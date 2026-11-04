@@ -2,51 +2,37 @@
   "id": "l11",
   "courseId": "bay-qua-khe",
   "order": 11,
-  "title": "Nút bay",
+  "title": "Danh sách",
   "draft": true,
-  "summary": "Bấm thì tốc độ thành số âm: chim vọt lên.",
+  "summary": "[40, 160, 280]: một hộp có nhiều ngăn; for đi qua từng ngăn.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l11-up",
-          "title": "Bay lên là tốc độ âm",
-          "text": "y nhỏ là ở trên. Muốn chim vọt lên, cho speed thành số âm, ví dụ -8. Trọng lực vẫn cộng 0.5 mỗi khung, nên chim lên chậm dần rồi lại rơi.",
-          "widget": {
-            "kind": "gravity"
-          },
-          "coachNotes": "Ghi bảng: speed -8, -7.5, -7… 0, 0.5, 1… → chim lên, khựng lại, rồi rơi. Đường bay cong."
+          "id": "l11-list",
+          "title": "Danh sách",
+          "text": "pipes = [450, 650] là một danh sách: một cái hộp có nhiều ngăn đánh số. pipes[0] là ngăn đầu (450), pipes[1] là ngăn thứ hai (650).",
+          "coachNotes": "Vẽ dãy hộp liền nhau, đánh số 0, 1, 2 bên dưới. Python đếm từ 0, giống range()."
         },
         {
-          "id": "l11-key",
-          "title": "Hỏi bàn phím",
-          "text": "key_pressed() trả lời True khi em đang bấm Space hoặc chạm màn hình. Kết hợp với if: if key_pressed(): speed = -8.",
-          "coachNotes": "Đây là sự kiện: chương trình phản ứng với người chơi."
+          "id": "l11-loop",
+          "title": "Đi qua từng ngăn",
+          "text": "for x in xs: lấy lần lượt từng số trong danh sách xs cất vào x. xs.append(400) thêm một ngăn vào cuối. len(xs) cho biết danh sách có mấy ngăn.",
+          "coachNotes": "Cho lớp cầm thẻ số xếp hàng: \"for x in xs\" là đi dọc hàng, đọc từng thẻ. append là thêm một bạn vào cuối hàng."
         },
         {
-          "id": "l11-quiz",
+          "id": "l11-quiz-index",
           "quiz": {
-            "question": "speed = -8 rồi y = y + speed. Chim đi đâu?",
+            "question": "xs = [40, 160, 280]. xs[1] là số mấy?",
             "choices": [
-              "Lên trên",
-              "Xuống dưới",
-              "Đứng yên"
+              "40",
+              "160",
+              "280"
             ],
-            "answer": 0,
-            "explain": "Cộng số âm là trừ: y nhỏ đi nên chim lên trên."
+            "answer": 1,
+            "explain": "Ngăn đầu là xs[0]. xs[1] là ngăn thứ hai: 160."
           }
-        }
-      ]
-    },
-    {
-      "kind": "design",
-      "slides": [
-        {
-          "id": "l11-feel",
-          "title": "Cảm giác vỗ cánh",
-          "text": "-8 có vừa không? -4 thì nhảy lè tè, -15 thì vọt mất khỏi màn hình. Nhà làm game thật chỉnh con số này rất lâu.",
-          "coachNotes": "Cho mỗi bé chọn một số, chơi thử rồi so sánh. Không có đáp án duy nhất."
         }
       ]
     },
@@ -55,8 +41,8 @@
       "slides": [
         {
           "id": "l11-code",
-          "title": "Thêm nút bay",
-          "text": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60."
+          "title": "Danh sách viết bằng tay",
+          "text": "Danh sách chưa có khối: em gõ trong khung Python, bên khối hiện thành khối code chữ."
         }
       ]
     },
@@ -65,8 +51,8 @@
       "slides": [
         {
           "id": "l11-try",
-          "title": "Chơi thử!",
-          "text": "Bấm ⛶ toàn màn hình, nhấn Space để bay. Chỉnh -8 và 0.5 tới khi em thấy chơi \"sướng tay\" nhất."
+          "title": "Thêm, bớt",
+          "text": "Thêm một số vào danh sách rồi chạy: có thêm hình mà không viết thêm dòng vẽ."
         }
       ]
     }
@@ -74,81 +60,114 @@
   "exercises": [
     {
       "id": "l11-e1",
-      "title": "Thêm nút bay",
-      "task": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60.",
+      "title": "Vẽ theo danh sách",
+      "task": "xs = [40, 160, 280]. Dùng for x in xs: để vẽ ô xanh lá (green) cạnh 60 ở (x, 300).",
       "input": "blocks",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\nxs = [40, 160, 280]\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
-        "pq_def",
-        "pq_global",
-        "pq_assign",
-        "pq_aug",
-        "pq_arith",
-        "pq_var_get",
         "pq_number",
-        "pq_clear",
         "pq_text",
-        "pq_if",
-        "pq_compare",
         "pq_draw_rect",
-        "pq_key_pressed"
+        "pq_var_get"
       ],
-      "mode": "game",
+      "mode": "script",
       "goals": [
         {
-          "id": "l11-g-run",
+          "id": "l11-e1-run",
           "label": "Chạy không lỗi",
           "kind": "noError"
         },
         {
-          "id": "l11-g-flap",
-          "label": "Bấm thì chim bay lên",
-          "kind": "risesAfterTap",
-          "sprite": "bird",
-          "taps": [
-            40,
-            60
-          ]
-        },
-        {
-          "id": "l11-g-ground",
-          "label": "Vẫn không chìm qua đất",
-          "kind": "staysWithin",
-          "sprite": "bird",
-          "axis": "y",
-          "max": 480
+          "id": "l11-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
         }
       ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nxs = [40, 160, 280]\nfor x in xs:\n    draw_rect(x, 300, 60, 60, \"green\")\n"
+      },
       "walkthrough": [
-        "Trong update(), ngay dưới dòng global y, speed, gõ: if key_pressed():",
-        "Dòng thụt vào thêm: speed = -8",
-        "Khối tương ứng: \"nếu … thì\" với khối \"đang bấm Space / chạm?\", bên trong \"đặt speed = -8\".",
-        "Bấm ▶ Chạy: máy thử bấm ở khung 40 và 60 để chấm.",
-        "Bấm ⛶ rồi nhấn Space để tự chơi. Chỉnh -8 và 0.5 tới khi vừa tay."
+        "Bài này em gõ vòng lặp trong khung Python.",
+        "for x in xs:",
+        "    draw_rect(x, 300, 60, 60, \"green\")"
+      ],
+      "hints": [
+        "for x in xs: lấy từng số của xs."
+      ]
+    },
+    {
+      "id": "l11-e2",
+      "title": "Thêm vào cuối",
+      "task": "xs = [20, 120]. Thêm 220 và 320 bằng xs.append(…), rồi vẽ mỗi x một ô vàng (gold) cạnh 60 ở (x, 300).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nxs = [20, 120]\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l11-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l11-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\nxs = [20, 120]\nxs.append(220)\nxs.append(320)\nfor x in xs:\n    draw_rect(x, 300, 60, 60, \"gold\")\n"
       },
-      "hints": [
-        "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",
-        "Bên trong: speed = -8.",
-        "if key_pressed():\n    speed = -8"
+      "walkthrough": [
+        "xs.append(220) thêm 220 vào cuối danh sách.",
+        "Vẽ sau khi đã thêm, để vòng lặp thấy đủ 4 số."
       ],
-      "test": {
-        "frames": 90,
-        "taps": [
-          40,
-          60
-        ]
-      }
+      "hints": [
+        "xs.append(320)"
+      ]
+    },
+    {
+      "id": "l11-e3",
+      "title": "Biểu đồ cột",
+      "task": "hs = [100, 250, 180, 300]. Vẽ cột thứ i ở (i * 80 + 40, 550 - hs[i]) rộng 60 cao hs[i], màu teal. Dùng for i in range(len(hs)):.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhs = [100, 250, 180, 300]\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l11-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l11-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nhs = [100, 250, 180, 300]\nfor i in range(len(hs)):\n    draw_rect(i * 80 + 40, 550 - hs[i], 60, hs[i], \"teal\")\n"
+      },
+      "walkthrough": [
+        "len(hs) là 4, nên i chạy 0, 1, 2, 3.",
+        "hs[i] là chiều cao cột thứ i."
+      ],
+      "hints": [
+        "draw_rect(i * 80 + 40, 550 - hs[i], 60, hs[i], \"teal\")"
+      ]
     }
   ],
-  "unlocksRoadmap": [
-    "flap"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

@@ -22,7 +22,7 @@ test('Bài 4: the child writes draw_bird; the 📞 panel shows each call and lig
   page,
 }) => {
   await asCoach(page);
-  await page.goto('/l/l04/code');
+  await page.goto('/l/l04/code?ex=l04-e2');
   await pythonReady(page);
   await typeCode(page, BIRD);
 
@@ -62,7 +62,7 @@ test('Bài 4: the child writes draw_bird; the 📞 panel shows each call and lig
 
 test('Bài 3: a bird typed with a fixed number does not pass "moves with x"', async ({ page }) => {
   await asCoach(page);
-  await page.goto('/l/l03/code');
+  await page.goto('/l/l03/code?ex=l03-e2');
   await pythonReady(page);
   const bird = (beak: string) =>
     `from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, "red")\ndraw_rect(${beak}, y + 14, 8, 8, "orange")\ndraw_rect(x + 8, y, 14, 10, "red")\n`;

@@ -2,35 +2,36 @@
   "id": "l19",
   "courseId": "bay-qua-khe",
   "order": 19,
-  "title": "Ra mắt",
+  "title": "Nhiều cột",
   "draft": true,
-  "summary": "Chơi thử chéo, nhận góp ý, sửa lỗi, đặt tên và giới thiệu game của em.",
+  "summary": "Danh sách pipes = [450, 650]: một biến giữ nhiều cột.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l19-launch",
-          "title": "Ra mắt là gì",
-          "text": "Sản phẩm thật không dừng ở \"chạy được\". Người khác chơi thử, góp ý, rồi mình sửa. Lặp lại vài vòng mới ra mắt.",
-          "widget": {
-            "kind": "sampleGame"
-          },
-          "coachNotes": "Kể ví dụ: game nổi tiếng nào cũng có bản thử nghiệm cho người chơi thật trước khi phát hành."
+          "id": "l19-list",
+          "title": "Danh sách",
+          "text": "pipes = [450, 650] là một danh sách: một cái hộp có nhiều ngăn đánh số. pipes[0] là ngăn đầu (450), pipes[1] là ngăn thứ hai (650).",
+          "coachNotes": "Vẽ dãy hộp liền nhau, đánh số 0, 1, 2 bên dưới. Python đếm từ 0, giống range()."
         },
         {
-          "id": "l19-feedback",
-          "title": "Góp ý thế nào cho có ích",
-          "text": "Nói điều mình thấy, không chê người: \"Mình thua ở cột thứ 3 vì khe hẹp quá\" có ích hơn \"game dở\".",
-          "coachNotes": "Tập nói: 1 điều em thích, 1 điều làm em bối rối, 1 gợi ý."
+          "id": "l19-move",
+          "title": "Băng chuyền cột",
+          "text": "Chim đứng yên ở x = 100, còn cột trượt sang trái 2 bước mỗi khung. Cột ra khỏi mép trái thì đưa nó về bên phải để dùng lại.",
+          "coachNotes": "Như băng chuyền siêu thị: hàng chạy qua, người đứng yên. Đây là mẹo của rất nhiều game chạy cảnh."
         },
         {
           "id": "l19-quiz",
           "quiz": {
-            "question": "Câu góp ý nào có ích nhất?",
-            "choices": ["Game chán quá", "Mình không biết bấm gì để bắt đầu", "Tốt"],
+            "question": "pipes = [450, 650]. pipes[1] là bao nhiêu?",
+            "choices": [
+              "450",
+              "650",
+              "1"
+            ],
             "answer": 1,
-            "explain": "Câu đó chỉ ra đúng chỗ cần sửa: màn chờ chưa rõ."
+            "explain": "Đếm từ 0: pipes[0] = 450, pipes[1] = 650."
           }
         }
       ]
@@ -39,26 +40,20 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l19-name",
-          "title": "Đặt tên và câu giới thiệu",
-          "text": "Đặt tên game của em, viết một câu giới thiệu không quá 12 chữ. Tên hay thì dễ nhớ và nói được game về cái gì.",
-          "coachNotes": "Mỗi bé đọc tên và câu giới thiệu trước lớp."
+          "id": "l19-spacing",
+          "title": "Khoảng cách giữa các cột",
+          "text": "Hai cột cách nhau 200: đủ chỗ cho chim lấy lại độ cao. Cột ra khỏi màn ở x < -76 (bề rộng hình cột) thì cộng 400 để quay về bên phải.",
+          "coachNotes": "Cho bé tính: cột ở -78 + 400 = 322, vẫn cách cột kia 200."
         }
       ]
     },
     {
-      "kind": "prepare",
+      "kind": "code",
       "slides": [
         {
-          "id": "l19-look",
-          "title": "Chọn diện mạo cuối cùng",
-          "text": "Chọn nền cho bản ra mắt. Kiểm tra lại: chim, cột, chữ điểm có nổi trên nền này không?",
-          "widget": {
-            "kind": "assetPicker",
-            "props": {
-              "group": "background"
-            }
-          }
+          "id": "l19-code",
+          "title": "Cho cột chạy",
+          "text": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách."
         }
       ]
     },
@@ -66,20 +61,90 @@
       "kind": "playtest",
       "slides": [
         {
-          "id": "l19-swap",
-          "title": "Chơi chéo",
-          "text": "Đổi máy với bạn, chơi game của nhau 3 phút. Ghi lại: 1 điều thích, 1 điều bối rối, 1 gợi ý. Rồi về sửa game của mình.",
-          "coachNotes": "Chia cặp. Bé ghi góp ý lên giấy; HLV gom lại các lỗi chung để chữa trên bảng."
-        },
-        {
-          "id": "l19-done",
-          "title": "Em đã làm ra một sản phẩm",
-          "text": "Từ một ý tưởng, em đã thiết kế, chuẩn bị, viết code, chơi thử và sửa. Đó chính là cách người ta làm phần mềm thật!",
-          "coachNotes": "Tổng kết lộ trình: mọi phần đã sáng. Gợi ý phần nâng cao: thêm âm thanh, huy chương, nhiều nhân vật."
+          "id": "l19-try",
+          "title": "Thêm cột",
+          "text": "Chạy toàn màn hình. Thêm một số vào danh sách, ví dụ [450, 650, 850], xem có thêm cột không."
         }
       ]
     }
   ],
-  "unlocksRoadmap": ["launch"],
+  "exercises": [
+    {
+      "id": "l19-e1",
+      "title": "Cho cột chạy",
+      "task": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_image",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_key_pressed",
+        "pq_for",
+        "pq_draw_text",
+        "pq_random"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l19-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l19-g-move",
+          "label": "Cột trượt sang trái",
+          "kind": "moves",
+          "sprite": "pipe",
+          "axis": "x",
+          "dir": -1
+        },
+        {
+          "id": "l19-g-two",
+          "label": "Có 2 cặp cột",
+          "kind": "drewCount",
+          "sprite": "pipe",
+          "min": 4
+        }
+      ],
+      "walkthrough": [
+        "Trong update(), xóa dòng pass.",
+        "Gõ: for i in range(len(pipes)):",
+        "Thụt vào: pipes[i] = pipes[i] - 2",
+        "Thụt vào tiếp: if pipes[i] < -76: rồi thụt thêm: pipes[i] = pipes[i] + 400",
+        "Bấm ▶ Chạy, rồi ⛶ để xem cột chạy vòng."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
+      },
+      "hints": [
+        "for i in range(len(pipes)): đi qua từng ngăn.",
+        "pipes[i] = pipes[i] - 2",
+        "if pipes[i] < -76:\n    pipes[i] = pipes[i] + 400"
+      ],
+      "test": {
+        "frames": 60,
+        "taps": []
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "pipes"
+  ],
   "docsUnlocked": []
 }

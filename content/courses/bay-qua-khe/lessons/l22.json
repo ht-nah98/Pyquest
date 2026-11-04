@@ -1,0 +1,182 @@
+{
+  "id": "l22",
+  "courseId": "bay-qua-khe",
+  "order": 22,
+  "title": "Giao diện",
+  "draft": true,
+  "summary": "Điểm số, chữ trên màn hình và bố cục: người chơi cần thấy gì?",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l22-ui",
+          "title": "Giao diện là gì",
+          "text": "Giao diện là những thứ người chơi nhìn và bấm: điểm số, chữ hướng dẫn, nút. Đẹp mà khó đọc thì vẫn là giao diện tồi.",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "Chơi game mẫu, hỏi: điểm nằm ở đâu? Vì sao ở giữa phía trên? (mắt người chơi nhìn quanh chim, không che đường bay)."
+        },
+        {
+          "id": "l22-str",
+          "title": "Số thành chữ",
+          "text": "draw_text cần chữ, mà score là số. str(score) biến số 3 thành chữ \"3\". Python không tự đổi giữa số và chữ.",
+          "coachNotes": "Thử print(\"Điểm: \" + score) cho lớp thấy lỗi \"không cộng được chữ với số\"."
+        },
+        {
+          "id": "l22-quiz",
+          "quiz": {
+            "question": "score = 7. str(score) là gì?",
+            "choices": [
+              "Số 7",
+              "Chữ \"7\"",
+              "Lỗi"
+            ],
+            "answer": 1,
+            "explain": "str() đổi số thành chữ để vẽ hoặc ghép chữ."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l22-layout",
+          "title": "Phác bố cục",
+          "text": "Phác ra giấy màn hình 400 × 600: điểm ở đâu, cỡ chữ bao nhiêu, chữ \"Thua rồi!\" ở đâu. Chữ to, nét đậm, đặt chỗ không che chim.",
+          "coachNotes": "Phát giấy kẻ ô. Bé vẽ bố cục rồi mới code. So sánh bản phác của các bạn."
+        },
+        {
+          "id": "l22-score-rule",
+          "title": "Khi nào cộng điểm?",
+          "text": "Cộng 1 điểm khi cột đã đi qua hẳn chim: pipe_x + 52 < 100. Thêm biến scored để mỗi cột chỉ cộng một lần.",
+          "coachNotes": "Hỏi: nếu không có scored thì sao? (mỗi khung hình cộng 1, điểm tăng vù vù)."
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "l22-bg",
+          "title": "Chọn nền cho game",
+          "text": "Chọn một ảnh nền trong kho. Nền đẹp nhưng chữ điểm vẫn phải đọc được: chữ trắng viền đen hợp với hầu hết các nền.",
+          "widget": {
+            "kind": "assetPicker",
+            "props": {
+              "group": "background"
+            }
+          },
+          "coachNotes": "Có thể đổi nền bằng draw_image(\"images/background-pho-co.png\", 0, 0) đầu draw(). Không bắt buộc ở bài này."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l22-code",
+          "title": "Thêm điểm số",
+          "text": "Tạo score = 0 và scored = False. Khi cột qua khỏi chim lần đầu thì cộng điểm. Trong draw(), vẽ draw_text(str(score), 200, 60, 56). Máy tự bấm giúp em để bay qua cột."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l22-try",
+          "title": "Đọc có rõ không?",
+          "text": "Chơi toàn màn hình. Điểm có dễ đọc không? Nhờ bạn bên cạnh chơi thử và nói em nghe họ thấy gì đầu tiên."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l22-e1",
+      "title": "Thêm điểm số",
+      "task": "Tạo score = 0 và scored = False. Khi cột qua khỏi chim lần đầu thì cộng điểm. Trong draw(), vẽ draw_text(str(score), 200, 60, 56). Máy tự bấm giúp em để bay qua cột.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_image",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_key_pressed",
+        "pq_for",
+        "pq_draw_text",
+        "pq_random"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l22-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l22-g-score",
+          "label": "Qua một cột được 1 điểm",
+          "kind": "varEquals",
+          "name": "score",
+          "value": 1
+        },
+        {
+          "id": "l22-g-show",
+          "label": "Điểm hiện trên màn hình",
+          "kind": "drewText",
+          "text": "1"
+        }
+      ],
+      "walkthrough": [
+        "Dưới dòng game_over = False: thêm score = 0 và scored = False.",
+        "Trong update(): thêm score, scored vào cuối dòng global.",
+        "Sau dòng pipe_x = pipe_x - 2: if pipe_x + 52 < 100 and not scored: rồi thụt vào score = score + 1 và scored = True.",
+        "Trong draw(), sau draw_bird: draw_text(str(score), 200, 60, 56)",
+        "Bấm ▶ Chạy: máy tự vỗ cánh để bay qua cột, điểm thành 1."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over, score, scored\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      },
+      "hints": [
+        "Thêm score = 0 và scored = False ở trên cùng; thêm cả hai vào dòng global.",
+        "if pipe_x + 52 < 100 and not scored: cộng 1 điểm rồi scored = True",
+        "Trong draw(): draw_text(str(score), 200, 60, 56)"
+      ],
+      "test": {
+        "frames": 200,
+        "taps": [
+          0,
+          31,
+          62,
+          93,
+          124,
+          155,
+          186
+        ]
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "score"
+  ],
+  "docsUnlocked": []
+}

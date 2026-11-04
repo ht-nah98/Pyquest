@@ -2,63 +2,30 @@
   "id": "l08",
   "courseId": "bay-qua-khe",
   "order": 8,
-  "title": "Hoạt hình là gì",
+  "title": "Nhiều lựa chọn: elif",
   "draft": true,
-  "summary": "Game vẽ lại mỗi khung hình: update() đổi số, draw() vẽ lại.",
+  "summary": "if … elif … else: thử từng điều kiện từ trên xuống, chọn cái đúng đầu tiên.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l08-flip",
-          "title": "Phim là nhiều ảnh tĩnh",
-          "text": "Phim hoạt hình là nhiều ảnh, mỗi ảnh khác nhau một chút, chiếu thật nhanh. Mỗi ảnh gọi là một khung hình. Bấm Chiếu rồi kéo tốc độ lên xem.",
-          "widget": {
-            "kind": "flipbook"
-          },
-          "coachNotes": "Hoạt động giấy: cho bé làm sách lật 8 trang ở góc vở, vẽ chấm tròn thấp dần. Lật nhanh → chấm rơi."
+          "id": "l08-ladder",
+          "title": "Thử từng bậc",
+          "text": "elif nghĩa là \"không thì nếu\". Máy thử if trước; sai thì thử elif; vẫn sai thì else. Gặp điều kiện đúng đầu tiên là làm nhánh đó rồi thôi, các nhánh dưới bị bỏ qua.",
+          "coachNotes": "Ví dụ chấm điểm: 9 trở lên thì giỏi, 5 trở lên thì khá, còn lại cần cố gắng. Hỏi: 9 điểm thì có rơi vào \"khá\" không? (không, vì nhánh trên đã đúng trước)."
         },
         {
-          "id": "l08-loop",
-          "title": "Vòng lặp của game",
-          "text": "Game làm đi làm lại khoảng 60 lần mỗi giây: update() đổi các con số (chim xuống một chút), rồi draw() xóa và vẽ lại tất cả.",
-          "coachNotes": "Vẽ vòng tròn lên bảng: update → draw → update → draw… Nền tảng PyQuest tự gọi hai lệnh này cho em."
-        },
-        {
-          "id": "l08-quiz",
+          "id": "l08-quiz-order",
           "quiz": {
-            "question": "Chim trông như đang rơi là nhờ đâu?",
+            "question": "score = 9. if score >= 5: A, elif score >= 9: B. Máy làm gì?",
             "choices": [
-              "Mỗi khung hình y tăng một chút rồi vẽ lại",
-              "Ảnh chim tự chạy",
-              "Vẽ thật nhiều chim cùng lúc"
+              "A",
+              "B",
+              "Cả A và B"
             ],
             "answer": 0,
-            "explain": "update() tăng y, draw() vẽ lại ở chỗ mới. Nhanh quá nên mắt thấy như chuyển động."
-          }
-        }
-      ]
-    },
-    {
-      "kind": "design",
-      "slides": [
-        {
-          "id": "l08-def",
-          "title": "update() và draw()",
-          "text": "Em đã biết def từ Bài 4. update() và draw() cũng là lệnh em tự đặt, nhưng em không gọi chúng: thư viện gọi giúp, khoảng 60 lần mỗi giây. Muốn update đổi hộp y bên ngoài, dòng đầu viết global y.",
-          "coachNotes": "global: \"dùng hộp y chung của cả chương trình\". Quên global thì Python báo lỗi."
-        },
-        {
-          "id": "l08-quiz-speed",
-          "quiz": {
-            "question": "Mỗi khung hình y tăng 3, game chạy 60 khung mỗi giây. Một giây chim rơi bao xa?",
-            "choices": [
-              "3",
-              "60",
-              "180"
-            ],
-            "answer": 2,
-            "explain": "3 × 60 = 180."
+            "explain": "score >= 5 đúng trước nên làm A rồi thôi. Điều kiện chặt hơn phải đặt lên trên."
           }
         }
       ]
@@ -68,9 +35,8 @@
       "slides": [
         {
           "id": "l08-code",
-          "title": "Cho chim rơi",
-          "text": "Trong update(), thay pass bằng hai dòng: global y và y = y + 3. Bấm Chạy: máy tự thử 60 khung hình rồi cho em xem chim rơi.",
-          "coachNotes": "Chim rơi khỏi màn hình là đúng! Bài 10 mới làm mặt đất."
+          "title": "Từng dải màu",
+          "text": "Mỗi dải là một ô rộng hết sân. Chọn màu theo y bằng if / elif / else."
         }
       ]
     },
@@ -79,8 +45,8 @@
       "slides": [
         {
           "id": "l08-try",
-          "title": "Nhanh hay chậm?",
-          "text": "Đổi 3 thành 1 rồi thành 10. Số nào trông đẹp nhất? Bấm ⛶ để xem toàn màn hình."
+          "title": "Đổi ranh giới",
+          "text": "Đổi 200 và 400 thành số khác. Núi cao lên hay thấp xuống?"
         }
       ]
     }
@@ -88,64 +54,122 @@
   "exercises": [
     {
       "id": "l08-e1",
-      "title": "Cho chim rơi",
-      "task": "Trong update(), thay pass bằng hai dòng: global y và y = y + 3. Bấm Chạy: máy tự thử 60 khung hình rồi cho em xem chim rơi.",
+      "title": "Trời, núi, đất",
+      "task": "Vẽ 12 dải ngang rộng 400 cao 50 ở y = i * 50. Dải có y < 200 màu skyblue, y < 400 màu green, còn lại màu brown.",
       "input": "blocks",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\nfor i in range(12):\n    y = i * 50\n    draw_rect(0, y, 400, 50, \"skyblue\")\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
-        "pq_def",
-        "pq_global",
-        "pq_assign",
-        "pq_aug",
-        "pq_arith",
-        "pq_var_get",
         "pq_number",
-        "pq_clear",
-        "pq_text"
+        "pq_text",
+        "pq_for",
+        "pq_if_chain",
+        "pq_compare",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
       ],
-      "mode": "game",
+      "mode": "script",
       "goals": [
         {
-          "id": "l08-g-run",
+          "id": "l08-e1-run",
           "label": "Chạy không lỗi",
           "kind": "noError"
         },
         {
-          "id": "l08-g-fall",
-          "label": "Chim đi xuống",
-          "kind": "moves",
-          "sprite": "bird",
-          "axis": "y",
-          "dir": 1
+          "id": "l08-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
         }
       ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(12):\n    y = i * 50\n    if y < 200:\n        color = \"skyblue\"\n    elif y < 400:\n        color = \"green\"\n    else:\n        color = \"brown\"\n    draw_rect(0, y, 400, 50, color)\n"
+      },
       "walkthrough": [
-        "Tìm def update(): bên trong chỉ có pass (nghĩa là \"chưa làm gì\").",
-        "Xóa pass. Gõ global y (thụt vào 4 dấu cách, thẳng hàng với chỗ pass cũ).",
-        "Dòng tiếp theo, cùng thụt lề: y = y + 3",
-        "Bấm ▶ Chạy: máy tự chạy thử 60 khung hình để chấm, rồi chim rơi trên sân.",
-        "Bấm ⛶ để xem toàn màn hình. Chim rơi khỏi màn hình là đúng: Bài 10 mới có mặt đất."
+        "Kéo khối \"nếu … không thì nếu … không thì\" vào vòng lặp, trước dòng vẽ.",
+        "Ba nhánh cất màu: skyblue, green, brown.",
+        "Trong dòng vẽ, thay \"skyblue\" bằng biến color."
+      ],
+      "hints": [
+        "if y < 200:",
+        "elif y < 400:",
+        "else:"
+      ]
+    },
+    {
+      "id": "l08-e2",
+      "title": "Huy chương",
+      "task": "Với score = 7, vẽ huy chương ô vuông cạnh 100 ở (150, 250): vàng (gold) nếu score >= 9, bạc (silver) nếu score >= 5, còn lại đồng (peru).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nscore = 7\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l08-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l08-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\nscore = 7\nif score >= 9:\n    color = \"gold\"\nelif score >= 5:\n    color = \"silver\"\nelse:\n    color = \"peru\"\ndraw_rect(150, 250, 100, 100, color)\n"
       },
-      "hints": [
-        "Trong update(), dòng đầu: global y",
-        "Dòng thứ hai: y = y + 3",
-        "Xóa dòng pass đi."
+      "walkthrough": [
+        "Điều kiện chặt nhất (>= 9) đặt trên cùng.",
+        "Sau chuỗi if/elif/else, vẽ một ô bằng color.",
+        "Thử đổi score = 9 và score = 2 xem màu đổi."
       ],
-      "test": {
-        "frames": 60,
-        "taps": []
-      }
+      "hints": [
+        "elif score >= 5:"
+      ]
+    },
+    {
+      "id": "l08-e3",
+      "title": "Bằng và khác",
+      "task": "Hàng 8 ô cạnh 40 ở y = 300, x = i * 50. Ô thứ i == 3 màu đỏ, ô i == 6 màu vàng (gold), các ô khác màu xám (gray).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 300, 40, 40, \"gray\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l08-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l08-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    if i == 3:\n        color = \"red\"\n    elif i == 6:\n        color = \"gold\"\n    else:\n        color = \"gray\"\n    draw_rect(i * 50, 300, 40, 40, color)\n"
+      },
+      "walkthrough": [
+        "== hai dấu bằng là so sánh.",
+        "Dùng if / elif / else để chọn color, rồi vẽ một dòng."
+      ],
+      "hints": [
+        "if i == 3:"
+      ]
     }
   ],
-  "unlocksRoadmap": [
-    "motion"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

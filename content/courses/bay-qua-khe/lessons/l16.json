@@ -2,39 +2,35 @@
   "id": "l16",
   "courseId": "bay-qua-khe",
   "order": 16,
-  "title": "Giao diện",
+  "title": "Nếu… thì…",
   "draft": true,
-  "summary": "Điểm số, chữ trên màn hình và bố cục: người chơi cần thấy gì?",
+  "summary": "if y > 480: chạm đất thì dừng lại.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l16-ui",
-          "title": "Giao diện là gì",
-          "text": "Giao diện là những thứ người chơi nhìn và bấm: điểm số, chữ hướng dẫn, nút. Đẹp mà khó đọc thì vẫn là giao diện tồi.",
-          "widget": {
-            "kind": "sampleGame"
-          },
-          "coachNotes": "Chơi game mẫu, hỏi: điểm nằm ở đâu? Vì sao ở giữa phía trên? (mắt người chơi nhìn quanh chim, không che đường bay)."
+          "id": "l16-rule",
+          "title": "Luật của game",
+          "text": "Game nào cũng có luật: nếu chạm đất thì dừng, nếu đụng cột thì thua. Python viết luật bằng if: nếu điều kiện đúng thì làm các dòng thụt vào bên dưới.",
+          "coachNotes": "Hỏi lớp luật trong trò chơi quen thuộc: nếu… thì…"
         },
         {
-          "id": "l16-str",
-          "title": "Số thành chữ",
-          "text": "draw_text cần chữ, mà score là số. str(score) biến số 3 thành chữ \"3\". Python không tự đổi giữa số và chữ.",
-          "coachNotes": "Thử print(\"Điểm: \" + score) cho lớp thấy lỗi \"không cộng được chữ với số\"."
+          "id": "l16-compare",
+          "title": "So sánh",
+          "text": "y > 480 hỏi: y có lớn hơn 480 không? Câu trả lời là True (đúng) hoặc False (sai). Còn có <, >=, <=, == (bằng), != (khác).",
+          "coachNotes": "== là so sánh, = là cất vào hộp. Đây là lỗi rất hay gặp."
         },
         {
           "id": "l16-quiz",
           "quiz": {
-            "question": "score = 7. str(score) là gì?",
+            "question": "y = 500. Điều kiện y > 480 là gì?",
             "choices": [
-              "Số 7",
-              "Chữ \"7\"",
-              "Lỗi"
+              "True (đúng)",
+              "False (sai)"
             ],
-            "answer": 1,
-            "explain": "str() đổi số thành chữ để vẽ hoặc ghép chữ."
+            "answer": 0,
+            "explain": "500 lớn hơn 480."
           }
         }
       ]
@@ -43,33 +39,23 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l16-layout",
-          "title": "Phác bố cục",
-          "text": "Phác ra giấy màn hình 400 × 600: điểm ở đâu, cỡ chữ bao nhiêu, chữ \"Thua rồi!\" ở đâu. Chữ to, nét đậm, đặt chỗ không che chim.",
-          "coachNotes": "Phát giấy kẻ ô. Bé vẽ bố cục rồi mới code. So sánh bản phác của các bạn."
+          "id": "l16-ground",
+          "title": "Mặt đất ở đâu?",
+          "text": "Mặt đất bắt đầu ở y = 520. Chim cao 40, nên khi y = 480 thì chân chim vừa chạm đất. Vượt quá 480 là chìm xuống đất.",
+          "coachNotes": "Vẽ chim là hình chữ nhật cao 40 trên lưới: góc trên ở y, đáy ở y + 40."
         },
         {
-          "id": "l16-score-rule",
-          "title": "Khi nào cộng điểm?",
-          "text": "Cộng 1 điểm khi cột đã đi qua hẳn chim: pipe_x + 52 < 100. Thêm biến scored để mỗi cột chỉ cộng một lần.",
-          "coachNotes": "Hỏi: nếu không có scored thì sao? (mỗi khung hình cộng 1, điểm tăng vù vù)."
-        }
-      ]
-    },
-    {
-      "kind": "prepare",
-      "slides": [
-        {
-          "id": "l16-bg",
-          "title": "Chọn nền cho game",
-          "text": "Chọn một ảnh nền trong kho. Nền đẹp nhưng chữ điểm vẫn phải đọc được: chữ trắng viền đen hợp với hầu hết các nền.",
-          "widget": {
-            "kind": "assetPicker",
-            "props": {
-              "group": "background"
-            }
-          },
-          "coachNotes": "Có thể đổi nền bằng draw_image(\"images/background-pho-co.png\", 0, 0) đầu draw(). Không bắt buộc ở bài này."
+          "id": "l16-quiz-fix",
+          "quiz": {
+            "question": "Chim lỡ xuống y = 490. Nên làm gì?",
+            "choices": [
+              "Kéo y về 480 và cho speed = 0",
+              "Cho speed lớn hơn",
+              "Không làm gì"
+            ],
+            "answer": 0,
+            "explain": "Đặt lại đúng mặt đất và ngừng rơi."
+          }
         }
       ]
     },
@@ -78,8 +64,8 @@
       "slides": [
         {
           "id": "l16-code",
-          "title": "Thêm điểm số",
-          "text": "Tạo score = 0 và scored = False. Khi cột qua khỏi chim lần đầu thì cộng điểm. Trong draw(), vẽ draw_text(str(score), 200, 60, 56). Máy tự bấm giúp em để bay qua cột."
+          "title": "Chạm đất thì dừng",
+          "text": "Trong update(), sau y = y + speed, thêm: if y > 480: rồi hai dòng thụt vào: y = 480 và speed = 0."
         }
       ]
     },
@@ -88,8 +74,8 @@
       "slides": [
         {
           "id": "l16-try",
-          "title": "Đọc có rõ không?",
-          "text": "Chơi toàn màn hình. Điểm có dễ đọc không? Nhờ bạn bên cạnh chơi thử và nói em nghe họ thấy gì đầu tiên."
+          "title": "Xem chim đáp đất",
+          "text": "Chạy toàn màn hình. Chim có đáp đúng mặt cỏ không? Nếu chìm hoặc lơ lửng, chỉnh số 480."
         }
       ]
     }
@@ -97,11 +83,11 @@
   "exercises": [
     {
       "id": "l16-e1",
-      "title": "Thêm điểm số",
-      "task": "Tạo score = 0 và scored = False. Khi cột qua khỏi chim lần đầu thì cộng điểm. Trong draw(), vẽ draw_text(str(score), 200, 60, 56). Máy tự bấm giúp em để bay qua cột.",
-      "input": "blocks",
+      "title": "Chạm đất thì dừng",
+      "task": "Trong update(), sau y = y + speed, thêm: if y > 480: rồi hai dòng thụt vào: y = 480 và speed = 0.",
+      "input": "typing",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
       },
       "main": "main.py",
       "toolbox": [
@@ -113,17 +99,11 @@
         "pq_arith",
         "pq_var_get",
         "pq_number",
-        "pq_draw_image",
         "pq_clear",
         "pq_text",
         "pq_if",
-        "pq_if_else",
         "pq_compare",
-        "pq_logic",
-        "pq_key_pressed",
-        "pq_for",
-        "pq_draw_text",
-        "pq_random"
+        "pq_draw_rect"
       ],
       "mode": "game",
       "goals": [
@@ -133,50 +113,43 @@
           "kind": "noError"
         },
         {
-          "id": "l16-g-score",
-          "label": "Qua một cột được 1 điểm",
-          "kind": "varEquals",
-          "name": "score",
-          "value": 1
+          "id": "l16-g-fall",
+          "label": "Chim đi xuống",
+          "kind": "moves",
+          "sprite": "bird",
+          "axis": "y",
+          "dir": 1
         },
         {
-          "id": "l16-g-show",
-          "label": "Điểm hiện trên màn hình",
-          "kind": "drewText",
-          "text": "1"
+          "id": "l16-g-ground",
+          "label": "Không chìm qua mặt đất",
+          "kind": "staysWithin",
+          "sprite": "bird",
+          "axis": "y",
+          "max": 480
         }
       ],
       "walkthrough": [
-        "Dưới dòng game_over = False: thêm score = 0 và scored = False.",
-        "Trong update(): thêm score, scored vào cuối dòng global.",
-        "Sau dòng pipe_x = pipe_x - 2: if pipe_x + 52 < 100 and not scored: rồi thụt vào score = score + 1 và scored = True.",
-        "Trong draw(), sau draw_bird: draw_text(str(score), 200, 60, 56)",
-        "Bấm ▶ Chạy: máy tự vỗ cánh để bay qua cột, điểm thành 1."
+        "Trong update(), tìm dòng y = y + speed.",
+        "Ngay dưới, cùng thụt lề, gõ: if y > 480:",
+        "Hai dòng thụt vào thêm 4 dấu cách nữa: y = 480 và speed = 0.",
+        "Dùng khối cũng được: khối \"nếu … thì\" + khối so sánh y > 480.",
+        "Bấm ▶ Chạy: chim rơi rồi đứng trên cỏ."
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over, score, scored\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
       },
       "hints": [
-        "Thêm score = 0 và scored = False ở trên cùng; thêm cả hai vào dòng global.",
-        "if pipe_x + 52 < 100 and not scored: cộng 1 điểm rồi scored = True",
-        "Trong draw(): draw_text(str(score), 200, 60, 56)"
+        "Dùng khối \"nếu … thì\" với điều kiện y > 480.",
+        "Bên trong: y = 480 và speed = 0.",
+        "if y > 480:\n    y = 480\n    speed = 0"
       ],
       "test": {
-        "frames": 200,
-        "taps": [
-          0,
-          31,
-          62,
-          93,
-          124,
-          155,
-          186
-        ]
+        "frames": 90,
+        "taps": []
       }
     }
   ],
-  "unlocksRoadmap": [
-    "score"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

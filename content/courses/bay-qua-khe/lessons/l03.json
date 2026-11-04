@@ -2,9 +2,9 @@
   "id": "l03",
   "courseId": "bay-qua-khe",
   "order": 3,
-  "title": "Vẽ chim bằng ô vuông",
+  "title": "Phép tính",
   "draft": true,
-  "summary": "Ghép chim từ vài khối draw_rect, mỗi khối đo từ x và y để cả con chim dời theo.",
+  "summary": "x + 30, y + 14, y = y + 100: tính từ số đã có để đặt hình theo nhau.",
   "steps": [
     {
       "kind": "understand",
@@ -33,6 +33,18 @@
             "answer": 2,
             "explain": "x + 30 = 200 + 30 = 230. Mỏ luôn cách góc chim 30 bước."
           }
+        },
+        {
+          "id": "l03-step",
+          "title": "Đi từng bước",
+          "text": "Chim muốn đi xuống. Vị trí mới = vị trí cũ + một bước. Trong Python viết: y = y + 100.",
+          "coachNotes": "Cho một bé đứng lên bước từng bước trên sàn kẻ ô; lớp đọc số ô sau mỗi bước."
+        },
+        {
+          "id": "l03-order",
+          "title": "Máy tính tính bên phải trước",
+          "text": "Với y = y + 100, máy tính lấy số đang trong hộp y, cộng thêm 100, rồi cất kết quả lại vào hộp y.",
+          "coachNotes": "Viết: y đang là 100. y = y + 100 → bên phải là 100 + 100 = 200 → cất 200 vào y."
         }
       ]
     },
@@ -85,7 +97,60 @@
   "exercises": [
     {
       "id": "l03-e1",
-      "title": "Ghép chim theo x, y",
+      "title": "Ô đi kèm",
+      "task": "Ô vàng ở (x, 300). Vẽ thêm ô đỏ luôn nằm cách ô vàng 60 bước sang phải: x của nó là x + 60. Đổi x thử: hai ô đi cùng nhau.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nx = 100\ndraw_rect(x, 300, 40, 40, \"gold\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_assign",
+        "pq_var_get",
+        "pq_arith",
+        "pq_draw_rect"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l03-e1-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l03-e1-follow",
+          "label": "Đổi x thì cả hai ô dời theo",
+          "kind": "shifts",
+          "var": "x",
+          "by": 50,
+          "axis": "x"
+        },
+        {
+          "id": "l03-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nx = 100\ndraw_rect(x, 300, 40, 40, \"gold\")\ndraw_rect(x + 60, 300, 40, 40, \"red\")\n"
+      },
+      "walkthrough": [
+        "Kéo thêm khối vẽ hình chữ nhật dưới ô vàng.",
+        "Ô x: kéo khối \"+\" (Số và chữ), bên trái đặt biến x, bên phải gõ 60.",
+        "Các ô còn lại: 300, 40, 40, red.",
+        "Chạy, rồi thử đổi x = 100 thành 200."
+      ],
+      "hints": [
+        "Viết x + 60, không viết 160.",
+        "draw_rect(x + 60, 300, 40, 40, \"red\")"
+      ]
+    },
+    {
+      "id": "l03-e2",
+      "title": "Chim ghép từ ô",
       "task": "Thân chim đã có sẵn. Thêm mỏ, cánh, mắt bằng draw_rect, mỗi khối tính từ x và y. Máy sẽ thử đổi x để xem cả con chim có dời theo không.",
       "input": "blocks",
       "starter": {
@@ -139,6 +204,84 @@
         "Mỗi khối của chim là một dòng draw_rect.",
         "Ô x viết x + số, ô y viết y + số. Đừng gõ số cố định.",
         "Ví dụ mỏ: draw_rect(x + 30, y + 14, 8, 8, \"orange\")"
+      ]
+    },
+    {
+      "id": "l03-e3",
+      "title": "Xuống từng bậc",
+      "task": "Vẽ ô ở (100, y), rồi y = y + 100 và vẽ lại, làm 3 lần: ba ô xếp dọc cách nhau 100. Dòng vẽ giống hệt nhau, chỉ hộp y đổi.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\ny = 100\ndraw_rect(100, y, 40, 40, \"gold\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l03-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l03-e3-y",
+          "label": "Cuối cùng y là 300",
+          "kind": "varEquals",
+          "name": "y",
+          "value": 300
+        },
+        {
+          "id": "l03-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\ny = 100\ndraw_rect(100, y, 40, 40, \"gold\")\ny = y + 100\ndraw_rect(100, y, 40, 40, \"gold\")\ny = y + 100\ndraw_rect(100, y, 40, 40, \"gold\")\n"
+      },
+      "walkthrough": [
+        "y = y + 100 nghĩa là: lấy số trong hộp y, cộng 100, cất lại vào y.",
+        "Thêm y = y + 100 rồi chép lại dòng draw_rect.",
+        "Làm thêm một lần nữa. Ô biến dưới sân phải ghi y = 300."
+      ],
+      "hints": [
+        "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."
+      ]
+    },
+    {
+      "id": "l03-e4",
+      "title": "Chia đều",
+      "task": "Sân rộng 400. Vẽ một ô rộng WIDTH / 4, cao 50 ở góc (0, 300), và một ô cùng cỡ ngay sau nó ở x = WIDTH / 4. Hai ô màu khác nhau.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nw = WIDTH / 4\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l03-e4-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l03-e4-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nw = WIDTH / 4\ndraw_rect(0, 300, w, 50, \"teal\")\ndraw_rect(w, 300, w, 50, \"orange\")\n"
+      },
+      "walkthrough": [
+        "w = WIDTH / 4 cất vào hộp w kết quả 400 chia 4.",
+        "Ô đầu ở x = 0, rộng w. Ô sau ở x = w, rộng w.",
+        "Màu ô đầu teal, ô sau orange."
+      ],
+      "hints": [
+        "draw_rect(0, 300, w, 50, \"teal\")",
+        "draw_rect(w, 300, w, 50, \"orange\")"
       ]
     }
   ],

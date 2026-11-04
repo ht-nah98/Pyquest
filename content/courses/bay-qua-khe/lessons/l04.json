@@ -4,7 +4,7 @@
   "order": 4,
   "title": "Tự đặt lệnh",
   "draft": true,
-  "summary": "def draw_bird(x, y): gom các khối của chim thành một lệnh mới, gọi bao nhiêu lần cũng được.",
+  "summary": "def: gom nhiều dòng thành một lệnh mới có tham số, gọi bao nhiêu lần cũng được.",
   "steps": [
     {
       "kind": "understand",
@@ -95,7 +95,58 @@
   "exercises": [
     {
       "id": "l04-e1",
-      "title": "Gói chim thành lệnh",
+      "title": "Lệnh vẽ ô",
+      "task": "Tự đặt lệnh def draw_square(x, y): bên trong vẽ ô vàng cạnh 40 ở (x, y). Rồi gọi nó 2 lần: draw_square(100, 200) và draw_square(250, 350).",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_def",
+        "pq_draw_rect",
+        "pq_var_get"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l04-e1-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l04-e1-call",
+          "label": "Gọi draw_square 2 lần",
+          "kind": "called",
+          "name": "draw_square",
+          "min": 2,
+          "distinct": true
+        },
+        {
+          "id": "l04-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\ndef draw_square(x, y):\n    draw_rect(x, y, 40, 40, \"gold\")\n\n\ndraw_square(100, 200)\ndraw_square(250, 350)\n"
+      },
+      "walkthrough": [
+        "Kéo khối \"tự đặt lệnh\". Ô tên gõ draw_square, ô trong ngoặc gõ x, y.",
+        "Kéo khối vẽ hình chữ nhật vào bên trong. Ô x, y: kéo khối biến x, y vào.",
+        "Mở nhóm Lệnh tự đặt: có khối 📞 draw_square. Kéo hai khối, điền số.",
+        "Chạy, mở tab 📞 Cuộc gọi xem mỗi lần gọi nhận số nào."
+      ],
+      "hints": [
+        "Hai dòng gọi nằm sát lề trái, bên dưới phần def."
+      ]
+    },
+    {
+      "id": "l04-e2",
+      "title": "Lệnh vẽ chim",
       "task": "Gói 4 dòng vẽ chim vào def draw_bird(x, y):. Rồi gọi nó hai lần: draw_bird(100, 300) và draw_bird(250, 150).",
       "input": "blocks",
       "starter": {
@@ -150,6 +201,50 @@
         "Dòng def draw_bird(x, y): phải có dấu hai chấm ở cuối.",
         "Các dòng draw_rect bên trong def thụt vào 4 dấu cách.",
         "Lời gọi draw_bird(100, 300) nằm sát lề trái, sau phần def."
+      ]
+    },
+    {
+      "id": "l04-e3",
+      "title": "Thêm tham số màu",
+      "task": "Thêm tham số thứ ba: def draw_square(x, y, color):, rồi vẽ 3 ô ở (60, 300), (170, 300), (280, 300) với 3 màu red, gold, green.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\ndef draw_square(x, y):\n    draw_rect(x, y, 40, 40, \"gold\")\n\n\ndraw_square(60, 300)\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l04-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l04-e3-call",
+          "label": "Gọi draw_square 3 lần, 3 kiểu",
+          "kind": "called",
+          "name": "draw_square",
+          "min": 3,
+          "distinct": true
+        },
+        {
+          "id": "l04-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\ndef draw_square(x, y, color):\n    draw_rect(x, y, 40, 40, color)\n\n\ndraw_square(60, 300, \"red\")\ndraw_square(170, 300, \"gold\")\ndraw_square(280, 300, \"green\")\n"
+      },
+      "walkthrough": [
+        "Dòng def: thêm , color vào trong ngoặc.",
+        "Bên trong: thay \"gold\" bằng color.",
+        "Mỗi lời gọi giờ cần 3 giá trị: draw_square(60, 300, \"red\")."
+      ],
+      "hints": [
+        "Tham số mới đứng sau y.",
+        "Số giá trị khi gọi phải bằng số tham số."
       ]
     }
   ],

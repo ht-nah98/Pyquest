@@ -1,0 +1,145 @@
+{
+  "id": "l20",
+  "courseId": "bay-qua-khe",
+  "order": 20,
+  "title": "Ngẫu nhiên",
+  "draft": true,
+  "summary": "random_int(80, 300): mỗi cột một độ cao, game bất ngờ hơn.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l20-boring",
+          "title": "Đoán trước được thì chán",
+          "text": "Khe cột lúc nào cũng ở cùng độ cao thì chơi vài lần là thuộc lòng. Game hay cần một chút bất ngờ.",
+          "coachNotes": "Cho lớp chơi game mẫu và để ý: khe cao thấp khác nhau."
+        },
+        {
+          "id": "l20-random",
+          "title": "Số ngẫu nhiên",
+          "text": "random_int(80, 300) cho một số bất kỳ từ 80 tới 300, như tung xúc xắc. Mỗi lần cột quay lại bên phải, ta tung lại độ cao khe.",
+          "coachNotes": "Nói về công bằng: số ngẫu nhiên nhưng nằm trong khoảng an toàn, không bao giờ ra khe bé không qua được."
+        },
+        {
+          "id": "l20-quiz",
+          "quiz": {
+            "question": "random_int(1, 6) có thể cho số nào?",
+            "choices": [
+              "0",
+              "1 đến 6",
+              "7"
+            ],
+            "answer": 1,
+            "explain": "Cả hai đầu 1 và 6 đều có thể ra."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l20-range",
+          "title": "Khoảng an toàn",
+          "text": "Khe bắt đầu ở gap_y và cao GAP = 150. gap_y nhỏ quá thì cột trên quá ngắn; lớn quá thì khe chạm đất (520). 80 đến 300 là vừa.",
+          "coachNotes": "Cho bé kiểm: 300 + 150 = 450 < 520, vẫn còn cột dưới."
+        },
+        {
+          "id": "l20-pair",
+          "title": "Cột nhớ hai con số",
+          "text": "Giờ mỗi cột là [x, gap_y]: một danh sách nhỏ trong danh sách lớn. pipe[0] là x, pipe[1] là độ cao khe.",
+          "coachNotes": "Danh sách lồng danh sách: vẽ hộp lớn chứa các hộp nhỏ hai ngăn."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l20-code",
+          "title": "Tung lại độ cao khe",
+          "text": "Trong update(), chỗ đưa cột về bên phải, thêm dòng pipe[1] = random_int(80, 300)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l20-try",
+          "title": "Chơi thử và chỉnh",
+          "text": "Chạy toàn màn hình, xem nhiều cột đi qua. Khoảng 80 đến 300 có công bằng không? Thử thu hẹp lại xem game dễ hơn không."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "l20-e1",
+      "title": "Tung lại độ cao khe",
+      "task": "Trong update(), chỗ đưa cột về bên phải, thêm dòng pipe[1] = random_int(80, 300).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_image",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_key_pressed",
+        "pq_for",
+        "pq_draw_text",
+        "pq_random"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l20-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l20-g-vary",
+          "label": "Khe cột cao thấp khác nhau",
+          "kind": "distinctCount",
+          "sprite": "pipe",
+          "axis": "y",
+          "min": 6
+        }
+      ],
+      "walkthrough": [
+        "Trong update(), tìm dòng pipe[0] = pipe[0] + 440.",
+        "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)",
+        "Bấm ▶ Chạy: máy chạy thử 520 khung hình để thấy cột quay lại nhiều lần.",
+        "Bấm ⛶: mỗi lần cột quay lại, khe ở một độ cao khác."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
+      },
+      "hints": [
+        "Tìm dòng pipe[0] = pipe[0] + 440.",
+        "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)"
+      ],
+      "test": {
+        "frames": 520,
+        "taps": []
+      }
+    }
+  ],
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
+}

@@ -2,36 +2,39 @@
   "id": "l17",
   "courseId": "bay-qua-khe",
   "order": 17,
-  "title": "Gói thành đối tượng",
+  "title": "Nút bay",
   "draft": true,
-  "summary": "class Bird: gom vị trí, tốc độ và hành động của chim vào một chỗ.",
+  "summary": "Bấm thì tốc độ thành số âm: chim vọt lên.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l17-mess",
-          "title": "Code bắt đầu rối",
-          "text": "y, speed, cách bay, cách vẽ chim đang nằm rải rác khắp file. Thêm chim thứ hai là phải chép lại mọi thứ. Lập trình viên gom chúng lại thành một đối tượng.",
-          "coachNotes": "Mở code Bài 16, tô màu mọi dòng liên quan tới chim: rải khắp nơi."
+          "id": "l17-up",
+          "title": "Bay lên là tốc độ âm",
+          "text": "y nhỏ là ở trên. Muốn chim vọt lên, cho speed thành số âm, ví dụ -8. Trọng lực vẫn cộng 0.5 mỗi khung, nên chim lên chậm dần rồi lại rơi.",
+          "widget": {
+            "kind": "gravity"
+          },
+          "coachNotes": "Ghi bảng: speed -8, -7.5, -7… 0, 0.5, 1… → chim lên, khựng lại, rồi rơi. Đường bay cong."
         },
         {
-          "id": "l17-class",
-          "title": "class là bản thiết kế",
-          "text": "class Bird: là bản thiết kế con chim: nó biết gì (self.y, self.speed) và làm được gì (update, draw). bird = Bird() làm ra một con chim thật theo bản thiết kế.",
-          "coachNotes": "So sánh: bản vẽ ngôi nhà (class) và ngôi nhà xây xong (đối tượng). Một bản vẽ xây được nhiều nhà."
+          "id": "l17-key",
+          "title": "Hỏi bàn phím",
+          "text": "key_pressed() trả lời True khi em đang bấm Space hoặc chạm màn hình. Kết hợp với if: if key_pressed(): speed = -8.",
+          "coachNotes": "Đây là sự kiện: chương trình phản ứng với người chơi."
         },
         {
           "id": "l17-quiz",
           "quiz": {
-            "question": "Trong class Bird, self.y là gì?",
+            "question": "speed = -8 rồi y = y + speed. Chim đi đâu?",
             "choices": [
-              "y của chính con chim này",
-              "Một biến chung của cả game",
-              "Một lệnh vẽ"
+              "Lên trên",
+              "Xuống dưới",
+              "Đứng yên"
             ],
             "answer": 0,
-            "explain": "self nghĩa là \"chính nó\": mỗi con chim có y riêng."
+            "explain": "Cộng số âm là trừ: y nhỏ đi nên chim lên trên."
           }
         }
       ]
@@ -40,10 +43,10 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l17-split",
-          "title": "Cái gì thuộc về chim?",
-          "text": "Thuộc về chim: vị trí, tốc độ, vỗ cánh, rơi, chạm đất, tự vẽ mình. Không thuộc về chim: cột, điểm số.",
-          "coachNotes": "Cho lớp chia các dòng code Bài 16 vào hai cột: \"của chim\" và \"của game\"."
+          "id": "l17-feel",
+          "title": "Cảm giác vỗ cánh",
+          "text": "-8 có vừa không? -4 thì nhảy lè tè, -15 thì vọt mất khỏi màn hình. Nhà làm game thật chỉnh con số này rất lâu.",
+          "coachNotes": "Cho mỗi bé chọn một số, chơi thử rồi so sánh. Không có đáp án duy nhất."
         }
       ]
     },
@@ -52,8 +55,8 @@
       "slides": [
         {
           "id": "l17-code",
-          "title": "Hoàn thành Bird.update",
-          "text": "class Bird đã có sẵn __init__ và draw. Viết update(self): giống update của Bài 16, nhưng dùng self.y và self.speed thay cho y và speed."
+          "title": "Thêm nút bay",
+          "text": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60."
         }
       ]
     },
@@ -62,8 +65,8 @@
       "slides": [
         {
           "id": "l17-try",
-          "title": "Vẫn chơi như cũ",
-          "text": "Chạy toàn màn hình: game phải chơi y như Bài 16. Code gọn hơn nhưng người chơi không thấy khác: đó gọi là dọn code."
+          "title": "Chơi thử!",
+          "text": "Bấm ⛶ toàn màn hình, nhấn Space để bay. Chỉnh -8 và 0.5 tới khi em thấy chơi \"sướng tay\" nhất."
         }
       ]
     }
@@ -71,11 +74,11 @@
   "exercises": [
     {
       "id": "l17-e1",
-      "title": "Hoàn thành Bird.update",
-      "task": "class Bird đã có sẵn __init__ và draw. Viết update(self): giống update của Bài 16, nhưng dùng self.y và self.speed thay cho y và speed.",
-      "input": "blocks",
+      "title": "Thêm nút bay",
+      "task": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60.",
+      "input": "typing",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        pass\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
       },
       "main": "main.py",
       "toolbox": [
@@ -87,17 +90,12 @@
         "pq_arith",
         "pq_var_get",
         "pq_number",
-        "pq_draw_image",
         "pq_clear",
         "pq_text",
         "pq_if",
-        "pq_if_else",
         "pq_compare",
-        "pq_logic",
-        "pq_key_pressed",
-        "pq_for",
-        "pq_draw_text",
-        "pq_random"
+        "pq_draw_rect",
+        "pq_key_pressed"
       ],
       "mode": "game",
       "goals": [
@@ -112,48 +110,45 @@
           "kind": "risesAfterTap",
           "sprite": "bird",
           "taps": [
-            31,
-            62
+            40,
+            60
           ]
         },
         {
-          "id": "l17-g-score",
-          "label": "Vẫn ghi được điểm",
-          "kind": "varEquals",
-          "name": "score",
-          "value": 1
+          "id": "l17-g-ground",
+          "label": "Vẫn không chìm qua đất",
+          "kind": "staysWithin",
+          "sprite": "bird",
+          "axis": "y",
+          "max": 480
         }
       ],
       "walkthrough": [
-        "Tìm trong class Bird dòng def update(self): bên trong chỉ có pass.",
-        "Xóa pass, viết phần bay và rơi của Bài 16, nhưng thêm self. trước y và speed.",
-        "if key_pressed(): rồi thụt vào self.speed = -8",
-        "self.speed = self.speed + 0.5 rồi self.y = self.y + self.speed",
-        "if self.y > 480: rồi thụt vào self.y = 480 và self.speed = 0",
-        "Bấm ▶ Chạy: game phải chơi y như Bài 16."
+        "Trong update(), ngay dưới dòng global y, speed, gõ: if key_pressed():",
+        "Dòng thụt vào thêm: speed = -8",
+        "Khối tương ứng: \"nếu … thì\" với khối \"đang bấm Space / chạm?\", bên trong \"đặt speed = -8\".",
+        "Bấm ▶ Chạy: máy thử bấm ở khung 40 và 60 để chấm.",
+        "Bấm ⛶ rồi nhấn Space để tự chơi. Chỉnh -8 và 0.5 tới khi vừa tay."
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
       },
       "hints": [
-        "Thay pass trong update(self) bằng code bay và rơi.",
-        "Dùng self.speed và self.y.",
-        "if key_pressed():\n    self.speed = -8\nself.speed = self.speed + 0.5\nself.y = self.y + self.speed"
+        "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",
+        "Bên trong: speed = -8.",
+        "if key_pressed():\n    speed = -8"
       ],
       "test": {
-        "frames": 200,
+        "frames": 90,
         "taps": [
-          0,
-          31,
-          62,
-          93,
-          124,
-          155,
-          186
+          40,
+          60
         ]
       }
     }
   ],
-  "unlocksRoadmap": [],
+  "unlocksRoadmap": [
+    "flap"
+  ],
   "docsUnlocked": []
 }

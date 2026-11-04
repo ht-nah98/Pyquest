@@ -2,60 +2,34 @@
   "id": "l07",
   "courseId": "bay-qua-khe",
   "order": 7,
-  "title": "Lặp lại",
+  "title": "Nếu… thì… không thì…",
   "draft": true,
-  "summary": "for i in range(8): làm một việc nhiều lần mà chỉ viết một lần.",
+  "summary": "if / else: máy tự chọn làm việc này hay việc kia tùy điều kiện.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l07-repeat",
-          "title": "Việc lặp lại quanh em",
-          "text": "Đánh răng mỗi sáng, chép 10 lần một chữ, bước 8 bước tới cửa: cùng một việc, làm nhiều lần. Máy tính rất giỏi việc này.",
-          "coachNotes": "Hỏi lớp tìm thêm ví dụ lặp lại. Nhấn mạnh: viết 8 dòng giống nhau thì dễ sai và khó sửa."
+          "id": "l07-choose",
+          "title": "Máy biết chọn",
+          "text": "if điều_kiện: làm các dòng thụt vào khi điều kiện đúng. else: làm khi điều kiện sai. Đúng một trong hai nhánh được chạy, không bao giờ cả hai.",
+          "coachNotes": "Diễn: \"Nếu trời mưa thì mang ô, không thì đội mũ\". Bé nào đứng ở cửa lớp là \"máy tính\", đọc tờ thời tiết rồi làm đúng một việc."
         },
         {
-          "id": "l07-for",
-          "title": "Vòng lặp for",
-          "text": "for i in range(8): làm các dòng thụt vào bên dưới 8 lần. Lần đầu i = 0, rồi 1, 2… tới 7. Dòng nào thụt vào 4 dấu cách thì nằm trong vòng lặp.",
-          "coachNotes": "Viết bảng i = 0 1 2 3 4 5 6 7 (8 số, bắt đầu từ 0). Dấu : cuối dòng for và thụt lề là bắt buộc."
+          "id": "l07-compare",
+          "title": "Phép so sánh",
+          "text": "x < 4, x > 4, x <= 4, x >= 4, x == 4 (bằng), x != 4 (khác). Kết quả là True (đúng) hoặc False (sai). Chú ý: == là so sánh, = là cất vào hộp."
         },
         {
-          "id": "l07-quiz",
+          "id": "l07-quiz-even",
           "quiz": {
-            "question": "for i in range(3) chạy mấy lần, i lần lượt là gì?",
+            "question": "i % 2 là phần dư khi chia i cho 2. Với i = 6 thì i % 2 == 0 đúng hay sai?",
             "choices": [
-              "3 lần: 1, 2, 3",
-              "3 lần: 0, 1, 2",
-              "4 lần: 0, 1, 2, 3"
+              "Đúng (True)",
+              "Sai (False)"
             ],
-            "answer": 1,
-            "explain": "range(3) đếm từ 0 và dừng trước 3: 0, 1, 2."
-          }
-        }
-      ]
-    },
-    {
-      "kind": "design",
-      "slides": [
-        {
-          "id": "l07-row",
-          "title": "Một hàng chim",
-          "text": "8 con chim xếp ngang, cách nhau 50. Con thứ i ở x = i * 50. Thử tính: i = 0 → x = 0, i = 1 → x = 50…",
-          "coachNotes": "Cho bé điền bảng i | x. Dấu * là nhân."
-        },
-        {
-          "id": "l07-quiz-x",
-          "quiz": {
-            "question": "Con chim có i = 7 nằm ở x bao nhiêu?",
-            "choices": [
-              "7",
-              "57",
-              "350"
-            ],
-            "answer": 2,
-            "explain": "7 * 50 = 350."
+            "answer": 0,
+            "explain": "6 chia 2 dư 0, nên i % 2 == 0 là True: 6 là số chẵn."
           }
         }
       ]
@@ -65,8 +39,8 @@
       "slides": [
         {
           "id": "l07-code",
-          "title": "Vẽ 8 con chim bằng một vòng lặp",
-          "text": "Dùng for i in range(8): và bên trong vẽ draw_bird(i * 50, 300). Chỉ cần 2 dòng thay vì 8."
+          "title": "Hai nhánh",
+          "text": "if và else thẳng hàng, các dòng bên trong mỗi nhánh thụt vào 4 dấu cách."
         }
       ]
     },
@@ -75,8 +49,8 @@
       "slides": [
         {
           "id": "l07-try",
-          "title": "Chơi với vòng lặp",
-          "text": "Chạy thử. Đổi 8 thành 5, đổi 50 thành 80. Thử thêm print(i) vào trong vòng lặp xem i thay đổi thế nào."
+          "title": "Đổi điều kiện",
+          "text": "Đổi i < 4 thành i < 6 hoặc i >= 4. Hàng ô đổi màu thế nào? Đoán trước rồi mới chạy."
         }
       ]
     }
@@ -84,54 +58,129 @@
   "exercises": [
     {
       "id": "l07-e1",
-      "title": "Vẽ 8 con chim bằng một vòng lặp",
-      "task": "Dùng for i in range(8): và bên trong vẽ draw_bird(i * 50, 300). Chỉ cần 2 dòng thay vì 8.",
+      "title": "Nửa đỏ nửa xanh",
+      "task": "Vẽ hàng 8 ô cạnh 40 ở y = 300, x = i * 50. Ô có i < 4 màu đỏ, còn lại màu xanh dương (blue).",
       "input": "blocks",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndraw_bird(0, 300)\n"
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 300, 40, 40, \"red\")\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
-        "pq_for",
-        "pq_for_range",
-        "pq_var_get",
         "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_if_else",
+        "pq_compare",
+        "pq_draw_rect",
         "pq_arith",
-        "pq_clear",
-        "pq_print",
-        "pq_text"
+        "pq_var_get"
       ],
       "mode": "script",
       "goals": [
         {
-          "id": "l07-g-run",
+          "id": "l07-e1-run",
           "label": "Chạy không lỗi",
           "kind": "noError"
         },
         {
-          "id": "l07-g-eight",
-          "label": "Vẽ 8 con chim",
-          "kind": "drewCount",
-          "sprite": "bird",
-          "min": 8
+          "id": "l07-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
         }
       ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    if i < 4:\n        draw_rect(i * 50, 300, 40, 40, \"red\")\n    else:\n        draw_rect(i * 50, 300, 40, 40, \"blue\")\n"
+      },
       "walkthrough": [
-        "Xóa dòng draw_bird(0, 300) cũ (kéo khối đó vào thùng rác).",
-        "Kéo khối \"lặp … lần, đếm bằng i\", đổi số lần thành 8.",
-        "Kéo khối \"vẽ chim\" thả VÀO TRONG khối lặp (khe ở giữa khối).",
-        "Ô x: dùng khối phép tính i × 50. Ô y: 300.",
-        "Trong khung Python: for i in range(8): và dòng thụt vào draw_bird(i * 50, 300).",
-        "Bấm ▶ Chạy: 8 chim thành một hàng ngang."
+        "Kéo khối \"nếu … thì … không thì\" vào trong vòng lặp.",
+        "Ô điều kiện: khối so sánh, i < 4.",
+        "Khối vẽ đỏ vào nhánh \"thì\". Chép một khối vẽ màu blue vào nhánh \"không thì\"."
+      ],
+      "hints": [
+        "if i < 4:",
+        "else:"
+      ]
+    },
+    {
+      "id": "l07-e2",
+      "title": "Chẵn lẻ",
+      "task": "Hàng 8 ô như trên, nhưng ô có i chẵn (i % 2 == 0) màu vàng (gold), ô lẻ màu đen (black).",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 300, 40, 40, \"gold\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_if_else",
+        "pq_compare",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l07-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l07-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\nfor i in range(8):\n    draw_bird(i * 50, 300)\n"
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    if i % 2 == 0:\n        draw_rect(i * 50, 300, 40, 40, \"gold\")\n    else:\n        draw_rect(i * 50, 300, 40, 40, \"black\")\n"
       },
+      "walkthrough": [
+        "% là phép lấy phần dư (trong khối phép tính chọn \"% (dư)\").",
+        "Điều kiện: i % 2 == 0.",
+        "Nhánh thì: gold. Nhánh không thì: black."
+      ],
       "hints": [
-        "Kéo khối \"lặp … lần\" ra, đặt khối vẽ chim vào bên trong.",
-        "x của chim là i * 50 (khối phép tính ×).",
-        "for i in range(8):\n    draw_bird(i * 50, 300)"
+        "if i % 2 == 0:"
+      ]
+    },
+    {
+      "id": "l07-e3",
+      "title": "Chọn màu trước, vẽ một lần",
+      "task": "Không chép dòng vẽ hai lần nữa: trong vòng lặp, dùng if/else để cất màu vào hộp color (\"red\" khi i < 4, không thì \"blue\"), rồi vẽ một dòng draw_rect(..., color).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 300, 40, 40, \"red\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l07-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l07-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    if i < 4:\n        color = \"red\"\n    else:\n        color = \"blue\"\n    draw_rect(i * 50, 300, 40, 40, color)\n"
+      },
+      "walkthrough": [
+        "if/else chỉ cất màu, không vẽ.",
+        "Dòng draw_rect thẳng hàng với if (thụt 4 dấu cách), nằm sau else.",
+        "Hình phải giống bài tập 1, nhưng code gọn hơn."
+      ],
+      "hints": [
+        "color = \"red\"",
+        "draw_rect(i * 50, 300, 40, 40, color)"
       ]
     }
   ],

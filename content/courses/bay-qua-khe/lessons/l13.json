@@ -2,37 +2,49 @@
   "id": "l13",
   "courseId": "bay-qua-khe",
   "order": 13,
-  "title": "Nhiều cột",
+  "title": "Vì sao có ảnh",
   "draft": true,
-  "summary": "Danh sách pipes = [450, 650]: một biến giữ nhiều cột.",
+  "summary": "Chim thật có 1760 điểm màu: lưu thành file ảnh, rồi đổi ruột draw_bird sang draw_image.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l13-list",
-          "title": "Danh sách",
-          "text": "pipes = [450, 650] là một danh sách: một cái hộp có nhiều ngăn đánh số. pipes[0] là ngăn đầu (450), pipes[1] là ngăn thứ hai (650).",
-          "coachNotes": "Vẽ dãy hộp liền nhau, đánh số 0, 1, 2 bên dưới. Python đếm từ 0, giống range()."
+          "id": "l13-count",
+          "title": "Đếm thử các điểm",
+          "text": "Một con chim đẹp trong game rộng 44, cao 40: 44 × 40 = 1760 điểm màu. Vẽ bằng draw_rect thì cần tới 1760 dòng! Không ai viết như vậy.",
+          "coachNotes": "Mở ảnh bird.png, phóng thật to để thấy từng điểm. Hỏi: 1760 dòng code thì gõ mất bao lâu? Sai một điểm thì tìm thế nào? Đó là lý do người ta lưu hình thành file ảnh."
         },
         {
-          "id": "l13-move",
-          "title": "Băng chuyền cột",
-          "text": "Chim đứng yên ở x = 100, còn cột trượt sang trái 2 bước mỗi khung. Cột ra khỏi mép trái thì đưa nó về bên phải để dùng lại.",
-          "coachNotes": "Như băng chuyền siêu thị: hàng chạy qua, người đứng yên. Đây là mẹo của rất nhiều game chạy cảnh."
+          "id": "l13-files",
+          "title": "Mọi thứ đều là file",
+          "text": "Ảnh, nhạc, code của em đều được máy tính cất trong file. File được xếp vào thư mục, giống vở được xếp vào ngăn cặp.",
+          "coachNotes": "Mở thư mục trên máy tính thật cho lớp xem: thư mục chứa thư mục con, chứa file. Đuôi .png là ảnh, .py là code Python."
         },
         {
-          "id": "l13-quiz",
+          "id": "l13-path",
+          "title": "Đường dẫn là đường đi tới file",
+          "text": "images/bird-cu.png nghĩa là: vào thư mục images, lấy file bird-cu.png. Dấu / ngăn tên thư mục với tên file.",
+          "coachNotes": "Viết lên bảng: du-an-cua-em / images / bird-cu.png. Cho bé đọc to từng chặng."
+        },
+        {
+          "id": "l13-quiz-path",
           "quiz": {
-            "question": "pipes = [450, 650]. pipes[1] là bao nhiêu?",
+            "question": "Đường dẫn images/bird-vet.png chỉ tới đâu?",
             "choices": [
-              "450",
-              "650",
-              "1"
+              "File bird-vet.png trong thư mục images",
+              "Thư mục bird-vet trong file images",
+              "Một đoạn code"
             ],
-            "answer": 1,
-            "explain": "Đếm từ 0: pipes[0] = 450, pipes[1] = 650."
+            "answer": 0,
+            "explain": "Phần trước dấu / là thư mục, phần sau là tên file."
           }
+        },
+        {
+          "id": "l13-image",
+          "title": "Lệnh dán cả file ảnh",
+          "text": "Thư viện có draw_image(đường_dẫn, x, y): mở file ảnh và dán cả 1760 điểm lên sân chỉ bằng một dòng. Đó là lý do thư viện có lệnh này.",
+          "coachNotes": "Mở 📘 Thư viện → draw_image → Vì sao có. Nhắc lại câu hỏi của Bài 1: lệnh nào trong thư viện cũng có lý do để tồn tại."
         }
       ]
     },
@@ -40,10 +52,27 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l13-spacing",
-          "title": "Khoảng cách giữa các cột",
-          "text": "Hai cột cách nhau 200: đủ chỗ cho chim lấy lại độ cao. Cột ra khỏi màn ở x < -76 (bề rộng hình cột) thì cộng 400 để quay về bên phải.",
-          "coachNotes": "Cho bé tính: cột ở -78 + 400 = 322, vẫn cách cột kia 200."
+          "id": "l13-pick-idea",
+          "title": "Chọn nhân vật hợp với game",
+          "text": "Nhân vật nên nổi trên nền trời, nhìn rõ hướng bay sang phải. Em thích nhân vật nào? Vì sao?",
+          "coachNotes": "Cho bé nói lý do chọn: màu nổi trên nền, dễ thấy cánh vỗ. Không có đáp án sai."
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "l13-library",
+          "title": "Chọn ảnh trong kho",
+          "text": "Bấm chọn một nhân vật. Xem ảnh nằm ở đâu trong dự án và đường dẫn tới nó. Em sẽ cần đường dẫn này khi viết code.",
+          "widget": {
+            "kind": "assetPicker",
+            "props": {
+              "group": "bird"
+            }
+          },
+          "coachNotes": "Kho hình do HLV sinh bằng AI. Hỏi: nếu gõ sai một chữ trong đường dẫn thì sao? (máy không tìm thấy file)."
         }
       ]
     },
@@ -51,9 +80,10 @@
       "kind": "code",
       "slides": [
         {
-          "id": "l13-code",
-          "title": "Cho cột chạy",
-          "text": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách."
+          "id": "l13-swap",
+          "title": "Thay ruột, giữ tên",
+          "text": "Giữ nguyên dòng def draw_bird(x, y): và hai dòng gọi. Chỉ thay 4 dòng draw_rect bên trong bằng một dòng draw_image(\"images/bird-cu.png\", x, y), đổi bird-cu thành ảnh em chọn.",
+          "coachNotes": "Ý lớn nhất của phần B: chỗ gọi draw_bird(100, 300) không đổi gì, chỉ bên trong lệnh đổi. Ai dùng một lệnh thì không cần biết bên trong nó làm gì. Cố tình gõ sai đường dẫn để lớp thấy máy gợi ý tên file đúng."
         }
       ]
     },
@@ -62,8 +92,21 @@
       "slides": [
         {
           "id": "l13-try",
-          "title": "Thêm cột",
-          "text": "Chạy toàn màn hình. Thêm một số vào danh sách, ví dụ [450, 650, 850], xem có thêm cột không."
+          "title": "Thử nhiều nhân vật",
+          "text": "Chạy thử. Đổi sang ảnh khác chỉ bằng cách sửa đường dẫn trong def. Thử gõ sai một chữ trong đường dẫn xem máy báo gì."
+        },
+        {
+          "id": "l13-quiz-callers",
+          "quiz": {
+            "question": "Em đổi ruột draw_bird từ ô vuông sang ảnh. Hai dòng gọi draw_bird(…) có phải sửa không?",
+            "choices": [
+              "Phải sửa cả hai",
+              "Không cần sửa",
+              "Phải xóa đi"
+            ],
+            "answer": 1,
+            "explain": "Tên và tham số vẫn vậy, nên chỗ gọi giữ nguyên. Chỉ ruột của lệnh đổi."
+          }
         }
       ]
     }
@@ -71,35 +114,24 @@
   "exercises": [
     {
       "id": "l13-e1",
-      "title": "Cho cột chạy",
-      "task": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách.",
+      "title": "Thay ruột, giữ tên",
+      "task": "Giữ nguyên dòng def draw_bird(x, y): và hai dòng gọi. Chỉ thay 4 dòng draw_rect bên trong bằng một dòng draw_image(\"images/bird-cu.png\", x, y), đổi bird-cu thành ảnh em chọn.",
       "input": "blocks",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n    draw_rect(x + 20, y + 13, 4, 4, \"black\")\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
         "pq_def",
-        "pq_global",
-        "pq_assign",
-        "pq_aug",
-        "pq_arith",
+        "pq_draw_image",
+        "pq_draw_rect",
         "pq_var_get",
         "pq_number",
-        "pq_draw_image",
-        "pq_clear",
         "pq_text",
-        "pq_if",
-        "pq_if_else",
-        "pq_compare",
-        "pq_logic",
-        "pq_key_pressed",
-        "pq_for",
-        "pq_draw_text",
-        "pq_random"
+        "pq_arith"
       ],
-      "mode": "game",
+      "mode": "script",
       "goals": [
         {
           "id": "l13-g-run",
@@ -107,44 +139,79 @@
           "kind": "noError"
         },
         {
-          "id": "l13-g-move",
-          "label": "Cột trượt sang trái",
-          "kind": "moves",
-          "sprite": "pipe",
-          "axis": "x",
-          "dir": -1
+          "id": "l13-g-image",
+          "label": "Chim vẽ bằng ảnh nhân vật",
+          "kind": "drew",
+          "sprite": "bird"
         },
         {
-          "id": "l13-g-two",
-          "label": "Có 2 cặp cột",
-          "kind": "drewCount",
-          "sprite": "pipe",
-          "min": 4
+          "id": "l13-g-call",
+          "label": "Vẫn gọi draw_bird 2 lần như cũ",
+          "kind": "called",
+          "name": "draw_bird",
+          "min": 2,
+          "distinct": true
         }
       ],
       "walkthrough": [
-        "Trong update(), xóa dòng pass.",
-        "Gõ: for i in range(len(pipes)):",
-        "Thụt vào: pipes[i] = pipes[i] - 2",
-        "Thụt vào tiếp: if pipes[i] < -76: rồi thụt thêm: pipes[i] = pipes[i] + 400",
-        "Bấm ▶ Chạy, rồi ⛶ để xem cột chạy vòng."
+        "Ở bước Chuẩn bị em đã chọn ảnh và thấy đường dẫn, ví dụ images/bird-vet.png.",
+        "Kéo 4 khối vẽ hình chữ nhật ra khỏi khối draw_bird, thả vào thùng rác.",
+        "Kéo khối \"vẽ ảnh … tại x … y …\" vào trong khối draw_bird.",
+        "Ô ảnh gõ đường dẫn em chọn. Ô x và ô y: kéo khối biến x và y vào.",
+        "Python sẽ là: draw_image(\"images/bird-vet.png\", x, y), thụt vào trong def.",
+        "Hai dòng draw_bird(…) ở dưới để nguyên. Bấm ▶ Chạy: hai con chim thành ảnh."
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird-cu.png\", x, y)\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
       },
       "hints": [
-        "for i in range(len(pipes)): đi qua từng ngăn.",
-        "pipes[i] = pipes[i] - 2",
-        "if pipes[i] < -76:\n    pipes[i] = pipes[i] + 400"
+        "Chỉ sửa bên trong def draw_bird, không sửa hai dòng gọi.",
+        "Đường dẫn bắt đầu bằng images/ và kết thúc bằng .png.",
+        "Ví dụ: draw_image(\"images/bird-vet.png\", x, y)"
+      ]
+    },
+    {
+      "id": "l13-e2",
+      "title": "Đàn chim bằng ảnh",
+      "task": "draw_bird giờ dán ảnh. Dùng for để vẽ 4 con chim ở y = 300, x = 30 + i * 90: chỉ một dòng gọi trong vòng lặp.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l13-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l13-e2-call",
+          "label": "Gọi draw_bird 4 lần",
+          "kind": "called",
+          "name": "draw_bird",
+          "min": 4,
+          "distinct": true
+        },
+        {
+          "id": "l13-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
       ],
-      "test": {
-        "frames": 60,
-        "taps": []
-      }
+      "solution": {
+        "main.py": "from pyquest import *\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\nfor i in range(4):\n    draw_bird(30 + i * 90, 300)\n"
+      },
+      "walkthrough": [
+        "Vòng lặp ở dưới def, sát lề trái.",
+        "Bên trong: draw_bird(30 + i * 90, 300)"
+      ]
     }
   ],
   "unlocksRoadmap": [
-    "pipes"
+    "bird"
   ],
   "docsUnlocked": []
 }

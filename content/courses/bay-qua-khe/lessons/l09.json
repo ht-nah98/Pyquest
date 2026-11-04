@@ -2,51 +2,35 @@
   "id": "l09",
   "courseId": "bay-qua-khe",
   "order": 9,
-  "title": "Trọng lực",
+  "title": "Đúng, sai: and, or, not",
   "draft": true,
-  "summary": "Rơi nhanh dần: mỗi khung hình tốc độ tăng thêm một chút.",
+  "summary": "Ghép điều kiện: and (cả hai), or (một trong hai), not (đảo lại).",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l09-gravity",
-          "title": "Rơi nhanh dần",
-          "text": "Thả một quả bóng: lúc đầu chậm, càng rơi càng nhanh. Vì trọng lực làm tốc độ tăng thêm sau mỗi khoảnh khắc. Kéo thanh trượt rồi thả chim xem.",
-          "widget": {
-            "kind": "gravity"
-          },
-          "coachNotes": "Thả thật một cục tẩy. Chỉ trên màn: khoảng cách giữa các chấm giãn dần = rơi nhanh dần."
+          "id": "l09-bool",
+          "title": "True và False",
+          "text": "Mỗi phép so sánh cho ra True (đúng) hoặc False (sai). Một hộp cũng cất được True/False, ví dụ is_night = True. Hộp như vậy dùng thẳng trong if."
         },
         {
-          "id": "l09-two",
-          "title": "Hai con số",
-          "text": "Cần hai hộp: y là vị trí, speed là tốc độ. Mỗi khung hình: speed tăng 0.5 (trọng lực), rồi y tăng thêm speed.",
-          "coachNotes": "Ghi bảng 4 khung đầu: speed 0.5, 1, 1.5, 2 → y 100.5, 101.5, 103, 105. Bước càng ngày càng dài."
+          "id": "l09-combine",
+          "title": "and, or, not",
+          "text": "a and b: đúng khi cả hai đúng. a or b: đúng khi ít nhất một cái đúng. not a: đảo đúng thành sai. Ô nằm trong khung khi x >= 120 and x <= 240.",
+          "coachNotes": "Bảng nhỏ trên bảng: hai cột a, b và kết quả and, or. Cho lớp điền 4 dòng."
         },
         {
-          "id": "l09-quiz",
+          "id": "l09-quiz-and",
           "quiz": {
-            "question": "speed đang là 2. Khung hình tới: speed = speed + 0.5 rồi y = y + speed. y tăng thêm bao nhiêu?",
+            "question": "x = 300. x >= 120 and x <= 240 là gì?",
             "choices": [
-              "0.5",
-              "2",
-              "2.5"
+              "True",
+              "False"
             ],
-            "answer": 2,
-            "explain": "speed thành 2.5 trước, rồi y cộng thêm 2.5."
+            "answer": 1,
+            "explain": "x >= 120 đúng nhưng x <= 240 sai. and cần cả hai đúng nên kết quả là False."
           }
-        }
-      ]
-    },
-    {
-      "kind": "design",
-      "slides": [
-        {
-          "id": "l09-feel",
-          "title": "Trọng lực bao nhiêu thì vừa?",
-          "text": "Trọng lực nhỏ: chim bồng bềnh như trên mặt trăng. Lớn: rơi như hòn đá. Game hay cần vừa phải. Em đoán số nào?",
-          "coachNotes": "Dùng thanh trượt ở slide trước so sánh 0.2, 0.5, 1.0."
         }
       ]
     },
@@ -55,8 +39,8 @@
       "slides": [
         {
           "id": "l09-code",
-          "title": "Thêm tốc độ",
-          "text": "Thêm speed = 0 ở trên cùng. Trong update(): global y, speed, rồi speed = speed + 0.5 và y = y + speed (thay cho y = y + 3)."
+          "title": "Ghép điều kiện",
+          "text": "Viết điều kiện ghép ngay trong if: if x >= 120 and x <= 240:"
         }
       ]
     },
@@ -65,8 +49,8 @@
       "slides": [
         {
           "id": "l09-try",
-          "title": "Chỉnh trọng lực",
-          "text": "Chạy và xem toàn màn hình. Thử 0.2 và 1. Ghi lại số em thích nhất, Bài 11 sẽ cần nó."
+          "title": "Đổi and thành or",
+          "text": "Đổi and thành or rồi chạy. Ô nào đổi màu? Vì sao?"
         }
       ]
     }
@@ -74,71 +58,129 @@
   "exercises": [
     {
       "id": "l09-e1",
-      "title": "Thêm tốc độ",
-      "task": "Thêm speed = 0 ở trên cùng. Trong update(): global y, speed, rồi speed = speed + 0.5 và y = y + speed (thay cho y = y + 3).",
+      "title": "Trong khung",
+      "task": "Hàng 10 ô cạnh 30 ở y = 300, x = i * 40. Ô có x >= 120 and x <= 240 màu vàng (gold), còn lại xám (gray).",
       "input": "blocks",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\nfor i in range(10):\n    x = i * 40\n    draw_rect(x, 300, 30, 30, \"gray\")\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
-        "pq_def",
-        "pq_global",
-        "pq_assign",
-        "pq_aug",
-        "pq_arith",
-        "pq_var_get",
         "pq_number",
-        "pq_clear",
-        "pq_text"
+        "pq_text",
+        "pq_for",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
       ],
-      "mode": "game",
+      "mode": "script",
       "goals": [
         {
-          "id": "l09-g-run",
+          "id": "l09-e1-run",
           "label": "Chạy không lỗi",
           "kind": "noError"
         },
         {
-          "id": "l09-g-fall",
-          "label": "Chim đi xuống",
-          "kind": "moves",
-          "sprite": "bird",
-          "axis": "y",
-          "dir": 1
-        },
-        {
-          "id": "l09-g-faster",
-          "label": "Rơi nhanh dần",
-          "kind": "speedsUp",
-          "sprite": "bird",
-          "axis": "y"
+          "id": "l09-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
         }
       ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(10):\n    x = i * 40\n    if x >= 120 and x <= 240:\n        draw_rect(x, 300, 30, 30, \"gold\")\n    else:\n        draw_rect(x, 300, 30, 30, \"gray\")\n"
+      },
       "walkthrough": [
-        "Dưới dòng y = 100, thêm dòng speed = 0.",
-        "Trong update(): sửa global y thành global y, speed.",
-        "Thay dòng y = y + 3 bằng hai dòng: speed = speed + 0.5 rồi y = y + speed.",
-        "Bấm ▶ Chạy. Ô biến cho thấy speed tăng dần sau mỗi khung hình.",
-        "Thử đổi 0.5 thành 0.2 hoặc 1 rồi chạy lại, so sánh cảm giác rơi."
+        "Kéo khối \"nếu … thì … không thì\" vào vòng lặp.",
+        "Ô điều kiện: khối \"và (and)\", hai bên là hai phép so sánh.",
+        "Nhánh thì vẽ gold, nhánh không thì vẽ gray."
+      ],
+      "hints": [
+        "if x >= 120 and x <= 240:"
+      ]
+    },
+    {
+      "id": "l09-e2",
+      "title": "Bàn cờ",
+      "task": "Vẽ bàn cờ 8 × 8 ô cạnh 40 ở (i * 40 + 40, j * 40 + 140). Ô có (i + j) % 2 == 0 màu đen (black), còn lại trắng (white).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nfor j in range(8):\n    for i in range(8):\n        draw_rect(i * 40 + 40, j * 40 + 140, 40, 40, \"white\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l09-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l09-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\nfor j in range(8):\n    for i in range(8):\n        if (i + j) % 2 == 0:\n            color = \"black\"\n        else:\n            color = \"white\"\n        draw_rect(i * 40 + 40, j * 40 + 140, 40, 40, color)\n"
       },
-      "hints": [
-        "Thêm dòng speed = 0 dưới dòng y = 100.",
-        "global y, speed để update đổi được cả hai hộp.",
-        "speed = speed + 0.5 rồi y = y + speed"
+      "walkthrough": [
+        "Hai ô cạnh nhau có i + j hơn kém 1, nên xen kẽ chẵn lẻ.",
+        "Chọn color bằng if/else trước dòng vẽ.",
+        "Dòng vẽ thụt vào 8 dấu cách."
       ],
-      "test": {
-        "frames": 40,
-        "taps": []
-      }
+      "hints": [
+        "if (i + j) % 2 == 0:"
+      ]
+    },
+    {
+      "id": "l09-e3",
+      "title": "Ngày và đêm",
+      "task": "Hộp is_night = True. Nếu not is_night thì trời skyblue, không thì trời navy kèm mặt trăng trắng: ô (300, 60) cạnh 50.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nis_night = False\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l09-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l09-e3-night",
+          "label": "Hộp is_night cất True",
+          "kind": "varEquals",
+          "name": "is_night",
+          "value": true
+        },
+        {
+          "id": "l09-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nis_night = True\nif not is_night:\n    clear(\"skyblue\")\nelse:\n    clear(\"navy\")\n    draw_rect(300, 60, 50, 50, \"white\")\n"
+      },
+      "walkthrough": [
+        "Đổi is_night thành True (chữ T viết hoa, không dấu nháy).",
+        "if not is_night: tô skyblue.",
+        "else: tô navy và vẽ mặt trăng."
+      ],
+      "hints": [
+        "not is_night là True khi is_night là False."
+      ]
     }
   ],
-  "unlocksRoadmap": [
-    "gravity"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

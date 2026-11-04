@@ -31,7 +31,7 @@ export function TaskCard({
   }
   return (
     <section
-      className="flex max-h-[42%] min-h-0 flex-col gap-2 overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
+      className="flex max-h-[38%] min-h-0 flex-col gap-2 overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
       data-testid="task-card"
     >
       <h2 className="font-display text-lg text-brand-deep">🎯 {title ?? 'Nhiệm vụ'}</h2>

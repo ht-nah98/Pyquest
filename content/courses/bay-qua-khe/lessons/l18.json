@@ -2,42 +2,36 @@
   "id": "l18",
   "courseId": "bay-qua-khe",
   "order": 18,
-  "title": "Thư viện của em",
+  "title": "Vẽ cột",
   "draft": true,
-  "summary": "Tách chim ra file riêng như pyquest; thêm màn bắt đầu và màn thua.",
+  "summary": "def draw_pipe(x, gap_y): lần hai tự đặt lệnh, lần này cho cặp cột chắn đường.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l18-ownlib",
-          "title": "Em cũng viết được thư viện",
-          "text": "pyquest chỉ là một file Python người khác viết. Em cũng làm được: chuyển def draw_bird và class Bird sang file bird.py, rồi from bird import Bird. File đó thành thư viện của em.",
-          "coachNotes": "Mở 📘 Thư viện → 🔍 Xem bên trong một lệnh bất kỳ, đặt cạnh file bird.py của bé: cùng là def, cùng là Python. Khác nhau chỉ là ai viết. Đây là chỗ khép vòng của cả khóa."
+          "id": "l18-why",
+          "title": "Một cặp cột = hai lệnh",
+          "text": "Mỗi chướng ngại gồm cột trên (lật ngược) và cột dưới, cách nhau một khe GAP. Vẽ 5 cặp là 10 dòng gần giống nhau: dễ sai, khó sửa.",
+          "coachNotes": "Cho lớp đếm: muốn đổi bề rộng khe thì phải sửa bao nhiêu chỗ?"
         },
         {
-          "id": "l18-states",
-          "title": "Game có nhiều màn hình",
-          "text": "Lúc mở game: chờ người chơi (ready). Bấm thì chơi (play). Đụng cột thì thua (over). Mỗi lúc game ở đúng một trạng thái.",
-          "coachNotes": "Vẽ ba ô ready → play → over và mũi tên kèm sự kiện: bấm, đụng cột. Đây là sơ đồ trạng thái."
-        },
-        {
-          "id": "l18-files",
-          "title": "Chia code ra nhiều file",
-          "text": "File dài thì khó tìm. Ta chuyển class Bird sang file riêng bird.py, rồi ở main.py viết from bird import Bird để mượn nó về.",
-          "coachNotes": "Giống chia vở: vở Toán, vở Văn. import là mượn đồ từ vở khác. bird.py cũng phải import các lệnh vẽ của pyquest."
+          "id": "l18-def",
+          "title": "Lệnh vẽ cặp cột",
+          "text": "Giống draw_bird ở Bài 4: gom hai lệnh vẽ ảnh cột vào def draw_pipe(x, gap_y):. x là chỗ đặt cột, gap_y là đỉnh khe. Cột trên lật ngược bằng flip=True.",
+          "coachNotes": "Lần thứ hai tự đặt lệnh có tham số. Hỏi lớp: lệnh này nhận mấy số? Vì sao cột trên đặt ở gap_y - 440? (ảnh cột cao 440: đẩy lên trên để đáy cột chạm đỉnh khe). Mở tab 📞 Cuộc gọi để thấy mỗi draw_pipe làm ra hai draw_image."
         },
         {
           "id": "l18-quiz",
           "quiz": {
-            "question": "Đang ở trạng thái over, người chơi bấm Space. Theo luật của em, điều gì nên xảy ra?",
+            "question": "Gọi draw_pipe(280, 250). Bên trong lệnh, gap_y bằng bao nhiêu?",
             "choices": [
-              "Chơi tiếp như không có gì",
-              "Không làm gì, hoặc chơi lại từ đầu",
-              "Thoát máy tính"
+              "280",
+              "250",
+              "150"
             ],
             "answer": 1,
-            "explain": "Thua rồi thì không cho bay tiếp; game hay thường cho chơi lại."
+            "explain": "Tham số nhận số theo thứ tự: x = 280, gap_y = 250."
           }
         }
       ]
@@ -46,10 +40,23 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l18-ready",
-          "title": "Màn chờ",
-          "text": "Ở màn ready, chim đứng yên, có chữ \"Bấm Space để bay\". Lần bấm đầu tiên vừa bắt đầu chơi vừa vỗ cánh luôn.",
-          "coachNotes": "Hỏi lớp: vì sao cần màn chờ? (người chơi chưa sẵn sàng thì chim đã rơi)."
+          "id": "l18-gap",
+          "title": "Thiết kế khe cột",
+          "text": "Khe là chỗ chim bay qua. GAP = 150 vừa với chim cao 40. Khe 60 thì gần như không qua được, 300 thì quá dễ.",
+          "coachNotes": "Viết hằng số viết HOA (GAP) để biết đây là con số thiết kế, không đổi khi chạy."
+        },
+        {
+          "id": "l18-quiz-gap",
+          "quiz": {
+            "question": "Muốn game khó hơn một chút, em sửa gì?",
+            "choices": [
+              "Giảm GAP",
+              "Tăng GAP",
+              "Đổi tên draw_pipe"
+            ],
+            "answer": 0,
+            "explain": "Khe hẹp hơn thì khó luồn qua hơn."
+          }
         }
       ]
     },
@@ -58,8 +65,8 @@
       "slides": [
         {
           "id": "l18-code",
-          "title": "Thêm trạng thái và tách file",
-          "text": "Bước 1: chuyển class Bird sang tab bird.py (thêm from pyquest import * ở đầu), main.py thêm from bird import Bird. Bước 2: thay game_over bằng state = \"ready\" / \"play\" / \"over\"."
+          "title": "Viết lệnh draw_pipe",
+          "text": "Đặt hai dòng vẽ cột vào trong def draw_pipe(x, gap_y):, thay 100 bằng x, 150 bằng gap_y. Rồi gọi draw_pipe hai lần với số khác nhau."
         }
       ]
     },
@@ -68,8 +75,8 @@
       "slides": [
         {
           "id": "l18-try",
-          "title": "Đi đủ ba màn",
-          "text": "Chạy toàn màn hình: thấy màn chờ, bấm để chơi, cố tình thua. Mỗi màn có đúng chữ và đúng cách cư xử chưa?"
+          "title": "Một dòng, một cặp cột",
+          "text": "Chạy thử. Gọi thêm draw_pipe lần thứ ba. Thử đổi GAP: mọi cặp cột đổi theo, chỉ sửa một chỗ."
         }
       ]
     }
@@ -77,36 +84,25 @@
   "exercises": [
     {
       "id": "l18-e1",
-      "title": "Thêm trạng thái và tách file",
-      "task": "Bước 1: chuyển class Bird sang tab bird.py (thêm from pyquest import * ở đầu), main.py thêm from bird import Bird. Bước 2: thay game_over bằng state = \"ready\" / \"play\" / \"over\".",
-      "input": "blocks",
+      "title": "Viết lệnh draw_pipe",
+      "task": "Đặt hai dòng vẽ cột vào trong def draw_pipe(x, gap_y):, thay 100 bằng x, 150 bằng gap_y. Rồi gọi draw_pipe hai lần với số khác nhau.",
+      "input": "typing",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n",
-        "bird.py": "# Chuyển def draw_bird và class Bird vào đây\n"
+        "main.py": "from pyquest import *\n\nGAP = 150\n\nclear(\"skyblue\")\ndraw_image(\"images/pipe.png\", 100, 150 - 440, flip=True)\ndraw_image(\"images/pipe.png\", 100, 150 + GAP)\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
         "pq_def",
-        "pq_global",
-        "pq_assign",
-        "pq_aug",
-        "pq_arith",
-        "pq_var_get",
-        "pq_number",
         "pq_draw_image",
         "pq_clear",
         "pq_text",
-        "pq_if",
-        "pq_if_else",
-        "pq_compare",
-        "pq_logic",
-        "pq_key_pressed",
-        "pq_for",
-        "pq_draw_text",
-        "pq_random"
+        "pq_number",
+        "pq_var_get",
+        "pq_arith",
+        "pq_assign"
       ],
-      "mode": "game",
+      "mode": "script",
       "goals": [
         {
           "id": "l18-g-run",
@@ -114,68 +110,38 @@
           "kind": "noError"
         },
         {
-          "id": "l18-g-wait",
-          "label": "Màn chờ: chim đứng yên",
-          "kind": "staysWithin",
-          "sprite": "bird",
-          "axis": "y",
-          "min": 299,
-          "max": 301,
-          "frames": [
-            0,
-            39
-          ]
+          "id": "l18-g-pipes",
+          "label": "Vẽ ít nhất 2 cặp cột",
+          "kind": "drewCount",
+          "sprite": "pipe",
+          "min": 4
         },
         {
-          "id": "l18-g-hint",
-          "label": "Có chữ hướng dẫn",
-          "kind": "drewText",
-          "text": "Bấm Space để bay"
-        },
-        {
-          "id": "l18-g-score",
-          "label": "Vẫn ghi được điểm",
-          "kind": "varEquals",
-          "name": "score",
-          "value": 1
+          "id": "l18-g-call",
+          "label": "Gọi draw_pipe 2 lần, ở 2 chỗ",
+          "kind": "called",
+          "name": "draw_pipe",
+          "min": 2,
+          "distinct": true
         }
       ],
       "walkthrough": [
-        "Tab main.py: bôi đen def draw_bird và cả class Bird (tới hết def draw của nó), cắt bằng Ctrl+X.",
-        "Tab bird.py: xóa dòng chú thích, gõ from pyquest import *, xuống vài dòng rồi dán bằng Ctrl+V.",
-        "Về tab main.py: ngay dưới from pyquest import *, thêm dòng from bird import Bird.",
-        "Đổi game_over = False thành state = \"ready\"; trong dòng global cũng đổi game_over thành state.",
-        "Đầu update(): if state == \"ready\": nếu chưa bấm (not key_pressed()) thì return, bấm rồi thì state = \"play\".",
-        "if state == \"over\": return. Đụng cột thì state = \"over\".",
-        "Trong draw(): khi ready vẽ draw_text(\"Bấm Space để bay\", 200, 400, 32); khi over vẽ \"Thua rồi!\".",
-        "Bấm ▶ Chạy rồi ⛶: đi đủ ba màn chờ, chơi, thua."
+        "Dưới dòng GAP = 150, gõ: def draw_pipe(x, gap_y):",
+        "Chuyển hai dòng draw_image vào trong lệnh mới (thụt vào 4 dấu cách).",
+        "Trong hai dòng đó: thay số 100 bằng x, thay số 150 bằng gap_y.",
+        "Cuối file, không thụt lề: draw_pipe(100, 150) rồi draw_pipe(280, 250).",
+        "Bấm ▶ Chạy: 2 cặp cột hiện ra."
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\nfrom bird import Bird\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\nstate = \"ready\"\nscore = 0\nscored = False\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, state, score, scored\n    if state == \"ready\":\n        if not key_pressed():\n            return\n        state = \"play\"\n    if state == \"over\":\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        state = \"over\"\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if state == \"ready\":\n        draw_text(\"Bấm Space để bay\", 200, 400, 32)\n    if state == \"over\":\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n",
-        "bird.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n"
+        "main.py": "from pyquest import *\n\nGAP = 150\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nclear(\"skyblue\")\ndraw_pipe(100, 150)\ndraw_pipe(280, 250)\n"
       },
       "hints": [
-        "bird.py: from pyquest import * rồi dán class Bird.",
-        "main.py: from bird import Bird ở dòng đầu, xóa class Bird cũ.",
-        "if state == \"ready\":\n    if not key_pressed():\n        return\n    state = \"play\""
-      ],
-      "test": {
-        "frames": 260,
-        "taps": [
-          40,
-          71,
-          102,
-          133,
-          164,
-          195,
-          226,
-          257
-        ]
-      }
+        "Dòng def draw_pipe(x, gap_y): rồi hai dòng vẽ thụt vào bên dưới.",
+        "Bên trong dùng x và gap_y thay cho 100 và 150.",
+        "Gọi: draw_pipe(100, 150) và draw_pipe(280, 250)"
+      ]
     }
   ],
-  "unlocksRoadmap": [
-    "screens"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

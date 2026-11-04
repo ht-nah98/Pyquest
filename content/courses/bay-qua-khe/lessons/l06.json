@@ -2,60 +2,30 @@
   "id": "l06",
   "courseId": "bay-qua-khe",
   "order": 6,
-  "title": "Tính rồi gán lại",
+  "title": "Vòng lặp lồng nhau",
   "draft": true,
-  "summary": "y = y + 100: lấy số cũ, tính ra số mới, cất lại vào hộp.",
+  "summary": "Một for nằm trong một for: vẽ cả lưới, cả tòa nhà nhiều cửa sổ.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l06-step",
-          "title": "Đi từng bước",
-          "text": "Chim muốn đi xuống. Vị trí mới = vị trí cũ + một bước. Trong Python viết: y = y + 100.",
-          "coachNotes": "Cho một bé đứng lên bước từng bước trên sàn kẻ ô; lớp đọc số ô sau mỗi bước."
+          "id": "l06-rows",
+          "title": "Hàng của hàng",
+          "text": "Một for vẽ được một hàng ô. Muốn nhiều hàng thì lặp cả cái hàng đó: for j (hàng) chứa for i (ô trong hàng). Vòng trong chạy hết rồi vòng ngoài mới sang bước tiếp.",
+          "coachNotes": "Cho lớp làm \"máy tính\": một bé đọc j, một bé đọc i, bé thứ ba tô ô trên giấy kẻ. Vòng trong quay nhanh, vòng ngoài quay chậm, như kim phút và kim giờ."
         },
         {
-          "id": "l06-order",
-          "title": "Máy tính tính bên phải trước",
-          "text": "Với y = y + 100, máy tính lấy số đang trong hộp y, cộng thêm 100, rồi cất kết quả lại vào hộp y.",
-          "coachNotes": "Viết: y đang là 100. y = y + 100 → bên phải là 100 + 100 = 200 → cất 200 vào y."
-        },
-        {
-          "id": "l06-quiz",
+          "id": "l06-quiz-count",
           "quiz": {
-            "question": "y đang là 150. Chạy y = y + 100. Bây giờ y là bao nhiêu?",
+            "question": "for j in range(3): chứa for i in range(4): thì lệnh bên trong chạy mấy lần?",
             "choices": [
-              "100",
-              "150",
-              "250"
-            ],
-            "answer": 2,
-            "explain": "Bên phải: 150 + 100 = 250, rồi cất 250 vào y."
-          }
-        }
-      ]
-    },
-    {
-      "kind": "design",
-      "slides": [
-        {
-          "id": "l06-plan",
-          "title": "Phác ra giấy",
-          "text": "Em muốn 3 con chim xếp dọc, cách nhau 100. Con đầu ở y = 100. Hai con sau ở y bao nhiêu?",
-          "coachNotes": "Đáp án: 200 và 300. Cho bé ghi ra giấy trước khi code."
-        },
-        {
-          "id": "l06-quiz-plan",
-          "quiz": {
-            "question": "Bắt đầu y = 100, cộng 100 hai lần. Con chim cuối ở y bao nhiêu?",
-            "choices": [
-              "200",
-              "300",
-              "400"
+              "7",
+              "12",
+              "3"
             ],
             "answer": 1,
-            "explain": "100 → 200 → 300."
+            "explain": "Mỗi j chạy 4 lần i: 3 × 4 = 12."
           }
         }
       ]
@@ -65,9 +35,8 @@
       "slides": [
         {
           "id": "l06-code",
-          "title": "Ba con chim xếp dọc",
-          "text": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi.",
-          "coachNotes": "Đầu file có sẵn def draw_bird (bé viết ở Bài 5) với ảnh mặc định images/bird.png; bé đổi đường dẫn sang ảnh của mình nếu muốn."
+          "title": "Thụt vào hai bậc",
+          "text": "Dòng vẽ nằm trong vòng trong nên thụt vào 8 dấu cách. Chạy chậm và xem thứ tự các ô hiện ra."
         }
       ]
     },
@@ -76,8 +45,8 @@
       "slides": [
         {
           "id": "l06-try",
-          "title": "Đổi bước nhảy",
-          "text": "Chạy thử. Đổi 100 thành 50: các chim xích lại gần nhau. Python còn cách viết ngắn: y += 100 cũng là y = y + 100."
+          "title": "Đổi lưới",
+          "text": "Đổi số hàng, số cột, khoảng cách. Lưới 10 × 10 có bao nhiêu ô?"
         }
       ]
     }
@@ -85,58 +54,117 @@
   "exercises": [
     {
       "id": "l06-e1",
-      "title": "Ba con chim xếp dọc",
-      "task": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi.",
+      "title": "Lưới 5 × 5",
+      "task": "Vẽ lưới 5 hàng × 5 cột ô xanh (teal) cạnh 40, cách nhau 60. Ô ở hàng j cột i có góc (i * 60 + 50, j * 60 + 100).",
       "input": "blocks",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\nfor i in range(5):\n    draw_rect(i * 60 + 50, 100, 40, 40, \"teal\")\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
-        "pq_assign",
-        "pq_var_get",
         "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_draw_rect",
         "pq_arith",
-        "pq_aug",
-        "pq_clear",
-        "pq_text"
+        "pq_var_get"
       ],
       "mode": "script",
       "goals": [
         {
-          "id": "l06-g-run",
+          "id": "l06-e1-run",
           "label": "Chạy không lỗi",
           "kind": "noError"
         },
         {
-          "id": "l06-g-three",
-          "label": "Vẽ 3 con chim",
-          "kind": "drewCount",
-          "sprite": "bird",
-          "min": 3
-        },
-        {
-          "id": "l06-g-y",
-          "label": "Cuối cùng y là 300",
-          "kind": "varEquals",
-          "name": "y",
-          "value": 300
+          "id": "l06-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
         }
       ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor j in range(5):\n    for i in range(5):\n        draw_rect(i * 60 + 50, j * 60 + 100, 40, 40, \"teal\")\n"
+      },
       "walkthrough": [
-        "Code đã có: y = 100 và vẽ chim lần 1.",
-        "Thêm dòng y = y + 100 (khối \"đặt y = …\" với khối phép tính y + 100, hoặc gõ thẳng).",
-        "Thêm draw_bird(100, y) để vẽ chim lần 2.",
-        "Lặp lại một lần nữa: y = y + 100 rồi draw_bird(100, y).",
-        "Bấm ▶ Chạy: 3 chim xếp dọc, ô biến báo y = 300."
+        "Một hàng đã có sẵn (vòng lặp i).",
+        "Kéo thêm một khối lặp, đổi tên biến đếm thành j, gõ 5.",
+        "Kéo cả vòng lặp i vào trong vòng lặp j.",
+        "Ô y của draw_rect: đổi 100 thành j * 60 + 100."
+      ],
+      "hints": [
+        "Vòng j ở ngoài, vòng i ở trong.",
+        "draw_rect(i * 60 + 50, j * 60 + 100, 40, 40, \"teal\")"
+      ]
+    },
+    {
+      "id": "l06-e2",
+      "title": "Tòa nhà",
+      "task": "Vẽ tòa nhà xám (gray) góc (100, 150) rộng 200 cao 400, rồi 6 tầng × 3 cửa sổ vàng cạnh 30: cửa sổ ở (130 + i * 60, 180 + j * 60).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\ndraw_rect(100, 150, 200, 400, \"gray\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l06-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l06-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
+        "main.py": "from pyquest import *\n\ndraw_rect(100, 150, 200, 400, \"gray\")\nfor j in range(6):\n    for i in range(3):\n        draw_rect(130 + i * 60, 180 + j * 60, 30, 30, \"yellow\")\n"
       },
+      "walkthrough": [
+        "Vẽ nhà trước (đã có), cửa sổ sau để nằm đè lên.",
+        "for j in range(6): rồi bên trong for i in range(3):",
+        "Dòng vẽ cửa sổ thụt vào 8 dấu cách."
+      ],
       "hints": [
-        "Sau mỗi lần vẽ, thêm dòng y = y + 100.",
-        "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."
+        "Cửa sổ: draw_rect(130 + i * 60, 180 + j * 60, 30, 30, \"yellow\")"
+      ]
+    },
+    {
+      "id": "l06-e3",
+      "title": "Bậc thang",
+      "task": "Vẽ bậc thang: cột thứ i có i + 1 ô xếp chồng. Ô ở (i * 40 + 40, 520 - j * 40), cạnh 40, màu orange, với i từ 0 tới 7 và j từ 0 tới i.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l06-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l06-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    for j in range(i + 1):\n        draw_rect(i * 40 + 40, 520 - j * 40, 40, 40, \"orange\")\n"
+      },
+      "walkthrough": [
+        "Vòng trong dùng range(i + 1): cột càng xa càng nhiều ô.",
+        "Ô càng cao thì y càng nhỏ: 520 - j * 40."
+      ],
+      "hints": [
+        "for i in range(8):",
+        "    for j in range(i + 1):"
       ]
     }
   ],

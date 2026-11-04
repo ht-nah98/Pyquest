@@ -503,7 +503,7 @@ function CodeEditor({
           )}
           {panel === 'calls' && showCalls ? (
             <section
-              className="flex max-h-[42%] min-h-0 flex-col overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
+              className="flex max-h-[38%] min-h-0 flex-col overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
               data-testid="calls-card"
             >
               <CallPanel result={result} from={callFrom} picked={picked} onPick={pick} />
@@ -569,7 +569,7 @@ function CodeEditor({
             )}
           </div>
           <div
-            className="relative min-h-[45%] flex-1 touch-none max-[1279px]:min-h-0"
+            className="relative min-h-[48%] flex-1 touch-none max-[1279px]:min-h-0"
             onPointerDown={() => {
               loop.press('space', true);
             }}

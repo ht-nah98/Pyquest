@@ -22,7 +22,13 @@
     "l16",
     "l17",
     "l18",
-    "l19"
+    "l19",
+    "l20",
+    "l21",
+    "l22",
+    "l23",
+    "l24",
+    "l25"
   ],
   "roadmap": [
     {
@@ -79,23 +85,49 @@
   "parts": [
     {
       "title": "A. Bức tranh toàn cảnh",
-      "lessonIds": ["l00"]
+      "lessonIds": [
+        "l00"
+      ]
     },
     {
-      "title": "B. Nhân vật từ mảnh nhỏ",
-      "lessonIds": ["l01", "l02", "l03", "l04", "l05"]
+      "title": "B. Nền tảng Python",
+      "lessonIds": [
+        "l01",
+        "l02",
+        "l03",
+        "l04",
+        "l05",
+        "l06",
+        "l07",
+        "l08",
+        "l09",
+        "l10",
+        "l11",
+        "l12",
+        "l13"
+      ]
     },
     {
-      "title": "C. Cho chim sống",
-      "lessonIds": ["l06", "l07", "l08", "l09", "l10", "l11"]
+      "title": "C. Làm game Bay Qua Khe",
+      "lessonIds": [
+        "l14",
+        "l15",
+        "l16",
+        "l17",
+        "l18",
+        "l19",
+        "l20",
+        "l21",
+        "l22",
+        "l23",
+        "l24"
+      ]
     },
     {
-      "title": "D. Thử thách",
-      "lessonIds": ["l12", "l13", "l14", "l15"]
-    },
-    {
-      "title": "E. Hoàn thiện sản phẩm",
-      "lessonIds": ["l16", "l17", "l18", "l19"]
+      "title": "D. Ra mắt",
+      "lessonIds": [
+        "l25"
+      ]
     }
   ]
 }

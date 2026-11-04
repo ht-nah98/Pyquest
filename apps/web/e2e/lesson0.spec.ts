@@ -6,7 +6,7 @@ test('a child goes through lesson 0 in self-study mode; draft lessons stay hidde
 }) => {
   await newStudent(page);
   await page.getByTestId('course-bay-qua-khe').click();
-  await expect(page.locator('[data-testid^=lesson-l]')).toHaveCount(20);
+  await expect(page.locator('[data-testid^=lesson-l]')).toHaveCount(26);
   await expect(page.getByTestId('lesson-l00')).toHaveAttribute('data-status', 'open');
   // Bài 1 is a draft again since the smallest-pieces rewrite (spec §7): hidden from children until the
   // coach approves it. When the coach removes its draft flag, this goes back to 'locked'.

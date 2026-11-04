@@ -2,9 +2,9 @@
   "id": "l02",
   "courseId": "bay-qua-khe",
   "order": 2,
-  "title": "Hộp đựng số",
+  "title": "Biến",
   "draft": true,
-  "summary": "Biến là cái hộp có tên để máy tính nhớ vị trí của nhân vật.",
+  "summary": "Biến là cái hộp có tên: x, y, color giữ số và chữ để lệnh vẽ đọc ra.",
   "steps": [
     {
       "kind": "understand",
@@ -68,6 +68,12 @@
           "title": "Vẽ ô bằng biến",
           "text": "Đặt x = 100 và y = 300, rồi vẽ draw_rect(x, y, 40, 40, \"gold\"). Lệnh vẽ lấy số trong hộp x và hộp y.",
           "coachNotes": "Cho bé nhìn ô giá trị biến dưới sân chơi sau khi chạy: đó là bên trong các cái hộp."
+        },
+        {
+          "id": "l02-text-box",
+          "title": "Hộp cũng đựng được chữ",
+          "text": "color = \"red\" cất chữ \"red\" vào hộp color. Lệnh vẽ đọc hộp: draw_rect(x, y, 40, 40, color). Chữ phải nằm trong dấu nháy, tên hộp thì không.",
+          "coachNotes": "Hỏi lớp: color và \"color\" khác nhau thế nào? (một cái là tên hộp, một cái là chữ c-o-l-o-r)."
         }
       ]
     },
@@ -98,7 +104,7 @@
   "exercises": [
     {
       "id": "l02-e1",
-      "title": "Vẽ ô bằng biến",
+      "title": "Ô đặt bằng biến",
       "task": "Đặt x = 100 và y = 300, rồi vẽ draw_rect(x, y, 40, 40, \"gold\"). Lệnh vẽ lấy số trong hộp x và hộp y.",
       "input": "blocks",
       "starter": {
@@ -161,6 +167,141 @@
         "Chỉ cần sửa hai dòng x = … và y = ….",
         "x = 100 nghĩa là cất số 100 vào hộp x.",
         "Cần: x = 100 và y = 300"
+      ]
+    },
+    {
+      "id": "l02-e2",
+      "title": "Hai ô đi cùng nhau",
+      "task": "Vẽ hai ô dùng chung x: ô vàng ở (x, 200) và ô đỏ ở (x, 300), cùng cạnh 40. Đặt x = 250: đổi một số mà cả hai ô cùng dời.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nx = 100\ndraw_rect(x, 200, 40, 40, \"gold\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_assign",
+        "pq_var_get",
+        "pq_draw_rect"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l02-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l02-e2-x",
+          "label": "Hộp x cất 250",
+          "kind": "varEquals",
+          "name": "x",
+          "value": 250
+        },
+        {
+          "id": "l02-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nx = 250\ndraw_rect(x, 200, 40, 40, \"gold\")\ndraw_rect(x, 300, 40, 40, \"red\")\n"
+      },
+      "walkthrough": [
+        "Đổi số trong khối \"đặt x =\" thành 250.",
+        "Kéo thêm một khối vẽ hình chữ nhật. Ô x của nó: kéo khối biến x vào.",
+        "Ô y gõ 300, rộng 40, cao 40, màu red.",
+        "Chạy: cả hai ô đứng thẳng hàng ở x = 250."
+      ],
+      "hints": [
+        "Cả hai dòng draw_rect cùng đọc hộp x.",
+        "Dòng mới: draw_rect(x, 300, 40, 40, \"red\")"
+      ]
+    },
+    {
+      "id": "l02-e3",
+      "title": "Hộp màu",
+      "task": "Tạo hộp color = \"purple\" và vẽ ô ở (100, 300) cạnh 60 bằng màu trong hộp. Rồi vẽ thêm ô thứ hai ở (200, 300) cùng màu color.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\ndraw_rect(100, 300, 60, 60, \"red\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l02-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l02-e3-color",
+          "label": "Hộp color cất \"purple\"",
+          "kind": "varEquals",
+          "name": "color",
+          "value": "purple"
+        },
+        {
+          "id": "l02-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\ncolor = \"purple\"\ndraw_rect(100, 300, 60, 60, color)\ndraw_rect(200, 300, 60, 60, color)\n"
+      },
+      "walkthrough": [
+        "Thêm dòng đầu: color = \"purple\"",
+        "Trong draw_rect, thay \"red\" bằng color (không có dấu nháy).",
+        "Thêm dòng vẽ ô thứ hai ở x = 200, cũng dùng color."
+      ],
+      "hints": [
+        "color không có dấu nháy vì nó là tên hộp.",
+        "draw_rect(200, 300, 60, 60, color)"
+      ]
+    },
+    {
+      "id": "l02-e4",
+      "title": "Nói ra giá trị",
+      "task": "Đặt x = 150 và y = 250, vẽ ô cạnh 50 ở (x, y), rồi cho sân chơi nói giá trị x bằng print(x).",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nx = 0\ny = 0\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l02-e4-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l02-e4-say",
+          "label": "Sân chơi nói 150",
+          "kind": "printed",
+          "text": "150"
+        },
+        {
+          "id": "l02-e4-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nx = 150\ny = 250\ndraw_rect(x, y, 50, 50, \"gold\")\nprint(x)\n"
+      },
+      "walkthrough": [
+        "Sửa hai dòng x, y.",
+        "Thêm dòng draw_rect(x, y, 50, 50, \"gold\")",
+        "Thêm dòng print(x): bong bóng hiện 150."
+      ],
+      "hints": [
+        "print(x) in giá trị trong hộp x, không in chữ x."
       ]
     }
   ],

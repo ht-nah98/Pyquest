@@ -2,36 +2,39 @@
   "id": "l14",
   "courseId": "bay-qua-khe",
   "order": 14,
-  "title": "Ngẫu nhiên",
+  "title": "Hoạt hình là gì",
   "draft": true,
-  "summary": "random_int(80, 300): mỗi cột một độ cao, game bất ngờ hơn.",
+  "summary": "Game vẽ lại mỗi khung hình: update() đổi số, draw() vẽ lại.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l14-boring",
-          "title": "Đoán trước được thì chán",
-          "text": "Khe cột lúc nào cũng ở cùng độ cao thì chơi vài lần là thuộc lòng. Game hay cần một chút bất ngờ.",
-          "coachNotes": "Cho lớp chơi game mẫu và để ý: khe cao thấp khác nhau."
+          "id": "l14-flip",
+          "title": "Phim là nhiều ảnh tĩnh",
+          "text": "Phim hoạt hình là nhiều ảnh, mỗi ảnh khác nhau một chút, chiếu thật nhanh. Mỗi ảnh gọi là một khung hình. Bấm Chiếu rồi kéo tốc độ lên xem.",
+          "widget": {
+            "kind": "flipbook"
+          },
+          "coachNotes": "Hoạt động giấy: cho bé làm sách lật 8 trang ở góc vở, vẽ chấm tròn thấp dần. Lật nhanh → chấm rơi."
         },
         {
-          "id": "l14-random",
-          "title": "Số ngẫu nhiên",
-          "text": "random_int(80, 300) cho một số bất kỳ từ 80 tới 300, như tung xúc xắc. Mỗi lần cột quay lại bên phải, ta tung lại độ cao khe.",
-          "coachNotes": "Nói về công bằng: số ngẫu nhiên nhưng nằm trong khoảng an toàn, không bao giờ ra khe bé không qua được."
+          "id": "l14-loop",
+          "title": "Vòng lặp của game",
+          "text": "Game làm đi làm lại khoảng 60 lần mỗi giây: update() đổi các con số (chim xuống một chút), rồi draw() xóa và vẽ lại tất cả.",
+          "coachNotes": "Vẽ vòng tròn lên bảng: update → draw → update → draw… Nền tảng PyQuest tự gọi hai lệnh này cho em."
         },
         {
           "id": "l14-quiz",
           "quiz": {
-            "question": "random_int(1, 6) có thể cho số nào?",
+            "question": "Chim trông như đang rơi là nhờ đâu?",
             "choices": [
-              "0",
-              "1 đến 6",
-              "7"
+              "Mỗi khung hình y tăng một chút rồi vẽ lại",
+              "Ảnh chim tự chạy",
+              "Vẽ thật nhiều chim cùng lúc"
             ],
-            "answer": 1,
-            "explain": "Cả hai đầu 1 và 6 đều có thể ra."
+            "answer": 0,
+            "explain": "update() tăng y, draw() vẽ lại ở chỗ mới. Nhanh quá nên mắt thấy như chuyển động."
           }
         }
       ]
@@ -40,16 +43,23 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l14-range",
-          "title": "Khoảng an toàn",
-          "text": "Khe bắt đầu ở gap_y và cao GAP = 150. gap_y nhỏ quá thì cột trên quá ngắn; lớn quá thì khe chạm đất (520). 80 đến 300 là vừa.",
-          "coachNotes": "Cho bé kiểm: 300 + 150 = 450 < 520, vẫn còn cột dưới."
+          "id": "l14-def",
+          "title": "update() và draw()",
+          "text": "Em đã biết def từ Bài 4. update() và draw() cũng là lệnh em tự đặt, nhưng em không gọi chúng: thư viện gọi giúp, khoảng 60 lần mỗi giây. Muốn update đổi hộp y bên ngoài, dòng đầu viết global y.",
+          "coachNotes": "global: \"dùng hộp y chung của cả chương trình\". Quên global thì Python báo lỗi."
         },
         {
-          "id": "l14-pair",
-          "title": "Cột nhớ hai con số",
-          "text": "Giờ mỗi cột là [x, gap_y]: một danh sách nhỏ trong danh sách lớn. pipe[0] là x, pipe[1] là độ cao khe.",
-          "coachNotes": "Danh sách lồng danh sách: vẽ hộp lớn chứa các hộp nhỏ hai ngăn."
+          "id": "l14-quiz-speed",
+          "quiz": {
+            "question": "Mỗi khung hình y tăng 3, game chạy 60 khung mỗi giây. Một giây chim rơi bao xa?",
+            "choices": [
+              "3",
+              "60",
+              "180"
+            ],
+            "answer": 2,
+            "explain": "3 × 60 = 180."
+          }
         }
       ]
     },
@@ -58,8 +68,9 @@
       "slides": [
         {
           "id": "l14-code",
-          "title": "Tung lại độ cao khe",
-          "text": "Trong update(), chỗ đưa cột về bên phải, thêm dòng pipe[1] = random_int(80, 300)."
+          "title": "Cho chim rơi",
+          "text": "Trong update(), thay pass bằng hai dòng: global y và y = y + 3. Bấm Chạy: máy tự thử 60 khung hình rồi cho em xem chim rơi.",
+          "coachNotes": "Chim rơi khỏi màn hình là đúng! Bài 16 mới làm mặt đất."
         }
       ]
     },
@@ -68,8 +79,8 @@
       "slides": [
         {
           "id": "l14-try",
-          "title": "Chơi thử và chỉnh",
-          "text": "Chạy toàn màn hình, xem nhiều cột đi qua. Khoảng 80 đến 300 có công bằng không? Thử thu hẹp lại xem game dễ hơn không."
+          "title": "Nhanh hay chậm?",
+          "text": "Đổi 3 thành 1 rồi thành 10. Số nào trông đẹp nhất? Bấm ⛶ để xem toàn màn hình."
         }
       ]
     }
@@ -77,11 +88,11 @@
   "exercises": [
     {
       "id": "l14-e1",
-      "title": "Tung lại độ cao khe",
-      "task": "Trong update(), chỗ đưa cột về bên phải, thêm dòng pipe[1] = random_int(80, 300).",
-      "input": "blocks",
+      "title": "Cho chim rơi",
+      "task": "Trong update(), thay pass bằng hai dòng: global y và y = y + 3. Bấm Chạy: máy tự thử 60 khung hình rồi cho em xem chim rơi.",
+      "input": "typing",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
       },
       "main": "main.py",
       "toolbox": [
@@ -93,17 +104,8 @@
         "pq_arith",
         "pq_var_get",
         "pq_number",
-        "pq_draw_image",
         "pq_clear",
-        "pq_text",
-        "pq_if",
-        "pq_if_else",
-        "pq_compare",
-        "pq_logic",
-        "pq_key_pressed",
-        "pq_for",
-        "pq_draw_text",
-        "pq_random"
+        "pq_text"
       ],
       "mode": "game",
       "goals": [
@@ -113,33 +115,37 @@
           "kind": "noError"
         },
         {
-          "id": "l14-g-vary",
-          "label": "Khe cột cao thấp khác nhau",
-          "kind": "distinctCount",
-          "sprite": "pipe",
+          "id": "l14-g-fall",
+          "label": "Chim đi xuống",
+          "kind": "moves",
+          "sprite": "bird",
           "axis": "y",
-          "min": 6
+          "dir": 1
         }
       ],
       "walkthrough": [
-        "Trong update(), tìm dòng pipe[0] = pipe[0] + 440.",
-        "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)",
-        "Bấm ▶ Chạy: máy chạy thử 520 khung hình để thấy cột quay lại nhiều lần.",
-        "Bấm ⛶: mỗi lần cột quay lại, khe ở một độ cao khác."
+        "Tìm def update(): bên trong chỉ có pass (nghĩa là \"chưa làm gì\").",
+        "Xóa pass. Gõ global y (thụt vào 4 dấu cách, thẳng hàng với chỗ pass cũ).",
+        "Dòng tiếp theo, cùng thụt lề: y = y + 3",
+        "Bấm ▶ Chạy: máy tự chạy thử 60 khung hình để chấm, rồi chim rơi trên sân.",
+        "Bấm ⛶ để xem toàn màn hình. Chim rơi khỏi màn hình là đúng: Bài 16 mới có mặt đất."
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
       },
       "hints": [
-        "Tìm dòng pipe[0] = pipe[0] + 440.",
-        "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)"
+        "Trong update(), dòng đầu: global y",
+        "Dòng thứ hai: y = y + 3",
+        "Xóa dòng pass đi."
       ],
       "test": {
-        "frames": 520,
+        "frames": 60,
         "taps": []
       }
     }
   ],
-  "unlocksRoadmap": [],
+  "unlocksRoadmap": [
+    "motion"
+  ],
   "docsUnlocked": []
 }

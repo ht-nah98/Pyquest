@@ -2,77 +2,75 @@
   "id": "l05",
   "courseId": "bay-qua-khe",
   "order": 5,
-  "title": "Vì sao có ảnh",
+  "title": "Lặp với for",
   "draft": true,
-  "summary": "Chim thật có 1760 điểm màu: lưu thành file ảnh, rồi đổi ruột draw_bird sang draw_image.",
+  "summary": "for i in range(8): làm một việc nhiều lần, mỗi lần i lớn thêm 1.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l05-count",
-          "title": "Đếm thử các điểm",
-          "text": "Một con chim đẹp trong game rộng 44, cao 40: 44 × 40 = 1760 điểm màu. Vẽ bằng draw_rect thì cần tới 1760 dòng! Không ai viết như vậy.",
-          "coachNotes": "Mở ảnh bird.png, phóng thật to để thấy từng điểm. Hỏi: 1760 dòng code thì gõ mất bao lâu? Sai một điểm thì tìm thế nào? Đó là lý do người ta lưu hình thành file ảnh."
+          "id": "l05-repeat",
+          "title": "Việc lặp lại quanh em",
+          "text": "Đánh răng mỗi sáng, chép 10 lần một chữ, bước 8 bước tới cửa: cùng một việc, làm nhiều lần. Máy tính rất giỏi việc này.",
+          "coachNotes": "Hỏi lớp tìm thêm ví dụ lặp lại. Nhấn mạnh: viết 8 dòng giống nhau thì dễ sai và khó sửa."
         },
         {
-          "id": "l05-files",
-          "title": "Mọi thứ đều là file",
-          "text": "Ảnh, nhạc, code của em đều được máy tính cất trong file. File được xếp vào thư mục, giống vở được xếp vào ngăn cặp.",
-          "coachNotes": "Mở thư mục trên máy tính thật cho lớp xem: thư mục chứa thư mục con, chứa file. Đuôi .png là ảnh, .py là code Python."
+          "id": "l05-for",
+          "title": "Vòng lặp for",
+          "text": "for i in range(8): làm các dòng thụt vào bên dưới 8 lần. Lần đầu i = 0, rồi 1, 2… tới 7. Dòng nào thụt vào 4 dấu cách thì nằm trong vòng lặp.",
+          "coachNotes": "Viết bảng i = 0 1 2 3 4 5 6 7 (8 số, bắt đầu từ 0). Dấu : cuối dòng for và thụt lề là bắt buộc."
         },
         {
-          "id": "l05-path",
-          "title": "Đường dẫn là đường đi tới file",
-          "text": "images/bird-cu.png nghĩa là: vào thư mục images, lấy file bird-cu.png. Dấu / ngăn tên thư mục với tên file.",
-          "coachNotes": "Viết lên bảng: du-an-cua-em / images / bird-cu.png. Cho bé đọc to từng chặng."
-        },
-        {
-          "id": "l05-quiz-path",
+          "id": "l05-quiz",
           "quiz": {
-            "question": "Đường dẫn images/bird-vet.png chỉ tới đâu?",
+            "question": "for i in range(3) chạy mấy lần, i lần lượt là gì?",
             "choices": [
-              "File bird-vet.png trong thư mục images",
-              "Thư mục bird-vet trong file images",
-              "Một đoạn code"
+              "3 lần: 1, 2, 3",
+              "3 lần: 0, 1, 2",
+              "4 lần: 0, 1, 2, 3"
             ],
-            "answer": 0,
-            "explain": "Phần trước dấu / là thư mục, phần sau là tên file."
+            "answer": 1,
+            "explain": "range(3) đếm từ 0 và dừng trước 3: 0, 1, 2."
           }
         },
         {
-          "id": "l05-image",
-          "title": "Lệnh dán cả file ảnh",
-          "text": "Thư viện có draw_image(đường_dẫn, x, y): mở file ảnh và dán cả 1760 điểm lên sân chỉ bằng một dòng. Đó là lý do thư viện có lệnh này.",
-          "coachNotes": "Mở 📘 Thư viện → draw_image → Vì sao có. Nhắc lại câu hỏi của Bài 1: lệnh nào trong thư viện cũng có lý do để tồn tại."
-        }
-      ]
-    },
-    {
-      "kind": "design",
-      "slides": [
+          "id": "l05-row",
+          "title": "Một hàng chim",
+          "text": "8 con chim xếp ngang, cách nhau 50. Con thứ i ở x = i * 50. Thử tính: i = 0 → x = 0, i = 1 → x = 50…",
+          "coachNotes": "Cho bé điền bảng i | x. Dấu * là nhân."
+        },
         {
-          "id": "l05-pick-idea",
-          "title": "Chọn nhân vật hợp với game",
-          "text": "Nhân vật nên nổi trên nền trời, nhìn rõ hướng bay sang phải. Em thích nhân vật nào? Vì sao?",
-          "coachNotes": "Cho bé nói lý do chọn: màu nổi trên nền, dễ thấy cánh vỗ. Không có đáp án sai."
-        }
-      ]
-    },
-    {
-      "kind": "prepare",
-      "slides": [
+          "id": "l05-quiz-x",
+          "quiz": {
+            "question": "Con chim có i = 7 nằm ở x bao nhiêu?",
+            "choices": [
+              "7",
+              "57",
+              "350"
+            ],
+            "answer": 2,
+            "explain": "7 * 50 = 350."
+          }
+        },
         {
-          "id": "l05-library",
-          "title": "Chọn ảnh trong kho",
-          "text": "Bấm chọn một nhân vật. Xem ảnh nằm ở đâu trong dự án và đường dẫn tới nó. Em sẽ cần đường dẫn này khi viết code.",
-          "widget": {
-            "kind": "assetPicker",
-            "props": {
-              "group": "bird"
-            }
-          },
-          "coachNotes": "Kho hình do HLV sinh bằng AI. Hỏi: nếu gõ sai một chữ trong đường dẫn thì sao? (máy không tìm thấy file)."
+          "id": "l05-i",
+          "title": "i đếm giúp em",
+          "text": "Trong for i in range(8):, i lần lượt là 0, 1, 2… tới 7. Dùng i để tính chỗ đặt: i * 50 cho 0, 50, 100… mỗi ô cách nhau 50.",
+          "coachNotes": "Viết bảng hai cột i và i * 50 cho lớp điền. Đây là chỗ biến, phép tính và vòng lặp gặp nhau."
+        },
+        {
+          "id": "l05-quiz-range",
+          "quiz": {
+            "question": "for i in range(3): thì i lần lượt là gì?",
+            "choices": [
+              "1, 2, 3",
+              "0, 1, 2",
+              "0, 1, 2, 3"
+            ],
+            "answer": 1,
+            "explain": "range(3) đếm 3 số, bắt đầu từ 0: 0, 1, 2."
+          }
         }
       ]
     },
@@ -80,10 +78,9 @@
       "kind": "code",
       "slides": [
         {
-          "id": "l05-swap",
-          "title": "Thay ruột, giữ tên",
-          "text": "Giữ nguyên dòng def draw_bird(x, y): và hai dòng gọi. Chỉ thay 4 dòng draw_rect bên trong bằng một dòng draw_image(\"images/bird-cu.png\", x, y), đổi bird-cu thành ảnh em chọn.",
-          "coachNotes": "Ý lớn nhất của phần B: chỗ gọi draw_bird(100, 300) không đổi gì, chỉ bên trong lệnh đổi. Ai dùng một lệnh thì không cần biết bên trong nó làm gì. Cố tình gõ sai đường dẫn để lớp thấy máy gợi ý tên file đúng."
+          "id": "l05-code",
+          "title": "Viết một lần, chạy nhiều lần",
+          "text": "Các dòng thụt vào dưới for chạy lại mỗi vòng. Bấm ▶ Chạy và xem các ô hiện ra lần lượt."
         }
       ]
     },
@@ -92,21 +89,8 @@
       "slides": [
         {
           "id": "l05-try",
-          "title": "Thử nhiều nhân vật",
-          "text": "Chạy thử. Đổi sang ảnh khác chỉ bằng cách sửa đường dẫn trong def. Thử gõ sai một chữ trong đường dẫn xem máy báo gì."
-        },
-        {
-          "id": "l05-quiz-callers",
-          "quiz": {
-            "question": "Em đổi ruột draw_bird từ ô vuông sang ảnh. Hai dòng gọi draw_bird(…) có phải sửa không?",
-            "choices": [
-              "Phải sửa cả hai",
-              "Không cần sửa",
-              "Phải xóa đi"
-            ],
-            "answer": 1,
-            "explain": "Tên và tham số vẫn vậy, nên chỗ gọi giữ nguyên. Chỉ ruột của lệnh đổi."
-          }
+          "title": "Đổi số vòng",
+          "text": "Đổi range(8) thành range(5) rồi range(10). Ô thứ mấy ra ngoài sân? Vì sao?"
         }
       ]
     }
@@ -114,65 +98,172 @@
   "exercises": [
     {
       "id": "l05-e1",
-      "title": "Thay ruột, giữ tên",
-      "task": "Giữ nguyên dòng def draw_bird(x, y): và hai dòng gọi. Chỉ thay 4 dòng draw_rect bên trong bằng một dòng draw_image(\"images/bird-cu.png\", x, y), đổi bird-cu thành ảnh em chọn.",
+      "title": "Hàng 8 ô",
+      "task": "Dùng for i in range(8): để vẽ 8 ô vàng cạnh 40 thành một hàng ở y = 300: ô thứ i ở x = i * 50.",
       "input": "blocks",
       "starter": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n    draw_rect(x + 20, y + 13, 4, 4, \"black\")\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
+        "main.py": "from pyquest import *\n\ndraw_rect(0, 300, 40, 40, \"gold\")\n"
       },
       "main": "main.py",
       "toolbox": [
         "pq_import",
-        "pq_def",
-        "pq_draw_image",
-        "pq_draw_rect",
-        "pq_var_get",
         "pq_number",
         "pq_text",
-        "pq_arith"
+        "pq_for",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
       ],
       "mode": "script",
       "goals": [
         {
-          "id": "l05-g-run",
+          "id": "l05-e1-run",
           "label": "Chạy không lỗi",
           "kind": "noError"
         },
         {
-          "id": "l05-g-image",
-          "label": "Chim vẽ bằng ảnh nhân vật",
-          "kind": "drew",
-          "sprite": "bird"
-        },
-        {
-          "id": "l05-g-call",
-          "label": "Vẫn gọi draw_bird 2 lần như cũ",
-          "kind": "called",
-          "name": "draw_bird",
-          "min": 2,
-          "distinct": true
+          "id": "l05-e1-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
         }
       ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 300, 40, 40, \"gold\")\n"
+      },
       "walkthrough": [
-        "Ở bước Chuẩn bị em đã chọn ảnh và thấy đường dẫn, ví dụ images/bird-vet.png.",
-        "Kéo 4 khối vẽ hình chữ nhật ra khỏi khối draw_bird, thả vào thùng rác.",
-        "Kéo khối \"vẽ ảnh … tại x … y …\" vào trong khối draw_bird.",
-        "Ô ảnh gõ đường dẫn em chọn. Ô x và ô y: kéo khối biến x và y vào.",
-        "Python sẽ là: draw_image(\"images/bird-vet.png\", x, y), thụt vào trong def.",
-        "Hai dòng draw_bird(…) ở dưới để nguyên. Bấm ▶ Chạy: hai con chim thành ảnh."
+        "Kéo khối \"lặp … lần, đếm bằng i\", gõ 8.",
+        "Kéo khối vẽ hình chữ nhật có sẵn vào bên trong vòng lặp.",
+        "Ô x: kéo khối \"×\", bên trái biến i, bên phải 50.",
+        "Chạy: 8 ô hiện ra lần lượt."
+      ],
+      "hints": [
+        "for i in range(8):",
+        "    draw_rect(i * 50, 300, 40, 40, \"gold\")"
+      ]
+    },
+    {
+      "id": "l05-e2",
+      "title": "Hàng rào cao dần",
+      "task": "Vẽ 8 cột gỗ nâu (brown) rộng 40 đứng trên mặt đất y = 560. Cột thứ i cao (i + 1) * 30, nên y của nó là 560 - (i + 1) * 30.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    pass\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l05-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l05-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
       ],
       "solution": {
-        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird-cu.png\", x, y)\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
+        "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 560 - (i + 1) * 30, 40, (i + 1) * 30, \"brown\")\n"
       },
+      "walkthrough": [
+        "Cột cao h đứng trên đất thì đỉnh ở y = 560 - h.",
+        "Ở đây h = (i + 1) * 30.",
+        "Gõ trong Python cho nhanh: draw_rect(i * 50, 560 - (i + 1) * 30, 40, (i + 1) * 30, \"brown\")"
+      ],
       "hints": [
-        "Chỉ sửa bên trong def draw_bird, không sửa hai dòng gọi.",
-        "Đường dẫn bắt đầu bằng images/ và kết thúc bằng .png.",
-        "Ví dụ: draw_image(\"images/bird-vet.png\", x, y)"
+        "Cột đầu cao 30, cột cuối cao 240.",
+        "Nhớ dấu ngoặc (i + 1)."
+      ]
+    },
+    {
+      "id": "l05-e3",
+      "title": "Đàn chim",
+      "task": "Lệnh draw_bird đã có sẵn. Dùng for để vẽ 5 con chim thành hàng ngang ở y = 200: con thứ i ở x = 20 + i * 75.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n\n\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l05-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l05-e3-call",
+          "label": "Gọi draw_bird 5 lần",
+          "kind": "called",
+          "name": "draw_bird",
+          "min": 5,
+          "distinct": true
+        },
+        {
+          "id": "l05-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n\n\nfor i in range(5):\n    draw_bird(20 + i * 75, 200)\n"
+      },
+      "walkthrough": [
+        "Viết vòng lặp ở dưới cùng, sát lề trái.",
+        "Bên trong, thụt vào 4 dấu cách: draw_bird(20 + i * 75, 200)",
+        "Mở 📞 Cuộc gọi: 5 lần gọi với x = 20, 95, 170…"
+      ],
+      "hints": [
+        "for i in range(5):"
+      ]
+    },
+    {
+      "id": "l05-e4",
+      "title": "Từ số nào tới số nào",
+      "task": "range(2, 6) cho i = 2, 3, 4, 5. Vẽ 4 ô đỏ cạnh 40 ở y = 100, x = i * 60, với i từ 2 tới 5.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l05-e4-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l05-e4-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nfor i in range(2, 6):\n    draw_rect(i * 60, 100, 40, 40, \"red\")\n"
+      },
+      "walkthrough": [
+        "range(a, b) bắt đầu từ a, dừng trước b.",
+        "for i in range(2, 6):",
+        "    draw_rect(i * 60, 100, 40, 40, \"red\")"
+      ],
+      "hints": [
+        "Số sau là 6, không phải 5: range dừng trước số đó."
       ]
     }
   ],
-  "unlocksRoadmap": [
-    "bird"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

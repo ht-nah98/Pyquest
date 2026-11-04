@@ -21,7 +21,7 @@ export function ExerciseBar({
 }) {
   return (
     <nav
-      className="flex items-center gap-2 overflow-x-auto border-b-2 border-ink/10 bg-paper px-3 py-1"
+      className="flex items-center gap-2 overflow-x-auto border-b-2 border-ink/10 bg-paper px-3 py-0.5"
       data-testid="exercise-bar"
     >
       <span className="shrink-0 font-display text-sm font-bold">Bài tập</span>
@@ -30,7 +30,7 @@ export function ExerciseBar({
         const isDone = done.includes(e.id);
         const here = e.id === current.id;
         const label = `${isDone ? '✓ ' : open ? '' : '🔒 '}${String(i + 1)}. ${e.title}`;
-        const cls = `shrink-0 rounded-full border-2 px-3 py-0.5 text-sm ${here ? 'border-ink bg-sun font-bold' : isDone ? 'border-go bg-go/15' : 'border-ink/30 bg-white'}`;
+        const cls = `shrink-0 rounded-full border-2 px-3 py-0 text-sm ${here ? 'border-ink bg-sun font-bold' : isDone ? 'border-go bg-go/15' : 'border-ink/30 bg-white'}`;
         return open ? (
           <Link
             key={e.id}

@@ -2,9 +2,9 @@
   "id": "l01",
   "courseId": "bay-qua-khe",
   "order": 1,
-  "title": "Màn hình là tờ giấy kẻ ô",
+  "title": "Tọa độ và gọi lệnh",
   "draft": true,
-  "summary": "Màn hình là lưới điểm: tô ô màu đầu tiên bằng draw_rect và hai con số.",
+  "summary": "Màn hình là lưới điểm: gọi draw_rect với các con số để tô ô màu đúng chỗ.",
   "steps": [
     {
       "kind": "understand",
@@ -112,7 +112,7 @@
   "exercises": [
     {
       "id": "l01-e1",
-      "title": "Lệnh tô khối",
+      "title": "Ô vuông đầu tiên",
       "task": "draw_rect(x, y, rộng, cao, màu) tô một hình chữ nhật, góc trên bên trái ở (x, y). Các giá trị trong ngoặc gọi là tham số. Ví dụ: draw_rect(100, 300, 40, 40, \"gold\")",
       "input": "blocks",
       "starter": {
@@ -160,6 +160,121 @@
         "Kéo khối \"vẽ hình chữ nhật\" vào vùng ghép.",
         "Hai số đầu là x và y của góc trên bên trái.",
         "Cần: draw_rect(100, 300, 40, 40, \"gold\")"
+      ]
+    },
+    {
+      "id": "l01-e2",
+      "title": "Đèn giao thông",
+      "task": "Vẽ đèn giao thông: ba ô vuông 60 × 60 xếp dọc tại x = 170. Đỏ ở y = 150, vàng ở y = 220, xanh lá (green) ở y = 290.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\ndraw_rect(170, 150, 60, 60, \"red\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_draw_rect",
+        "pq_clear"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l01-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l01-e2-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\ndraw_rect(170, 150, 60, 60, \"red\")\ndraw_rect(170, 220, 60, 60, \"yellow\")\ndraw_rect(170, 290, 60, 60, \"green\")\n"
+      },
+      "walkthrough": [
+        "Ô đỏ đã có sẵn. Kéo thêm hai khối \"vẽ hình chữ nhật\" đặt bên dưới.",
+        "Cả ba ô cùng x = 170, rộng 60, cao 60. Chỉ y và màu khác nhau.",
+        "Ô thứ hai: y = 220, màu yellow. Ô thứ ba: y = 290, màu green.",
+        "Bấm ▶ Chạy rồi bấm 👀 để so với hình mẫu."
+      ],
+      "hints": [
+        "Mỗi ô là một dòng draw_rect.",
+        "Ô sau thấp hơn ô trước 70: 150, 220, 290."
+      ]
+    },
+    {
+      "id": "l01-e3",
+      "title": "Mặt đất và bầu trời",
+      "task": "Tô nền trời bằng clear(\"skyblue\"), rồi vẽ mặt đất xanh lá dài hết sân: góc ở (0, 520), rộng WIDTH, cao 80. WIDTH là bề rộng sân, bằng 400.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nclear(\"skyblue\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l01-e3-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l01-e3-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_rect(0, 520, WIDTH, 80, \"green\")\n"
+      },
+      "walkthrough": [
+        "Bài này em gõ code trong khung Python.",
+        "Dưới dòng clear, gõ: draw_rect(0, 520, WIDTH, 80, \"green\")",
+        "WIDTH viết hoa, không có dấu nháy: nó là tên một con số trong thư viện."
+      ],
+      "hints": [
+        "Dòng cần thêm bắt đầu bằng draw_rect(0, 520, …",
+        "Rộng là WIDTH, cao là 80."
+      ]
+    },
+    {
+      "id": "l01-e4",
+      "title": "Ngôi nhà",
+      "task": "Vẽ một ngôi nhà: thân nhà vàng (gold) góc (120, 300) rộng 160 cao 140; cửa nâu (brown) góc (180, 360) rộng 40 cao 80; mái đỏ góc (100, 260) rộng 200 cao 40.",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\nclear(\"skyblue\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l01-e4-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l01-e4-same",
+          "label": "Giống hình mẫu 👀",
+          "kind": "matches"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_rect(120, 300, 160, 140, \"gold\")\ndraw_rect(180, 360, 40, 80, \"brown\")\ndraw_rect(100, 260, 200, 40, \"red\")\n"
+      },
+      "walkthrough": [
+        "Mỗi phần của nhà là một dòng draw_rect.",
+        "Vẽ thân nhà trước, rồi cửa (cửa nằm đè lên thân), rồi mái.",
+        "Bấm 👀 để thấy hình cần vẽ."
+      ],
+      "hints": [
+        "Thứ tự số: x, y, rộng, cao, màu.",
+        "Cửa: draw_rect(180, 360, 40, 80, \"brown\")"
       ]
     }
   ],
