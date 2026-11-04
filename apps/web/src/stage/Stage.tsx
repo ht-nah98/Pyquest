@@ -2,6 +2,7 @@ import type { DrawEvent } from '@pyquest/runtime';
 import { STAGE_HEIGHT, STAGE_WIDTH } from '@pyquest/runtime';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { drawEvent, preloadSprites, resetStage } from './render';
+import { replayDelay } from './replayDelay';
 
 export type StageHandle = {
   /** Draw a whole frame (game mode): reset, then every event. */
@@ -45,7 +46,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
         if (says.length > 0) setBubbles(says.slice(-3));
         bump();
       },
-      async replay(events, msPerEvent = 30) {
+      async replay(events, msPerEvent = replayDelay(events.length)) {
         const token = ++replayToken.current;
         await preloadSprites();
         const c = ctx();

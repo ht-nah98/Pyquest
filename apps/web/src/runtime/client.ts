@@ -11,13 +11,23 @@ type Body<K> = K extends WorkerRequest ? Omit<K, 'id'> : never;
  * One Python worker for the whole app, so Pyodide (~10 MB) loads once. stop() kills a runaway program
  * by terminating the worker; the next call starts a fresh one.
  */
-class PyClient {
+export class PyClient {
   private worker: Worker | null = null;
   private nextId = 1;
   private pending = new Map<number, Pending>();
   private statusValue: PyStatus = 'idle';
   private listeners = new Set<() => void>();
   private readyPromise: Promise<void> | null = null;
+
+  constructor(
+    private readonly makeWorker: () => Worker = () =>
+      new Worker(new URL('./python.worker.ts', import.meta.url), { type: 'module' }),
+  ) {}
+
+  /** True while Python is working on a call (Stop must then kill the worker). */
+  get hasPending(): boolean {
+    return this.pending.size > 0;
+  }
 
   get status(): PyStatus {
     return this.statusValue;
@@ -37,19 +47,31 @@ class PyClient {
   warmUp(): Promise<void> {
     if (this.readyPromise !== null) return this.readyPromise;
     this.setStatus('loading');
-    const worker = new Worker(new URL('./python.worker.ts', import.meta.url), { type: 'module' });
+    const worker = this.makeWorker();
     this.worker = worker;
     this.readyPromise = new Promise((resolve, reject) => {
+      // A failed load forgets this worker, so the next warmUp() (the retry button) starts clean (review I2).
+      const fail = (message: string) => {
+        worker.terminate();
+        if (this.worker === worker) {
+          this.worker = null;
+          this.readyPromise = null;
+        }
+        for (const p of this.pending.values()) p.reject(new Error(message));
+        this.pending.clear();
+        this.setStatus('failed');
+        reject(new Error(message));
+      };
+      worker.onerror = () => {
+        fail('python worker could not load');
+      };
       worker.onmessage = (e: MessageEvent<WorkerReply>) => {
         const msg = e.data;
         if ('kind' in msg) {
           if (msg.kind === 'ready') {
             this.setStatus('ready');
             resolve();
-          } else {
-            this.setStatus('failed');
-            reject(new Error(msg.message));
-          }
+          } else fail(msg.message);
           return;
         }
         const p = this.pending.get(msg.id);

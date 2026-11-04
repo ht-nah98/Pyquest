@@ -31,6 +31,13 @@ describe('Python → blocks → Python', () => {
     '# vẽ chim\ndraw_bird(1, 2)',
     'x = (a if c else b) + 1',
     'x = random_int(1, 5) * 2',
+    'score = 0\nscore += 1; print(score)',
+    'x = 1; y = 2  # hai biến',
+    'x = 1.0',
+    'x = 0x10',
+    '@decorate\ndef f():\n    pass',
+    'x = 1\n\ny = 2',
+    "print('hi')",
   ])('%j survives the round trip', (source) => {
     expect(roundTrip(source).trimEnd()).toBe(source);
   });

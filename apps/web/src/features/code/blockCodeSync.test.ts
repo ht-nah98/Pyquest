@@ -53,6 +53,35 @@ describe('BlockCodeSync', () => {
     expect(await pending).toBe(false);
   });
 
+  test('after the child types, block edits do not overwrite the code until it parses', async () => {
+    const { sync, seen } = setup();
+    await sync.fromCode('draw_bird(1, 2)');
+    sync.markCodeDirty();
+    expect(sync.fromBlocks()).toBeNull();
+    expect(seen.code).toEqual([]);
+    expect(await sync.fromCode('draw_bird(1, 2)\nx = = 2')).toBe(false);
+    expect(sync.fromBlocks()).toBeNull();
+    expect(seen.code).toEqual([]);
+    expect(await sync.fromCode('draw_bird(5, 2)')).toBe(true);
+    expect(sync.fromBlocks()).toBe('draw_bird(5, 2)\n');
+  });
+
+  test('an older parse that finishes last is dropped', async () => {
+    const ws = new Blockly.Workspace();
+    const resolvers: ((v: ReturnType<PyRunner['parseBlocks']>) => void)[] = [];
+    const sync = new BlockCodeSync(ws, () => new Promise((r) => resolvers.push(r)), {
+      onCode: () => undefined,
+      onError: () => undefined,
+    });
+    const older = sync.fromCode('draw_bird(1, 1)');
+    const newer = sync.fromCode('draw_bird(2, 2)');
+    resolvers[1]!(py.parseBlocks('draw_bird(2, 2)'));
+    expect(await newer).toBe(true);
+    resolvers[0]!(py.parseBlocks('draw_bird(1, 1)'));
+    expect(await older).toBe(false);
+    expect(sync.fromBlocks()).toBe('draw_bird(2, 2)\n');
+  });
+
   test('while applying code, block events are ignored', async () => {
     const { sync } = setup();
     const p = sync.fromCode('draw_bird(1, 2)');

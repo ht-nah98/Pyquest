@@ -24,7 +24,9 @@ test('drag a block, edit the code, blocks follow, run, fullscreen and back', asy
 
   // Code → blocks.
   await typeCode(page, 'x = 120\ndraw_bird(x, 250)');
-  await expect(page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '120' })).toBeVisible();
+  await expect(
+    page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '120' }),
+  ).toBeVisible();
 
   // Run: goal not met at (120, 250), then fix it.
   await page.getByTestId('run').click();
@@ -51,12 +53,39 @@ test('drag a block, edit the code, blocks follow, run, fullscreen and back', asy
 test('a syntax error keeps the blocks and points at the line', async ({ page }) => {
   await openCode(page);
   await typeCode(page, 'draw_bird(100, 300)');
-  await expect(page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '300' })).toBeVisible();
+  await expect(
+    page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '300' }),
+  ).toBeVisible();
   await typeCode(page, 'draw_bird(100, 300)\nx = = 2');
   await expect(page.getByTestId('sync-error')).toContainText('Dòng 2');
-  await expect(page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '300' })).toBeVisible();
+  await expect(
+    page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '300' }),
+  ).toBeVisible();
   await page.getByTestId('run').click();
   await expect(page.getByTestId('run-error')).toContainText('Dòng 2');
+
+  // Review C1: while the code has an error, touching the blocks must not overwrite it.
+  await expect(page.getByTestId('blocks-locked')).toBeVisible();
+  const pane = await page.getByTestId('blocks-pane').boundingBox();
+  if (pane === null) throw new Error('no pane');
+  await page.mouse.move(pane.x + 60, pane.y + 30);
+  await page.mouse.down();
+  await page.mouse.move(pane.x + 300, pane.y + 200, { steps: 8 });
+  await page.mouse.up();
+  await page.waitForTimeout(800);
+  expect(await codeText(page)).toBe('draw_bird(100, 300)\nx = = 2');
+
+  // Fixing the error unlocks the blocks again.
+  await typeCode(page, 'draw_bird(100, 300)\nx = 2');
+  await expect(page.getByTestId('blocks-locked')).toBeHidden();
+});
+
+test('Stop ends a long drawing replay at once, without reloading Python', async ({ page }) => {
+  await openCode(page);
+  await typeCode(page, 'for i in range(400):\n    draw_bird(i, 300)');
+  await page.getByTestId('run').click();
+  await page.getByTestId('stop').click();
+  await expect(page.getByTestId('run')).toHaveText(/Chạy/, { timeout: 2_000 });
 });
 
 test('an endless loop can be stopped', async ({ page }) => {
@@ -66,7 +95,10 @@ test('an endless loop can be stopped', async ({ page }) => {
   const stop = page.getByTestId('stop');
   const outcome = await Promise.race([
     stop.waitFor({ timeout: 5_000 }).then(() => 'stop-shown'),
-    page.getByTestId('run-error').waitFor({ timeout: 20_000 }).then(() => 'limit-hit'),
+    page
+      .getByTestId('run-error')
+      .waitFor({ timeout: 20_000 })
+      .then(() => 'limit-hit'),
   ]);
   if (outcome === 'stop-shown' && (await stop.isVisible())) await stop.click();
   await pythonReady(page);

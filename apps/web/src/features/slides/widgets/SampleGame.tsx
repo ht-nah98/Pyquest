@@ -38,7 +38,13 @@ export function SampleGame({ source }: { source: string }) {
       </div>
       <div className="flex flex-col gap-3">
         <Button tone="go" onClick={play} data-testid="sample-play">
-          {status === 'loading' ? 'Đang chuẩn bị Python…' : playing ? '↻ Chơi lại' : '▶ Chơi thử'}
+          {status === 'loading'
+            ? 'Đang chuẩn bị Python…'
+            : status === 'failed'
+              ? '⚠️ Chưa tải được Python. Thử lại'
+              : playing
+                ? '↻ Chơi lại'
+                : '▶ Chơi thử'}
         </Button>
         <Button
           onClick={() => void box.current?.requestFullscreen()}

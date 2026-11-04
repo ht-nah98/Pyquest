@@ -89,6 +89,16 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     [update, main],
   );
 
+  /** Rebuild the blocks from this code; a stopped worker just leaves the blocks stale until the next try. */
+  function reparse(text: string) {
+    void sync.current
+      ?.fromCode(text)
+      .then((ok) => {
+        if (ok && sync.current !== null) update({ workspace: sync.current.saveState() });
+      })
+      .catch(() => undefined);
+  }
+
   const onReady = useCallback(
     (ws: Blockly.WorkspaceSvg) => {
       const s = new BlockCodeSync(ws, (src) => python.parse(src), {
@@ -102,8 +112,9 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
         },
       });
       sync.current = s;
+      // Saved blocks are only a first paint: the code is the truth, so always re-parse it (review C1).
       if (state?.workspace !== undefined) s.loadState(state.workspace);
-      else void s.fromCode(filesRef.current[main] ?? '');
+      reparse(filesRef.current[main] ?? '');
     },
     // Runs once, when Blockly is injected.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -113,21 +124,23 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const onBlocksEdit = useCallback(() => {
     const s = sync.current;
     if (s === null || s.applying) return;
-    s.fromBlocks();
+    // Blocks behind newer typed code must never overwrite it (review C1).
+    if (s.fromBlocks() === null) return;
     update({ workspace: s.saveState() });
   }, [update]);
 
   const onCodeChange = useCallback(
     (text: string) => {
+      sync.current?.markCodeDirty();
       saveCode(text);
       clearTimeout(parseTimer.current);
       parseTimer.current = setTimeout(() => {
-        void sync.current?.fromCode(text).then((ok) => {
-          if (ok && sync.current !== null) update({ workspace: sync.current.saveState() });
-        });
+        reparse(text);
       }, PARSE_DELAY_MS);
     },
-    [saveCode, update],
+    // reparse is stable (refs only).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [saveCode],
   );
 
   useEffect(
@@ -139,9 +152,18 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
 
   const stop = () => {
     loop.stop();
-    python.stop();
+    stage.current?.clear();
     setRunning(false);
-    void python.warmUp().catch(() => undefined);
+    // Only kill the worker when Python is really busy; a replaying animation needs no reload (review I3).
+    if (python.hasPending) {
+      python.stop();
+      void python
+        .warmUp()
+        .then(() => {
+          reparse(filesRef.current[main] ?? '');
+        })
+        .catch(() => undefined);
+    }
   };
 
   const run = async () => {
@@ -179,7 +201,17 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             style={{ flexBasis: `${String(split)}%` }}
           >
             <h2 className="border-b-2 border-ink px-3 py-1 text-base">🧩 Khối</h2>
-            <div className="min-h-0 flex-1">
+            <div className="relative min-h-0 flex-1">
+              {syncError !== null && (
+                <div
+                  className="absolute inset-0 z-[85] flex items-center justify-center bg-white/70 p-4 text-center"
+                  data-testid="blocks-locked"
+                >
+                  <p className="rounded-[10px] border-2 border-ink bg-paper px-4 py-3 shadow-hard">
+                    ✋ Sửa lỗi ở khung Python trước, khối sẽ hiện lại.
+                  </p>
+                </div>
+              )}
               <BlocksPane
                 ref={blocks}
                 toolbox={code.toolbox}
@@ -237,11 +269,21 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
               <Button tone="oops" onClick={stop} data-testid="stop">
                 ■ Dừng
               </Button>
+            ) : status === 'failed' ? (
+              <Button
+                tone="sun"
+                onClick={() => {
+                  void python.warmUp().catch(() => undefined);
+                }}
+                data-testid="python-retry"
+              >
+                ⚠️ Chưa tải được Python. Thử lại
+              </Button>
             ) : (
               <Button
                 tone="go"
                 onClick={() => void run()}
-                disabled={status === 'loading'}
+                disabled={status === 'loading' || status === 'idle'}
                 data-testid="run"
               >
                 {status === 'loading' || status === 'idle' ? 'Đang chuẩn bị Python…' : '▶ Chạy'}
