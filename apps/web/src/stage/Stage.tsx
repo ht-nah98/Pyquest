@@ -22,13 +22,34 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
     const [bubbles, setBubbles] = useState<string[]>([]);
     const frames = useRef(0);
     const replayToken = useRef(0);
+    /** What is on screen now, so a resize (new backing size) can redraw it. */
+    const shown = useRef<DrawEvent[]>([]);
 
     const ctx = () => canvas.current?.getContext('2d') ?? null;
 
     useEffect(() => {
-      const c = ctx();
-      if (c !== null) resetStage(c);
+      const el = canvas.current;
+      if (el === null) return;
+      // Backing store = displayed size × devicePixelRatio, so pictures stay sharp when the stage is big.
+      const fit = () => {
+        const k = Math.min(el.clientWidth / STAGE_WIDTH, el.clientHeight / STAGE_HEIGHT);
+        const scale = Math.max(1, k * (window.devicePixelRatio || 1));
+        const w = Math.round(STAGE_WIDTH * scale);
+        if (el.width === w) return;
+        el.width = w;
+        el.height = Math.round(STAGE_HEIGHT * scale);
+        const c = el.getContext('2d');
+        if (c === null) return;
+        resetStage(c);
+        for (const e of shown.current) drawEvent(c, e);
+      };
+      fit();
+      const ro = new ResizeObserver(fit);
+      ro.observe(el);
       void preloadSprites();
+      return () => {
+        ro.disconnect();
+      };
     }, []);
 
     const bump = () => {
@@ -42,6 +63,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
         if (c === null) return;
         resetStage(c);
         for (const e of events) drawEvent(c, e);
+        shown.current = [...events];
         const says = events.flatMap((e) => (e.t === 'say' ? [e.text] : []));
         if (says.length > 0) setBubbles(says.slice(-3));
         bump();
@@ -53,13 +75,17 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
         if (c === null) return;
         resetStage(c);
         setBubbles([]);
+        shown.current = [];
         const says: string[] = [];
         for (const e of events) {
           if (token !== replayToken.current) return;
           if (e.t === 'say') {
             says.push(e.text);
             setBubbles(says.slice(-3));
-          } else drawEvent(c, e);
+          } else {
+            drawEvent(c, e);
+            shown.current.push(e);
+          }
           bump();
           if (msPerEvent > 0 && e.t !== 'frame')
             await new Promise((r) => setTimeout(r, msPerEvent));
@@ -67,6 +93,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
       },
       clear() {
         replayToken.current++;
+        shown.current = [];
         const c = ctx();
         if (c !== null) resetStage(c);
         setBubbles([]);
@@ -81,7 +108,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
           height={STAGE_HEIGHT}
           data-testid={testId}
           data-frames="0"
-          className="h-full w-full object-contain [image-rendering:pixelated]"
+          className="h-full w-full object-contain"
         />
         {bubbles.length > 0 && (
           <div

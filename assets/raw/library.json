@@ -1,0 +1,14 @@
+[
+  { "src": "assets/raw/bird/bird-lua.png", "id": "bird", "group": "bird", "label": "Én Lửa" },
+  { "src": "assets/raw/bird/bird-cu.png", "id": "bird-cu", "group": "bird", "label": "Cú Mèo" },
+  { "src": "assets/raw/bird/bird-vet.png", "id": "bird-vet", "group": "bird", "label": "Vẹt Xanh" },
+  { "src": "assets/raw/bird/bird-rong.png", "id": "bird-rong", "group": "bird", "label": "Rồng Con" },
+  { "src": "assets/raw/pipe/pillar-tre.png", "id": "pipe", "group": "pipe", "label": "Cột tre" },
+  { "src": "assets/raw/pipe/pillar-da.png", "id": "pipe-da", "group": "pipe", "label": "Cột đá rêu" },
+  { "src": "assets/raw/pipe/pillar-pha-le.png", "id": "pipe-pha-le", "group": "pipe", "label": "Cột pha lê" },
+  { "src": "assets/raw/pipe/pillar-cay.png", "id": "pipe-cay", "group": "pipe", "label": "Thân cây" },
+  { "src": "assets/raw/background/bg-ruong-bac-thang.png", "id": "background", "group": "background", "label": "Ruộng bậc thang" },
+  { "src": "assets/raw/background/bg-pho-co.png", "id": "background-pho-co", "group": "background", "label": "Phố cổ chiều" },
+  { "src": "assets/raw/background/bg-vinh-bien.png", "id": "background-vinh-bien", "group": "background", "label": "Vịnh biển" },
+  { "src": "assets/raw/background/bg-thanh-pho-dem.png", "id": "background-thanh-pho-dem", "group": "background", "label": "Thành phố đêm" }
+]

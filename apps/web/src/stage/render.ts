@@ -33,6 +33,11 @@ export const DEFAULT_SKY = '#bfe3f2';
 
 /** Clears the canvas to the empty stage (sky blue, like a fresh sheet). */
 export function resetStage(ctx: CanvasRenderingContext2D): void {
+  // The backing store matches the screen (Stage sizes it); draw in 400 × 600 stage units.
+  const k = ctx.canvas.width / STAGE_WIDTH;
+  ctx.setTransform(k, 0, 0, k, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.fillStyle = DEFAULT_SKY;
   ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
 }
@@ -67,33 +72,17 @@ export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent): void {
         return;
       }
       const frame = ((e.frame % asset.frames) + asset.frames) % asset.frames;
+      // The file may be stored larger than its game size (2× for sharp screens): read the source
+      // frame from the real pixels, draw it at the game size.
+      const sw = img.naturalWidth / asset.frames;
+      const sh = img.naturalHeight;
       ctx.save();
       if (e.flip === true) {
         ctx.translate(e.x, e.y + asset.height);
         ctx.scale(1, -1);
-        ctx.drawImage(
-          img,
-          frame * asset.width,
-          0,
-          asset.width,
-          asset.height,
-          0,
-          0,
-          asset.width,
-          asset.height,
-        );
+        ctx.drawImage(img, frame * sw, 0, sw, sh, 0, 0, asset.width, asset.height);
       } else {
-        ctx.drawImage(
-          img,
-          frame * asset.width,
-          0,
-          asset.width,
-          asset.height,
-          e.x,
-          e.y,
-          asset.width,
-          asset.height,
-        );
+        ctx.drawImage(img, frame * sw, 0, sw, sh, e.x, e.y, asset.width, asset.height);
       }
       ctx.restore();
       return;

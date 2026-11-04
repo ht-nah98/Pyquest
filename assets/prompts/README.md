@@ -22,6 +22,12 @@ no shadow on the background
 - Không nhân vật hay logo của game, phim hay hãng nào.
 - Không chữ trong ảnh, vì chữ trong game do code vẽ bằng font VT323.
 
+## Ghi chú sau đợt ảnh đầu (04/11/2026)
+
+Đợt đầu ra kiểu **hoạt hình nét mịn, nền trắng** (nền là pixel art). Công cụ xử lý được cả hai: nền trắng hay magenta
+đều tách được. Muốn cả kho đồng bộ hơn thì lần sau thêm `pixel art` vào đầu prompt của chim và cột. Chưa có ảnh
+**mặt đất** riêng: dải đất đang được cắt tự động từ đáy ảnh nền.
+
 ## Mẹo khi sinh ảnh
 
 - Nếu công cụ cho chọn tỉ lệ khung thì chọn đúng tỉ lệ ghi ở từng prompt.

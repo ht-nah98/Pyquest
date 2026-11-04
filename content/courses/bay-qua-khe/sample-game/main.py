@@ -4,14 +4,17 @@
 GRAVITY = 0.45      # mỗi khung hình chim rơi nhanh thêm bấy nhiêu
 FLAP = -7.5         # bấm một lần: tốc độ thành số âm, tức là bay lên
 GAP = 150           # khe giữa hai cột
-PIPE_W = 52         # bề rộng một cột
-PIPE_H = 320        # chiều cao hình cột
+PIPE_W = 52         # bề rộng thân cột (chỗ chạm vào là thua)
+PIPE_H = 440        # chiều cao hình cột
+PIPE_PAD = 12       # hình cột rộng 76: lá/đầu cột tràn ra 12 mỗi bên
 SPACING = 220       # khoảng cách giữa hai cặp cột
 SPEED = 2           # cột trượt sang trái bao nhiêu mỗi khung
 GROUND_Y = 520      # mặt đất bắt đầu ở đây
 BIRD_X = 80
-BIRD_W = 32
-BIRD_H = 24
+BIRD_W = 44
+BIRD_H = 40
+HIT = 8             # chừa mép: đuôi và cánh mỏng không tính là va chạm
+GROUND_W = 800      # dải đất dài 800, cuộn vòng
 
 bird_y = 250
 speed = 0
@@ -39,9 +42,9 @@ def reset():
 
 def hits(pipe):
     x, gap_top = pipe[0], pipe[1]
-    if BIRD_X + BIRD_W - 4 < x or BIRD_X + 4 > x + PIPE_W:
+    if BIRD_X + BIRD_W - HIT < x or BIRD_X + HIT > x + PIPE_W:
         return False
-    return bird_y + 4 < gap_top or bird_y + BIRD_H - 4 > gap_top + GAP
+    return bird_y + HIT < gap_top or bird_y + BIRD_H - HIT > gap_top + GAP
 
 
 def update():
@@ -77,7 +80,7 @@ def update():
         pipes.pop(0)
         pipes.append(new_pipe(pipes[-1][0] + SPACING))
 
-    crashed = bird_y + BIRD_H > GROUND_Y or bird_y < -BIRD_H
+    crashed = bird_y + BIRD_H - HIT > GROUND_Y or bird_y < -BIRD_H
     for pipe in pipes:
         if hits(pipe):
             crashed = True
@@ -90,11 +93,12 @@ def update():
 def draw():
     draw_sprite("background", 0, 0)
     for pipe in pipes:
-        draw_sprite("pipe", pipe[0], pipe[1] - PIPE_H, flip=True)
-        draw_sprite("pipe", pipe[0], pipe[1] + GAP)
-    ground_x = -(frame_no * SPEED % 400) if state != "over" else -(over_at * SPEED % 400)
+        draw_sprite("pipe", pipe[0] - PIPE_PAD, pipe[1] - PIPE_H, flip=True)
+        draw_sprite("pipe", pipe[0] - PIPE_PAD, pipe[1] + GAP)
+    moved = frame_no if state != "over" else over_at
+    ground_x = -(moved * SPEED % GROUND_W)
     draw_sprite("ground", ground_x, GROUND_Y)
-    draw_sprite("ground", ground_x + 400, GROUND_Y)
+    draw_sprite("ground", ground_x + GROUND_W, GROUND_Y)
     flap = frame_no // 5 % 3 if state != "over" else 1
     draw_bird(BIRD_X, bird_y, flap)
     draw_text(str(score), 200, 60, 56)

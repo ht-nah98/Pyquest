@@ -7,38 +7,158 @@
       "width": 400,
       "height": 600,
       "frames": 1,
-      "credit": "placeholder",
-      "label": "Ruộng bậc thang (tạm)"
+      "credit": "ai-generated",
+      "label": "Ruộng bậc thang"
+    },
+    {
+      "id": "background-pho-co",
+      "group": "background",
+      "file": "background-pho-co.png",
+      "width": 400,
+      "height": 600,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Phố cổ chiều"
+    },
+    {
+      "id": "background-thanh-pho-dem",
+      "group": "background",
+      "file": "background-thanh-pho-dem.png",
+      "width": 400,
+      "height": 600,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Thành phố đêm"
+    },
+    {
+      "id": "background-vinh-bien",
+      "group": "background",
+      "file": "background-vinh-bien.png",
+      "width": 400,
+      "height": 600,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Vịnh biển"
     },
     {
       "id": "bird",
       "group": "bird",
       "file": "bird.png",
-      "width": 32,
-      "height": 24,
+      "width": 44,
+      "height": 40,
       "frames": 3,
-      "credit": "placeholder",
-      "label": "Chim én (tạm)"
+      "credit": "ai-generated",
+      "label": "Én Lửa"
+    },
+    {
+      "id": "bird-cu",
+      "group": "bird",
+      "file": "bird-cu.png",
+      "width": 44,
+      "height": 40,
+      "frames": 3,
+      "credit": "ai-generated",
+      "label": "Cú Mèo"
+    },
+    {
+      "id": "bird-rong",
+      "group": "bird",
+      "file": "bird-rong.png",
+      "width": 44,
+      "height": 40,
+      "frames": 3,
+      "credit": "ai-generated",
+      "label": "Rồng Con"
+    },
+    {
+      "id": "bird-vet",
+      "group": "bird",
+      "file": "bird-vet.png",
+      "width": 44,
+      "height": 40,
+      "frames": 3,
+      "credit": "ai-generated",
+      "label": "Vẹt Xanh"
     },
     {
       "id": "ground",
       "group": "ground",
       "file": "ground.png",
-      "width": 400,
+      "width": 800,
       "height": 80,
       "frames": 1,
-      "credit": "placeholder",
-      "label": "Đất ruộng (tạm)"
+      "credit": "ai-generated",
+      "label": "Ruộng bậc thang"
+    },
+    {
+      "id": "ground-pho-co",
+      "group": "ground",
+      "file": "ground-pho-co.png",
+      "width": 800,
+      "height": 80,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Phố cổ chiều"
+    },
+    {
+      "id": "ground-thanh-pho-dem",
+      "group": "ground",
+      "file": "ground-thanh-pho-dem.png",
+      "width": 800,
+      "height": 80,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Thành phố đêm"
+    },
+    {
+      "id": "ground-vinh-bien",
+      "group": "ground",
+      "file": "ground-vinh-bien.png",
+      "width": 800,
+      "height": 80,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Vịnh biển"
     },
     {
       "id": "pipe",
       "group": "pipe",
       "file": "pipe.png",
-      "width": 52,
-      "height": 320,
+      "width": 76,
+      "height": 440,
       "frames": 1,
-      "credit": "placeholder",
-      "label": "Cột tre (tạm)"
+      "credit": "ai-generated",
+      "label": "Cột tre"
+    },
+    {
+      "id": "pipe-cay",
+      "group": "pipe",
+      "file": "pipe-cay.png",
+      "width": 76,
+      "height": 440,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Thân cây"
+    },
+    {
+      "id": "pipe-da",
+      "group": "pipe",
+      "file": "pipe-da.png",
+      "width": 76,
+      "height": 440,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Cột đá rêu"
+    },
+    {
+      "id": "pipe-pha-le",
+      "group": "pipe",
+      "file": "pipe-pha-le.png",
+      "width": 76,
+      "height": 440,
+      "frames": 1,
+      "credit": "ai-generated",
+      "label": "Cột pha lê"
     }
   ]
 }
