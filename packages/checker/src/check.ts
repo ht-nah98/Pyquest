@@ -215,21 +215,41 @@ export type GameApi = {
   step: (input: GameInput) => RunResult | Promise<RunResult>;
 };
 
+/** A game test run: every frame joined; lastFrameFrom = id of the first call made in the last frame. */
+export type GameTestResult = RunResult & { lastFrameFrom: number };
+
 /**
  * The automatic test of a game-mode program: start it, play the scheduled frames (tapping on the
  * listed ones) and join the frames into one result the goals can judge. Same on Node and in the page.
+ * Each frame numbers its calls from 0, so they are renumbered here to stay unique across frames.
  */
 export async function runGameTest(
   api: GameApi,
   test: { frames: number; taps: readonly number[] },
-): Promise<RunResult> {
+): Promise<GameTestResult> {
   const start = await api.start();
-  if (start.error !== undefined || start.stoppedByLimit) return start;
+  if (start.error !== undefined || start.stoppedByLimit) return { ...start, lastFrameFrom: 0 };
   // Drawing done while the module loads belongs to no frame: frame 0 is the first update().
-  const all: RunResult = { events: [], vars: start.vars, stoppedByLimit: false, calls: [] };
+  const all: GameTestResult = {
+    events: [],
+    vars: start.vars,
+    stoppedByLimit: false,
+    calls: [],
+    lastFrameFrom: 0,
+  };
   for (let f = 0; f < test.frames; f++) {
     const r = await api.step({ keys: [], tapped: test.taps.includes(f) });
-    all.events.push(...r.events);
+    const offset = all.calls.length;
+    all.lastFrameFrom = offset;
+    for (const c of r.calls)
+      all.calls.push({
+        ...c,
+        id: c.id + offset,
+        parent: c.parent === null ? null : c.parent + offset,
+      });
+    for (const e of r.events)
+      all.events.push(e.t !== 'frame' && e.by !== undefined ? { ...e, by: e.by + offset } : e);
+    if (r.callsTruncated === true) all.callsTruncated = true;
     all.vars = r.vars;
     if (r.error !== undefined) return { ...all, error: r.error };
     if (r.stoppedByLimit) return { ...all, stoppedByLimit: true };

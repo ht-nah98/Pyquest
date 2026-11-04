@@ -1,5 +1,11 @@
 import { BLOCK_TYPES, registerBlocks, toPython, treeToState } from '@pyquest/blocks';
-import { checkGoals, runGameTest } from '@pyquest/checker';
+import {
+  checkGoals,
+  needsShiftedRun,
+  runGameTest,
+  shiftSource,
+  type GoalResult,
+} from '@pyquest/checker';
 import {
   AssetManifestSchema,
   CourseSchema,
@@ -148,6 +154,9 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
     if (goal.kind === 'drew' && !ctx.assetIds.has(goal.sprite)) {
       ctx.err(where, `goal ${goal.id} sprite "${goal.sprite}" is not in the asset library`);
     }
+    if (goal.kind === 'shifts' && code.mode !== 'script') {
+      ctx.err(where, `goal ${goal.id}: shifts only works in script mode`);
+    }
   }
 
   // Rule 9: what the lesson ships must survive code → blocks → code unchanged, or the editor would
@@ -165,16 +174,33 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
     }
   }
 
-  const solution = await runLesson(ctx.py, code.mode, code.solution, code.main, code.test);
-  const failed = checkGoals(code.goals, solution).filter((g) => !g.ok);
+  const solution = await gradeFiles(ctx.py, code, code.solution);
+  const failed = solution.goals.filter((g) => !g.ok);
   if (failed.length > 0) {
-    const why = solution.error === undefined ? '' : ` (${solution.error.raw})`;
+    const why = solution.run.error === undefined ? '' : ` (${solution.run.error.raw})`;
     ctx.err(where, `solution misses goals ${failed.map((g) => g.id).join(', ')}${why}`);
   }
-  const starter = await runLesson(ctx.py, code.mode, code.starter, code.main, code.test);
-  if (checkGoals(code.goals, starter).every((g) => g.ok)) {
+  const starter = await gradeFiles(ctx.py, code, code.starter);
+  if (starter.goals.every((g) => g.ok)) {
     ctx.err(where, 'starter already passes every goal; the lesson would finish itself');
   }
+}
+
+/** Runs a lesson's files and grades them the way the page does, a 'shifts' goal's second run included. */
+async function gradeFiles(
+  py: PyRunner,
+  code: NonNullable<OpenLesson['code']>,
+  files: Record<string, string>,
+): Promise<{ run: RunResult; goals: GoalResult[] }> {
+  const run = await runLesson(py, code.mode, files, code.main, code.test);
+  const shift = needsShiftedRun(code.goals);
+  const moved =
+    shift === undefined ? undefined : shiftSource(files[code.main] ?? '', shift.var, shift.by);
+  const shifted =
+    moved === undefined
+      ? undefined
+      : await runLesson(py, code.mode, { ...files, [code.main]: moved }, code.main, code.test);
+  return { run, goals: checkGoals(code.goals, run, shifted) };
 }
 
 async function runLesson(

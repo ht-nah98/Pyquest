@@ -1,8 +1,9 @@
+import { librarySource } from '@pyquest/runtime';
 import { catalog } from '../../content/catalog';
 
 /**
- * 📘 Thư viện: every pyquest command the child has met so far, with Vietnamese words and an example.
- * It answers "where does draw_bird come from?" — from the library opened by `from pyquest import *`.
+ * 📘 Thư viện: every pyquest command the child has met so far: what it does, why the library has it,
+ * an example, and "Xem bên trong" — its real code, because a library is just a Python file someone wrote.
  */
 export function LibraryPanel({
   uptoOrder,
@@ -29,17 +30,33 @@ export function LibraryPanel({
         </button>
       </header>
       <p className="px-3 pt-2 text-sm text-ink-soft">
-        Các lệnh làm sẵn. Dòng <code className="rounded bg-white px-1">from pyquest import *</code>{' '}
-        ở đầu file mở hộp lệnh này ra cho em dùng.
+        Mảnh gốc làm sẵn: những việc Python thường không tự làm được (tô màn hình, đọc phím, mở file
+        ảnh). Dòng <code className="rounded bg-white px-1">from pyquest import *</code> ở đầu file
+        mở hộp này ra. Còn <code>draw_bird</code>, <code>draw_pipe</code>… là em tự viết.
       </p>
       <ul className="flex-1 space-y-3 overflow-y-auto p-3">
         {entries.map((e) => (
           <li key={e.name} className="rounded-[10px] border border-ink/20 bg-white p-3">
             <p className="font-code font-bold text-brand-deep">{e.signature}</p>
             <p className="mt-1 text-[15px]">{e.vi}</p>
+            <p className="mt-1 text-[15px]" data-testid="library-why">
+              <b>Vì sao có?</b> {e.why}
+            </p>
             <pre className="mt-2 overflow-x-auto rounded bg-code-bg px-2 py-1 font-code text-sm text-code-fg">
               {e.example}
             </pre>
+            {librarySource(e.name) !== undefined && (
+              <details className="mt-2" data-testid="library-inside">
+                <summary className="cursor-pointer text-sm font-bold">🔍 Xem bên trong</summary>
+                <p className="mt-1 text-sm text-ink-soft">
+                  Đây là code thật trong file <code>pyquest.py</code>.
+                  {e.inside === undefined ? '' : ` ${e.inside}`}
+                </p>
+                <pre className="mt-1 overflow-x-auto rounded bg-code-bg px-2 py-1 font-code text-xs text-code-fg">
+                  {librarySource(e.name)}
+                </pre>
+              </details>
+            )}
           </li>
         ))}
       </ul>

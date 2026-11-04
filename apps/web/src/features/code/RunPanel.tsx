@@ -3,7 +3,7 @@ import type { RunResult } from '@pyquest/runtime';
 import type { GoalResult } from '@pyquest/checker';
 
 /** How Python itself would print the value: True/False, text in quotes. */
-function pythonRepr(v: number | string | boolean): string {
+export function pythonRepr(v: number | string | boolean): string {
   if (typeof v === 'boolean') return v ? 'True' : 'False';
   return typeof v === 'string' ? `"${v}"` : String(v);
 }

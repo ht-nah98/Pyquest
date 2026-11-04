@@ -10,7 +10,36 @@ export type StageHandle = {
   /** Script mode: replay events one by one so the child sees the order things happen. */
   replay(events: readonly DrawEvent[], msPerEvent?: number): Promise<void>;
   clear(): void;
+  /**
+   * 📞 calls panel: keep the drawings made by these calls bright and fade the rest (null: all bright).
+   * Ids are the call ids of the events on screen.
+   */
+  highlight(ids: ReadonlySet<number> | null): void;
 };
+
+/** How faded a drawing is when another call is picked in the 📞 calls panel. */
+const FADED = 0.18;
+
+/** One event, faded when the 📞 panel picked another call. The background (clear) never fades. */
+function paintEvent(c: CanvasRenderingContext2D, e: DrawEvent, picked: ReadonlySet<number> | null) {
+  const dim =
+    picked !== null &&
+    e.t !== 'clear' &&
+    e.t !== 'frame' &&
+    (e.by === undefined || !picked.has(e.by));
+  c.globalAlpha = dim ? FADED : 1;
+  drawEvent(c, e);
+  c.globalAlpha = 1;
+}
+
+function repaintAll(
+  c: CanvasRenderingContext2D,
+  events: readonly DrawEvent[],
+  picked: ReadonlySet<number> | null,
+) {
+  resetStage(c);
+  for (const e of events) paintEvent(c, e, picked);
+}
 
 /**
  * The stage: a 400 × 600 canvas scaled to fit its box, plus speech bubbles from print().
@@ -24,6 +53,11 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
     const replayToken = useRef(0);
     /** What is on screen now, so a resize (new backing size) can redraw it. */
     const shown = useRef<DrawEvent[]>([]);
+    const picked = useRef<ReadonlySet<number> | null>(null);
+
+    const repaint = (c: CanvasRenderingContext2D) => {
+      repaintAll(c, shown.current, picked.current);
+    };
 
     const ctx = () => canvas.current?.getContext('2d') ?? null;
 
@@ -42,8 +76,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
         el.height = Math.round(STAGE_HEIGHT * scale);
         const c = el.getContext('2d');
         if (c === null) return;
-        resetStage(c);
-        for (const e of shown.current) drawEvent(c, e);
+        repaintAll(c, shown.current, picked.current);
       };
       fit();
       const ro = new ResizeObserver(fit);
@@ -63,9 +96,8 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
       showFrame(events) {
         const c = ctx();
         if (c === null) return;
-        resetStage(c);
-        for (const e of events) drawEvent(c, e);
         shown.current = [...events];
+        repaint(c);
         const says = events.flatMap((e) => (e.t === 'say' ? [e.text] : []));
         if (says.length > 0) setBubbles(says.slice(-3));
         bump();
@@ -85,13 +117,22 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
             says.push(e.text);
             setBubbles(says.slice(-3));
           } else {
-            drawEvent(c, e);
+            paintEvent(c, e, picked.current);
             shown.current.push(e);
           }
           bump();
           if (msPerEvent > 0 && e.t !== 'frame')
             await new Promise((r) => setTimeout(r, msPerEvent));
         }
+      },
+      highlight(ids) {
+        picked.current = ids;
+        canvas.current?.setAttribute(
+          'data-highlight',
+          ids === null ? '' : [...ids].sort((a, b) => a - b).join(','),
+        );
+        const c = ctx();
+        if (c !== null) repaint(c);
       },
       clear() {
         replayToken.current++;

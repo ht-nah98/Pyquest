@@ -381,3 +381,33 @@ describe('shiftSource', () => {
     expect(shiftSource('x = y + 1\n', 'x', 5)).toBeUndefined();
   });
 });
+
+describe('runGameTest and calls', () => {
+  test('calls of every frame get their own ids; lastFrameFrom marks where the last frame starts', async () => {
+    const frame = (x: number): RunResult => ({
+      events: [{ t: 'rect', x, y: 0, w: 1, h: 1, color: 'red', by: 1 }, { t: 'frame' }],
+      vars: {},
+      stoppedByLimit: false,
+      calls: [
+        { id: 0, parent: null, name: 'draw', args: {}, line: null },
+        { id: 1, parent: 0, name: 'draw_bird', args: { x }, line: 4 },
+      ],
+    });
+    let n = 0;
+    const r = await runGameTest(
+      {
+        start: () => Promise.resolve({ events: [], vars: {}, stoppedByLimit: false, calls: [] }),
+        step: () => frame(++n * 10),
+      },
+      { frames: 2, taps: [] },
+    );
+    expect(r.calls.map((c) => [c.id, c.parent, c.name])).toEqual([
+      [0, null, 'draw'],
+      [1, 0, 'draw_bird'],
+      [2, null, 'draw'],
+      [3, 2, 'draw_bird'],
+    ]);
+    expect(r.events.filter((e) => e.t === 'rect').map((e) => e.by)).toEqual([1, 3]);
+    expect(r.lastFrameFrom).toBe(2);
+  });
+});

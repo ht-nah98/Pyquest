@@ -5,5 +5,6 @@ export {
   runGameTest,
   shiftSource,
   type GameApi,
+  type GameTestResult,
   type GoalResult,
 } from './check';

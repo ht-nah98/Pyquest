@@ -1,4 +1,5 @@
-import { lineMap, registerBlocks, toolboxFor } from '@pyquest/blocks';
+import { callBlocksFor, lineMap, registerBlocks, toolboxFor } from '@pyquest/blocks';
+import type { BlockNode } from '@pyquest/runtime';
 import * as Blockly from 'blockly/core';
 import * as vi from 'blockly/msg/vi';
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
@@ -10,6 +11,14 @@ export type BlocksPaneHandle = {
 };
 
 let localeSet = false;
+
+/** The defs on the workspace, as the parser would give them, for the toolbox's call blocks. */
+function defsOn(w: Blockly.Workspace): BlockNode[] {
+  return w.getBlocksByType('pq_def', true).map((b) => ({
+    type: 'pq_def',
+    fields: { NAME: String(b.getFieldValue('NAME')), PARAMS: String(b.getFieldValue('PARAMS')) },
+  }));
+}
 
 /** The block half of the editor. Reports block edits and the line of the selected block. */
 export const BlocksPane = forwardRef<
@@ -46,13 +55,27 @@ export const BlocksPane = forwardRef<
       sounds: false,
     });
     ws.current = w;
+    // Every def in the code gets a call block in the toolbox ("Lệnh tự đặt"), like Scratch's My Blocks.
+    let defsKey = '[]';
+    const refreshCalls = () => {
+      const calls = callBlocksFor(defsOn(w));
+      const key = JSON.stringify(calls);
+      if (key === defsKey) return;
+      defsKey = key;
+      w.updateToolbox(toolboxFor(toolbox, calls));
+    };
     w.addChangeListener((e) => {
       if (e instanceof Blockly.Events.Selected) {
         const id = e.newElementId;
         cb.current.onSelectLine(id === undefined ? null : (lineMap(w).get(id) ?? null));
         return;
       }
-      if (e.isUiEvent || e instanceof Blockly.Events.FinishedLoading) return;
+      if (e instanceof Blockly.Events.FinishedLoading) {
+        refreshCalls();
+        return;
+      }
+      if (e.isUiEvent) return;
+      refreshCalls();
       cb.current.onEdit();
     });
     cb.current.onReady(w);

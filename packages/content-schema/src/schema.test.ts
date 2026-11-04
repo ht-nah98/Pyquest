@@ -174,7 +174,7 @@ describe('walkthrough and the library reference', () => {
       entries: [{ ...entry, inside: '_emit gửi lệnh vẽ cho trang web.' }],
     });
     expect(ok.entries[0]?.why).toBe('Tô từng điểm thì quá lâu.');
-    const { why: _why, ...noWhy } = entry;
+    const noWhy = Object.fromEntries(Object.entries(entry).filter(([k]) => k !== 'why'));
     expect(() => LibraryRefSchema.parse({ entries: [noWhy] })).toThrow();
     expect(() => LibraryRefSchema.parse({ entries: [{ name: 'x' }] })).toThrow();
   });

@@ -1,5 +1,11 @@
-import { checkGoals, runGameTest, type GoalResult } from '@pyquest/checker';
-import type { RunResult } from '@pyquest/runtime';
+import {
+  checkGoals,
+  needsShiftedRun,
+  runGameTest,
+  shiftSource,
+  type GoalResult,
+} from '@pyquest/checker';
+import type { Call, RunResult } from '@pyquest/runtime';
 import type * as Blockly from 'blockly/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
@@ -14,6 +20,7 @@ import { useLessonState } from '../lesson/useLessonState';
 import { BlockCodeSync, type SyncError } from './blockCodeSync';
 import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
 import { PythonPane, type PythonPaneHandle } from './PythonPane';
+import { CallPanel, familyOf } from './CallPanel';
 import { ErrorBubble, VarWatch } from './RunPanel';
 import { FileTabs } from './FileTabs';
 import { LibraryPanel } from './LibraryPanel';
@@ -51,6 +58,11 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const [running, setRunning] = useState(false);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [runs, setRuns] = useState(0);
+  /** Right column: the task card or the 📞 calls panel. */
+  const [panel, setPanel] = useState<'task' | 'calls'>('task');
+  const [picked, setPicked] = useState<number | null>(null);
+  /** Game mode shows the calls of the test run's last frame: ids from here on. */
+  const [callFrom, setCallFrom] = useState(0);
   const { profile } = useSession();
 
   const main = code?.main ?? 'main.py';
@@ -65,9 +77,9 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   });
 
   const grade = useCallback(
-    (r: RunResult) => {
+    (r: RunResult, shifted?: RunResult) => {
       if (code === undefined || lesson === undefined) return;
-      const res = checkGoals(code.goals, r);
+      const res = checkGoals(code.goals, r, shifted);
       setGoals(res);
       if (res.every((g) => g.ok)) {
         update((s) => {
@@ -192,11 +204,27 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     }
   };
 
+  /** 📞 panel: light up what this call drew, and its line in the code. */
+  const pick = (call: Call | null) => {
+    setPicked(call?.id ?? null);
+    if (call === null || result === null) {
+      stage.current?.highlight(null);
+      return;
+    }
+    const ids = familyOf(result.calls, call.id);
+    // The live game numbers each frame's calls from 0; the test run numbered them on from callFrom.
+    const live = code?.mode === 'game' ? new Set([...ids].map((i) => i - callFrom)) : ids;
+    stage.current?.highlight(live);
+    pyPane.current?.highlight(call.line, 'select');
+  };
+
   const run = async () => {
     setRuns((n) => n + 1);
     if (code === undefined) return;
     flush();
     setRunning(true);
+    setPicked(null);
+    stage.current?.highlight(null);
     try {
       if (code.mode === 'game') {
         // Grade with the scripted test run first (same as content:check), then let the child play.
@@ -209,6 +237,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
         );
         grade(test);
         setResult(test);
+        setCallFrom(test.lastFrameFrom);
         pyPane.current?.highlight(test.error?.line ?? null, 'error');
         if (test.error !== undefined) {
           setRunning(false);
@@ -219,9 +248,20 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
       }
       const r = await python.run(filesRef.current, main);
       setResult(r);
+      setCallFrom(0);
       pyPane.current?.highlight(r.error?.line ?? null, 'error');
+      // A 'shifts' goal runs the program once more with its variable moved (fixed numbers stay put).
+      const shift = needsShiftedRun(code.goals);
+      const moved =
+        shift === undefined
+          ? undefined
+          : shiftSource(filesRef.current[main] ?? '', shift.var, shift.by);
+      const shifted =
+        moved === undefined
+          ? undefined
+          : await python.run({ ...filesRef.current, [main]: moved }, main);
       await stage.current?.replay(r.events);
-      grade(r);
+      grade(r, shifted);
     } catch {
       /* stopped */
     } finally {
@@ -233,6 +273,8 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const allOk = goals.length > 0 && goals.every((g) => g.ok);
   const task = lesson.steps.find((st) => st.kind === 'code')?.slides[0];
   const codeDone = state.doneSteps.includes('code');
+  // The 📞 tab appears once the lesson teaches def, or the child's code made a call anyway.
+  const showCalls = code.toolbox.includes('pq_def') || (result?.calls.length ?? 0) > 0;
 
   return (
     <div className="flex h-dvh flex-col overflow-hidden" data-testid="code-screen">
@@ -328,15 +370,51 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
         </div>
 
         <aside className="flex min-h-0 w-[28%] min-w-[340px] shrink-0 flex-col gap-2 max-[1279px]:h-[250px] max-[1279px]:w-full max-[1279px]:min-w-0 max-[1279px]:flex-row">
-          <TaskCard
-            title={task?.title}
-            text={task?.text}
-            goals={code.goals}
-            results={goals}
-            hints={code.hints ?? []}
-            walkthrough={code.walkthrough ?? []}
-            runs={runs}
-          />
+          {showCalls && (
+            <div className="flex gap-1" role="tablist" data-testid="side-tabs">
+              {(
+                [
+                  ['task', '🎯 Nhiệm vụ'],
+                  [
+                    'calls',
+                    `📞 Cuộc gọi${result !== null && result.calls.length > 0 ? ` (${String(result.calls.filter((c) => c.id >= callFrom).length)})` : ''}`,
+                  ],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  role="tab"
+                  aria-selected={panel === id}
+                  className={`rounded-t-[10px] border-2 border-b-0 border-ink px-3 py-0.5 text-sm font-bold ${panel === id ? 'bg-paper' : 'bg-white/60'}`}
+                  onClick={() => {
+                    setPanel(id);
+                  }}
+                  data-testid={`tab-${id}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+          {panel === 'calls' && showCalls ? (
+            <section
+              className="flex max-h-[42%] min-h-0 flex-col overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
+              data-testid="calls-card"
+            >
+              <CallPanel result={result} from={callFrom} picked={picked} onPick={pick} />
+            </section>
+          ) : (
+            <TaskCard
+              title={task?.title}
+              text={task?.text}
+              goals={code.goals}
+              results={goals}
+              hints={code.hints ?? []}
+              walkthrough={code.walkthrough ?? []}
+              runs={runs}
+            />
+          )}
           <div className="flex gap-2 max-[1279px]:w-44 max-[1279px]:flex-col">
             {running ? (
               <Button tone="oops" onClick={stop} data-testid="stop" className="flex-1 text-xl">

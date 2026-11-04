@@ -23,10 +23,10 @@ function lesson(overrides: Record<string, unknown> = {}): Record<string, unknown
     code: {
       starter: { 'main.py': '' },
       main: 'main.py',
-      toolbox: ['pq_draw_bird', 'pq_number'],
+      toolbox: ['pq_draw_image', 'pq_number'],
       mode: 'script',
       goals: [{ id: 'g-bird', label: 'Chim', kind: 'drew', sprite: 'bird', at: [100, 300] }],
-      solution: { 'main.py': 'from pyquest import *\ndraw_bird(100, 300)\n' },
+      solution: { 'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 100, 300)\n' },
     },
     unlocksRoadmap: ['stage'],
     docsUnlocked: [],
@@ -81,7 +81,7 @@ describe('checkContent', () => {
   test('a solution that misses a goal is reported with the goal id', async () => {
     const l = lesson();
     (l['code'] as { solution: Record<string, string> }).solution = {
-      'main.py': 'draw_bird(101, 300)\n',
+      'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 101, 300)\n',
     };
     const errors = await checkContent(input(l), py);
     expect(errors.join('\n')).toContain('g-bird');
@@ -90,7 +90,7 @@ describe('checkContent', () => {
   test('a starter that already passes every goal is reported', async () => {
     const l = lesson();
     (l['code'] as { starter: Record<string, string> }).starter = {
-      'main.py': 'from pyquest import *\ndraw_bird(100, 300)\n',
+      'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 100, 300)\n',
     };
     expect((await checkContent(input(l), py)).join('\n')).toMatch(/starter/);
   });
@@ -126,7 +126,9 @@ describe('checkContent', () => {
 
   test('code the block editor would change is reported (rule 9)', async () => {
     const l = lesson();
-    (l['code'] as { starter: Record<string, string> }).starter = { 'main.py': 'draw_bird(1,2)\n' };
+    (l['code'] as { starter: Record<string, string> }).starter = {
+      'main.py': 'draw_rect(1,2,3,4,"red")\n',
+    };
     expect((await checkContent(input(l), py)).join('\n')).toMatch(/round trip/);
   });
 
@@ -135,15 +137,32 @@ describe('checkContent', () => {
     i.library = {
       entries: [
         {
-          name: 'draw_bird',
-          signature: 'draw_bird(x, y)',
-          vi: 'Vẽ chim.',
-          example: 'draw_bird(1, 2)',
+          name: 'draw_rect',
+          signature: 'draw_rect(x, y, rộng, cao, màu)',
+          vi: 'Tô một khối.',
+          why: 'Tô từng điểm thì quá lâu.',
+          example: 'draw_rect(1, 2, 3, 4, "red")',
           lesson: 'l99',
         },
       ],
     };
     expect((await checkContent(i, py)).join('\n')).toContain('l99');
+  });
+
+  test('a shifts goal catches a bird typed with fixed numbers', async () => {
+    const birdAt = (x: string) =>
+      `from pyquest import *\n\nx = 100\ndraw_rect(${x}, 300, 30, 20, "red")\n`;
+    const l = lesson();
+    const code = l['code'] as Record<string, unknown>;
+    code['toolbox'] = ['pq_draw_rect', 'pq_assign', 'pq_var_get', 'pq_number', 'pq_text'];
+    code['goals'] = [
+      { id: 'g-follow', label: 'Theo x', kind: 'shifts', var: 'x', by: 50, axis: 'x' },
+    ];
+    code['starter'] = { 'main.py': 'from pyquest import *\n' };
+    code['solution'] = { 'main.py': birdAt('x') };
+    expect(await checkContent(input(l), py)).toEqual([]);
+    code['solution'] = { 'main.py': birdAt('100') };
+    expect((await checkContent(input(l), py)).join('\n')).toContain('g-follow');
   });
 
   test('stray files are reported', async () => {
