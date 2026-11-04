@@ -10,6 +10,9 @@ const value = (block: Block, name: string): string =>
 
 /** Our own precedence so `a + b + c` stays as typed instead of Blockly's `(a + b) + c`. */
 function precedenceOf(block: Block | null): number {
+  // Comparisons and logic bind looser than any arithmetic: (not a) + 1 keeps its brackets (review I3).
+  if (block?.type === 'pq_compare' || block?.type === 'pq_logic' || block?.type === 'pq_not')
+    return 0;
   if (block?.type !== 'pq_arith') return ATOMIC;
   return PRECEDENCE[String(block.getFieldValue('OP'))] ?? ATOMIC;
 }
@@ -85,16 +88,15 @@ function installGenerators(): void {
     const { name, params } = callOf(block);
     return `${name}(${params.map((_, i) => value(block, `ARG${String(i)}`) || '0').join(', ')})\n`;
   };
-  g['pq_compare'] = (block) => [
-    `${value(block, 'A')} ${String(block.getFieldValue('OP'))} ${value(block, 'B')}`,
-    Order.RELATIONAL,
-  ];
+  g['pq_compare'] = (block) => {
+    const side = (n: string) => pythonGenerator.valueToCode(block, n, Order.RELATIONAL) || '0';
+    return [`${side('A')} ${String(block.getFieldValue('OP'))} ${side('B')}`, Order.RELATIONAL];
+  };
   g['pq_logic'] = (block) => {
     const op = String(block.getFieldValue('OP'));
-    return [
-      `${value(block, 'A')} ${op} ${value(block, 'B')}`,
-      op === 'and' ? Order.LOGICAL_AND : Order.LOGICAL_OR,
-    ];
+    const order = op === 'and' ? Order.LOGICAL_AND : Order.LOGICAL_OR;
+    const side = (n: string) => pythonGenerator.valueToCode(block, n, order) || 'False';
+    return [`${side('A')} ${op} ${side('B')}`, order];
   };
   g['pq_key_pressed'] = () => ['key_pressed()', Order.FUNCTION_CALL];
   g['pq_random'] = (block) => [

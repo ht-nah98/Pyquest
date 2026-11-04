@@ -467,3 +467,19 @@ describe("matches: the picture is the same as the solution's", () => {
     expect(needsExpected([g])).toBe(true);
   });
 });
+
+describe('review fixes', () => {
+  test('I1: sameShape fails when the calls ignore their numbers and draw in the same place', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'sameShape', name: 'draw_bird' };
+    const stuck = result(
+      [...bird(100, 300, 0), ...bird(100, 300, 1)],
+      [call(0, 100, 300), call(1, 250, 150)],
+    );
+    expect(one(g, stuck)).toBe(false);
+  });
+
+  test('M1: shiftSource accepts x=100 and a comment at the end of the line', () => {
+    expect(shiftSource('x=100\n', 'x', 50)).toBe('x=150\n');
+    expect(shiftSource('x = 100  # vàng\n', 'x', 50)).toBe('x = 150  # vàng\n');
+  });
+});

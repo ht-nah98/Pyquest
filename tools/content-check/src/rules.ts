@@ -158,8 +158,8 @@ async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<v
     if (goal.kind === 'drew' && !ctx.assetIds.has(goal.sprite)) {
       ctx.err(where, `goal ${goal.id} sprite "${goal.sprite}" is not in the asset library`);
     }
-    if (goal.kind === 'shifts' && code.mode !== 'script') {
-      ctx.err(where, `goal ${goal.id}: shifts only works in script mode`);
+    if ((goal.kind === 'shifts' || goal.kind === 'matches') && code.mode !== 'script') {
+      ctx.err(where, `goal ${goal.id}: ${goal.kind} only works in script mode`);
     }
   }
 

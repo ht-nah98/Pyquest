@@ -50,12 +50,13 @@ export function needsShiftedRun(
  * exactly one such line. Used to check the drawing really follows the variable.
  */
 export function shiftSource(code: string, name: string, by: number): string | undefined {
-  const re = new RegExp(`^${name} = (-?\\d+(?:\\.\\d+)?)[ \\t]*$`, 'gm');
+  // "x = 100", "x=100", "x = 100  # vàng" (review M1); only the number changes.
+  const re = new RegExp(`^(${name}\\s*=\\s*)(-?\\d+(?:\\.\\d+)?)([ \\t]*(?:#.*)?)$`, 'gm');
   const hits = [...code.matchAll(re)];
   const hit = hits[0];
-  if (hits.length !== 1 || hit?.[1] === undefined) return undefined;
-  const at = hit.index;
-  return `${code.slice(0, at)}${name} = ${String(Number(hit[1]) + by)}${code.slice(at + hit[0].length)}`;
+  if (hits.length !== 1 || hit?.[1] === undefined || hit[2] === undefined) return undefined;
+  const start = hit.index + hit[1].length;
+  return `${code.slice(0, start)}${String(Number(hit[2]) + by)}${code.slice(start + hit[2].length)}`;
 }
 
 /** "bird" matches the picture bird and every picture of its group: bird-cu, bird-rong… */
@@ -88,6 +89,15 @@ function family(r: RunResult, root: number): Set<number> {
   const ids = new Set([root]);
   for (const c of r.calls) if (c.parent !== null && ids.has(c.parent)) ids.add(c.id);
   return ids;
+}
+
+/** Where one call's first piece was drawn. */
+function placeOf(r: RunResult, callId: number): string {
+  const ids = family(r, callId);
+  const first = pieces(
+    r.events.filter((e) => e.t !== 'frame' && e.by !== undefined && ids.has(e.by)),
+  )[0];
+  return first === undefined ? '' : `${String(first.x)} ${String(first.y)}`;
 }
 
 /** One call's drawing, moved so its first piece sits at (0, 0). */
@@ -154,8 +164,16 @@ function meets(goal: Goal, r: RunResult, extra: CheckExtra): boolean {
       return count >= (goal.min ?? 1);
     }
     case 'sameShape': {
-      const shapes = r.calls.filter((c) => c.name === goal.name).map((c) => shapeOf(r, c.id));
-      return shapes.length >= 2 && shapes.every((s) => s !== undefined && s === shapes[0]);
+      const calls = r.calls.filter((c) => c.name === goal.name);
+      const shapes = calls.map((c) => shapeOf(r, c.id));
+      // The same picture, and really moved: a def that ignores its parameters draws every copy in one
+      // place (review I1).
+      const places = new Set(calls.map((c) => placeOf(r, c.id)));
+      return (
+        shapes.length >= 2 &&
+        shapes.every((s) => s !== undefined && s === shapes[0]) &&
+        places.size >= 2
+      );
     }
     case 'shifts': {
       if (shifted === undefined || shifted.error !== undefined) return false;

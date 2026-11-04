@@ -40,10 +40,9 @@ describe('exercises of a lesson', () => {
     expect(pickExercise(all, state(), 'nope', true).id).toBe('e1');
   });
 
-  test('work: saved per exercise; the old single code counts as the first exercise', () => {
+  test('work: saved per exercise; code saved before the course was rebuilt is not reused (M3)', () => {
     const old = state({ files: { 'main.py': 'cũ' } });
-    expect(workOf(old, all, all[0]!).files).toEqual({ 'main.py': 'cũ' });
-    expect(workOf(old, all, all[1]!).files).toEqual({ 'main.py': '# e2\n' });
+    expect(workOf(old, all, all[0]!).files).toEqual({ 'main.py': '# e1\n' });
     const saved = state({ exercises: { e2: { files: { 'main.py': 'mới' } } } });
     expect(workOf(saved, all, all[1]!).files).toEqual({ 'main.py': 'mới' });
   });

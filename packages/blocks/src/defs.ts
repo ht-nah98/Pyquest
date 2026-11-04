@@ -401,6 +401,8 @@ const JSON_DEFS = [
     message0: 'trả về %1',
     args0: [{ type: 'input_value', name: 'VALUE' }],
     previousStatement: null,
+    // Python allows lines after return (they never run); without this the blocks cannot hold them.
+    nextStatement: null,
     colour: FUNCTION,
     tooltip: 'return: lệnh tự đặt gửi một kết quả về chỗ đã gọi nó.',
   },

@@ -33,15 +33,13 @@ export function pickExercise(
   return all.find((e) => !done.includes(e.id)) ?? fallback;
 }
 
-/** The child's work on an exercise. Code saved before exercises existed counts as the first one's. */
-export function workOf(state: LessonState, all: readonly Exercise[], ex: Exercise): ExerciseWork {
+/**
+ * The child's work on an exercise, else its starter. Code saved before the course was rebuilt
+ * (LessonState.files) belongs to old lessons and is not reused (review M3).
+ */
+export function workOf(state: LessonState, _all: readonly Exercise[], ex: Exercise): ExerciseWork {
   const saved = state.exercises?.[ex.id];
   if (saved !== undefined && Object.keys(saved.files).length > 0) return saved;
-  if (ex.id === all[0]?.id && Object.keys(state.files).length > 0) {
-    return state.workspace === undefined
-      ? { files: state.files }
-      : { files: state.files, workspace: state.workspace };
-  }
   return { files: ex.starter };
 }
 

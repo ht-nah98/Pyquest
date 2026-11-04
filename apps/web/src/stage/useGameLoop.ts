@@ -15,12 +15,15 @@ export function useGameLoop(
   const keys = useRef(new Set<string>());
   const tapped = useRef(false);
   const raf = useRef(0);
+  /** Bumped by every start and stop: a start still awaiting Python must not run once superseded (M8). */
+  const token = useRef(0);
   const onResultRef = useRef(onResult);
   useEffect(() => {
     onResultRef.current = onResult;
   });
 
   const stop = useCallback(() => {
+    token.current++;
     running.current = false;
     cancelAnimationFrame(raf.current);
   }, []);
@@ -28,7 +31,10 @@ export function useGameLoop(
   const start = useCallback(
     async (files: Files, main: string) => {
       stop();
+      const mine = token.current;
       const first = await python.startGame(files, main);
+      // Stopped, unmounted (stop runs on unmount) or restarted while Python was loading: do nothing.
+      if (mine !== token.current) return;
       onResultRef.current(first);
       if (first.error !== undefined) return;
       running.current = true;

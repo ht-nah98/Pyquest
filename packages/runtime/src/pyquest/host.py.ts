@@ -64,6 +64,8 @@ MAX_CALLS = 300
 
 def _arg(value):
     """An argument as the 📞 calls panel shows it: numbers, words and True/False as they are."""
+    if isinstance(value, str) and len(value) > 30:
+        return value[:29] + "…"
     if isinstance(value, (bool, int, str)) or (isinstance(value, float) and value == value
                                                and abs(value) != float("inf")):
         return value
@@ -90,7 +92,9 @@ def _tracer(user_files, max_lines):
         code = frame.f_code
         if code.co_filename not in user_files:
             return None
-        if event == "call" and not code.co_name.startswith("<"):
+        # Only real function calls: not module or class bodies (no CO_OPTIMIZED), not generator resumes.
+        if (event == "call" and not code.co_name.startswith("<") and code.co_flags & 0x1
+                and not code.co_flags & 0x20):
             # One of the child's own functions starts: remember it, so its drawings know who made them.
             calls = state["calls"]
             cid = None

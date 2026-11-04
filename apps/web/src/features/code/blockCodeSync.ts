@@ -62,6 +62,13 @@ export class BlockCodeSync {
     try {
       Blockly.Events.disable();
       Blockly.serialization.workspaces.load(treeToState(tree.statements), this.ws);
+    } catch {
+      // Never fail silently (review I2): the blocks stay locked and the child is told why.
+      this.on.onError({
+        line: null,
+        messageVi: 'Đoạn code này chưa vẽ thành khối được. Em vẫn chạy code bình thường.',
+      });
+      return false;
     } finally {
       Blockly.Events.enable();
       this.applying = false;

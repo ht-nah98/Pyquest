@@ -194,6 +194,14 @@ describe("calls: what the child's own functions did", () => {
     expect(r.calls[0]?.args).toEqual({ a: '[1, 2, 3]', b: 'None' });
   });
 
+  test('M4: a class body is not a call; long words are cut short', async () => {
+    const r = await run(
+      'class Bird:\n    def hop(self, word):\n        pass\nBird().hop("a" * 100)',
+    );
+    expect(r.calls.map((c) => c.name)).toEqual(['hop']);
+    expect(String(r.calls[0]?.args['word']).length).toBeLessThanOrEqual(30);
+  });
+
   test('a big loop records at most 300 calls but still draws everything', async () => {
     const r = await run(BIRD + 'for i in range(400):\n    draw_bird(i, 0)', 5000);
     expect(r.calls).toHaveLength(300);

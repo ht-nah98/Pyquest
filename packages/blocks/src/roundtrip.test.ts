@@ -79,6 +79,9 @@ describe('Python → blocks → Python', () => {
     'pairs = [[1, 2], [3, 4]]',
     'for k in d.keys():\n    pass',
     'pipes[i] = pipes[i] - 2',
+    'def f(x):\n    return x * 2\n    print("hi")',
+    'y = (not a) + 1',
+    'if (x > 5) == True:\n    pass',
   ])('%j survives the round trip', (source) => {
     expect(roundTrip(source).trimEnd()).toBe(source);
   });
@@ -189,6 +192,39 @@ describe('Python → blocks → Python', () => {
     Blockly.serialization.workspaces.load(treeToState(tree.statements), ws);
     expect([...lineMap(ws).values()].sort((a, b) => a - b)).toEqual([1, 2, 4, 6, 7]);
     ws.dispose();
+  });
+
+  test('I3: blocks built by hand keep the brackets their meaning needs', () => {
+    const cmp = (a: object, op: string, b: object) => ({
+      type: 'pq_compare',
+      fields: { OP: op },
+      inputs: { A: a, B: b },
+    });
+    const v = (n: string) => ({ type: 'pq_var_get', fields: { NAME: n } });
+    const t = { type: 'pq_bool', fields: { BOOL: 'True' } };
+    const logic = (op: string, a: object, b: object) => ({
+      type: 'pq_logic',
+      fields: { OP: op },
+      inputs: { A: a, B: b },
+    });
+    const assign = (value: object) => [
+      { type: 'pq_assign', fields: { NAME: 'r' }, inputs: { VALUE: value } },
+    ];
+    expect(toPython(treeToState(assign(cmp(cmp(v('x'), '>', v('y')), '==', t)) as never))).toBe(
+      'r = (x > y) == True\n',
+    );
+    expect(
+      toPython(treeToState(assign(logic('and', logic('or', v('a'), v('b')), v('c'))) as never)),
+    ).toBe('r = (a or b) and c\n');
+    const plus = {
+      type: 'pq_arith',
+      fields: { OP: '+' },
+      inputs: {
+        A: { type: 'pq_not', inputs: { A: v('a') } },
+        B: { type: 'pq_number', fields: { NUM: 1 } },
+      },
+    };
+    expect(toPython(treeToState(assign(plus) as never))).toBe('r = (not a) + 1\n');
   });
 
   test('a syntax error comes back with its line and blocks are not produced', () => {

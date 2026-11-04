@@ -89,3 +89,15 @@ describe('BlockCodeSync', () => {
     expect(sync.applying).toBe(false);
   });
 });
+
+test('I2: blocks that cannot be built are reported, not silently dropped', async () => {
+  const ws = new Blockly.Workspace();
+  const errors: (string | null)[] = [];
+  const sync = new BlockCodeSync(
+    ws,
+    () => Promise.resolve({ ok: true as const, statements: [{ type: 'pq_nope' }] }),
+    { onCode: () => undefined, onError: (e) => errors.push(e === null ? null : e.messageVi) },
+  );
+  expect(await sync.fromCode('anything')).toBe(false);
+  expect(errors.at(-1)).toContain('khối');
+});

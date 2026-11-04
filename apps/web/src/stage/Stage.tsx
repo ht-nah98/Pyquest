@@ -158,7 +158,8 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
         replayToken.current++;
         shown.current = [];
         const c = ctx();
-        if (c !== null) resetStage(c);
+        // repaint, not resetStage: the 👀 picture stays while its button is on (review M5).
+        if (c !== null) repaint(c);
         setBubbles([]);
       },
     }));

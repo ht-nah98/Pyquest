@@ -194,6 +194,16 @@ describe('checkContent', () => {
     expect(await checkContent(input(l), py)).toEqual([]);
   });
 
+  test('M2: a matches goal in a game exercise is reported (the page cannot grade it)', async () => {
+    const l = lesson();
+    const e = ex(l) as Record<string, unknown>;
+    e['mode'] = 'game';
+    e['goals'] = [{ id: 'g-same', label: 'Giống hình', kind: 'matches' }];
+    expect((await checkContent(input(l), py)).join('\n')).toMatch(
+      /matches only works in script mode/,
+    );
+  });
+
   test('stray files are reported', async () => {
     const i = input(lesson());
     i.strayFiles = ['courses/c/.omc/state.json'];
