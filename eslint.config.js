@@ -110,7 +110,7 @@ export default defineConfig(
 
   // Tools may print to the terminal.
   {
-    files: [`tools/**/*.${SRC}`],
+    files: [`tools/**/*.${SRC}`, `apps/web/scripts/**/*.${SRC}`],
     rules: { 'no-console': 'off' },
   },
 

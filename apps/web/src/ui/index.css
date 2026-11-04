@@ -1,0 +1,64 @@
+/* Global stylesheet, imported once from main.tsx. Fonts are self-hosted (no third-party requests). */
+@import 'tailwindcss';
+@import './fonts.css';
+
+@theme static {
+  --color-*: initial;
+  --font-*: initial;
+
+  /* PyQuest palette: Python blue + yellow, on warm paper. */
+  --color-ink: #1b2233;
+  --color-ink-soft: #55607a;
+  --color-paper: #fffaf1;
+  --color-paper-2: #f2ead9;
+  --color-ground: #e7edf6;
+  --color-white: #ffffff;
+  --color-brand: #3776ab;
+  --color-brand-deep: #1f3a5f;
+  --color-brand-soft: #d6e6f5;
+  --color-sun: #ffd43b;
+  --color-sun-deep: #c99a00;
+  --color-go: #2f9e5b;
+  --color-go-deep: #1f6e3f;
+  --color-oops: #d9534f;
+  --color-oops-soft: #fde8e7;
+  --color-code-bg: #1e1e2e;
+  --color-code-fg: #cdd6f4;
+
+  /* Only fonts with a `vietnamese` subset (AGENTS.md §3 rule 9). */
+  --font-display: 'Baloo 2', 'Nunito', system-ui, 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;
+  --font-body: 'Nunito', system-ui, 'Segoe UI', 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;
+  --font-pixel: 'VT323', ui-monospace, monospace;
+  --font-code: ui-monospace, 'SFMono-Regular', 'Cascadia Code', Menlo, Consolas, monospace;
+
+  --shadow-hard: 0 3px 0 0 var(--color-ink);
+  --radius-card: 14px;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    font-synthesis-weight: none;
+  }
+  body {
+    margin: 0;
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: 600;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}

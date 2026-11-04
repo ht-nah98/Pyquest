@@ -1,0 +1,40 @@
+{
+  "name": "@pyquest/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node scripts/copyBlocklyMedia.js && node scripts/copyPyodide.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@codemirror/lang-python": "6.2.1",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.15",
+    "@pyquest/blocks": "*",
+    "@pyquest/checker": "*",
+    "@pyquest/content-schema": "*",
+    "@pyquest/runtime": "*",
+    "@tailwindcss/vite": "^4.3.3",
+    "blockly": "13.4.0",
+    "codemirror": "6.0.2",
+    "dexie": "^4.4.6",
+    "dexie-react-hooks": "^4.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router": "^8.4.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "fake-indexeddb": "^6.2.5",
+    "vite": "^8.3.2"
+  }
+}

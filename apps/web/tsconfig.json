@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "types": ["vite/client"],
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../../packages/blocks" },
+    { "path": "../../packages/checker" },
+    { "path": "../../packages/content-schema" },
+    { "path": "../../packages/runtime" }
+  ]
+}

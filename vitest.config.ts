@@ -12,6 +12,17 @@ export default defineConfig({
           testTimeout: 60_000,
         },
       },
+      {
+        extends: './apps/web/vite.config.ts',
+        root: './apps/web',
+        test: {
+          name: 'web',
+          environment: 'jsdom',
+          include: ['src/**/*.test.{ts,tsx}'],
+          setupFiles: ['./src/test/setup.ts'],
+          testTimeout: 60_000,
+        },
+      },
     ],
   },
 });
