@@ -25,6 +25,9 @@ echo "PyQuest class server: $(git log --oneline -1 "$SHA") on http://localhost:$
 HOST_ARGS=()
 if [ "${PQ_HOST:-}" = 1 ]; then
   HOST_ARGS=(--host)
-  for ip in $(hostname -I 2>/dev/null); do echo "  children open: http://$ip:$PORT"; done
+  # Skip Docker/VM bridges (172.16–31.x): the class Wi-Fi is usually 192.168.x or 10.x.
+  for ip in $(hostname -I 2>/dev/null); do
+    case "$ip" in 172.1[6-9].*|172.2[0-9].*|172.3[01].*|*:*) ;; *) echo "  children open: http://$ip:$PORT" ;; esac
+  done
 fi
 exec npx vite --port "$PORT" --strictPort "${HOST_ARGS[@]}"
