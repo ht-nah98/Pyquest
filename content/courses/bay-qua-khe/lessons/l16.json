@@ -2,36 +2,35 @@
   "id": "l16",
   "courseId": "bay-qua-khe",
   "order": 16,
-  "title": "Màn hình và nhiều file",
+  "title": "Giao diện",
   "draft": true,
-  "summary": "Màn bắt đầu, đang chơi, thua; chia code ra hai file.",
+  "summary": "Điểm số, chữ trên màn hình và bố cục: người chơi cần thấy gì?",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l16-states",
-          "title": "Game có nhiều màn hình",
-          "text": "Lúc mở game: chờ người chơi (ready). Bấm thì chơi (play). Đụng cột thì thua (over). Mỗi lúc game ở đúng một trạng thái.",
-          "coachNotes": "Vẽ ba ô ready → play → over và mũi tên kèm sự kiện: bấm, đụng cột. Đây là sơ đồ trạng thái."
+          "id": "l16-ui",
+          "title": "Giao diện là gì",
+          "text": "Giao diện là những thứ người chơi nhìn và bấm: điểm số, chữ hướng dẫn, nút. Đẹp mà khó đọc thì vẫn là giao diện tồi.",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "Chơi game mẫu, hỏi: điểm nằm ở đâu? Vì sao ở giữa phía trên? (mắt người chơi nhìn quanh chim, không che đường bay)."
         },
         {
-          "id": "l16-files",
-          "title": "Chia code ra nhiều file",
-          "text": "File dài thì khó tìm. Ta chuyển class Bird sang file riêng bird.py, rồi ở main.py viết from bird import Bird để mượn nó về.",
-          "coachNotes": "Giống chia vở: vở Toán, vở Văn. import là mượn đồ từ vở khác. bird.py cũng phải import các lệnh vẽ của pyquest."
+          "id": "l16-str",
+          "title": "Số thành chữ",
+          "text": "draw_text cần chữ, mà score là số. str(score) biến số 3 thành chữ \"3\". Python không tự đổi giữa số và chữ.",
+          "coachNotes": "Thử print(\"Điểm: \" + score) cho lớp thấy lỗi \"không cộng được chữ với số\"."
         },
         {
           "id": "l16-quiz",
           "quiz": {
-            "question": "Đang ở trạng thái over, người chơi bấm Space. Theo luật của em, điều gì nên xảy ra?",
-            "choices": [
-              "Chơi tiếp như không có gì",
-              "Không làm gì, hoặc chơi lại từ đầu",
-              "Thoát máy tính"
-            ],
+            "question": "score = 7. str(score) là gì?",
+            "choices": ["Số 7", "Chữ \"7\"", "Lỗi"],
             "answer": 1,
-            "explain": "Thua rồi thì không cho bay tiếp; game hay thường cho chơi lại."
+            "explain": "str() đổi số thành chữ để vẽ hoặc ghép chữ."
           }
         }
       ]
@@ -40,10 +39,33 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l16-ready",
-          "title": "Màn chờ",
-          "text": "Ở màn ready, chim đứng yên, có chữ \"Bấm Space để bay\". Lần bấm đầu tiên vừa bắt đầu chơi vừa vỗ cánh luôn.",
-          "coachNotes": "Hỏi lớp: vì sao cần màn chờ? (người chơi chưa sẵn sàng thì chim đã rơi)."
+          "id": "l16-layout",
+          "title": "Phác bố cục",
+          "text": "Phác ra giấy màn hình 400 × 600: điểm ở đâu, cỡ chữ bao nhiêu, chữ \"Thua rồi!\" ở đâu. Chữ to, nét đậm, đặt chỗ không che chim.",
+          "coachNotes": "Phát giấy kẻ ô. Bé vẽ bố cục rồi mới code. So sánh bản phác của các bạn."
+        },
+        {
+          "id": "l16-score-rule",
+          "title": "Khi nào cộng điểm?",
+          "text": "Cộng 1 điểm khi cột đã đi qua hẳn chim: pipe_x + 52 < 100. Thêm biến scored để mỗi cột chỉ cộng một lần.",
+          "coachNotes": "Hỏi: nếu không có scored thì sao? (mỗi khung hình cộng 1, điểm tăng vù vù)."
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "l16-bg",
+          "title": "Chọn nền cho game",
+          "text": "Chọn một ảnh nền trong kho. Nền đẹp nhưng chữ điểm vẫn phải đọc được: chữ trắng viền đen hợp với hầu hết các nền.",
+          "widget": {
+            "kind": "assetPicker",
+            "props": {
+              "group": "background"
+            }
+          },
+          "coachNotes": "Có thể đổi nền bằng draw_image(\"images/background-pho-co.png\", 0, 0) đầu draw(). Không bắt buộc ở bài này."
         }
       ]
     },
@@ -52,8 +74,8 @@
       "slides": [
         {
           "id": "l16-code",
-          "title": "Thêm trạng thái và tách file",
-          "text": "Bước 1: chuyển class Bird sang tab bird.py (thêm from pyquest import * ở đầu), main.py thêm from bird import Bird. Bước 2: thay game_over bằng state = \"ready\" / \"play\" / \"over\"."
+          "title": "Thêm điểm số",
+          "text": "Tạo score = 0 và scored = False. Khi cột qua khỏi chim lần đầu thì cộng điểm. Trong draw(), vẽ draw_text(str(score), 200, 60, 56). Máy tự bấm giúp em để bay qua cột."
         }
       ]
     },
@@ -62,16 +84,15 @@
       "slides": [
         {
           "id": "l16-try",
-          "title": "Đi đủ ba màn",
-          "text": "Chạy toàn màn hình: thấy màn chờ, bấm để chơi, cố tình thua. Mỗi màn có đúng chữ và đúng cách cư xử chưa?"
+          "title": "Đọc có rõ không?",
+          "text": "Chơi toàn màn hình. Điểm có dễ đọc không? Nhờ bạn bên cạnh chơi thử và nói em nghe họ thấy gì đầu tiên."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n",
-      "bird.py": "# Chuyển class Bird vào đây\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
     },
     "main": "main.py",
     "toolbox": [
@@ -83,8 +104,7 @@
       "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
-      "pq_draw_sprite",
+      "pq_draw_image",
       "pq_clear",
       "pq_text",
       "pq_if",
@@ -104,67 +124,39 @@
         "kind": "noError"
       },
       {
-        "id": "l16-g-wait",
-        "label": "Màn chờ: chim đứng yên",
-        "kind": "staysWithin",
-        "sprite": "bird",
-        "axis": "y",
-        "min": 299,
-        "max": 301,
-        "frames": [
-          0,
-          39
-        ]
-      },
-      {
-        "id": "l16-g-hint",
-        "label": "Có chữ hướng dẫn",
-        "kind": "drewText",
-        "text": "Bấm Space để bay"
-      },
-      {
         "id": "l16-g-score",
-        "label": "Vẫn ghi được điểm",
+        "label": "Qua một cột được 1 điểm",
         "kind": "varEquals",
         "name": "score",
         "value": 1
+      },
+      {
+        "id": "l16-g-show",
+        "label": "Điểm hiện trên màn hình",
+        "kind": "drewText",
+        "text": "1"
       }
     ],
     "walkthrough": [
-      "Tab main.py: bôi đen cả class Bird (từ dòng class tới hết def draw của nó), cắt bằng Ctrl+X.",
-      "Tab bird.py: xóa dòng chú thích, gõ from pyquest import *, xuống vài dòng rồi dán bằng Ctrl+V.",
-      "Về tab main.py: ngay dưới from pyquest import *, thêm dòng from bird import Bird.",
-      "Đổi game_over = False thành state = \"ready\"; trong dòng global cũng đổi game_over thành state.",
-      "Đầu update(): if state == \"ready\": nếu chưa bấm (not key_pressed()) thì return, bấm rồi thì state = \"play\".",
-      "if state == \"over\": return. Đụng cột thì state = \"over\".",
-      "Trong draw(): khi ready vẽ draw_text(\"Bấm Space để bay\", 200, 400, 32); khi over vẽ \"Thua rồi!\".",
-      "Bấm ▶ Chạy rồi ⛶: đi đủ ba màn chờ, chơi, thua."
+      "Dưới dòng game_over = False: thêm score = 0 và scored = False.",
+      "Trong update(): thêm score, scored vào cuối dòng global.",
+      "Sau dòng pipe_x = pipe_x - 2: if pipe_x + 52 < 100 and not scored: rồi thụt vào score = score + 1 và scored = True.",
+      "Trong draw(), sau draw_bird: draw_text(str(score), 200, 60, 56)",
+      "Bấm ▶ Chạy: máy tự vỗ cánh để bay qua cột, điểm thành 1."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nfrom bird import Bird\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\nstate = \"ready\"\nscore = 0\nscored = False\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, state, score, scored\n    if state == \"ready\":\n        if not key_pressed():\n            return\n        state = \"play\"\n    if state == \"over\":\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        state = \"over\"\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if state == \"ready\":\n        draw_text(\"Bấm Space để bay\", 200, 400, 32)\n    if state == \"over\":\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n",
-      "bird.py": "from pyquest import *\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over, score, scored\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
     },
     "hints": [
-      "bird.py: from pyquest import * rồi dán class Bird.",
-      "main.py: from bird import Bird ở dòng đầu, xóa class Bird cũ.",
-      "if state == \"ready\":\n    if not key_pressed():\n        return\n    state = \"play\""
+      "Thêm score = 0 và scored = False ở trên cùng; thêm cả hai vào dòng global.",
+      "if pipe_x + 52 < 100 and not scored: cộng 1 điểm rồi scored = True",
+      "Trong draw(): draw_text(str(score), 200, 60, 56)"
     ],
     "test": {
-      "frames": 260,
-      "taps": [
-        40,
-        71,
-        102,
-        133,
-        164,
-        195,
-        226,
-        257
-      ]
+      "frames": 200,
+      "taps": [0, 31, 62, 93, 124, 155, 186]
     }
   },
-  "unlocksRoadmap": [
-    "screens"
-  ],
+  "unlocksRoadmap": ["score"],
   "docsUnlocked": []
 }

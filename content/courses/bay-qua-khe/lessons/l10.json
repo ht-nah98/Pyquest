@@ -2,36 +2,32 @@
   "id": "l10",
   "courseId": "bay-qua-khe",
   "order": 10,
-  "title": "Tự đặt lệnh",
+  "title": "Nếu… thì…",
   "draft": true,
-  "summary": "def draw_pipe(x, gap_y): đặt tên cho một nhóm lệnh rồi dùng lại.",
+  "summary": "if y > 480: chạm đất thì dừng lại.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l10-why",
-          "title": "Một cặp cột = hai lệnh",
-          "text": "Mỗi chướng ngại gồm cột trên (lật ngược) và cột dưới, cách nhau một khe GAP. Vẽ 5 cặp là 10 dòng gần giống nhau: dễ sai, khó sửa.",
-          "coachNotes": "Cho lớp đếm: muốn đổi bề rộng khe thì phải sửa bao nhiêu chỗ?"
+          "id": "l10-rule",
+          "title": "Luật của game",
+          "text": "Game nào cũng có luật: nếu chạm đất thì dừng, nếu đụng cột thì thua. Python viết luật bằng if: nếu điều kiện đúng thì làm các dòng thụt vào bên dưới.",
+          "coachNotes": "Hỏi lớp luật trong trò chơi quen thuộc: nếu… thì…"
         },
         {
-          "id": "l10-def",
-          "title": "Tự đặt lệnh có tham số",
-          "text": "def draw_pipe(x, gap_y): gom hai lệnh vẽ thành một lệnh mới. x và gap_y là tham số: mỗi lần gọi, em đưa vào số khác nhau.",
-          "coachNotes": "So với Bài 1: draw_bird(x, y) cũng là một lệnh có tham số, chỉ là do PyQuest viết sẵn."
+          "id": "l10-compare",
+          "title": "So sánh",
+          "text": "y > 480 hỏi: y có lớn hơn 480 không? Câu trả lời là True (đúng) hoặc False (sai). Còn có <, >=, <=, == (bằng), != (khác).",
+          "coachNotes": "== là so sánh, = là cất vào hộp. Đây là lỗi rất hay gặp."
         },
         {
           "id": "l10-quiz",
           "quiz": {
-            "question": "Gọi draw_pipe(280, 250). Bên trong lệnh, gap_y bằng bao nhiêu?",
-            "choices": [
-              "280",
-              "250",
-              "150"
-            ],
-            "answer": 1,
-            "explain": "Tham số nhận số theo thứ tự: x = 280, gap_y = 250."
+            "question": "y = 500. Điều kiện y > 480 là gì?",
+            "choices": ["True (đúng)", "False (sai)"],
+            "answer": 0,
+            "explain": "500 lớn hơn 480."
           }
         }
       ]
@@ -40,22 +36,18 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l10-gap",
-          "title": "Thiết kế khe cột",
-          "text": "Khe là chỗ chim bay qua. GAP = 150 vừa với chim cao 40. Khe 60 thì gần như không qua được, 300 thì quá dễ.",
-          "coachNotes": "Viết hằng số viết HOA (GAP) để biết đây là con số thiết kế, không đổi khi chạy."
+          "id": "l10-ground",
+          "title": "Mặt đất ở đâu?",
+          "text": "Mặt đất bắt đầu ở y = 520. Chim cao 40, nên khi y = 480 thì chân chim vừa chạm đất. Vượt quá 480 là chìm xuống đất.",
+          "coachNotes": "Vẽ chim là hình chữ nhật cao 40 trên lưới: góc trên ở y, đáy ở y + 40."
         },
         {
-          "id": "l10-quiz-gap",
+          "id": "l10-quiz-fix",
           "quiz": {
-            "question": "Muốn game khó hơn một chút, em sửa gì?",
-            "choices": [
-              "Giảm GAP",
-              "Tăng GAP",
-              "Đổi tên draw_pipe"
-            ],
+            "question": "Chim lỡ xuống y = 490. Nên làm gì?",
+            "choices": ["Kéo y về 480 và cho speed = 0", "Cho speed lớn hơn", "Không làm gì"],
             "answer": 0,
-            "explain": "Khe hẹp hơn thì khó luồn qua hơn."
+            "explain": "Đặt lại đúng mặt đất và ngừng rơi."
           }
         }
       ]
@@ -65,8 +57,8 @@
       "slides": [
         {
           "id": "l10-code",
-          "title": "Viết lệnh draw_pipe",
-          "text": "Đặt hai dòng vẽ cột vào trong def draw_pipe(x, gap_y):, thay 100 bằng x, 150 bằng gap_y. Rồi gọi draw_pipe hai lần với số khác nhau."
+          "title": "Chạm đất thì dừng",
+          "text": "Trong update(), sau y = y + speed, thêm: if y > 480: rồi hai dòng thụt vào: y = 480 và speed = 0."
         }
       ]
     },
@@ -75,29 +67,33 @@
       "slides": [
         {
           "id": "l10-try",
-          "title": "Một dòng, một cặp cột",
-          "text": "Chạy thử. Gọi thêm draw_pipe lần thứ ba. Thử đổi GAP: mọi cặp cột đổi theo, chỉ sửa một chỗ."
+          "title": "Xem chim đáp đất",
+          "text": "Chạy toàn màn hình. Chim có đáp đúng mặt cỏ không? Nếu chìm hoặc lơ lửng, chỉnh số 480."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nGAP = 150\n\nclear(\"skyblue\")\ndraw_sprite(\"pipe\", 100, 150 - 440, flip=True)\ndraw_sprite(\"pipe\", 100, 150 + GAP)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
       "pq_import",
       "pq_def",
-      "pq_draw_sprite",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
       "pq_clear",
       "pq_text",
-      "pq_number",
-      "pq_var_get",
-      "pq_arith",
-      "pq_assign"
+      "pq_if",
+      "pq_compare",
+      "pq_draw_rect"
     ],
-    "mode": "script",
+    "mode": "game",
     "goals": [
       {
         "id": "l10-g-run",
@@ -105,28 +101,41 @@
         "kind": "noError"
       },
       {
-        "id": "l10-g-pipes",
-        "label": "Vẽ ít nhất 2 cặp cột",
-        "kind": "drewCount",
-        "sprite": "pipe",
-        "min": 4
+        "id": "l10-g-fall",
+        "label": "Chim đi xuống",
+        "kind": "moves",
+        "sprite": "bird",
+        "axis": "y",
+        "dir": 1
+      },
+      {
+        "id": "l10-g-ground",
+        "label": "Không chìm qua mặt đất",
+        "kind": "staysWithin",
+        "sprite": "bird",
+        "axis": "y",
+        "max": 480
       }
     ],
     "walkthrough": [
-      "Dưới dòng GAP = 150, gõ: def draw_pipe(x, gap_y):",
-      "Chuyển hai dòng draw_sprite vào trong lệnh mới (thụt vào 4 dấu cách).",
-      "Trong hai dòng đó: thay số 100 bằng x, thay số 150 bằng gap_y.",
-      "Cuối file, không thụt lề: draw_pipe(100, 150) rồi draw_pipe(280, 250).",
-      "Bấm ▶ Chạy: 2 cặp cột hiện ra."
+      "Trong update(), tìm dòng y = y + speed.",
+      "Ngay dưới, cùng thụt lề, gõ: if y > 480:",
+      "Hai dòng thụt vào thêm 4 dấu cách nữa: y = 480 và speed = 0.",
+      "Dùng khối cũng được: khối \"nếu … thì\" + khối so sánh y > 480.",
+      "Bấm ▶ Chạy: chim rơi rồi đứng trên cỏ."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nGAP = 150\n\n\ndef draw_pipe(x, gap_y):\n    draw_sprite(\"pipe\", x, gap_y - 440, flip=True)\n    draw_sprite(\"pipe\", x, gap_y + GAP)\n\n\nclear(\"skyblue\")\ndraw_pipe(100, 150)\ndraw_pipe(280, 250)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "hints": [
-      "Dòng def draw_pipe(x, gap_y): rồi hai dòng vẽ thụt vào bên dưới.",
-      "Bên trong dùng x và gap_y thay cho 100 và 150.",
-      "Gọi: draw_pipe(100, 150) và draw_pipe(280, 250)"
-    ]
+      "Dùng khối \"nếu … thì\" với điều kiện y > 480.",
+      "Bên trong: y = 480 và speed = 0.",
+      "if y > 480:\n    y = 480\n    speed = 0"
+    ],
+    "test": {
+      "frames": 90,
+      "taps": []
+    }
   },
   "unlocksRoadmap": [],
   "docsUnlocked": []

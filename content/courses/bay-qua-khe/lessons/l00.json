@@ -27,11 +27,7 @@
           "id": "l00-quiz-gravity",
           "quiz": {
             "question": "Vì sao chim cứ rơi xuống khi em không bấm gì?",
-            "choices": [
-              "Vì có trọng lực kéo xuống",
-              "Vì em bấm sai phím",
-              "Vì cột đẩy chim"
-            ],
+            "choices": ["Vì có trọng lực kéo xuống", "Vì em bấm sai phím", "Vì cột đẩy chim"],
             "answer": 0,
             "explain": "Mỗi khung hình, game kéo chim xuống một chút. Đó là trọng lực, một phần em sẽ tự làm."
           }
@@ -73,11 +69,7 @@
           "id": "l00-quiz-order",
           "quiz": {
             "question": "Phần nào nên làm đầu tiên?",
-            "choices": [
-              "Điểm số",
-              "Sân khấu và nhân vật",
-              "Màn hình thua"
-            ],
+            "choices": ["Điểm số", "Sân khấu và nhân vật", "Màn hình thua"],
             "answer": 1,
             "explain": "Chưa có sân khấu và nhân vật thì chưa có gì để tính điểm hay để thua."
           }
@@ -117,7 +109,7 @@
         {
           "id": "l00-next",
           "title": "Bài sau",
-          "text": "Màn hình là một tờ giấy kẻ ô. Em sẽ đặt nhân vật vào đúng chỗ bằng hai con số.",
+          "text": "Màn hình là một tờ giấy kẻ ô. Em sẽ tô những ô màu đầu tiên lên đó, chỉ bằng vài con số.",
           "coachNotes": "Nếu còn giờ: cho bé xem lại lộ trình vừa xếp và đánh dấu phần sẽ làm ở bài sau (sân khấu)."
         }
       ]
@@ -128,11 +120,7 @@
       "main.py": "from pyquest import *\n\nprint(\"Xin chào!\")\n"
     },
     "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_print",
-      "pq_text"
-    ],
+    "toolbox": ["pq_import", "pq_print", "pq_text"],
     "mode": "script",
     "goals": [
       {

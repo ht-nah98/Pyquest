@@ -2,36 +2,32 @@
   "id": "l12",
   "courseId": "bay-qua-khe",
   "order": 12,
-  "title": "Ngẫu nhiên",
+  "title": "Vẽ cột",
   "draft": true,
-  "summary": "random_int(80, 300): mỗi cột một độ cao, game bất ngờ hơn.",
+  "summary": "def draw_pipe(x, gap_y): lần hai tự đặt lệnh, lần này cho cặp cột chắn đường.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l12-boring",
-          "title": "Đoán trước được thì chán",
-          "text": "Khe cột lúc nào cũng ở cùng độ cao thì chơi vài lần là thuộc lòng. Game hay cần một chút bất ngờ.",
-          "coachNotes": "Cho lớp chơi game mẫu và để ý: khe cao thấp khác nhau."
+          "id": "l12-why",
+          "title": "Một cặp cột = hai lệnh",
+          "text": "Mỗi chướng ngại gồm cột trên (lật ngược) và cột dưới, cách nhau một khe GAP. Vẽ 5 cặp là 10 dòng gần giống nhau: dễ sai, khó sửa.",
+          "coachNotes": "Cho lớp đếm: muốn đổi bề rộng khe thì phải sửa bao nhiêu chỗ?"
         },
         {
-          "id": "l12-random",
-          "title": "Số ngẫu nhiên",
-          "text": "random_int(80, 300) cho một số bất kỳ từ 80 tới 300, như tung xúc xắc. Mỗi lần cột quay lại bên phải, ta tung lại độ cao khe.",
-          "coachNotes": "Nói về công bằng: số ngẫu nhiên nhưng nằm trong khoảng an toàn, không bao giờ ra khe bé không qua được."
+          "id": "l12-def",
+          "title": "Lệnh vẽ cặp cột",
+          "text": "Giống draw_bird ở Bài 4: gom hai lệnh vẽ ảnh cột vào def draw_pipe(x, gap_y):. x là chỗ đặt cột, gap_y là đỉnh khe. Cột trên lật ngược bằng flip=True.",
+          "coachNotes": "Lần thứ hai tự đặt lệnh có tham số. Hỏi lớp: lệnh này nhận mấy số? Vì sao cột trên đặt ở gap_y - 440? (ảnh cột cao 440: đẩy lên trên để đáy cột chạm đỉnh khe). Mở tab 📞 Cuộc gọi để thấy mỗi draw_pipe làm ra hai draw_image."
         },
         {
           "id": "l12-quiz",
           "quiz": {
-            "question": "random_int(1, 6) có thể cho số nào?",
-            "choices": [
-              "0",
-              "1 đến 6",
-              "7"
-            ],
+            "question": "Gọi draw_pipe(280, 250). Bên trong lệnh, gap_y bằng bao nhiêu?",
+            "choices": ["280", "250", "150"],
             "answer": 1,
-            "explain": "Cả hai đầu 1 và 6 đều có thể ra."
+            "explain": "Tham số nhận số theo thứ tự: x = 280, gap_y = 250."
           }
         }
       ]
@@ -40,16 +36,19 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l12-range",
-          "title": "Khoảng an toàn",
-          "text": "Khe bắt đầu ở gap_y và cao GAP = 150. gap_y nhỏ quá thì cột trên quá ngắn; lớn quá thì khe chạm đất (520). 80 đến 300 là vừa.",
-          "coachNotes": "Cho bé kiểm: 300 + 150 = 450 < 520, vẫn còn cột dưới."
+          "id": "l12-gap",
+          "title": "Thiết kế khe cột",
+          "text": "Khe là chỗ chim bay qua. GAP = 150 vừa với chim cao 40. Khe 60 thì gần như không qua được, 300 thì quá dễ.",
+          "coachNotes": "Viết hằng số viết HOA (GAP) để biết đây là con số thiết kế, không đổi khi chạy."
         },
         {
-          "id": "l12-pair",
-          "title": "Cột nhớ hai con số",
-          "text": "Giờ mỗi cột là [x, gap_y]: một danh sách nhỏ trong danh sách lớn. pipe[0] là x, pipe[1] là độ cao khe.",
-          "coachNotes": "Danh sách lồng danh sách: vẽ hộp lớn chứa các hộp nhỏ hai ngăn."
+          "id": "l12-quiz-gap",
+          "quiz": {
+            "question": "Muốn game khó hơn một chút, em sửa gì?",
+            "choices": ["Giảm GAP", "Tăng GAP", "Đổi tên draw_pipe"],
+            "answer": 0,
+            "explain": "Khe hẹp hơn thì khó luồn qua hơn."
+          }
         }
       ]
     },
@@ -58,8 +57,8 @@
       "slides": [
         {
           "id": "l12-code",
-          "title": "Tung lại độ cao khe",
-          "text": "Trong update(), chỗ đưa cột về bên phải, thêm dòng pipe[1] = random_int(80, 300)."
+          "title": "Viết lệnh draw_pipe",
+          "text": "Đặt hai dòng vẽ cột vào trong def draw_pipe(x, gap_y):, thay 100 bằng x, 150 bằng gap_y. Rồi gọi draw_pipe hai lần với số khác nhau."
         }
       ]
     },
@@ -68,40 +67,29 @@
       "slides": [
         {
           "id": "l12-try",
-          "title": "Chơi thử và chỉnh",
-          "text": "Chạy toàn màn hình, xem nhiều cột đi qua. Khoảng 80 đến 300 có công bằng không? Thử thu hẹp lại xem game dễ hơn không."
+          "title": "Một dòng, một cặp cột",
+          "text": "Chạy thử. Gọi thêm draw_pipe lần thứ ba. Thử đổi GAP: mọi cặp cột đổi theo, chỉ sửa một chỗ."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_sprite(\"pipe\", pipe[0], pipe[1] - 440, flip=True)\n        draw_sprite(\"pipe\", pipe[0], pipe[1] + GAP)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\n\nclear(\"skyblue\")\ndraw_image(\"images/pipe.png\", 100, 150 - 440, flip=True)\ndraw_image(\"images/pipe.png\", 100, 150 + GAP)\n"
     },
     "main": "main.py",
     "toolbox": [
       "pq_import",
       "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
-      "pq_var_get",
-      "pq_number",
-      "pq_draw_bird",
-      "pq_draw_sprite",
+      "pq_draw_image",
       "pq_clear",
       "pq_text",
-      "pq_if",
-      "pq_if_else",
-      "pq_compare",
-      "pq_logic",
-      "pq_key_pressed",
-      "pq_for",
-      "pq_draw_text",
-      "pq_random"
+      "pq_number",
+      "pq_var_get",
+      "pq_arith",
+      "pq_assign"
     ],
-    "mode": "game",
+    "mode": "script",
     "goals": [
       {
         "id": "l12-g-run",
@@ -109,31 +97,36 @@
         "kind": "noError"
       },
       {
-        "id": "l12-g-vary",
-        "label": "Khe cột cao thấp khác nhau",
-        "kind": "distinctCount",
+        "id": "l12-g-pipes",
+        "label": "Vẽ ít nhất 2 cặp cột",
+        "kind": "drewCount",
         "sprite": "pipe",
-        "axis": "y",
-        "min": 6
+        "min": 4
+      },
+      {
+        "id": "l12-g-call",
+        "label": "Gọi draw_pipe 2 lần, ở 2 chỗ",
+        "kind": "called",
+        "name": "draw_pipe",
+        "min": 2,
+        "distinct": true
       }
     ],
     "walkthrough": [
-      "Trong update(), tìm dòng pipe[0] = pipe[0] + 440.",
-      "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)",
-      "Bấm ▶ Chạy: máy chạy thử 520 khung hình để thấy cột quay lại nhiều lần.",
-      "Bấm ⛶: mỗi lần cột quay lại, khe ở một độ cao khác."
+      "Dưới dòng GAP = 150, gõ: def draw_pipe(x, gap_y):",
+      "Chuyển hai dòng draw_image vào trong lệnh mới (thụt vào 4 dấu cách).",
+      "Trong hai dòng đó: thay số 100 bằng x, thay số 150 bằng gap_y.",
+      "Cuối file, không thụt lề: draw_pipe(100, 150) rồi draw_pipe(280, 250).",
+      "Bấm ▶ Chạy: 2 cặp cột hiện ra."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_sprite(\"pipe\", pipe[0], pipe[1] - 440, flip=True)\n        draw_sprite(\"pipe\", pipe[0], pipe[1] + GAP)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nclear(\"skyblue\")\ndraw_pipe(100, 150)\ndraw_pipe(280, 250)\n"
     },
     "hints": [
-      "Tìm dòng pipe[0] = pipe[0] + 440.",
-      "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)"
-    ],
-    "test": {
-      "frames": 520,
-      "taps": []
-    }
+      "Dòng def draw_pipe(x, gap_y): rồi hai dòng vẽ thụt vào bên dưới.",
+      "Bên trong dùng x và gap_y thay cho 100 và 150.",
+      "Gọi: draw_pipe(100, 150) và draw_pipe(280, 250)"
+    ]
   },
   "unlocksRoadmap": [],
   "docsUnlocked": []

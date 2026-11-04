@@ -360,6 +360,9 @@ describe('goals for drawing from the smallest pieces', () => {
     ).toBe(true);
     // Fixed numbers: nothing moves.
     expect(checkGoals([g], before, before)[0]?.ok).toBe(false);
+    // The beak typed as a fixed number stays behind while the body moves: wrong.
+    const beakStuck = result([{ t: 'clear', color: 'sky' }, rect(150, 310), rect(130, 314)]);
+    expect(checkGoals([g], before, beakStuck)[0]?.ok).toBe(false);
     // One piece moves twice as far: wrong.
     const odd = result([{ t: 'clear', color: 'sky' }, rect(150, 310), rect(230, 314)]);
     expect(checkGoals([g], before, odd)[0]?.ok).toBe(false);
@@ -410,4 +413,16 @@ describe('runGameTest and calls', () => {
     expect(r.events.filter((e) => e.t === 'rect').map((e) => e.by)).toEqual([1, 3]);
     expect(r.lastFrameFrom).toBe(2);
   });
+});
+
+test('drewRects with at: one of the boxes has its corner at that point', () => {
+  const g: Goal = { id: 'g', label: 'l', kind: 'drewRects', min: 1, at: [100, 300] };
+  const box = (x: number) => ({
+    events: [{ t: 'rect', x, y: 300, w: 40, h: 40, color: 'gold' }] as RunResult['events'],
+    vars: {},
+    stoppedByLimit: false,
+    calls: [],
+  });
+  expect(checkGoals([g], box(100))[0]?.ok).toBe(true);
+  expect(checkGoals([g], box(101))[0]?.ok).toBe(false);
 });

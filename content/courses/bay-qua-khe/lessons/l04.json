@@ -2,36 +2,37 @@
   "id": "l04",
   "courseId": "bay-qua-khe",
   "order": 4,
-  "title": "Tính rồi gán lại",
+  "title": "Tự đặt lệnh",
   "draft": true,
-  "summary": "y = y + 100: lấy số cũ, tính ra số mới, cất lại vào hộp.",
+  "summary": "def draw_bird(x, y): gom các khối của chim thành một lệnh mới, gọi bao nhiêu lần cũng được.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l04-step",
-          "title": "Đi từng bước",
-          "text": "Chim muốn đi xuống. Vị trí mới = vị trí cũ + một bước. Trong Python viết: y = y + 100.",
-          "coachNotes": "Cho một bé đứng lên bước từng bước trên sàn kẻ ô; lớp đọc số ô sau mỗi bước."
+          "id": "l04-copy",
+          "title": "Muốn hai con chim thì sao?",
+          "text": "Một con chim là 4 dòng draw_rect. Hai con là 8 dòng, mười con là 40 dòng chép đi chép lại. Muốn đổi màu mỏ thì phải sửa 10 chỗ. Có cách hay hơn không?",
+          "coachNotes": "Cho lớp thử chép 4 dòng thành con chim thứ hai rồi đổi màu mỏ của cả hai: thấy mệt và dễ sót. Để bé tự nói ra mong muốn: \"giá mà có lệnh vẽ chim\"."
         },
         {
-          "id": "l04-order",
-          "title": "Máy tính tính bên phải trước",
-          "text": "Với y = y + 100, máy tính lấy số đang trong hộp y, cộng thêm 100, rồi cất kết quả lại vào hộp y.",
-          "coachNotes": "Viết: y đang là 100. y = y + 100 → bên phải là 100 + 100 = 200 → cất 200 vào y."
+          "id": "l04-def",
+          "title": "Đặt tên cho một nhóm lệnh",
+          "text": "def draw_bird(x, y): gom các dòng vẽ chim lại dưới tên draw_bird. Sau đó chỉ cần gọi draw_bird(100, 300) là cả nhóm chạy. Thư viện cũng làm ra draw_rect theo đúng cách này.",
+          "coachNotes": "Mở 📘 Thư viện → draw_rect → 🔍 Xem bên trong: nó cũng bắt đầu bằng def. Người viết thư viện và các em dùng cùng một công cụ."
         },
         {
-          "id": "l04-quiz",
+          "id": "l04-params",
+          "title": "Tham số là chỗ nhận số",
+          "text": "x và y trong def draw_bird(x, y) là tham số: hai cái hộp nhận số mỗi lần gọi. Gọi draw_bird(250, 150) thì trong lúc lệnh chạy, x là 250, y là 150."
+        },
+        {
+          "id": "l04-quiz-param",
           "quiz": {
-            "question": "y đang là 150. Chạy y = y + 100. Bây giờ y là bao nhiêu?",
-            "choices": [
-              "100",
-              "150",
-              "250"
-            ],
+            "question": "Gọi draw_bird(250, 150). Bên trong lệnh, x + 30 bằng bao nhiêu?",
+            "choices": ["30", "180", "280"],
             "answer": 2,
-            "explain": "Bên phải: 150 + 100 = 250, rồi cất 250 vào y."
+            "explain": "Lần gọi này cất 250 vào x, nên x + 30 = 280."
           }
         }
       ]
@@ -40,23 +41,10 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l04-plan",
-          "title": "Phác ra giấy",
-          "text": "Em muốn 3 con chim xếp dọc, cách nhau 100. Con đầu ở y = 100. Hai con sau ở y bao nhiêu?",
-          "coachNotes": "Đáp án: 200 và 300. Cho bé ghi ra giấy trước khi code."
-        },
-        {
-          "id": "l04-quiz-plan",
-          "quiz": {
-            "question": "Bắt đầu y = 100, cộng 100 hai lần. Con chim cuối ở y bao nhiêu?",
-            "choices": [
-              "200",
-              "300",
-              "400"
-            ],
-            "answer": 1,
-            "explain": "100 → 200 → 300."
-          }
+          "id": "l04-name",
+          "title": "Đặt tên lệnh",
+          "text": "Tên lệnh nói nó làm gì, viết như tên biến: chữ thường, nối bằng _. Ví dụ draw_bird, draw_cloud. Dòng def kết thúc bằng dấu hai chấm, các dòng bên trong thụt vào 4 dấu cách.",
+          "coachNotes": "Cho lớp đặt tên cho vài lệnh: vẽ mây, vẽ cây, vẽ mặt trời. Hỏi: lệnh vẽ mây cần tham số gì? (x, y; có thể thêm cỡ)."
         }
       ]
     },
@@ -65,8 +53,14 @@
       "slides": [
         {
           "id": "l04-code",
-          "title": "Ba con chim xếp dọc",
-          "text": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi."
+          "title": "Gói chim thành lệnh",
+          "text": "Gói 4 dòng vẽ chim vào def draw_bird(x, y):. Rồi gọi nó hai lần: draw_bird(100, 300) và draw_bird(250, 150)."
+        },
+        {
+          "id": "l04-calls",
+          "title": "📞 Xem cuộc gọi",
+          "text": "Chạy xong, mở tab 📞 Cuộc gọi bên phải. Mỗi lần gọi hiện ra với số nó nhận được và các draw_rect nó đã làm. Bấm một dòng để xem nó vẽ phần nào.",
+          "coachNotes": "Bấm lần lượt hai dòng draw_bird: con chim tương ứng sáng lên, con kia mờ đi. Chỉ cho bé thấy x + 30 đã thành 130 ở lần gọi đầu và 280 ở lần gọi sau: máy tính thay số vào tham số rồi mới tính."
         }
       ]
     },
@@ -75,27 +69,35 @@
       "slides": [
         {
           "id": "l04-try",
-          "title": "Đổi bước nhảy",
-          "text": "Chạy thử. Đổi 100 thành 50: các chim xích lại gần nhau. Python còn cách viết ngắn: y += 100 cũng là y = y + 100."
+          "title": "Một đàn chim",
+          "text": "Gọi thêm draw_bird ở chỗ khác. Rồi đổi màu mỏ một lần trong def: mọi con chim đều đổi theo."
+        },
+        {
+          "id": "l04-quiz-change",
+          "quiz": {
+            "question": "Đổi màu mỏ bên trong def draw_bird thì sao?",
+            "choices": ["Chỉ con đầu đổi", "Mọi con chim đều đổi", "Phải sửa từng chỗ gọi"],
+            "answer": 1,
+            "explain": "Mọi lần gọi đều chạy cùng các dòng bên trong def."
+          }
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\ny = 100\ndraw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, \"red\")\ndraw_rect(x + 30, y + 14, 8, 8, \"orange\")\ndraw_rect(x + 8, y, 14, 10, \"red\")\ndraw_rect(x + 20, y + 13, 4, 4, \"black\")\n"
     },
     "main": "main.py",
     "toolbox": [
       "pq_import",
-      "pq_assign",
+      "pq_def",
+      "pq_draw_rect",
+      "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_arith",
-      "pq_aug",
-      "pq_draw_bird",
-      "pq_clear",
-      "pq_text"
+      "pq_text",
+      "pq_assign"
     ],
     "mode": "script",
     "goals": [
@@ -105,33 +107,36 @@
         "kind": "noError"
       },
       {
-        "id": "l04-g-three",
-        "label": "Vẽ 3 con chim",
-        "kind": "drewCount",
-        "sprite": "bird",
-        "min": 3
+        "id": "l04-g-call",
+        "label": "Gọi draw_bird 2 lần, ở 2 chỗ khác nhau",
+        "kind": "called",
+        "name": "draw_bird",
+        "min": 2,
+        "distinct": true
       },
       {
-        "id": "l04-g-y",
-        "label": "Cuối cùng y là 300",
-        "kind": "varEquals",
-        "name": "y",
-        "value": 300
+        "id": "l04-g-same",
+        "label": "Hai con chim giống hệt nhau",
+        "kind": "sameShape",
+        "name": "draw_bird"
       }
     ],
     "walkthrough": [
-      "Code đã có: y = 100 và vẽ chim lần 1.",
-      "Thêm dòng y = y + 100 (khối \"đặt y = …\" với khối phép tính y + 100, hoặc gõ thẳng).",
-      "Thêm draw_bird(100, y) để vẽ chim lần 2.",
-      "Lặp lại một lần nữa: y = y + 100 rồi draw_bird(100, y).",
-      "Bấm ▶ Chạy: 3 chim xếp dọc, ô biến báo y = 300."
+      "Kéo khối \"tự đặt lệnh\" (nhóm Lệnh tự đặt) đặt ngay dưới khối 📦.",
+      "Ô tên gõ draw_bird. Ô trong ngoặc gõ x, y: hai tham số.",
+      "Kéo 4 khối vẽ hình chữ nhật của chim vào bên trong khối tự đặt lệnh.",
+      "Xóa hai khối \"đặt x =\" và \"đặt y =\": giờ x, y là tham số, nhận số khi gọi.",
+      "Mở nhóm Lệnh tự đặt: có khối mới 📞 draw_bird. Kéo hai khối, điền 100, 300 và 250, 150.",
+      "Trong Python, hai dòng draw_bird(…) nằm sát lề trái, bên dưới phần def.",
+      "Bấm ▶ Chạy, rồi mở tab 📞 Cuộc gọi và bấm từng dòng xem chim nào sáng lên."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\ny = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n    draw_rect(x + 20, y + 13, 4, 4, \"black\")\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
     },
     "hints": [
-      "Sau mỗi lần vẽ, thêm dòng y = y + 100.",
-      "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."
+      "Dòng def draw_bird(x, y): phải có dấu hai chấm ở cuối.",
+      "Các dòng draw_rect bên trong def thụt vào 4 dấu cách.",
+      "Lời gọi draw_bird(100, 300) nằm sát lề trái, sau phần def."
     ]
   },
   "unlocksRoadmap": [],

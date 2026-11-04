@@ -1,0 +1,161 @@
+{
+  "id": "l18",
+  "courseId": "bay-qua-khe",
+  "order": 18,
+  "title": "Thư viện của em",
+  "draft": true,
+  "summary": "Tách chim ra file riêng như pyquest; thêm màn bắt đầu và màn thua.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l18-ownlib",
+          "title": "Em cũng viết được thư viện",
+          "text": "pyquest chỉ là một file Python người khác viết. Em cũng làm được: chuyển def draw_bird và class Bird sang file bird.py, rồi from bird import Bird. File đó thành thư viện của em.",
+          "coachNotes": "Mở 📘 Thư viện → 🔍 Xem bên trong một lệnh bất kỳ, đặt cạnh file bird.py của bé: cùng là def, cùng là Python. Khác nhau chỉ là ai viết. Đây là chỗ khép vòng của cả khóa."
+        },
+        {
+          "id": "l18-states",
+          "title": "Game có nhiều màn hình",
+          "text": "Lúc mở game: chờ người chơi (ready). Bấm thì chơi (play). Đụng cột thì thua (over). Mỗi lúc game ở đúng một trạng thái.",
+          "coachNotes": "Vẽ ba ô ready → play → over và mũi tên kèm sự kiện: bấm, đụng cột. Đây là sơ đồ trạng thái."
+        },
+        {
+          "id": "l18-files",
+          "title": "Chia code ra nhiều file",
+          "text": "File dài thì khó tìm. Ta chuyển class Bird sang file riêng bird.py, rồi ở main.py viết from bird import Bird để mượn nó về.",
+          "coachNotes": "Giống chia vở: vở Toán, vở Văn. import là mượn đồ từ vở khác. bird.py cũng phải import các lệnh vẽ của pyquest."
+        },
+        {
+          "id": "l18-quiz",
+          "quiz": {
+            "question": "Đang ở trạng thái over, người chơi bấm Space. Theo luật của em, điều gì nên xảy ra?",
+            "choices": [
+              "Chơi tiếp như không có gì",
+              "Không làm gì, hoặc chơi lại từ đầu",
+              "Thoát máy tính"
+            ],
+            "answer": 1,
+            "explain": "Thua rồi thì không cho bay tiếp; game hay thường cho chơi lại."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l18-ready",
+          "title": "Màn chờ",
+          "text": "Ở màn ready, chim đứng yên, có chữ \"Bấm Space để bay\". Lần bấm đầu tiên vừa bắt đầu chơi vừa vỗ cánh luôn.",
+          "coachNotes": "Hỏi lớp: vì sao cần màn chờ? (người chơi chưa sẵn sàng thì chim đã rơi)."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l18-code",
+          "title": "Thêm trạng thái và tách file",
+          "text": "Bước 1: chuyển class Bird sang tab bird.py (thêm from pyquest import * ở đầu), main.py thêm from bird import Bird. Bước 2: thay game_over bằng state = \"ready\" / \"play\" / \"over\"."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l18-try",
+          "title": "Đi đủ ba màn",
+          "text": "Chạy toàn màn hình: thấy màn chờ, bấm để chơi, cố tình thua. Mỗi màn có đúng chữ và đúng cách cư xử chưa?"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n",
+      "bird.py": "# Chuyển def draw_bird và class Bird vào đây\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_import",
+      "pq_def",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_image",
+      "pq_clear",
+      "pq_text",
+      "pq_if",
+      "pq_if_else",
+      "pq_compare",
+      "pq_logic",
+      "pq_key_pressed",
+      "pq_for",
+      "pq_draw_text",
+      "pq_random"
+    ],
+    "mode": "game",
+    "goals": [
+      {
+        "id": "l18-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l18-g-wait",
+        "label": "Màn chờ: chim đứng yên",
+        "kind": "staysWithin",
+        "sprite": "bird",
+        "axis": "y",
+        "min": 299,
+        "max": 301,
+        "frames": [0, 39]
+      },
+      {
+        "id": "l18-g-hint",
+        "label": "Có chữ hướng dẫn",
+        "kind": "drewText",
+        "text": "Bấm Space để bay"
+      },
+      {
+        "id": "l18-g-score",
+        "label": "Vẫn ghi được điểm",
+        "kind": "varEquals",
+        "name": "score",
+        "value": 1
+      }
+    ],
+    "walkthrough": [
+      "Tab main.py: bôi đen def draw_bird và cả class Bird (tới hết def draw của nó), cắt bằng Ctrl+X.",
+      "Tab bird.py: xóa dòng chú thích, gõ from pyquest import *, xuống vài dòng rồi dán bằng Ctrl+V.",
+      "Về tab main.py: ngay dưới from pyquest import *, thêm dòng from bird import Bird.",
+      "Đổi game_over = False thành state = \"ready\"; trong dòng global cũng đổi game_over thành state.",
+      "Đầu update(): if state == \"ready\": nếu chưa bấm (not key_pressed()) thì return, bấm rồi thì state = \"play\".",
+      "if state == \"over\": return. Đụng cột thì state = \"over\".",
+      "Trong draw(): khi ready vẽ draw_text(\"Bấm Space để bay\", 200, 400, 32); khi over vẽ \"Thua rồi!\".",
+      "Bấm ▶ Chạy rồi ⛶: đi đủ ba màn chờ, chơi, thua."
+    ],
+    "solution": {
+      "main.py": "from pyquest import *\n\nfrom bird import Bird\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\nstate = \"ready\"\nscore = 0\nscored = False\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, state, score, scored\n    if state == \"ready\":\n        if not key_pressed():\n            return\n        state = \"play\"\n    if state == \"over\":\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        state = \"over\"\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if state == \"ready\":\n        draw_text(\"Bấm Space để bay\", 200, 400, 32)\n    if state == \"over\":\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n",
+      "bird.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n"
+    },
+    "hints": [
+      "bird.py: from pyquest import * rồi dán class Bird.",
+      "main.py: from bird import Bird ở dòng đầu, xóa class Bird cũ.",
+      "if state == \"ready\":\n    if not key_pressed():\n        return\n    state = \"play\""
+    ],
+    "test": {
+      "frames": 260,
+      "taps": [40, 71, 102, 133, 164, 195, 226, 257]
+    }
+  },
+  "unlocksRoadmap": ["screens"],
+  "docsUnlocked": []
+}

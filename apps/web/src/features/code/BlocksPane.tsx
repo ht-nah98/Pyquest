@@ -8,6 +8,8 @@ export type BlocksPaneHandle = {
   workspace(): Blockly.WorkspaceSvg | null;
   /** Glow the block whose code starts on or before this line. */
   highlightLine(line: number): void;
+  /** Re-read the defs: the sync loads blocks with events off, so it calls this after each load. */
+  refreshCalls(): void;
 };
 
 let localeSet = false;
@@ -33,6 +35,7 @@ export const BlocksPane = forwardRef<
 >(function BlocksPane({ toolbox, onEdit, onSelectLine, onReady, onDispose }, ref) {
   const host = useRef<HTMLDivElement>(null);
   const ws = useRef<Blockly.WorkspaceSvg | null>(null);
+  const refresh = useRef<() => void>(() => undefined);
   const cb = useRef({ onEdit, onSelectLine, onReady, onDispose });
   useEffect(() => {
     cb.current = { onEdit, onSelectLine, onReady, onDispose };
@@ -64,6 +67,7 @@ export const BlocksPane = forwardRef<
       defsKey = key;
       w.updateToolbox(toolboxFor(toolbox, calls));
     };
+    refresh.current = refreshCalls;
     w.addChangeListener((e) => {
       if (e instanceof Blockly.Events.Selected) {
         const id = e.newElementId;
@@ -95,6 +99,9 @@ export const BlocksPane = forwardRef<
 
   useImperativeHandle(ref, () => ({
     workspace: () => ws.current,
+    refreshCalls() {
+      refresh.current();
+    },
     highlightLine(line) {
       const w = ws.current;
       if (w === null) return;

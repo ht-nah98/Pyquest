@@ -1,12 +1,16 @@
 import { expect, test } from '@playwright/test';
 import { asCoach, codeText, framesOf, newStudent, pythonReady, typeCode } from './helpers';
 
-test('a child goes through lesson 0 in self-study mode and lesson 1 opens', async ({ page }) => {
+test('a child goes through lesson 0 in self-study mode; draft lessons stay hidden', async ({
+  page,
+}) => {
   await newStudent(page);
   await page.getByTestId('course-bay-qua-khe').click();
-  await expect(page.locator('[data-testid^=lesson-l]')).toHaveCount(18);
+  await expect(page.locator('[data-testid^=lesson-l]')).toHaveCount(20);
   await expect(page.getByTestId('lesson-l00')).toHaveAttribute('data-status', 'open');
-  await expect(page.getByTestId('lesson-l01')).toHaveAttribute('data-status', 'locked');
+  // Bài 1 is a draft again since the smallest-pieces rewrite (spec §7): hidden from children until the
+  // coach approves it. When the coach removes its draft flag, this goes back to 'locked'.
+  await expect(page.getByTestId('lesson-l01')).toHaveAttribute('data-status', 'hidden');
   await expect(page.getByTestId('lesson-l05')).toHaveAttribute('data-status', 'hidden');
 
   await page.getByTestId('lesson-l00').click();
@@ -53,7 +57,7 @@ test('a child goes through lesson 0 in self-study mode and lesson 1 opens', asyn
   await page.getByTestId('slide-next').click();
   await page.getByTestId('slide-finish').click();
   await expect(page.getByTestId('lesson-l00')).toHaveAttribute('data-status', 'done');
-  await expect(page.getByTestId('lesson-l01')).toHaveAttribute('data-status', 'open');
+  await expect(page.getByTestId('lesson-l01')).toHaveAttribute('data-status', 'hidden');
 });
 
 test('the coach presents lesson 0 and the notes window follows the slides', async ({

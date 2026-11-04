@@ -2,36 +2,32 @@
   "id": "l03",
   "courseId": "bay-qua-khe",
   "order": 3,
-  "title": "Chuẩn bị nhân vật",
+  "title": "Vẽ chim bằng ô vuông",
   "draft": true,
-  "summary": "File, thư mục, đường dẫn: chọn nhân vật cho game của em.",
+  "summary": "Ghép chim từ vài khối draw_rect, mỗi khối đo từ x và y để cả con chim dời theo.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l03-files",
-          "title": "Mọi thứ đều là file",
-          "text": "Ảnh, nhạc, code của em đều được máy tính cất trong file. File được xếp vào thư mục, giống vở được xếp vào ngăn cặp.",
-          "coachNotes": "Mở thư mục trên máy tính thật cho lớp xem: thư mục chứa thư mục con, chứa file. Đuôi .png là ảnh, .py là code Python."
+          "id": "l03-pieces",
+          "title": "Con chim là nhiều khối ghép lại",
+          "text": "Nhìn kỹ một con chim pixel: thân là một khối, mỏ là một khối nhỏ, cánh và mắt cũng vậy. Ghép vài lệnh draw_rect là ra con chim.",
+          "coachNotes": "Vẽ lên bảng một con chim bằng 4 hình chữ nhật: thân đỏ, mỏ cam, cánh, mắt đen. Hỏi lớp: cần mấy lệnh draw_rect? Mỗi lệnh cần những số nào?"
         },
         {
-          "id": "l03-path",
-          "title": "Đường dẫn là đường đi tới file",
-          "text": "images/bird-cu.png nghĩa là: vào thư mục images, lấy file bird-cu.png. Dấu / ngăn tên thư mục với tên file.",
-          "coachNotes": "Viết lên bảng: du-an-cua-em / images / bird-cu.png. Cho bé đọc to từng chặng."
+          "id": "l03-relative",
+          "title": "Đo từ góc của chim",
+          "text": "Mỏ không nằm ở một số cố định. Nó nằm cách góc chim 30 bước sang phải: x + 30. Viết mọi khối theo x và y thì chỉ đổi x một chỗ, cả con chim dời theo.",
+          "coachNotes": "Đây là ý quan trọng nhất bài: tọa độ tương đối. Lấy một tờ giấy bóng có vẽ chim, đặt lên giấy kẻ ô rồi trượt sang phải: mọi bộ phận cùng dời, khoảng cách giữa chúng giữ nguyên."
         },
         {
-          "id": "l03-quiz-path",
+          "id": "l03-quiz-move",
           "quiz": {
-            "question": "Đường dẫn images/bird-vet.png chỉ tới đâu?",
-            "choices": [
-              "File bird-vet.png trong thư mục images",
-              "Thư mục bird-vet trong file images",
-              "Một đoạn code"
-            ],
-            "answer": 0,
-            "explain": "Phần trước dấu / là thư mục, phần sau là tên file."
+            "question": "Mỏ là draw_rect(x + 30, y + 14, 8, 8, \"orange\"). Đặt x = 200 thì mỏ ở x bằng mấy?",
+            "choices": ["30", "200", "230"],
+            "answer": 2,
+            "explain": "x + 30 = 200 + 30 = 230. Mỏ luôn cách góc chim 30 bước."
           }
         }
       ]
@@ -40,27 +36,10 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l03-pick-idea",
-          "title": "Chọn nhân vật hợp với game",
-          "text": "Nhân vật nên nổi trên nền trời, nhìn rõ hướng bay sang phải. Em thích nhân vật nào? Vì sao?",
-          "coachNotes": "Cho bé nói lý do chọn: màu nổi trên nền, dễ thấy cánh vỗ. Không có đáp án sai."
-        }
-      ]
-    },
-    {
-      "kind": "prepare",
-      "slides": [
-        {
-          "id": "l03-library",
-          "title": "Chọn ảnh trong kho",
-          "text": "Bấm chọn một nhân vật. Xem ảnh nằm ở đâu trong dự án và đường dẫn tới nó. Em sẽ cần đường dẫn này khi viết code.",
-          "widget": {
-            "kind": "assetPicker",
-            "props": {
-              "group": "bird"
-            }
-          },
-          "coachNotes": "Kho hình do HLV sinh bằng AI. Hỏi: nếu gõ sai một chữ trong đường dẫn thì sao? (máy không tìm thấy file)."
+          "id": "l03-sketch",
+          "title": "Thiết kế con chim của em",
+          "text": "Trên giấy kẻ ô, vẽ chim của em bằng 3 đến 5 hình chữ nhật. Ghi cạnh mỗi khối: cách góc chim bao nhiêu (ví dụ x + 30, y + 14), rộng, cao, màu.",
+          "coachNotes": "Mỗi bé một thiết kế, không cần giống mẫu. Góc chim là điểm (x, y) trên bên trái. Kiểm tra: khối nào cũng ghi dạng x + …, y + …, không có số cố định."
         }
       ]
     },
@@ -69,9 +48,9 @@
       "slides": [
         {
           "id": "l03-code",
-          "title": "Dùng ảnh bằng đường dẫn",
-          "text": "Thêm dòng use_sprite(\"bird\", \"images/bird-cu.png\") lên đầu, thay bird-cu bằng tên ảnh em chọn. Lệnh này đổi hình của chim.",
-          "coachNotes": "Cố tình gõ sai đường dẫn để lớp thấy thông báo \"Không tìm thấy file\": lỗi này rất hay gặp khi làm phần mềm thật."
+          "title": "Ghép chim theo x, y",
+          "text": "Thân chim đã có sẵn. Thêm mỏ, cánh, mắt bằng draw_rect, mỗi khối tính từ x và y. Máy sẽ thử đổi x để xem cả con chim có dời theo không.",
+          "coachNotes": "Ô phép tính nằm trong nhóm Số và chữ. Bé kéo khối \"+\" vào ô x, rồi kéo khối biến x vào bên trái, gõ số bên phải."
         }
       ]
     },
@@ -80,25 +59,35 @@
       "slides": [
         {
           "id": "l03-try",
-          "title": "Thử nhiều nhân vật",
-          "text": "Chạy thử. Đổi sang ảnh khác chỉ bằng cách sửa đường dẫn. Thử gõ sai một chữ trong đường dẫn xem máy báo gì."
+          "title": "Dời cả con chim",
+          "text": "Đổi x = 100 thành x = 250 rồi chạy lại. Cả con chim có sang phải không? Khối nào đứng yên tức là khối đó đang dùng số cố định."
+        },
+        {
+          "id": "l03-quiz-fixed",
+          "quiz": {
+            "question": "Em viết mỏ là draw_rect(130, 314, 8, 8, \"orange\"). Đổi x thì sao?",
+            "choices": ["Mỏ dời theo chim", "Mỏ đứng yên, chim bay mất mỏ", "Máy báo lỗi"],
+            "answer": 1,
+            "explain": "130 là số cố định, không đọc hộp x. Viết x + 30 thì mỏ mới đi theo chim."
+          }
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, \"red\")\n"
     },
     "main": "main.py",
     "toolbox": [
       "pq_import",
-      "pq_use_sprite",
-      "pq_text",
       "pq_assign",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird"
+      "pq_arith",
+      "pq_draw_rect",
+      "pq_text",
+      "pq_clear"
     ],
     "mode": "script",
     "goals": [
@@ -108,32 +97,37 @@
         "kind": "noError"
       },
       {
-        "id": "l03-g-bird",
-        "label": "Chim dùng ảnh em chọn",
-        "kind": "drew",
-        "sprite": "bird",
-        "customImage": true
+        "id": "l03-g-pieces",
+        "label": "Chim có ít nhất 3 khối",
+        "kind": "drewRects",
+        "min": 3
+      },
+      {
+        "id": "l03-g-follow",
+        "label": "Đổi x thì cả chim dời theo",
+        "kind": "shifts",
+        "var": "x",
+        "by": 50,
+        "axis": "x"
       }
     ],
     "walkthrough": [
-      "Ở bước Chuẩn bị em đã chọn ảnh và thấy đường dẫn, ví dụ images/bird-vet.png.",
-      "Kéo khối \"dùng ảnh … cho …\" đặt ngay dưới khối 📦 thư viện.",
-      "Ô đầu giữ chữ bird (nhân vật cần đổi hình). Ô sau gõ đường dẫn ảnh em chọn.",
-      "Trong khung Python sẽ là: use_sprite(\"bird\", \"images/bird-vet.png\")",
-      "Bấm ▶ Chạy: chim đổi thành nhân vật mới.",
-      "Thử gõ sai một chữ trong đường dẫn để xem máy báo lỗi gì, rồi sửa lại cho đúng."
+      "Khung Python đã có x, y và thân chim: draw_rect(x, y + 10, 30, 20, \"red\").",
+      "Kéo thêm một khối \"vẽ hình chữ nhật\" đặt dưới thân. Đây là mỏ.",
+      "Ô x của mỏ: kéo khối \"+\" (Số và chữ) vào, ghép thành x + 30. Ô y: y + 14.",
+      "Rộng 8, cao 8, màu orange. Trong Python: draw_rect(x + 30, y + 14, 8, 8, \"orange\")",
+      "Làm thêm cánh và mắt theo thiết kế giấy của em, khối nào cũng tính từ x và y.",
+      "Bấm ▶ Chạy. Rồi đổi x = 100 thành 250, chạy lại: cả chim phải dời theo."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nuse_sprite(\"bird\", \"images/bird-cu.png\")\nx = 100\ny = 300\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, \"red\")\ndraw_rect(x + 30, y + 14, 8, 8, \"orange\")\ndraw_rect(x + 8, y, 14, 10, \"red\")\ndraw_rect(x + 20, y + 13, 4, 4, \"black\")\n"
     },
     "hints": [
-      "Kéo khối \"dùng ảnh … cho …\" lên trên cùng.",
-      "Đường dẫn bắt đầu bằng images/ và kết thúc bằng .png.",
-      "Ví dụ: use_sprite(\"bird\", \"images/bird-vet.png\")"
+      "Mỗi khối của chim là một dòng draw_rect.",
+      "Ô x viết x + số, ô y viết y + số. Đừng gõ số cố định.",
+      "Ví dụ mỏ: draw_rect(x + 30, y + 14, 8, 8, \"orange\")"
     ]
   },
-  "unlocksRoadmap": [
-    "bird"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

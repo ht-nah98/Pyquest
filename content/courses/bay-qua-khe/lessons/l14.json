@@ -2,39 +2,32 @@
   "id": "l14",
   "courseId": "bay-qua-khe",
   "order": 14,
-  "title": "Giao diện",
+  "title": "Ngẫu nhiên",
   "draft": true,
-  "summary": "Điểm số, chữ trên màn hình và bố cục: người chơi cần thấy gì?",
+  "summary": "random_int(80, 300): mỗi cột một độ cao, game bất ngờ hơn.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l14-ui",
-          "title": "Giao diện là gì",
-          "text": "Giao diện là những thứ người chơi nhìn và bấm: điểm số, chữ hướng dẫn, nút. Đẹp mà khó đọc thì vẫn là giao diện tồi.",
-          "widget": {
-            "kind": "sampleGame"
-          },
-          "coachNotes": "Chơi game mẫu, hỏi: điểm nằm ở đâu? Vì sao ở giữa phía trên? (mắt người chơi nhìn quanh chim, không che đường bay)."
+          "id": "l14-boring",
+          "title": "Đoán trước được thì chán",
+          "text": "Khe cột lúc nào cũng ở cùng độ cao thì chơi vài lần là thuộc lòng. Game hay cần một chút bất ngờ.",
+          "coachNotes": "Cho lớp chơi game mẫu và để ý: khe cao thấp khác nhau."
         },
         {
-          "id": "l14-str",
-          "title": "Số thành chữ",
-          "text": "draw_text cần chữ, mà score là số. str(score) biến số 3 thành chữ \"3\". Python không tự đổi giữa số và chữ.",
-          "coachNotes": "Thử print(\"Điểm: \" + score) cho lớp thấy lỗi \"không cộng được chữ với số\"."
+          "id": "l14-random",
+          "title": "Số ngẫu nhiên",
+          "text": "random_int(80, 300) cho một số bất kỳ từ 80 tới 300, như tung xúc xắc. Mỗi lần cột quay lại bên phải, ta tung lại độ cao khe.",
+          "coachNotes": "Nói về công bằng: số ngẫu nhiên nhưng nằm trong khoảng an toàn, không bao giờ ra khe bé không qua được."
         },
         {
           "id": "l14-quiz",
           "quiz": {
-            "question": "score = 7. str(score) là gì?",
-            "choices": [
-              "Số 7",
-              "Chữ \"7\"",
-              "Lỗi"
-            ],
+            "question": "random_int(1, 6) có thể cho số nào?",
+            "choices": ["0", "1 đến 6", "7"],
             "answer": 1,
-            "explain": "str() đổi số thành chữ để vẽ hoặc ghép chữ."
+            "explain": "Cả hai đầu 1 và 6 đều có thể ra."
           }
         }
       ]
@@ -43,33 +36,16 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l14-layout",
-          "title": "Phác bố cục",
-          "text": "Phác ra giấy màn hình 400 × 600: điểm ở đâu, cỡ chữ bao nhiêu, chữ \"Thua rồi!\" ở đâu. Chữ to, nét đậm, đặt chỗ không che chim.",
-          "coachNotes": "Phát giấy kẻ ô. Bé vẽ bố cục rồi mới code. So sánh bản phác của các bạn."
+          "id": "l14-range",
+          "title": "Khoảng an toàn",
+          "text": "Khe bắt đầu ở gap_y và cao GAP = 150. gap_y nhỏ quá thì cột trên quá ngắn; lớn quá thì khe chạm đất (520). 80 đến 300 là vừa.",
+          "coachNotes": "Cho bé kiểm: 300 + 150 = 450 < 520, vẫn còn cột dưới."
         },
         {
-          "id": "l14-score-rule",
-          "title": "Khi nào cộng điểm?",
-          "text": "Cộng 1 điểm khi cột đã đi qua hẳn chim: pipe_x + 52 < 100. Thêm biến scored để mỗi cột chỉ cộng một lần.",
-          "coachNotes": "Hỏi: nếu không có scored thì sao? (mỗi khung hình cộng 1, điểm tăng vù vù)."
-        }
-      ]
-    },
-    {
-      "kind": "prepare",
-      "slides": [
-        {
-          "id": "l14-bg",
-          "title": "Chọn nền cho game",
-          "text": "Chọn một ảnh nền trong kho. Nền đẹp nhưng chữ điểm vẫn phải đọc được: chữ trắng viền đen hợp với hầu hết các nền.",
-          "widget": {
-            "kind": "assetPicker",
-            "props": {
-              "group": "background"
-            }
-          },
-          "coachNotes": "Có thể đổi nền bằng draw_sprite(\"background-pho-co\", 0, 0) đầu draw(). Không bắt buộc ở bài này."
+          "id": "l14-pair",
+          "title": "Cột nhớ hai con số",
+          "text": "Giờ mỗi cột là [x, gap_y]: một danh sách nhỏ trong danh sách lớn. pipe[0] là x, pipe[1] là độ cao khe.",
+          "coachNotes": "Danh sách lồng danh sách: vẽ hộp lớn chứa các hộp nhỏ hai ngăn."
         }
       ]
     },
@@ -78,8 +54,8 @@
       "slides": [
         {
           "id": "l14-code",
-          "title": "Thêm điểm số",
-          "text": "Tạo score = 0 và scored = False. Khi cột qua khỏi chim lần đầu thì cộng điểm. Trong draw(), vẽ draw_text(str(score), 200, 60, 56). Máy tự bấm giúp em để bay qua cột."
+          "title": "Tung lại độ cao khe",
+          "text": "Trong update(), chỗ đưa cột về bên phải, thêm dòng pipe[1] = random_int(80, 300)."
         }
       ]
     },
@@ -88,15 +64,15 @@
       "slides": [
         {
           "id": "l14-try",
-          "title": "Đọc có rõ không?",
-          "text": "Chơi toàn màn hình. Điểm có dễ đọc không? Nhờ bạn bên cạnh chơi thử và nói em nghe họ thấy gì đầu tiên."
+          "title": "Chơi thử và chỉnh",
+          "text": "Chạy toàn màn hình, xem nhiều cột đi qua. Khoảng 80 đến 300 có công bằng không? Thử thu hẹp lại xem game dễ hơn không."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
     },
     "main": "main.py",
     "toolbox": [
@@ -108,8 +84,7 @@
       "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
-      "pq_draw_sprite",
+      "pq_draw_image",
       "pq_clear",
       "pq_text",
       "pq_if",
@@ -129,49 +104,32 @@
         "kind": "noError"
       },
       {
-        "id": "l14-g-score",
-        "label": "Qua một cột được 1 điểm",
-        "kind": "varEquals",
-        "name": "score",
-        "value": 1
-      },
-      {
-        "id": "l14-g-show",
-        "label": "Điểm hiện trên màn hình",
-        "kind": "drewText",
-        "text": "1"
+        "id": "l14-g-vary",
+        "label": "Khe cột cao thấp khác nhau",
+        "kind": "distinctCount",
+        "sprite": "pipe",
+        "axis": "y",
+        "min": 6
       }
     ],
     "walkthrough": [
-      "Dưới dòng game_over = False: thêm score = 0 và scored = False.",
-      "Trong update(): thêm score, scored vào cuối dòng global.",
-      "Sau dòng pipe_x = pipe_x - 2: if pipe_x + 52 < 100 and not scored: rồi thụt vào score = score + 1 và scored = True.",
-      "Trong draw(), sau draw_bird: draw_text(str(score), 200, 60, 56)",
-      "Bấm ▶ Chạy: máy tự vỗ cánh để bay qua cột, điểm thành 1."
+      "Trong update(), tìm dòng pipe[0] = pipe[0] + 440.",
+      "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)",
+      "Bấm ▶ Chạy: máy chạy thử 520 khung hình để thấy cột quay lại nhiều lần.",
+      "Bấm ⛶: mỗi lần cột quay lại, khe ở một độ cao khác."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over, score, scored\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
     },
     "hints": [
-      "Thêm score = 0 và scored = False ở trên cùng; thêm cả hai vào dòng global.",
-      "if pipe_x + 52 < 100 and not scored: cộng 1 điểm rồi scored = True",
-      "Trong draw(): draw_text(str(score), 200, 60, 56)"
+      "Tìm dòng pipe[0] = pipe[0] + 440.",
+      "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)"
     ],
     "test": {
-      "frames": 200,
-      "taps": [
-        0,
-        31,
-        62,
-        93,
-        124,
-        155,
-        186
-      ]
+      "frames": 520,
+      "taps": []
     }
   },
-  "unlocksRoadmap": [
-    "score"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

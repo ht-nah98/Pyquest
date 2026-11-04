@@ -55,9 +55,6 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
   { name: 'Số và chữ', colour: '160', types: ['pq_number', 'pq_text', 'pq_arith', 'pq_random'] },
 ];
 
-/** Up to this many blocks: one flyout. More: categories, so the flyout never pushes the workspace away. */
-const FLYOUT_MAX = 6;
-
 function entry(type: string): ToolboxEntry {
   const known: readonly string[] = BLOCK_TYPES;
   if (!known.includes(type)) throw new Error(`unknown block "${type}" in toolbox`);
@@ -95,8 +92,8 @@ export function callBlocksFor(statements: readonly BlockNode[]): ToolboxEntry[] 
 
 /** The toolbox for a lesson: exactly the blocks it allows, plus a call block for each of the child's defs. */
 export function toolboxFor(ids: readonly string[], calls: readonly ToolboxEntry[] = []): Toolbox {
-  const entries = ids.map(entry);
-  if (ids.length <= FLYOUT_MAX) return { kind: 'flyoutToolbox', contents: [...entries, ...calls] };
+  // Always categories: an always-open flyout is as wide as its widest block, and draw_rect is wide
+  // enough to cover the whole workspace (no room left to drop a block).
   const contents: ToolboxCategory[] = [];
   for (const cat of CATEGORIES) {
     const inCat = cat.types.filter((t) => ids.includes(t)).map(entry);

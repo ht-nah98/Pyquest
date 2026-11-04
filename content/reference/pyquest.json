@@ -1,18 +1,107 @@
 {
   "entries": [
-    { "name": "from pyquest import *", "signature": "from pyquest import *", "vi": "Mở hộp lệnh làm sẵn của PyQuest. Đặt ở dòng đầu mọi file. Thiếu dòng này thì Python không biết draw_bird, clear… là gì.", "example": "from pyquest import *", "lesson": "l00" },
-    { "name": "print", "signature": "print(giá trị, …)", "vi": "Lệnh có sẵn của Python. Trong PyQuest, chữ in ra hiện thành bong bóng thoại trên sân chơi.", "example": "print(\"Mình sẽ làm game!\")", "lesson": "l00" },
-    { "name": "draw_bird", "signature": "draw_bird(x, y)", "vi": "Vẽ chim, góc trên bên trái của hình nằm ở điểm (x, y). Chim rộng 44, cao 40.", "example": "draw_bird(100, 300)", "lesson": "l01" },
-    { "name": "clear", "signature": "clear(màu)", "vi": "Tô kín sân chơi bằng một màu (tên màu tiếng Anh: \"skyblue\", \"green\"…). Thường đặt ở đầu draw().", "example": "clear(\"skyblue\")", "lesson": "l01" },
-    { "name": "WIDTH, HEIGHT", "signature": "WIDTH = 400, HEIGHT = 600", "vi": "Bề rộng và chiều cao sân chơi. Góc trên bên trái là (0, 0), y càng lớn càng thấp.", "example": "draw_bird(WIDTH / 2, HEIGHT / 2)", "lesson": "l01" },
-    { "name": "use_sprite", "signature": "use_sprite(tên, đường dẫn)", "vi": "Đổi hình của một nhân vật bằng một file ảnh trong thư mục images. Sai đường dẫn thì báo \"Không tìm thấy file\".", "example": "use_sprite(\"bird\", \"images/bird-cu.png\")", "lesson": "l03" },
-    { "name": "draw_rect", "signature": "draw_rect(x, y, rộng, cao, màu)", "vi": "Vẽ hình chữ nhật, góc trên bên trái ở (x, y).", "example": "draw_rect(0, 520, 400, 80, \"green\")", "lesson": "l08" },
-    { "name": "update", "signature": "def update():", "vi": "Em tự viết. PyQuest gọi update() 60 lần mỗi giây để đổi các con số (vị trí, tốc độ…).", "example": "def update():\n    global y\n    y = y + 3", "lesson": "l06" },
-    { "name": "draw", "signature": "def draw():", "vi": "Em tự viết. PyQuest gọi draw() sau mỗi update() để vẽ lại cả màn hình.", "example": "def draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)", "lesson": "l06" },
-    { "name": "key_pressed", "signature": "key_pressed()", "vi": "True khi đang bấm Space hoặc chạm màn hình, False khi không bấm.", "example": "if key_pressed():\n    speed = -8", "lesson": "l09" },
-    { "name": "draw_sprite", "signature": "draw_sprite(tên, x, y, flip=False)", "vi": "Vẽ một hình trong kho (\"pipe\", \"background\"…). flip=True vẽ lộn ngược (cột phía trên).", "example": "draw_sprite(\"pipe\", 200, 300)", "lesson": "l10" },
-    { "name": "random_int", "signature": "random_int(a, b)", "vi": "Một số nguyên bất kỳ từ a tới b (có cả a và b), như tung xúc xắc.", "example": "gap_y = random_int(80, 300)", "lesson": "l12" },
-    { "name": "draw_text", "signature": "draw_text(chữ, x, y, cỡ=24, màu=\"white\")", "vi": "Viết chữ, (x, y) là tâm của chữ. Số phải đổi thành chữ bằng str() trước.", "example": "draw_text(str(score), 200, 60, 56)", "lesson": "l14" },
-    { "name": "str", "signature": "str(số)", "vi": "Lệnh có sẵn của Python: đổi số thành chữ, ví dụ 7 thành \"7\".", "example": "draw_text(\"Điểm: \" + str(score), 200, 60)", "lesson": "l14" }
+    {
+      "name": "from pyquest import *",
+      "signature": "from pyquest import *",
+      "vi": "Mở hộp mảnh gốc của PyQuest. Đặt ở dòng đầu mọi file. Thiếu dòng này thì Python không biết draw_rect, clear… là gì.",
+      "why": "Python thường không vẽ được lên sân chơi. Thư viện pyquest nối Python với sân chơi; import là cách lấy hộp đó ra dùng.",
+      "example": "from pyquest import *",
+      "lesson": "l00"
+    },
+    {
+      "name": "print",
+      "signature": "print(giá trị, …)",
+      "vi": "Lệnh có sẵn của Python. Trong PyQuest, chữ in ra hiện thành bong bóng thoại trên sân chơi.",
+      "why": "Python thật in chữ ra một cửa sổ dòng lệnh. Ở đây không có cửa sổ đó, nên PyQuest đổi chữ in ra thành bong bóng thoại.",
+      "inside": "PyQuest viết lại print: thay vì in ra cửa sổ, nó ghép các giá trị thành một câu và gửi lên sân.",
+      "example": "print(\"Mình sẽ làm game!\")",
+      "lesson": "l00"
+    },
+    {
+      "name": "draw_rect",
+      "signature": "draw_rect(x, y, rộng, cao, màu)",
+      "vi": "Tô một hình chữ nhật, góc trên bên trái ở (x, y). Màu viết bằng tên tiếng Anh: \"gold\", \"red\", \"green\"…",
+      "why": "Màn hình là hàng nghìn điểm màu. Tô từng điểm thì quá lâu, nên có lệnh tô cả một khối một lần.",
+      "inside": "_num kiểm tra em đưa vào số thật. _emit gửi một lệnh vẽ cho trang web, trang web tô màu lên sân.",
+      "example": "draw_rect(100, 300, 40, 40, \"gold\")",
+      "lesson": "l01"
+    },
+    {
+      "name": "clear",
+      "signature": "clear(màu)",
+      "vi": "Tô kín sân chơi bằng một màu (\"skyblue\", \"green\"…). Thường đặt ở đầu draw().",
+      "why": "Mỗi khung hình phải xóa tranh cũ rồi vẽ lại, không thì nhân vật để lại một vệt dài phía sau.",
+      "inside": "_emit gửi lệnh \"tô kín\" cho trang web.",
+      "example": "clear(\"skyblue\")",
+      "lesson": "l01"
+    },
+    {
+      "name": "WIDTH",
+      "signature": "WIDTH = 400, HEIGHT = 600",
+      "vi": "Bề rộng và chiều cao sân chơi. Góc trên bên trái là (0, 0), y càng lớn càng thấp.",
+      "why": "Để khỏi phải nhớ số 400 và 600. Đọc WIDTH thì ai cũng hiểu là bề rộng sân.",
+      "example": "draw_rect(0, 0, WIDTH, 50, \"white\")",
+      "lesson": "l01"
+    },
+    {
+      "name": "draw_image",
+      "signature": "draw_image(đường_dẫn, x, y, flip=False)",
+      "vi": "Dán cả một file ảnh trong thư mục images, góc trên bên trái ở (x, y). flip=True vẽ lộn ngược. Sai đường dẫn thì máy gợi ý tên đúng.",
+      "why": "Một con chim đẹp có khoảng 1760 điểm màu. Vẽ bằng draw_rect thì cần 1760 dòng, nên hình được lưu thành file và có lệnh dán cả file.",
+      "inside": "_picture đổi đường dẫn thành tên ảnh và kiểm tra file có thật. _emit gửi lệnh vẽ ảnh cho trang web.",
+      "example": "draw_image(\"images/bird.png\", 100, 300)",
+      "lesson": "l05"
+    },
+    {
+      "name": "update",
+      "signature": "def update():",
+      "vi": "Em tự viết. PyQuest gọi update() khoảng 60 lần mỗi giây để đổi các con số (vị trí, tốc độ…).",
+      "why": "Game là nhiều bức tranh nối nhau. Thư viện lo việc gọi đều đặn, em chỉ cần nói mỗi khung hình đổi gì.",
+      "example": "def update():\n    global y\n    y = y + 3",
+      "lesson": "l08"
+    },
+    {
+      "name": "draw",
+      "signature": "def draw():",
+      "vi": "Em tự viết. PyQuest gọi draw() sau mỗi update() để vẽ lại cả màn hình.",
+      "why": "Tách \"đổi số\" (update) và \"vẽ\" (draw) ra hai chỗ thì dễ tìm lỗi: sai vị trí thì xem update, sai hình thì xem draw.",
+      "example": "def draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)",
+      "lesson": "l08"
+    },
+    {
+      "name": "key_pressed",
+      "signature": "key_pressed()",
+      "vi": "True khi đang bấm Space hoặc chạm màn hình, False khi không bấm.",
+      "why": "Python thường chỉ đọc chữ gõ vào cửa sổ dòng lệnh, không biết phím Space trên trang web. Thư viện làm cầu nối đó.",
+      "inside": "_state[\"keys\"] là các phím trang web báo đang được bấm; một lần chạm màn hình cũng tính là Space.",
+      "example": "if key_pressed():\n    speed = -8",
+      "lesson": "l11"
+    },
+    {
+      "name": "random_int",
+      "signature": "random_int(a, b)",
+      "vi": "Một số nguyên bất kỳ từ a tới b (có cả a và b), như tung xúc xắc.",
+      "why": "Máy tính làm đúng từng bước, không tự \"đoán\" được. Thư viện dùng một công thức tạo ra dãy số trông như ngẫu nhiên.",
+      "inside": "_state[\"rng\"] là máy tạo số của Python (thư viện random). Cùng một hạt giống thì ra cùng một dãy số, nên bài kiểm tra luôn giống nhau.",
+      "example": "gap_y = random_int(80, 300)",
+      "lesson": "l14"
+    },
+    {
+      "name": "draw_text",
+      "signature": "draw_text(chữ, x, y, cỡ=24, màu=\"white\")",
+      "vi": "Viết chữ, (x, y) là tâm của chữ. Số phải đổi thành chữ bằng str() trước.",
+      "why": "Mỗi chữ cái là một hình nhỏ. Có lệnh vẽ sẵn để em khỏi tự vẽ từng chữ bằng ô vuông.",
+      "inside": "_emit gửi chữ, chỗ đặt và cỡ chữ cho trang web; trang web dùng phông chữ có sẵn để vẽ.",
+      "example": "draw_text(str(score), 200, 60, 56)",
+      "lesson": "l16"
+    },
+    {
+      "name": "str",
+      "signature": "str(số)",
+      "vi": "Lệnh có sẵn của Python: đổi số thành chữ, ví dụ 7 thành \"7\".",
+      "why": "Python không cho ghép chữ với số. str() đổi số thành chữ để ghép hoặc vẽ ra.",
+      "example": "draw_text(\"Điểm: \" + str(score), 200, 60)",
+      "lesson": "l16"
+    }
   ]
 }

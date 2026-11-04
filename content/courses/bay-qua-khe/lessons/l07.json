@@ -2,39 +2,32 @@
   "id": "l07",
   "courseId": "bay-qua-khe",
   "order": 7,
-  "title": "Trọng lực",
+  "title": "Lặp lại",
   "draft": true,
-  "summary": "Rơi nhanh dần: mỗi khung hình tốc độ tăng thêm một chút.",
+  "summary": "for i in range(8): làm một việc nhiều lần mà chỉ viết một lần.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l07-gravity",
-          "title": "Rơi nhanh dần",
-          "text": "Thả một quả bóng: lúc đầu chậm, càng rơi càng nhanh. Vì trọng lực làm tốc độ tăng thêm sau mỗi khoảnh khắc. Kéo thanh trượt rồi thả chim xem.",
-          "widget": {
-            "kind": "gravity"
-          },
-          "coachNotes": "Thả thật một cục tẩy. Chỉ trên màn: khoảng cách giữa các chấm giãn dần = rơi nhanh dần."
+          "id": "l07-repeat",
+          "title": "Việc lặp lại quanh em",
+          "text": "Đánh răng mỗi sáng, chép 10 lần một chữ, bước 8 bước tới cửa: cùng một việc, làm nhiều lần. Máy tính rất giỏi việc này.",
+          "coachNotes": "Hỏi lớp tìm thêm ví dụ lặp lại. Nhấn mạnh: viết 8 dòng giống nhau thì dễ sai và khó sửa."
         },
         {
-          "id": "l07-two",
-          "title": "Hai con số",
-          "text": "Cần hai hộp: y là vị trí, speed là tốc độ. Mỗi khung hình: speed tăng 0.5 (trọng lực), rồi y tăng thêm speed.",
-          "coachNotes": "Ghi bảng 4 khung đầu: speed 0.5, 1, 1.5, 2 → y 100.5, 101.5, 103, 105. Bước càng ngày càng dài."
+          "id": "l07-for",
+          "title": "Vòng lặp for",
+          "text": "for i in range(8): làm các dòng thụt vào bên dưới 8 lần. Lần đầu i = 0, rồi 1, 2… tới 7. Dòng nào thụt vào 4 dấu cách thì nằm trong vòng lặp.",
+          "coachNotes": "Viết bảng i = 0 1 2 3 4 5 6 7 (8 số, bắt đầu từ 0). Dấu : cuối dòng for và thụt lề là bắt buộc."
         },
         {
           "id": "l07-quiz",
           "quiz": {
-            "question": "speed đang là 2. Khung hình tới: speed = speed + 0.5 rồi y = y + speed. y tăng thêm bao nhiêu?",
-            "choices": [
-              "0.5",
-              "2",
-              "2.5"
-            ],
-            "answer": 2,
-            "explain": "speed thành 2.5 trước, rồi y cộng thêm 2.5."
+            "question": "for i in range(3) chạy mấy lần, i lần lượt là gì?",
+            "choices": ["3 lần: 1, 2, 3", "3 lần: 0, 1, 2", "4 lần: 0, 1, 2, 3"],
+            "answer": 1,
+            "explain": "range(3) đếm từ 0 và dừng trước 3: 0, 1, 2."
           }
         }
       ]
@@ -43,10 +36,19 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l07-feel",
-          "title": "Trọng lực bao nhiêu thì vừa?",
-          "text": "Trọng lực nhỏ: chim bồng bềnh như trên mặt trăng. Lớn: rơi như hòn đá. Game hay cần vừa phải. Em đoán số nào?",
-          "coachNotes": "Dùng thanh trượt ở slide trước so sánh 0.2, 0.5, 1.0."
+          "id": "l07-row",
+          "title": "Một hàng chim",
+          "text": "8 con chim xếp ngang, cách nhau 50. Con thứ i ở x = i * 50. Thử tính: i = 0 → x = 0, i = 1 → x = 50…",
+          "coachNotes": "Cho bé điền bảng i | x. Dấu * là nhân."
+        },
+        {
+          "id": "l07-quiz-x",
+          "quiz": {
+            "question": "Con chim có i = 7 nằm ở x bao nhiêu?",
+            "choices": ["7", "57", "350"],
+            "answer": 2,
+            "explain": "7 * 50 = 350."
+          }
         }
       ]
     },
@@ -55,8 +57,8 @@
       "slides": [
         {
           "id": "l07-code",
-          "title": "Thêm tốc độ",
-          "text": "Thêm speed = 0 ở trên cùng. Trong update(): global y, speed, rồi speed = speed + 0.5 và y = y + speed (thay cho y = y + 3)."
+          "title": "Vẽ 8 con chim bằng một vòng lặp",
+          "text": "Dùng for i in range(8): và bên trong vẽ draw_bird(i * 50, 300). Chỉ cần 2 dòng thay vì 8."
         }
       ]
     },
@@ -65,31 +67,29 @@
       "slides": [
         {
           "id": "l07-try",
-          "title": "Chỉnh trọng lực",
-          "text": "Chạy và xem toàn màn hình. Thử 0.2 và 1. Ghi lại số em thích nhất, Bài 9 sẽ cần nó."
+          "title": "Chơi với vòng lặp",
+          "text": "Chạy thử. Đổi 8 thành 5, đổi 50 thành 80. Thử thêm print(i) vào trong vòng lặp xem i thay đổi thế nào."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndraw_bird(0, 300)\n"
     },
     "main": "main.py",
     "toolbox": [
       "pq_import",
-      "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
+      "pq_for",
+      "pq_for_range",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
+      "pq_arith",
       "pq_clear",
+      "pq_print",
       "pq_text"
     ],
-    "mode": "game",
+    "mode": "script",
     "goals": [
       {
         "id": "l07-g-run",
@@ -97,43 +97,30 @@
         "kind": "noError"
       },
       {
-        "id": "l07-g-fall",
-        "label": "Chim đi xuống",
-        "kind": "moves",
+        "id": "l07-g-eight",
+        "label": "Vẽ 8 con chim",
+        "kind": "drewCount",
         "sprite": "bird",
-        "axis": "y",
-        "dir": 1
-      },
-      {
-        "id": "l07-g-faster",
-        "label": "Rơi nhanh dần",
-        "kind": "speedsUp",
-        "sprite": "bird",
-        "axis": "y"
+        "min": 8
       }
     ],
     "walkthrough": [
-      "Dưới dòng y = 100, thêm dòng speed = 0.",
-      "Trong update(): sửa global y thành global y, speed.",
-      "Thay dòng y = y + 3 bằng hai dòng: speed = speed + 0.5 rồi y = y + speed.",
-      "Bấm ▶ Chạy. Ô biến cho thấy speed tăng dần sau mỗi khung hình.",
-      "Thử đổi 0.5 thành 0.2 hoặc 1 rồi chạy lại, so sánh cảm giác rơi."
+      "Xóa dòng draw_bird(0, 300) cũ (kéo khối đó vào thùng rác).",
+      "Kéo khối \"lặp … lần, đếm bằng i\", đổi số lần thành 8.",
+      "Kéo khối \"vẽ chim\" thả VÀO TRONG khối lặp (khe ở giữa khối).",
+      "Ô x: dùng khối phép tính i × 50. Ô y: 300.",
+      "Trong khung Python: for i in range(8): và dòng thụt vào draw_bird(i * 50, 300).",
+      "Bấm ▶ Chạy: 8 chim thành một hàng ngang."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\nfor i in range(8):\n    draw_bird(i * 50, 300)\n"
     },
     "hints": [
-      "Thêm dòng speed = 0 dưới dòng y = 100.",
-      "global y, speed để update đổi được cả hai hộp.",
-      "speed = speed + 0.5 rồi y = y + speed"
-    ],
-    "test": {
-      "frames": 40,
-      "taps": []
-    }
+      "Kéo khối \"lặp … lần\" ra, đặt khối vẽ chim vào bên trong.",
+      "x của chim là i * 50 (khối phép tính ×).",
+      "for i in range(8):\n    draw_bird(i * 50, 300)"
+    ]
   },
-  "unlocksRoadmap": [
-    "gravity"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

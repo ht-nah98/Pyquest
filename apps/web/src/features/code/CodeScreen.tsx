@@ -122,6 +122,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
       ?.fromCode(text)
       .then((ok) => {
         if (ok && sync.current !== null) update({ workspace: sync.current.saveState() });
+        if (ok) blocks.current?.refreshCalls();
       })
       .catch(() => undefined);
   }
@@ -141,6 +142,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
       sync.current = s;
       // Saved blocks are only a first paint: the code is the truth, so always re-parse it (review C1).
       if (state?.workspace !== undefined) s.loadState(state.workspace);
+      blocks.current?.refreshCalls();
       reparse(filesRef.current[activeRef.current] ?? '');
     },
     // Runs once, when Blockly is injected.

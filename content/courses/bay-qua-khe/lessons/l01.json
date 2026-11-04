@@ -3,7 +3,8 @@
   "courseId": "bay-qua-khe",
   "order": 1,
   "title": "Màn hình là tờ giấy kẻ ô",
-  "summary": "Màn hình là lưới tọa độ: đặt chim vào đúng chỗ bằng hai con số.",
+  "draft": true,
+  "summary": "Màn hình là lưới điểm: tô ô màu đầu tiên bằng draw_rect và hai con số.",
   "steps": [
     {
       "kind": "understand",
@@ -27,14 +28,16 @@
           "id": "l01-quiz-corner",
           "quiz": {
             "question": "Điểm (0, 600) nằm ở đâu?",
-            "choices": [
-              "Góc trên bên trái",
-              "Góc dưới bên trái",
-              "Giữa màn hình"
-            ],
+            "choices": ["Góc trên bên trái", "Góc dưới bên trái", "Giữa màn hình"],
             "answer": 1,
             "explain": "x = 0 là sát mép trái, y = 600 là sát đáy."
           }
+        },
+        {
+          "id": "l01-pixels",
+          "title": "Màn hình là lưới điểm",
+          "text": "Nhìn thật gần, màn hình là hàng nghìn điểm nhỏ, mỗi điểm một màu. Tô từng điểm một thì rất lâu, nên thư viện pyquest có sẵn lệnh tô cả một khối: draw_rect.",
+          "coachNotes": "Phóng thật to một ảnh (hoặc soi màn hình bằng kính lúp) cho lớp thấy các điểm vuông. Đây là câu hỏi \"vì sao có lệnh này?\" đầu tiên của khóa: lệnh nào trong thư viện cũng có lý do để tồn tại. Những gì lớn hơn (con chim, cái cột) các em sẽ tự viết từ các mảnh nhỏ."
         }
       ]
     },
@@ -44,13 +47,13 @@
         {
           "id": "l01-sketch",
           "title": "Phác ra giấy trước",
-          "text": "Lúc bắt đầu, chim nên đứng ở đâu? Gần mép trái, giữa chiều cao, để còn nhìn thấy cột từ bên phải tới.",
-          "coachNotes": "Phát giấy kẻ ô. Bé đánh dấu điểm (100, 300) và vẽ con chim ở đó."
+          "text": "Nhân vật đầu tiên chỉ là một ô vuông vàng, cạnh 40. Đặt nó gần mép trái, giữa chiều cao: góc trên bên trái ở (100, 300).",
+          "coachNotes": "Phát giấy kẻ ô. Bé tô một ô vuông 40 × 40 có góc trên bên trái ở (100, 300). Hỏi: góc dưới bên phải ở đâu? (140, 340)."
         },
         {
           "id": "l01-quiz-where",
           "quiz": {
-            "question": "Chim ở (100, 300) nằm ở đâu?",
+            "question": "Ô vuông có góc ở (100, 300) nằm ở đâu?",
             "choices": [
               "Bên trái, giữa chiều cao",
               "Bên phải, sát đáy",
@@ -66,16 +69,16 @@
       "kind": "code",
       "slides": [
         {
-          "id": "l01-call",
-          "title": "Gọi lệnh vẽ",
-          "text": "Lệnh draw_bird(x, y) vẽ chim tại điểm (x, y). Hai số trong ngoặc gọi là tham số. Kéo khối \"vẽ chim\", hoặc gõ: draw_bird(100, 300)",
-          "coachNotes": "Chỉ cho bé: góc trên bên trái của hình chim nằm đúng ở (x, y). Thêm khối tô nền nếu bé muốn đổi màu trời."
+          "id": "l01-rect",
+          "title": "Lệnh tô khối",
+          "text": "draw_rect(x, y, rộng, cao, màu) tô một hình chữ nhật, góc trên bên trái ở (x, y). Các giá trị trong ngoặc gọi là tham số. Ví dụ: draw_rect(100, 300, 40, 40, \"gold\")",
+          "coachNotes": "Chỉ cho bé: số thứ nhất và thứ hai là góc, số thứ ba và thứ tư là kích thước. Màu viết bằng tên tiếng Anh trong dấu nháy: \"gold\", \"red\", \"green\"."
         },
         {
           "id": "l01-library",
-          "title": "Hộp lệnh làm sẵn",
-          "text": "draw_bird không phải lệnh có sẵn của Python. Nó nằm trong thư viện pyquest: một hộp lệnh làm sẵn. Dòng from pyquest import * ở đầu file mở hộp đó ra. Bấm 📘 Thư viện để xem mọi lệnh.",
-          "coachNotes": "Xóa thử dòng from pyquest import * rồi chạy: máy báo \"chưa có lệnh draw_bird\". Thư viện = đồ nghề người khác làm sẵn để mình dùng lại; lập trình viên thật dùng thư viện suốt."
+          "title": "Hộp mảnh gốc",
+          "text": "draw_rect không phải lệnh có sẵn của Python. Nó nằm trong thư viện pyquest, một hộp mảnh gốc người khác làm sẵn. Dòng from pyquest import * mở hộp ra. Bấm 📘 Thư viện để xem.",
+          "coachNotes": "Xóa thử dòng from pyquest import * rồi chạy: máy báo \"chưa có lệnh draw_rect\". Mở 📘 Thư viện → draw_rect → 🔍 Xem bên trong: thư viện cũng chỉ là một file Python. Thư viện chỉ có những mảnh Python thường không tự làm được: tô màn hình, đọc phím, mở file ảnh."
         }
       ]
     },
@@ -85,16 +88,13 @@
         {
           "id": "l01-try",
           "title": "Chạy và đổi số",
-          "text": "Chạy thử. Rồi đổi số: muốn chim sang phải thì đổi số nào? Muốn chim lên trên thì đổi số nào?"
+          "text": "Chạy thử. Rồi đổi số: muốn ô sang phải thì đổi số nào? Muốn ô to gấp đôi thì đổi số nào?"
         },
         {
           "id": "l01-quiz-up",
           "quiz": {
-            "question": "Muốn chim lên cao hơn, em đổi y thế nào?",
-            "choices": [
-              "Tăng y",
-              "Giảm y"
-            ],
+            "question": "Muốn ô vuông lên cao hơn, em đổi y thế nào?",
+            "choices": ["Tăng y", "Giảm y"],
             "answer": 1,
             "explain": "y nhỏ hơn thì gần mép trên hơn."
           }
@@ -107,14 +107,7 @@
       "main.py": "from pyquest import *\n"
     },
     "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_draw_bird",
-      "pq_number",
-      "pq_clear",
-      "pq_text",
-      "pq_print"
-    ],
+    "toolbox": ["pq_import", "pq_draw_rect", "pq_number", "pq_text", "pq_clear", "pq_print"],
     "mode": "script",
     "goals": [
       {
@@ -123,34 +116,30 @@
         "kind": "noError"
       },
       {
-        "id": "l01-g-bird",
-        "label": "Chim ở (100, 300)",
-        "kind": "drew",
-        "sprite": "bird",
-        "at": [
-          100,
-          300
-        ]
+        "id": "l01-g-box",
+        "label": "Ô vuông ở (100, 300)",
+        "kind": "drewRects",
+        "min": 1,
+        "at": [100, 300]
       }
     ],
     "walkthrough": [
-      "Kéo khối \"vẽ chim tại x … y …\" thả ngay dưới khối 📦 dùng thư viện pyquest.",
-      "Bấm vào ô số đầu (x) gõ 100, ô số sau (y) gõ 300.",
-      "Muốn đổi màu trời: kéo thêm khối \"tô nền màu\" đặt TRƯỚC khối vẽ chim.",
-      "Nhìn khung Python: khối vừa ghép đã thành dòng draw_bird(100, 300).",
-      "Bấm ▶ Chạy. Chim hiện ở bên trái, giữa chiều cao."
+      "Kéo khối \"vẽ hình chữ nhật\" thả ngay dưới khối 📦 dùng thư viện pyquest.",
+      "Ô x gõ 100, ô y gõ 300: đó là góc trên bên trái của ô.",
+      "Ô rộng và ô cao đều gõ 40. Ô màu gõ gold (vàng).",
+      "Nhìn khung Python: khối vừa ghép thành dòng draw_rect(100, 300, 40, 40, \"gold\").",
+      "Bấm ▶ Chạy. Ô vàng hiện ở bên trái, giữa chiều cao.",
+      "Muốn đổi màu trời: kéo thêm khối \"tô nền màu\" đặt TRƯỚC khối vẽ."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_bird(100, 300)\n"
+      "main.py": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_rect(100, 300, 40, 40, \"gold\")\n"
     },
     "hints": [
-      "Kéo khối \"vẽ chim\" vào vùng ghép.",
-      "Số đầu là x (sang phải), số sau là y (xuống dưới).",
-      "Cần: draw_bird(100, 300)"
+      "Kéo khối \"vẽ hình chữ nhật\" vào vùng ghép.",
+      "Hai số đầu là x và y của góc trên bên trái.",
+      "Cần: draw_rect(100, 300, 40, 40, \"gold\")"
     ]
   },
-  "unlocksRoadmap": [
-    "stage"
-  ],
+  "unlocksRoadmap": ["stage"],
   "docsUnlocked": []
 }

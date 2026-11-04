@@ -2,35 +2,32 @@
   "id": "l13",
   "courseId": "bay-qua-khe",
   "order": 13,
-  "title": "Đụng cột",
+  "title": "Nhiều cột",
   "draft": true,
-  "summary": "Hai hình chữ nhật chồng lên nhau khi nào? and, or và luật thua.",
+  "summary": "Danh sách pipes = [450, 650]: một biến giữ nhiều cột.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l13-boxes",
-          "title": "Chim và cột là hai hình chữ nhật",
-          "text": "Máy tính không \"nhìn\" thấy chim đụng cột. Nó hỏi: hai hình chữ nhật có chồng lên nhau không? Chim: x từ 100 tới 144, y từ y tới y + 40.",
-          "coachNotes": "Cắt hai hình chữ nhật giấy, đặt chồng và không chồng. Hỏi: khi nào chắc chắn KHÔNG chạm? (một hình hoàn toàn bên trái/phải/trên/dưới hình kia)."
+          "id": "l13-list",
+          "title": "Danh sách",
+          "text": "pipes = [450, 650] là một danh sách: một cái hộp có nhiều ngăn đánh số. pipes[0] là ngăn đầu (450), pipes[1] là ngăn thứ hai (650).",
+          "coachNotes": "Vẽ dãy hộp liền nhau, đánh số 0, 1, 2 bên dưới. Python đếm từ 0, giống range()."
         },
         {
-          "id": "l13-andor",
-          "title": "and và or",
-          "text": "A or B: đúng khi ít nhất một điều đúng. A and B: đúng khi cả hai cùng đúng. \"Chim ở bên trái cột HOẶC ở bên phải cột\" thì chắc chắn không chạm.",
-          "coachNotes": "Ví dụ đời thường: được ra chơi nếu làm xong bài VÀ trật tự; mang ô nếu trời mưa HOẶC nắng gắt."
+          "id": "l13-move",
+          "title": "Băng chuyền cột",
+          "text": "Chim đứng yên ở x = 100, còn cột trượt sang trái 2 bước mỗi khung. Cột ra khỏi mép trái thì đưa nó về bên phải để dùng lại.",
+          "coachNotes": "Như băng chuyền siêu thị: hàng chạy qua, người đứng yên. Đây là mẹo của rất nhiều game chạy cảnh."
         },
         {
           "id": "l13-quiz",
           "quiz": {
-            "question": "x = 5. Điều kiện x < 3 or x > 4 là gì?",
-            "choices": [
-              "True",
-              "False"
-            ],
-            "answer": 0,
-            "explain": "x > 4 đúng, nên cả câu or đúng."
+            "question": "pipes = [450, 650]. pipes[1] là bao nhiêu?",
+            "choices": ["450", "650", "1"],
+            "answer": 1,
+            "explain": "Đếm từ 0: pipes[0] = 450, pipes[1] = 650."
           }
         }
       ]
@@ -39,22 +36,10 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l13-fair",
-          "title": "Va chạm công bằng",
-          "text": "Đuôi và cánh chim mỏng, nên ta chừa mép 8 điểm: chỉ phần thân mới tính là chạm. Người chơi sẽ thấy game công bằng hơn.",
-          "coachNotes": "Game thật cũng làm vậy: vùng chạm (hitbox) nhỏ hơn hình vẽ một chút."
-        },
-        {
-          "id": "l13-quiz-rule",
-          "quiz": {
-            "question": "Chim đã qua khỏi cột hoàn toàn bên phải. Có chạm không?",
-            "choices": [
-              "Có",
-              "Không"
-            ],
-            "answer": 1,
-            "explain": "Hai hình không chồng lên nhau theo chiều ngang thì không thể chạm."
-          }
+          "id": "l13-spacing",
+          "title": "Khoảng cách giữa các cột",
+          "text": "Hai cột cách nhau 200: đủ chỗ cho chim lấy lại độ cao. Cột ra khỏi màn ở x < -76 (bề rộng hình cột) thì cộng 400 để quay về bên phải.",
+          "coachNotes": "Cho bé tính: cột ở -78 + 400 = 322, vẫn cách cột kia 200."
         }
       ]
     },
@@ -63,8 +48,8 @@
       "slides": [
         {
           "id": "l13-code",
-          "title": "Viết lệnh hits()",
-          "text": "hits() đang luôn trả False. Viết: nếu chim ở hẳn bên trái hoặc hẳn bên phải cột thì return False. Còn lại: chạm khi chim cao hơn khe hoặc thấp hơn khe."
+          "title": "Cho cột chạy",
+          "text": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách."
         }
       ]
     },
@@ -73,15 +58,15 @@
       "slides": [
         {
           "id": "l13-try",
-          "title": "Thua cho đúng",
-          "text": "Chơi toàn màn hình. Cố tình đụng cột trên, cột dưới và bay qua khe. Lần nào game cũng xử đúng chưa?"
+          "title": "Thêm cột",
+          "text": "Chạy toàn màn hình. Thêm một số vào danh sách, ví dụ [450, 650, 850], xem có thêm cột không."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    return False\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
     },
     "main": "main.py",
     "toolbox": [
@@ -93,8 +78,7 @@
       "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
-      "pq_draw_sprite",
+      "pq_draw_image",
       "pq_clear",
       "pq_text",
       "pq_if",
@@ -114,35 +98,41 @@
         "kind": "noError"
       },
       {
-        "id": "l13-g-hit",
-        "label": "Đụng cột thì thua",
-        "kind": "varEquals",
-        "name": "game_over",
-        "value": true
+        "id": "l13-g-move",
+        "label": "Cột trượt sang trái",
+        "kind": "moves",
+        "sprite": "pipe",
+        "axis": "x",
+        "dir": -1
+      },
+      {
+        "id": "l13-g-two",
+        "label": "Có 2 cặp cột",
+        "kind": "drewCount",
+        "sprite": "pipe",
+        "min": 4
       }
     ],
     "walkthrough": [
-      "Tìm def hits(): bên trong chỉ có return False.",
-      "Thay bằng: if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:  (chim ở hẳn bên trái hoặc hẳn bên phải cột)",
-      "Thụt vào dòng dưới: return False",
-      "Dòng cuối của hits(), thẳng hàng với if: return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP",
-      "Bấm ▶ Chạy: không bấm gì nên chim rơi, đụng cột dưới, game_over thành True."
+      "Trong update(), xóa dòng pass.",
+      "Gõ: for i in range(len(pipes)):",
+      "Thụt vào: pipes[i] = pipes[i] - 2",
+      "Thụt vào tiếp: if pipes[i] < -76: rồi thụt thêm: pipes[i] = pipes[i] + 400",
+      "Bấm ▶ Chạy, rồi ⛶ để xem cột chạy vòng."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
     },
     "hints": [
-      "Dòng đầu của hits(): if (chim bên trái cột) or (chim bên phải cột): return False",
-      "Chim bên trái cột: 100 + 44 - 8 < pipe_x",
-      "Cuối cùng: return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP"
+      "for i in range(len(pipes)): đi qua từng ngăn.",
+      "pipes[i] = pipes[i] - 2",
+      "if pipes[i] < -76:\n    pipes[i] = pipes[i] + 400"
     ],
     "test": {
-      "frames": 200,
+      "frames": 60,
       "taps": []
     }
   },
-  "unlocksRoadmap": [
-    "collision"
-  ],
+  "unlocksRoadmap": ["pipes"],
   "docsUnlocked": []
 }

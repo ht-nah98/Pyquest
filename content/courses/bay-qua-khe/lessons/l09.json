@@ -2,39 +2,35 @@
   "id": "l09",
   "courseId": "bay-qua-khe",
   "order": 9,
-  "title": "Nút bay",
+  "title": "Trọng lực",
   "draft": true,
-  "summary": "Bấm thì tốc độ thành số âm: chim vọt lên.",
+  "summary": "Rơi nhanh dần: mỗi khung hình tốc độ tăng thêm một chút.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l09-up",
-          "title": "Bay lên là tốc độ âm",
-          "text": "y nhỏ là ở trên. Muốn chim vọt lên, cho speed thành số âm, ví dụ -8. Trọng lực vẫn cộng 0.5 mỗi khung, nên chim lên chậm dần rồi lại rơi.",
+          "id": "l09-gravity",
+          "title": "Rơi nhanh dần",
+          "text": "Thả một quả bóng: lúc đầu chậm, càng rơi càng nhanh. Vì trọng lực làm tốc độ tăng thêm sau mỗi khoảnh khắc. Kéo thanh trượt rồi thả chim xem.",
           "widget": {
             "kind": "gravity"
           },
-          "coachNotes": "Ghi bảng: speed -8, -7.5, -7… 0, 0.5, 1… → chim lên, khựng lại, rồi rơi. Đường bay cong."
+          "coachNotes": "Thả thật một cục tẩy. Chỉ trên màn: khoảng cách giữa các chấm giãn dần = rơi nhanh dần."
         },
         {
-          "id": "l09-key",
-          "title": "Hỏi bàn phím",
-          "text": "key_pressed() trả lời True khi em đang bấm Space hoặc chạm màn hình. Kết hợp với if: if key_pressed(): speed = -8.",
-          "coachNotes": "Đây là sự kiện: chương trình phản ứng với người chơi."
+          "id": "l09-two",
+          "title": "Hai con số",
+          "text": "Cần hai hộp: y là vị trí, speed là tốc độ. Mỗi khung hình: speed tăng 0.5 (trọng lực), rồi y tăng thêm speed.",
+          "coachNotes": "Ghi bảng 4 khung đầu: speed 0.5, 1, 1.5, 2 → y 100.5, 101.5, 103, 105. Bước càng ngày càng dài."
         },
         {
           "id": "l09-quiz",
           "quiz": {
-            "question": "speed = -8 rồi y = y + speed. Chim đi đâu?",
-            "choices": [
-              "Lên trên",
-              "Xuống dưới",
-              "Đứng yên"
-            ],
-            "answer": 0,
-            "explain": "Cộng số âm là trừ: y nhỏ đi nên chim lên trên."
+            "question": "speed đang là 2. Khung hình tới: speed = speed + 0.5 rồi y = y + speed. y tăng thêm bao nhiêu?",
+            "choices": ["0.5", "2", "2.5"],
+            "answer": 2,
+            "explain": "speed thành 2.5 trước, rồi y cộng thêm 2.5."
           }
         }
       ]
@@ -44,9 +40,9 @@
       "slides": [
         {
           "id": "l09-feel",
-          "title": "Cảm giác vỗ cánh",
-          "text": "-8 có vừa không? -4 thì nhảy lè tè, -15 thì vọt mất khỏi màn hình. Nhà làm game thật chỉnh con số này rất lâu.",
-          "coachNotes": "Cho mỗi bé chọn một số, chơi thử rồi so sánh. Không có đáp án duy nhất."
+          "title": "Trọng lực bao nhiêu thì vừa?",
+          "text": "Trọng lực nhỏ: chim bồng bềnh như trên mặt trăng. Lớn: rơi như hòn đá. Game hay cần vừa phải. Em đoán số nào?",
+          "coachNotes": "Dùng thanh trượt ở slide trước so sánh 0.2, 0.5, 1.0."
         }
       ]
     },
@@ -55,8 +51,8 @@
       "slides": [
         {
           "id": "l09-code",
-          "title": "Thêm nút bay",
-          "text": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60."
+          "title": "Thêm tốc độ",
+          "text": "Thêm speed = 0 ở trên cùng. Trong update(): global y, speed, rồi speed = speed + 0.5 và y = y + speed (thay cho y = y + 3)."
         }
       ]
     },
@@ -65,15 +61,15 @@
       "slides": [
         {
           "id": "l09-try",
-          "title": "Chơi thử!",
-          "text": "Bấm ⛶ toàn màn hình, nhấn Space để bay. Chỉnh -8 và 0.5 tới khi em thấy chơi \"sướng tay\" nhất."
+          "title": "Chỉnh trọng lực",
+          "text": "Chạy và xem toàn màn hình. Thử 0.2 và 1. Ghi lại số em thích nhất, Bài 11 sẽ cần nó."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
@@ -85,13 +81,8 @@
       "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
       "pq_clear",
-      "pq_text",
-      "pq_if",
-      "pq_compare",
-      "pq_draw_rect",
-      "pq_key_pressed"
+      "pq_text"
     ],
     "mode": "game",
     "goals": [
@@ -101,49 +92,41 @@
         "kind": "noError"
       },
       {
-        "id": "l09-g-flap",
-        "label": "Bấm thì chim bay lên",
-        "kind": "risesAfterTap",
-        "sprite": "bird",
-        "taps": [
-          40,
-          60
-        ]
-      },
-      {
-        "id": "l09-g-ground",
-        "label": "Vẫn không chìm qua đất",
-        "kind": "staysWithin",
+        "id": "l09-g-fall",
+        "label": "Chim đi xuống",
+        "kind": "moves",
         "sprite": "bird",
         "axis": "y",
-        "max": 480
+        "dir": 1
+      },
+      {
+        "id": "l09-g-faster",
+        "label": "Rơi nhanh dần",
+        "kind": "speedsUp",
+        "sprite": "bird",
+        "axis": "y"
       }
     ],
     "walkthrough": [
-      "Trong update(), ngay dưới dòng global y, speed, gõ: if key_pressed():",
-      "Dòng thụt vào thêm: speed = -8",
-      "Khối tương ứng: \"nếu … thì\" với khối \"đang bấm Space / chạm?\", bên trong \"đặt speed = -8\".",
-      "Bấm ▶ Chạy: máy thử bấm ở khung 40 và 60 để chấm.",
-      "Bấm ⛶ rồi nhấn Space để tự chơi. Chỉnh -8 và 0.5 tới khi vừa tay."
+      "Dưới dòng y = 100, thêm dòng speed = 0.",
+      "Trong update(): sửa global y thành global y, speed.",
+      "Thay dòng y = y + 3 bằng hai dòng: speed = speed + 0.5 rồi y = y + speed.",
+      "Bấm ▶ Chạy. Ô biến cho thấy speed tăng dần sau mỗi khung hình.",
+      "Thử đổi 0.5 thành 0.2 hoặc 1 rồi chạy lại, so sánh cảm giác rơi."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
     },
     "hints": [
-      "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",
-      "Bên trong: speed = -8.",
-      "if key_pressed():\n    speed = -8"
+      "Thêm dòng speed = 0 dưới dòng y = 100.",
+      "global y, speed để update đổi được cả hai hộp.",
+      "speed = speed + 0.5 rồi y = y + speed"
     ],
     "test": {
-      "frames": 90,
-      "taps": [
-        40,
-        60
-      ]
+      "frames": 40,
+      "taps": []
     }
   },
-  "unlocksRoadmap": [
-    "flap"
-  ],
+  "unlocksRoadmap": ["gravity"],
   "docsUnlocked": []
 }

@@ -2,36 +2,35 @@
   "id": "l11",
   "courseId": "bay-qua-khe",
   "order": 11,
-  "title": "Nhiều cột",
+  "title": "Nút bay",
   "draft": true,
-  "summary": "Danh sách pipes = [450, 650]: một biến giữ nhiều cột.",
+  "summary": "Bấm thì tốc độ thành số âm: chim vọt lên.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l11-list",
-          "title": "Danh sách",
-          "text": "pipes = [450, 650] là một danh sách: một cái hộp có nhiều ngăn đánh số. pipes[0] là ngăn đầu (450), pipes[1] là ngăn thứ hai (650).",
-          "coachNotes": "Vẽ dãy hộp liền nhau, đánh số 0, 1, 2 bên dưới. Python đếm từ 0, giống range()."
+          "id": "l11-up",
+          "title": "Bay lên là tốc độ âm",
+          "text": "y nhỏ là ở trên. Muốn chim vọt lên, cho speed thành số âm, ví dụ -8. Trọng lực vẫn cộng 0.5 mỗi khung, nên chim lên chậm dần rồi lại rơi.",
+          "widget": {
+            "kind": "gravity"
+          },
+          "coachNotes": "Ghi bảng: speed -8, -7.5, -7… 0, 0.5, 1… → chim lên, khựng lại, rồi rơi. Đường bay cong."
         },
         {
-          "id": "l11-move",
-          "title": "Băng chuyền cột",
-          "text": "Chim đứng yên ở x = 100, còn cột trượt sang trái 2 bước mỗi khung. Cột ra khỏi mép trái thì đưa nó về bên phải để dùng lại.",
-          "coachNotes": "Như băng chuyền siêu thị: hàng chạy qua, người đứng yên. Đây là mẹo của rất nhiều game chạy cảnh."
+          "id": "l11-key",
+          "title": "Hỏi bàn phím",
+          "text": "key_pressed() trả lời True khi em đang bấm Space hoặc chạm màn hình. Kết hợp với if: if key_pressed(): speed = -8.",
+          "coachNotes": "Đây là sự kiện: chương trình phản ứng với người chơi."
         },
         {
           "id": "l11-quiz",
           "quiz": {
-            "question": "pipes = [450, 650]. pipes[1] là bao nhiêu?",
-            "choices": [
-              "450",
-              "650",
-              "1"
-            ],
-            "answer": 1,
-            "explain": "Đếm từ 0: pipes[0] = 450, pipes[1] = 650."
+            "question": "speed = -8 rồi y = y + speed. Chim đi đâu?",
+            "choices": ["Lên trên", "Xuống dưới", "Đứng yên"],
+            "answer": 0,
+            "explain": "Cộng số âm là trừ: y nhỏ đi nên chim lên trên."
           }
         }
       ]
@@ -40,10 +39,10 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l11-spacing",
-          "title": "Khoảng cách giữa các cột",
-          "text": "Hai cột cách nhau 200: đủ chỗ cho chim lấy lại độ cao. Cột ra khỏi màn ở x < -76 (bề rộng hình cột) thì cộng 400 để quay về bên phải.",
-          "coachNotes": "Cho bé tính: cột ở -78 + 400 = 322, vẫn cách cột kia 200."
+          "id": "l11-feel",
+          "title": "Cảm giác vỗ cánh",
+          "text": "-8 có vừa không? -4 thì nhảy lè tè, -15 thì vọt mất khỏi màn hình. Nhà làm game thật chỉnh con số này rất lâu.",
+          "coachNotes": "Cho mỗi bé chọn một số, chơi thử rồi so sánh. Không có đáp án duy nhất."
         }
       ]
     },
@@ -52,8 +51,8 @@
       "slides": [
         {
           "id": "l11-code",
-          "title": "Cho cột chạy",
-          "text": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách."
+          "title": "Thêm nút bay",
+          "text": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60."
         }
       ]
     },
@@ -62,15 +61,15 @@
       "slides": [
         {
           "id": "l11-try",
-          "title": "Thêm cột",
-          "text": "Chạy toàn màn hình. Thêm một số vào danh sách, ví dụ [450, 650, 850], xem có thêm cột không."
+          "title": "Chơi thử!",
+          "text": "Bấm ⛶ toàn màn hình, nhấn Space để bay. Chỉnh -8 và 0.5 tới khi em thấy chơi \"sướng tay\" nhất."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
@@ -82,18 +81,12 @@
       "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
-      "pq_draw_sprite",
       "pq_clear",
       "pq_text",
       "pq_if",
-      "pq_if_else",
       "pq_compare",
-      "pq_logic",
-      "pq_key_pressed",
-      "pq_for",
-      "pq_draw_text",
-      "pq_random"
+      "pq_draw_rect",
+      "pq_key_pressed"
     ],
     "mode": "game",
     "goals": [
@@ -103,43 +96,41 @@
         "kind": "noError"
       },
       {
-        "id": "l11-g-move",
-        "label": "Cột trượt sang trái",
-        "kind": "moves",
-        "sprite": "pipe",
-        "axis": "x",
-        "dir": -1
+        "id": "l11-g-flap",
+        "label": "Bấm thì chim bay lên",
+        "kind": "risesAfterTap",
+        "sprite": "bird",
+        "taps": [40, 60]
       },
       {
-        "id": "l11-g-two",
-        "label": "Có 2 cặp cột",
-        "kind": "drewCount",
-        "sprite": "pipe",
-        "min": 4
+        "id": "l11-g-ground",
+        "label": "Vẫn không chìm qua đất",
+        "kind": "staysWithin",
+        "sprite": "bird",
+        "axis": "y",
+        "max": 480
       }
     ],
     "walkthrough": [
-      "Trong update(), xóa dòng pass.",
-      "Gõ: for i in range(len(pipes)):",
-      "Thụt vào: pipes[i] = pipes[i] - 2",
-      "Thụt vào tiếp: if pipes[i] < -76: rồi thụt thêm: pipes[i] = pipes[i] + 400",
-      "Bấm ▶ Chạy, rồi ⛶ để xem cột chạy vòng."
+      "Trong update(), ngay dưới dòng global y, speed, gõ: if key_pressed():",
+      "Dòng thụt vào thêm: speed = -8",
+      "Khối tương ứng: \"nếu … thì\" với khối \"đang bấm Space / chạm?\", bên trong \"đặt speed = -8\".",
+      "Bấm ▶ Chạy: máy thử bấm ở khung 40 và 60 để chấm.",
+      "Bấm ⛶ rồi nhấn Space để tự chơi. Chỉnh -8 và 0.5 tới khi vừa tay."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "hints": [
-      "for i in range(len(pipes)): đi qua từng ngăn.",
-      "pipes[i] = pipes[i] - 2",
-      "if pipes[i] < -76:\n    pipes[i] = pipes[i] + 400"
+      "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",
+      "Bên trong: speed = -8.",
+      "if key_pressed():\n    speed = -8"
     ],
     "test": {
-      "frames": 60,
-      "taps": []
+      "frames": 90,
+      "taps": [40, 60]
     }
   },
-  "unlocksRoadmap": [
-    "pipes"
-  ],
+  "unlocksRoadmap": ["flap"],
   "docsUnlocked": []
 }

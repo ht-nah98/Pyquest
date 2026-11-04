@@ -2,39 +2,32 @@
   "id": "l06",
   "courseId": "bay-qua-khe",
   "order": 6,
-  "title": "Hoạt hình là gì",
+  "title": "Tính rồi gán lại",
   "draft": true,
-  "summary": "Game vẽ lại mỗi khung hình: update() đổi số, draw() vẽ lại.",
+  "summary": "y = y + 100: lấy số cũ, tính ra số mới, cất lại vào hộp.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l06-flip",
-          "title": "Phim là nhiều ảnh tĩnh",
-          "text": "Phim hoạt hình là nhiều ảnh, mỗi ảnh khác nhau một chút, chiếu thật nhanh. Mỗi ảnh gọi là một khung hình. Bấm Chiếu rồi kéo tốc độ lên xem.",
-          "widget": {
-            "kind": "flipbook"
-          },
-          "coachNotes": "Hoạt động giấy: cho bé làm sách lật 8 trang ở góc vở, vẽ chấm tròn thấp dần. Lật nhanh → chấm rơi."
+          "id": "l06-step",
+          "title": "Đi từng bước",
+          "text": "Chim muốn đi xuống. Vị trí mới = vị trí cũ + một bước. Trong Python viết: y = y + 100.",
+          "coachNotes": "Cho một bé đứng lên bước từng bước trên sàn kẻ ô; lớp đọc số ô sau mỗi bước."
         },
         {
-          "id": "l06-loop",
-          "title": "Vòng lặp của game",
-          "text": "Game làm đi làm lại 60 lần mỗi giây: update() đổi các con số (chim xuống một chút), rồi draw() xóa và vẽ lại tất cả.",
-          "coachNotes": "Vẽ vòng tròn lên bảng: update → draw → update → draw… Nền tảng PyQuest tự gọi hai lệnh này cho em."
+          "id": "l06-order",
+          "title": "Máy tính tính bên phải trước",
+          "text": "Với y = y + 100, máy tính lấy số đang trong hộp y, cộng thêm 100, rồi cất kết quả lại vào hộp y.",
+          "coachNotes": "Viết: y đang là 100. y = y + 100 → bên phải là 100 + 100 = 200 → cất 200 vào y."
         },
         {
           "id": "l06-quiz",
           "quiz": {
-            "question": "Chim trông như đang rơi là nhờ đâu?",
-            "choices": [
-              "Mỗi khung hình y tăng một chút rồi vẽ lại",
-              "Ảnh chim tự chạy",
-              "Vẽ thật nhiều chim cùng lúc"
-            ],
-            "answer": 0,
-            "explain": "update() tăng y, draw() vẽ lại ở chỗ mới. Nhanh quá nên mắt thấy như chuyển động."
+            "question": "y đang là 150. Chạy y = y + 100. Bây giờ y là bao nhiêu?",
+            "choices": ["100", "150", "250"],
+            "answer": 2,
+            "explain": "Bên phải: 150 + 100 = 250, rồi cất 250 vào y."
           }
         }
       ]
@@ -43,22 +36,18 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l06-def",
-          "title": "Tự đặt lệnh với def",
-          "text": "def update(): gom các dòng thụt vào bên dưới thành một lệnh tên update. Muốn update đổi hộp y nằm bên ngoài, dòng đầu phải viết global y.",
-          "coachNotes": "global: \"dùng hộp y chung của cả chương trình\". Quên global thì Python báo lỗi."
+          "id": "l06-plan",
+          "title": "Phác ra giấy",
+          "text": "Em muốn 3 con chim xếp dọc, cách nhau 100. Con đầu ở y = 100. Hai con sau ở y bao nhiêu?",
+          "coachNotes": "Đáp án: 200 và 300. Cho bé ghi ra giấy trước khi code."
         },
         {
-          "id": "l06-quiz-speed",
+          "id": "l06-quiz-plan",
           "quiz": {
-            "question": "Mỗi khung hình y tăng 3, game chạy 60 khung mỗi giây. Một giây chim rơi bao xa?",
-            "choices": [
-              "3",
-              "60",
-              "180"
-            ],
-            "answer": 2,
-            "explain": "3 × 60 = 180."
+            "question": "Bắt đầu y = 100, cộng 100 hai lần. Con chim cuối ở y bao nhiêu?",
+            "choices": ["200", "300", "400"],
+            "answer": 1,
+            "explain": "100 → 200 → 300."
           }
         }
       ]
@@ -68,9 +57,8 @@
       "slides": [
         {
           "id": "l06-code",
-          "title": "Cho chim rơi",
-          "text": "Trong update(), thay pass bằng hai dòng: global y và y = y + 3. Bấm Chạy: máy tự thử 60 khung hình rồi cho em xem chim rơi.",
-          "coachNotes": "Chim rơi khỏi màn hình là đúng! Bài 8 mới làm mặt đất."
+          "title": "Ba con chim xếp dọc",
+          "text": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi."
         }
       ]
     },
@@ -79,31 +67,28 @@
       "slides": [
         {
           "id": "l06-try",
-          "title": "Nhanh hay chậm?",
-          "text": "Đổi 3 thành 1 rồi thành 10. Số nào trông đẹp nhất? Bấm ⛶ để xem toàn màn hình."
+          "title": "Đổi bước nhảy",
+          "text": "Chạy thử. Đổi 100 thành 50: các chim xích lại gần nhau. Python còn cách viết ngắn: y += 100 cũng là y = y + 100."
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\ny = 100\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
       "pq_import",
-      "pq_def",
-      "pq_global",
       "pq_assign",
-      "pq_aug",
-      "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
+      "pq_arith",
+      "pq_aug",
       "pq_clear",
       "pq_text"
     ],
-    "mode": "game",
+    "mode": "script",
     "goals": [
       {
         "id": "l06-g-run",
@@ -111,36 +96,32 @@
         "kind": "noError"
       },
       {
-        "id": "l06-g-fall",
-        "label": "Chim đi xuống",
-        "kind": "moves",
+        "id": "l06-g-three",
+        "label": "Vẽ 3 con chim",
+        "kind": "drewCount",
         "sprite": "bird",
-        "axis": "y",
-        "dir": 1
+        "min": 3
+      },
+      {
+        "id": "l06-g-y",
+        "label": "Cuối cùng y là 300",
+        "kind": "varEquals",
+        "name": "y",
+        "value": 300
       }
     ],
     "walkthrough": [
-      "Tìm def update(): bên trong chỉ có pass (nghĩa là \"chưa làm gì\").",
-      "Xóa pass. Gõ global y (thụt vào 4 dấu cách, thẳng hàng với chỗ pass cũ).",
-      "Dòng tiếp theo, cùng thụt lề: y = y + 3",
-      "Bấm ▶ Chạy: máy tự chạy thử 60 khung hình để chấm, rồi chim rơi trên sân.",
-      "Bấm ⛶ để xem toàn màn hình. Chim rơi khỏi màn hình là đúng: Bài 8 mới có mặt đất."
+      "Code đã có: y = 100 và vẽ chim lần 1.",
+      "Thêm dòng y = y + 100 (khối \"đặt y = …\" với khối phép tính y + 100, hoặc gõ thẳng).",
+      "Thêm draw_bird(100, y) để vẽ chim lần 2.",
+      "Lặp lại một lần nữa: y = y + 100 rồi draw_bird(100, y).",
+      "Bấm ▶ Chạy: 3 chim xếp dọc, ô biến báo y = 300."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
     },
-    "hints": [
-      "Trong update(), dòng đầu: global y",
-      "Dòng thứ hai: y = y + 3",
-      "Xóa dòng pass đi."
-    ],
-    "test": {
-      "frames": 60,
-      "taps": []
-    }
+    "hints": ["Sau mỗi lần vẽ, thêm dòng y = y + 100.", "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."]
   },
-  "unlocksRoadmap": [
-    "motion"
-  ],
+  "unlocksRoadmap": [],
   "docsUnlocked": []
 }

@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 import { asCoach, codeText, expectNoPageScroll, framesOf, pythonReady, typeCode } from './helpers';
 
+const BOX = 'from pyquest import *\ndraw_rect(100, 300, 40, 40, "gold")';
+
 async function openCode(page: Page) {
   await asCoach(page);
   await page.goto('/l/l01/code');
@@ -11,8 +13,11 @@ test('drag a block, edit the code, blocks follow, run, fullscreen and back', asy
   await openCode(page);
   await expectNoPageScroll(page);
 
-  // Drag "vẽ chim" from the flyout into the workspace.
-  const source = page.locator('.blocklyFlyout .blocklyDraggable', { hasText: 'vẽ chim' }).first();
+  // Open the "Vẽ" group and drag "vẽ hình chữ nhật" into the workspace.
+  await page.locator('.blocklyToolboxCategory', { hasText: 'Vẽ' }).first().click();
+  const source = page
+    .locator('.blocklyFlyout .blocklyDraggable', { hasText: 'vẽ hình chữ nhật' })
+    .first();
   const box = await source.boundingBox();
   const target = await page.getByTestId('blocks-pane').boundingBox();
   if (box === null || target === null) throw new Error('no boxes');
@@ -20,10 +25,10 @@ test('drag a block, edit the code, blocks follow, run, fullscreen and back', asy
   await page.mouse.down();
   await page.mouse.move(target.x + target.width * 0.6, target.y + 80, { steps: 12 });
   await page.mouse.up();
-  await expect.poll(() => codeText(page)).toContain('draw_bird(100, 300)');
+  await expect.poll(() => codeText(page)).toContain('draw_rect(0, 550, 400, 50, "green")');
 
   // Code → blocks.
-  await typeCode(page, 'from pyquest import *\nx = 120\ndraw_bird(x, 250)');
+  await typeCode(page, 'from pyquest import *\nx = 120\ndraw_rect(x, 250, 40, 40, "gold")');
   await expect(
     page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '120' }),
   ).toBeVisible();
@@ -31,10 +36,10 @@ test('drag a block, edit the code, blocks follow, run, fullscreen and back', asy
   // Run: goal not met at (120, 250), then fix it.
   await page.getByTestId('run').click();
   await expect(page.getByTestId('var-watch')).toContainText('x = 120');
-  await expect(page.getByTestId('goal-l01-g-bird')).toHaveAttribute('data-ok', 'false');
-  await typeCode(page, 'from pyquest import *\ndraw_bird(100, 300)');
+  await expect(page.getByTestId('goal-l01-g-box')).toHaveAttribute('data-ok', 'false');
+  await typeCode(page, BOX);
   await page.getByTestId('run').click();
-  await expect(page.getByTestId('goal-l01-g-bird')).toHaveAttribute('data-ok', 'true');
+  await expect(page.getByTestId('goal-l01-g-box')).toHaveAttribute('data-ok', 'true');
 
   // Fullscreen and back: the code is untouched.
   await page.getByTestId('fullscreen').click();
@@ -42,21 +47,21 @@ test('drag a block, edit the code, blocks follow, run, fullscreen and back', asy
   await expect.poll(() => framesOf(page, 'play-stage')).toBeGreaterThan(0);
   await page.getByTestId('back-to-code').click();
   await expect(page.getByTestId('code-screen')).toBeVisible();
-  expect(await codeText(page)).toBe('from pyquest import *\ndraw_bird(100, 300)');
+  expect(await codeText(page)).toBe(BOX);
 
   // Reload keeps the code.
   await page.reload();
   await pythonReady(page);
-  expect(await codeText(page)).toBe('from pyquest import *\ndraw_bird(100, 300)');
+  expect(await codeText(page)).toBe(BOX);
 });
 
 test('a syntax error keeps the blocks and points at the line', async ({ page }) => {
   await openCode(page);
-  await typeCode(page, 'from pyquest import *\ndraw_bird(100, 300)');
+  await typeCode(page, BOX);
   await expect(
     page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '300' }),
   ).toBeVisible();
-  await typeCode(page, 'from pyquest import *\ndraw_bird(100, 300)\nx = = 2');
+  await typeCode(page, BOX + '\nx = = 2');
   await expect(page.getByTestId('sync-error')).toContainText('Dòng 3');
   await expect(
     page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: '300' }),
@@ -73,16 +78,19 @@ test('a syntax error keeps the blocks and points at the line', async ({ page }) 
   await page.mouse.move(pane.x + 300, pane.y + 200, { steps: 8 });
   await page.mouse.up();
   await page.waitForTimeout(800);
-  expect(await codeText(page)).toBe('from pyquest import *\ndraw_bird(100, 300)\nx = = 2');
+  expect(await codeText(page)).toBe(BOX + '\nx = = 2');
 
   // Fixing the error unlocks the blocks again.
-  await typeCode(page, 'from pyquest import *\ndraw_bird(100, 300)\nx = 2');
+  await typeCode(page, BOX + '\nx = 2');
   await expect(page.getByTestId('blocks-locked')).toBeHidden();
 });
 
 test('Stop ends a long drawing replay at once, without reloading Python', async ({ page }) => {
   await openCode(page);
-  await typeCode(page, 'from pyquest import *\nfor i in range(400):\n    draw_bird(i, 300)');
+  await typeCode(
+    page,
+    'from pyquest import *\nfor i in range(400):\n    draw_rect(i, 300, 10, 10, "red")',
+  );
   await page.getByTestId('run').click();
   await page.getByTestId('stop').click();
   await expect(page.getByTestId('run')).toHaveText(/Chạy/, { timeout: 2_000 });
@@ -106,15 +114,26 @@ test('an endless loop can be stopped', async ({ page }) => {
   await expect(page.getByTestId('run').or(page.getByTestId('stop'))).toBeVisible();
 });
 
-test('the library panel and the steps explain where draw_bird comes from', async ({ page }) => {
+test('the library panel says what each piece does, why it exists, and shows its real code', async ({
+  page,
+}) => {
   await openCode(page);
-  await expect(page.getByTestId('walkthrough')).toContainText('vẽ chim');
+  await expect(page.getByTestId('walkthrough')).toContainText('vẽ hình chữ nhật');
   await page.getByTestId('library-toggle').click();
-  await expect(page.getByTestId('library-panel')).toContainText('draw_bird(x, y)');
-  await expect(page.getByTestId('library-panel')).toContainText('from pyquest import *');
+  const panel = page.getByTestId('library-panel');
+  await expect(panel).toContainText('draw_rect(x, y, rộng, cao, màu)');
+  await expect(panel).toContainText('from pyquest import *');
+  await expect(panel.getByTestId('library-why').first()).toContainText('Vì sao có?');
+  await panel
+    .getByTestId('library-inside')
+    .filter({ hasText: 'Xem bên trong' })
+    .nth(1)
+    .locator('summary')
+    .click();
+  await expect(panel).toContainText('def draw_rect(x, y, w, h, color="green"):');
   await page.getByRole('button', { name: 'Đóng' }).click();
-  // Like real Python: without the import line, draw_bird is unknown and the message says what to add.
-  await typeCode(page, 'draw_bird(100, 300)');
+  // Like real Python: without the import line, draw_rect is unknown and the message says what to add.
+  await typeCode(page, 'draw_rect(100, 300, 40, 40, "gold")');
   await page.getByTestId('run').click();
   await expect(page.getByTestId('run-error')).toContainText('from pyquest import *');
 });

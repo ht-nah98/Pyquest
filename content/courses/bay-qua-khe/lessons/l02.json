@@ -4,7 +4,7 @@
   "order": 2,
   "title": "Hộp đựng số",
   "draft": true,
-  "summary": "Biến là cái hộp có tên để máy tính nhớ vị trí của chim.",
+  "summary": "Biến là cái hộp có tên để máy tính nhớ vị trí của nhân vật.",
   "steps": [
     {
       "kind": "understand",
@@ -25,11 +25,7 @@
           "id": "l02-quiz-last",
           "quiz": {
             "question": "Chạy hai dòng x = 100 rồi x = 250. Hộp x đang cất số nào?",
-            "choices": [
-              "100",
-              "250",
-              "350"
-            ],
+            "choices": ["100", "250", "350"],
             "answer": 1,
             "explain": "Dòng sau cất số 250 vào hộp x, thay chỗ số 100."
           }
@@ -49,11 +45,7 @@
           "id": "l02-quiz-name",
           "quiz": {
             "question": "Tên biến nào viết đúng trong Python?",
-            "choices": [
-              "vị trí",
-              "bird y",
-              "bird_y"
-            ],
+            "choices": ["vị trí", "bird y", "bird_y"],
             "answer": 2,
             "explain": "Tên biến không có dấu tiếng Việt và không có khoảng trắng; dùng dấu gạch dưới _ để nối."
           }
@@ -65,8 +57,8 @@
       "slides": [
         {
           "id": "l02-code",
-          "title": "Vẽ chim bằng biến",
-          "text": "Đặt x = 100 và y = 200, rồi vẽ chim bằng draw_bird(x, y). Lệnh vẽ sẽ lấy số trong hộp x và hộp y.",
+          "title": "Vẽ ô bằng biến",
+          "text": "Đặt x = 100 và y = 300, rồi vẽ draw_rect(x, y, 40, 40, \"gold\"). Lệnh vẽ lấy số trong hộp x và hộp y.",
           "coachNotes": "Cho bé nhìn ô giá trị biến dưới sân chơi sau khi chạy: đó là bên trong các cái hộp."
         }
       ]
@@ -77,17 +69,13 @@
         {
           "id": "l02-try",
           "title": "Đổi số trong hộp",
-          "text": "Chạy thử. Ô dưới sân chơi cho em xem trong hộp đang có gì. Thử thêm dòng print(x) để chim nói giá trị của x."
+          "text": "Chạy thử. Ô dưới sân chơi cho em xem trong hộp đang có gì. Thử thêm dòng print(x) để sân chơi nói giá trị của x."
         },
         {
           "id": "l02-quiz-move",
           "quiz": {
-            "question": "Muốn chim sang phải 50 bước mà không sửa dòng draw_bird, em sửa ở đâu?",
-            "choices": [
-              "Sửa dòng x = …",
-              "Sửa dòng draw_bird",
-              "Không sửa được"
-            ],
+            "question": "Muốn ô sang phải 50 bước mà không sửa dòng draw_rect, em sửa ở đâu?",
+            "choices": ["Sửa dòng x = …", "Sửa dòng draw_rect", "Không sửa được"],
             "answer": 0,
             "explain": "Lệnh vẽ đọc số trong hộp x, nên chỉ cần cất số mới vào x."
           }
@@ -97,7 +85,7 @@
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nx = 0\ny = 0\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nx = 0\ny = 0\ndraw_rect(x, y, 40, 40, \"gold\")\n"
     },
     "main": "main.py",
     "toolbox": [
@@ -105,9 +93,9 @@
       "pq_assign",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
-      "pq_print",
+      "pq_draw_rect",
       "pq_text",
+      "pq_print",
       "pq_clear"
     ],
     "mode": "script",
@@ -126,35 +114,33 @@
       },
       {
         "id": "l02-g-y",
-        "label": "Hộp y cất 200",
+        "label": "Hộp y cất 300",
         "kind": "varEquals",
         "name": "y",
-        "value": 200
+        "value": 300
       },
       {
-        "id": "l02-g-bird",
-        "label": "Chim ở (100, 200)",
-        "kind": "drew",
-        "sprite": "bird",
-        "at": [
-          100,
-          200
-        ]
+        "id": "l02-g-box",
+        "label": "Ô vuông ở (100, 300)",
+        "kind": "drewRects",
+        "min": 1,
+        "at": [100, 300]
       }
     ],
     "walkthrough": [
-      "Dòng x = 0: đổi 0 thành 100 (sửa số trong khối \"đặt x\" hoặc gõ trong khung Python).",
-      "Dòng y = 0: đổi 0 thành 200.",
-      "Giữ nguyên dòng draw_bird(x, y): nó tự lấy số đang cất trong hộp x và hộp y.",
-      "Bấm ▶ Chạy, nhìn ô biến dưới sân chơi: x = 100, y = 200.",
-      "Thử thêm dòng print(x) để chim nói giá trị của x."
+      "Khung Python đã có sẵn x = 0, y = 0 và một dòng draw_rect dùng x, y.",
+      "Bấm vào ô số của khối \"đặt x =\", gõ 100.",
+      "Bấm vào ô số của khối \"đặt y =\", gõ 300.",
+      "Để nguyên dòng draw_rect(x, y, 40, 40, \"gold\"): nó tự đọc số trong hộp.",
+      "Bấm ▶ Chạy. Nhìn ô dưới sân: x = 100, y = 300."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nx = 100\ny = 200\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y, 40, 40, \"gold\")\n"
     },
     "hints": [
-      "Sửa số 0 ở dòng x = 0 và y = 0.",
-      "x = 100 rồi y = 200; dòng draw_bird(x, y) giữ nguyên."
+      "Chỉ cần sửa hai dòng x = … và y = ….",
+      "x = 100 nghĩa là cất số 100 vào hộp x.",
+      "Cần: x = 100 và y = 300"
     ]
   },
   "unlocksRoadmap": [],

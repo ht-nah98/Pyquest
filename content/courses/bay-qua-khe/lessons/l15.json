@@ -2,36 +2,32 @@
   "id": "l15",
   "courseId": "bay-qua-khe",
   "order": 15,
-  "title": "Gói thành đối tượng",
+  "title": "Đụng cột",
   "draft": true,
-  "summary": "class Bird: gom vị trí, tốc độ và hành động của chim vào một chỗ.",
+  "summary": "Hai hình chữ nhật chồng lên nhau khi nào? and, or và luật thua.",
   "steps": [
     {
       "kind": "understand",
       "slides": [
         {
-          "id": "l15-mess",
-          "title": "Code bắt đầu rối",
-          "text": "y, speed, cách bay, cách vẽ chim đang nằm rải rác khắp file. Thêm chim thứ hai là phải chép lại mọi thứ. Lập trình viên gom chúng lại thành một đối tượng.",
-          "coachNotes": "Mở code Bài 14, tô màu mọi dòng liên quan tới chim: rải khắp nơi."
+          "id": "l15-boxes",
+          "title": "Chim và cột là hai hình chữ nhật",
+          "text": "Máy tính không \"nhìn\" thấy chim đụng cột. Nó hỏi: hai hình chữ nhật có chồng lên nhau không? Chim: x từ 100 tới 144, y từ y tới y + 40.",
+          "coachNotes": "Cắt hai hình chữ nhật giấy, đặt chồng và không chồng. Hỏi: khi nào chắc chắn KHÔNG chạm? (một hình hoàn toàn bên trái/phải/trên/dưới hình kia)."
         },
         {
-          "id": "l15-class",
-          "title": "class là bản thiết kế",
-          "text": "class Bird: là bản thiết kế con chim: nó biết gì (self.y, self.speed) và làm được gì (update, draw). bird = Bird() làm ra một con chim thật theo bản thiết kế.",
-          "coachNotes": "So sánh: bản vẽ ngôi nhà (class) và ngôi nhà xây xong (đối tượng). Một bản vẽ xây được nhiều nhà."
+          "id": "l15-andor",
+          "title": "and và or",
+          "text": "A or B: đúng khi ít nhất một điều đúng. A and B: đúng khi cả hai cùng đúng. \"Chim ở bên trái cột HOẶC ở bên phải cột\" thì chắc chắn không chạm.",
+          "coachNotes": "Ví dụ đời thường: được ra chơi nếu làm xong bài VÀ trật tự; mang ô nếu trời mưa HOẶC nắng gắt."
         },
         {
           "id": "l15-quiz",
           "quiz": {
-            "question": "Trong class Bird, self.y là gì?",
-            "choices": [
-              "y của chính con chim này",
-              "Một biến chung của cả game",
-              "Một lệnh vẽ"
-            ],
+            "question": "x = 5. Điều kiện x < 3 or x > 4 là gì?",
+            "choices": ["True", "False"],
             "answer": 0,
-            "explain": "self nghĩa là \"chính nó\": mỗi con chim có y riêng."
+            "explain": "x > 4 đúng, nên cả câu or đúng."
           }
         }
       ]
@@ -40,10 +36,19 @@
       "kind": "design",
       "slides": [
         {
-          "id": "l15-split",
-          "title": "Cái gì thuộc về chim?",
-          "text": "Thuộc về chim: vị trí, tốc độ, vỗ cánh, rơi, chạm đất, tự vẽ mình. Không thuộc về chim: cột, điểm số.",
-          "coachNotes": "Cho lớp chia các dòng code Bài 14 vào hai cột: \"của chim\" và \"của game\"."
+          "id": "l15-fair",
+          "title": "Va chạm công bằng",
+          "text": "Đuôi và cánh chim mỏng, nên ta chừa mép 8 điểm: chỉ phần thân mới tính là chạm. Người chơi sẽ thấy game công bằng hơn.",
+          "coachNotes": "Game thật cũng làm vậy: vùng chạm (hitbox) nhỏ hơn hình vẽ một chút."
+        },
+        {
+          "id": "l15-quiz-rule",
+          "quiz": {
+            "question": "Chim đã qua khỏi cột hoàn toàn bên phải. Có chạm không?",
+            "choices": ["Có", "Không"],
+            "answer": 1,
+            "explain": "Hai hình không chồng lên nhau theo chiều ngang thì không thể chạm."
+          }
         }
       ]
     },
@@ -52,8 +57,8 @@
       "slides": [
         {
           "id": "l15-code",
-          "title": "Hoàn thành Bird.update",
-          "text": "class Bird đã có sẵn __init__ và draw. Viết update(self): giống update của Bài 14, nhưng dùng self.y và self.speed thay cho y và speed."
+          "title": "Viết lệnh hits()",
+          "text": "hits() đang luôn trả False. Viết: nếu chim ở hẳn bên trái hoặc hẳn bên phải cột thì return False. Còn lại: chạm khi chim cao hơn khe hoặc thấp hơn khe."
         }
       ]
     },
@@ -62,15 +67,15 @@
       "slides": [
         {
           "id": "l15-try",
-          "title": "Vẫn chơi như cũ",
-          "text": "Chạy toàn màn hình: game phải chơi y như Bài 14. Code gọn hơn nhưng người chơi không thấy khác: đó gọi là dọn code."
+          "title": "Thua cho đúng",
+          "text": "Chơi toàn màn hình. Cố tình đụng cột trên, cột dưới và bay qua khe. Lần nào game cũng xử đúng chưa?"
         }
       ]
     }
   ],
   "code": {
     "starter": {
-      "main.py": "from pyquest import *\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        pass\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    return False\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
     },
     "main": "main.py",
     "toolbox": [
@@ -82,8 +87,7 @@
       "pq_arith",
       "pq_var_get",
       "pq_number",
-      "pq_draw_bird",
-      "pq_draw_sprite",
+      "pq_draw_image",
       "pq_clear",
       "pq_text",
       "pq_if",
@@ -103,52 +107,33 @@
         "kind": "noError"
       },
       {
-        "id": "l15-g-flap",
-        "label": "Bấm thì chim bay lên",
-        "kind": "risesAfterTap",
-        "sprite": "bird",
-        "taps": [
-          31,
-          62
-        ]
-      },
-      {
-        "id": "l15-g-score",
-        "label": "Vẫn ghi được điểm",
+        "id": "l15-g-hit",
+        "label": "Đụng cột thì thua",
         "kind": "varEquals",
-        "name": "score",
-        "value": 1
+        "name": "game_over",
+        "value": true
       }
     ],
     "walkthrough": [
-      "Tìm trong class Bird dòng def update(self): bên trong chỉ có pass.",
-      "Xóa pass, viết phần bay và rơi của Bài 14, nhưng thêm self. trước y và speed.",
-      "if key_pressed(): rồi thụt vào self.speed = -8",
-      "self.speed = self.speed + 0.5 rồi self.y = self.y + self.speed",
-      "if self.y > 480: rồi thụt vào self.y = 480 và self.speed = 0",
-      "Bấm ▶ Chạy: game phải chơi y như Bài 14."
+      "Tìm def hits(): bên trong chỉ có return False.",
+      "Thay bằng: if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:  (chim ở hẳn bên trái hoặc hẳn bên phải cột)",
+      "Thụt vào dòng dưới: return False",
+      "Dòng cuối của hits(), thẳng hàng với if: return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP",
+      "Bấm ▶ Chạy: không bấm gì nên chim rơi, đụng cột dưới, game_over thành True."
     ],
     "solution": {
-      "main.py": "from pyquest import *\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
     },
     "hints": [
-      "Thay pass trong update(self) bằng code bay và rơi.",
-      "Dùng self.speed và self.y.",
-      "if key_pressed():\n    self.speed = -8\nself.speed = self.speed + 0.5\nself.y = self.y + self.speed"
+      "Dòng đầu của hits(): if (chim bên trái cột) or (chim bên phải cột): return False",
+      "Chim bên trái cột: 100 + 44 - 8 < pipe_x",
+      "Cuối cùng: return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP"
     ],
     "test": {
       "frames": 200,
-      "taps": [
-        0,
-        31,
-        62,
-        93,
-        124,
-        155,
-        186
-      ]
+      "taps": []
     }
   },
-  "unlocksRoadmap": [],
+  "unlocksRoadmap": ["collision"],
   "docsUnlocked": []
 }

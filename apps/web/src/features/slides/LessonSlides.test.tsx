@@ -62,7 +62,7 @@ describe('self-study mode', () => {
     const { store, kid, ui } = await setup();
     await store.saveLessonState(kid.id, 'l01', {
       stepIndex: 2,
-      slideIndex: 6,
+      slideIndex: 7,
       quizAnswers: { 'l01-quiz-corner': 1, 'l01-quiz-where': 0 },
       files: {},
       done: false,

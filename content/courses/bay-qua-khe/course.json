@@ -20,7 +20,9 @@
     "l14",
     "l15",
     "l16",
-    "l17"
+    "l17",
+    "l18",
+    "l19"
   ],
   "roadmap": [
     {
@@ -77,46 +79,23 @@
   "parts": [
     {
       "title": "A. Bức tranh toàn cảnh",
-      "lessonIds": [
-        "l00"
-      ]
+      "lessonIds": ["l00"]
     },
     {
-      "title": "B. Dựng sân khấu",
-      "lessonIds": [
-        "l01",
-        "l02",
-        "l03"
-      ]
+      "title": "B. Nhân vật từ mảnh nhỏ",
+      "lessonIds": ["l01", "l02", "l03", "l04", "l05"]
     },
     {
       "title": "C. Cho chim sống",
-      "lessonIds": [
-        "l04",
-        "l05",
-        "l06",
-        "l07",
-        "l08",
-        "l09"
-      ]
+      "lessonIds": ["l06", "l07", "l08", "l09", "l10", "l11"]
     },
     {
       "title": "D. Thử thách",
-      "lessonIds": [
-        "l10",
-        "l11",
-        "l12",
-        "l13"
-      ]
+      "lessonIds": ["l12", "l13", "l14", "l15"]
     },
     {
       "title": "E. Hoàn thiện sản phẩm",
-      "lessonIds": [
-        "l14",
-        "l15",
-        "l16",
-        "l17"
-      ]
+      "lessonIds": ["l16", "l17", "l18", "l19"]
     }
   ]
 }

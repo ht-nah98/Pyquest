@@ -1,5 +1,6 @@
 # Bay Qua Khe — game mẫu cho Bài 0.
 # Cuối khóa, em sẽ tự viết được một game như thế này.
+# draw_bird và draw_pipe không có sẵn: chúng được viết ngay trong file này, từ draw_image của thư viện.
 
 from pyquest import *
 
@@ -28,6 +29,15 @@ state = "ready"     # ready → play → over
 frame_no = 0
 over_at = 0
 was_down = False
+
+
+def draw_bird(x, y, frame):
+    draw_image("images/bird.png", x, y, frame)
+
+
+def draw_pipe(x, gap_top):
+    draw_image("images/pipe.png", x - PIPE_PAD, gap_top - PIPE_H, flip=True)
+    draw_image("images/pipe.png", x - PIPE_PAD, gap_top + GAP)
 
 
 def new_pipe(x):
@@ -94,14 +104,13 @@ def update():
 
 
 def draw():
-    draw_sprite("background", 0, 0)
+    draw_image("images/background.png", 0, 0)
     for pipe in pipes:
-        draw_sprite("pipe", pipe[0] - PIPE_PAD, pipe[1] - PIPE_H, flip=True)
-        draw_sprite("pipe", pipe[0] - PIPE_PAD, pipe[1] + GAP)
+        draw_pipe(pipe[0], pipe[1])
     moved = frame_no if state != "over" else over_at
     ground_x = -(moved * SPEED % GROUND_W)
-    draw_sprite("ground", ground_x, GROUND_Y)
-    draw_sprite("ground", ground_x + GROUND_W, GROUND_Y)
+    draw_image("images/ground.png", ground_x, GROUND_Y)
+    draw_image("images/ground.png", ground_x + GROUND_W, GROUND_Y)
     flap = frame_no // 5 % 3 if state != "over" else 1
     draw_bird(BIRD_X, bird_y, flap)
     draw_text(str(score), 200, 60, 56)

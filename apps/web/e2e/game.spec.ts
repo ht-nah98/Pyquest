@@ -3,6 +3,11 @@ import { asCoach, pythonReady, typeCode } from './helpers';
 
 const FLAP = `from pyquest import *
 
+
+def draw_bird(x, y):
+    draw_image("images/bird.png", x, y)
+
+
 y = 100
 speed = 0
 
@@ -26,7 +31,7 @@ def draw():
 
 test('a game-mode lesson is graded by its scripted test run, then plays', async ({ page }) => {
   await asCoach(page);
-  await page.goto('/l/l09/code');
+  await page.goto('/l/l11/code');
   await pythonReady(page);
   await expect(page.getByTestId('task-card')).toContainText('Thêm nút bay');
   await page.getByTestId('hint-more').click();
@@ -39,10 +44,10 @@ test('a game-mode lesson is graded by its scripted test run, then plays', async 
       .first(),
   ).toBeVisible();
   await page.getByTestId('run').click();
-  await expect(page.getByTestId('goal-l09-g-flap')).toHaveAttribute('data-ok', 'true', {
+  await expect(page.getByTestId('goal-l11-g-flap')).toHaveAttribute('data-ok', 'true', {
     timeout: 30_000,
   });
-  await expect(page.getByTestId('goal-l09-g-ground')).toHaveAttribute('data-ok', 'true');
+  await expect(page.getByTestId('goal-l11-g-ground')).toHaveAttribute('data-ok', 'true');
   await expect(page.getByTestId('code-done')).toBeVisible();
   await page.getByTestId('fullscreen').click();
   await expect(page.getByTestId('play-screen')).toBeVisible();
@@ -51,8 +56,8 @@ test('a game-mode lesson is graded by its scripted test run, then plays', async 
 test('the coach sees draft lessons; a child does not', async ({ page, browser, baseURL }) => {
   await asCoach(page);
   await page.goto('/c/bay-qua-khe');
-  await expect(page.getByTestId('lesson-l09')).toHaveAttribute('data-status', 'open');
-  await expect(page.getByTestId('lesson-l09')).toContainText('Bản nháp');
+  await expect(page.getByTestId('lesson-l11')).toHaveAttribute('data-status', 'open');
+  await expect(page.getByTestId('lesson-l11')).toContainText('Bản nháp');
   const kidContext = await browser.newContext(baseURL === undefined ? {} : { baseURL });
   const kid = await kidContext.newPage();
   await kid.goto('/');
@@ -60,6 +65,6 @@ test('the coach sees draft lessons; a child does not', async ({ page, browser, b
   await kid.getByTestId('create').click();
   await kid.waitForURL('**/courses');
   await kid.goto('/c/bay-qua-khe');
-  await expect(kid.getByTestId('lesson-l09')).toHaveAttribute('data-status', 'hidden');
+  await expect(kid.getByTestId('lesson-l11')).toHaveAttribute('data-status', 'hidden');
   await kidContext.close();
 });

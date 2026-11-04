@@ -60,7 +60,13 @@ export const GoalSchema = z.discriminatedUnion('kind', [
   }),
   // Drawing from the smallest pieces (spec 2026-11-04-from-smallest-pieces).
   /** At least min boxes in one picture; a box covering the whole stage (a background) does not count. */
-  z.object({ ...base, kind: z.literal('drewRects'), min: z.int().positive() }),
+  z.object({
+    ...base,
+    kind: z.literal('drewRects'),
+    min: z.int().positive(),
+    /** One of the boxes has its top-left corner exactly here (Bài 1–2). */
+    at: z.tuple([z.number(), z.number()]).optional(),
+  }),
   /** The child's own function ran at least min times; distinct: with different arguments. */
   z.object({
     ...base,
@@ -72,7 +78,7 @@ export const GoalSchema = z.discriminatedUnion('kind', [
   /** Every call of name drew the same picture, only moved: its pieces are placed from x and y. */
   z.object({ ...base, kind: z.literal('sameShape'), name: z.string().min(1) }),
   /**
-   * Run again with "var = n" changed to n + by: the picture moves by exactly that much on axis.
+   * Run again with "var = n" changed to n + by: every piece moves by exactly that much on axis.
    * Catches a bird typed with fixed numbers that only looks right.
    */
   z.object({

@@ -107,12 +107,18 @@ const defined = (xs: (number | undefined)[]): number[] => xs.filter((v) => v !==
 
 function meets(goal: Goal, r: RunResult, shifted: RunResult | undefined): boolean {
   switch (goal.kind) {
-    case 'drewRects':
-      return framesOf(r.events).some(
-        (f) =>
-          f.filter((e) => e.t === 'rect' && !(e.w >= STAGE_WIDTH && e.h >= STAGE_HEIGHT)).length >=
-          goal.min,
-      );
+    case 'drewRects': {
+      const at = goal.at;
+      return framesOf(r.events).some((f) => {
+        const boxes = f.filter(
+          (e) => e.t === 'rect' && !(e.w >= STAGE_WIDTH && e.h >= STAGE_HEIGHT),
+        );
+        return (
+          boxes.length >= goal.min &&
+          (at === undefined || boxes.some((e) => e.t === 'rect' && e.x === at[0] && e.y === at[1]))
+        );
+      });
+    }
     case 'called': {
       const calls = r.calls.filter((c) => c.name === goal.name);
       const count =
@@ -130,16 +136,14 @@ function meets(goal: Goal, r: RunResult, shifted: RunResult | undefined): boolea
       const a = pieces(r.events);
       const b = pieces(shifted.events);
       if (a.length === 0 || a.length !== b.length) return false;
-      let moved = 0;
-      for (const [i, p] of a.entries()) {
+      // Every piece must move by exactly that much: one left behind was typed as a fixed number.
+      return a.every((p, i) => {
         const q = b[i];
         if (q === undefined || q.t !== p.t || q.rest !== p.rest) return false;
         const d = goal.axis === 'x' ? q.x - p.x : q.y - p.y;
         const other = goal.axis === 'x' ? q.y - p.y : q.x - p.x;
-        if (other !== 0 || (d !== 0 && d !== goal.by)) return false;
-        if (d === goal.by) moved++;
-      }
-      return moved > 0;
+        return d === goal.by && other === 0;
+      });
     }
     case 'moves': {
       const pos = defined(track(r, goal.sprite, goal.axis));

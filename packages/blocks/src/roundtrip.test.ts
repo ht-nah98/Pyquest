@@ -131,14 +131,18 @@ describe('lineMap and toolbox', () => {
     ws.dispose();
   });
 
-  test('toolboxFor lists only the allowed blocks, in order', () => {
+  test('toolboxFor lists only the allowed blocks, by family, even for a short list', () => {
+    // A wide block like draw_rect would make an always-open flyout cover the whole workspace.
     const tb = toolboxFor(['pq_draw_rect', 'pq_number']);
-    expect(tb.kind).toBe('flyoutToolbox');
-    if (tb.kind === 'flyoutToolbox')
-      expect(tb.contents.map((c) => c.type)).toEqual(['pq_draw_rect', 'pq_number']);
+    expect(tb.kind).toBe('categoryToolbox');
+    if (tb.kind === 'categoryToolbox')
+      expect(tb.contents.map((c) => [c.name, c.contents.map((b) => b.type)])).toEqual([
+        ['Vẽ', ['pq_draw_rect']],
+        ['Số và chữ', ['pq_number']],
+      ]);
   });
 
-  test('more than 6 blocks become a category toolbox, grouped by family in a fixed order', () => {
+  test('blocks are grouped by family in a fixed order', () => {
     const tb = toolboxFor([
       'pq_draw_rect',
       'pq_if',
@@ -190,12 +194,10 @@ describe('lineMap and toolbox', () => {
       'pq_call',
       'pq_call',
     ]);
-    const flyout = toolboxFor(['pq_def'], calls);
-    expect(flyout.kind === 'flyoutToolbox' && flyout.contents.map((b) => b.type)).toEqual([
-      'pq_def',
-      'pq_call',
-      'pq_call',
-    ]);
+    const short = toolboxFor(['pq_def'], calls);
+    expect(
+      short.kind === 'categoryToolbox' && short.contents[0]?.contents.map((b) => b.type),
+    ).toEqual(['pq_def', 'pq_call', 'pq_call']);
   });
 
   test('a call block written back to code keeps its values in order', () => {
