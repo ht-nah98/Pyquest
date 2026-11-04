@@ -1,6 +1,6 @@
 # Thiết kế: dạy từ những mảnh nhỏ nhất
 
-Ngày 04/11/2026. Trạng thái: **chờ HLV duyệt**. Bổ sung cho `2026-11-04-pyquest-design.md`.
+Ngày 04/11/2026. Trạng thái: **HLV đã duyệt, đã làm** (ADR 0004). Bổ sung cho `2026-11-04-pyquest-design.md`.
 
 ## 1. Vì sao đổi
 
@@ -109,3 +109,11 @@ Bài 18 khép vòng: bé tự viết thư viện, hiểu `pyquest` cũng chỉ l
 ## 8. Việc để người làm tự quyết
 
 Màu và kích thước các ô của con chim; câu chữ từng màn trong khung độ dài schema; cách vẽ đường nối cây Cuộc gọi.
+
+## 9. Khác với bản duyệt khi làm (04/11)
+
+- Vòng lặp game chạy theo `requestAnimationFrame`, khoảng **60** khung mỗi giây (không phải 30 như §5 ghi).
+- Bài 15 giữ hàm `hits()` bé tự viết (đã có từ bản cũ) thay cho tên `overlap(...)`: cùng ý, ít đổi.
+- `shifts` đòi **mọi** mảnh dời đúng `by`: bản đầu cho phép mảnh đứng yên, và lần thử phá có chủ đích (mỏ chim gõ số cố
+  định) đã lọt qua.
+- Toolbox luôn chia nhóm: với khay luôn mở, khối `draw_rect` dài che kín vùng ghép.

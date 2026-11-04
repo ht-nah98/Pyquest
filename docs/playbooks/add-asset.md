@@ -6,7 +6,8 @@
    vẫn giữ.
 3. **Khai báo** ảnh trong `assets/raw/library.json`: `src`, `id` (tên code dùng), `group` (`bird`, `pipe`,
    `background`), `label` (tên tiếng Việt cho bé chọn). `id` `bird`, `pipe`, `background` là hình mặc định mà game mẫu và
-   `draw_bird` dùng; các id khác (`bird-cu`, `pipe-da`…) là lựa chọn thêm cho Bài 3.
+   code bài dùng (`draw_image("images/bird.png", …)`); các id khác (`bird-cu`, `pipe-da`…) là lựa chọn thêm cho Bài 5.
+   Tên `<nhóm>-<biến thể>` là bắt buộc: goal chấm theo nhóm (`bird` khớp `bird-rong`).
 4. **Làm sạch:** `npm run assets:clean -- --all` (hoặc một ảnh: `npm run assets:clean -- <ảnh> --id X --group Y`).
 5. **Kiểm:** `npm run content:check`, khởi động lại `npm run dev` (tệp mới trong `content/`, AGENTS.md §9.3), mở game
    mẫu ở Bài 0 xem hình.

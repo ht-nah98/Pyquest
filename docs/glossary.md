@@ -22,3 +22,8 @@
 | Kho hình | `AssetLibrary` | `content/assets/library/` |
 | Dự án của bé | `files` | `{ "main.py": "...", "images/...": ... }` |
 | HLV | `role: 'coach'` | huấn luyện viên |
+| Mảnh gốc | `pyquest` | lệnh thư viện làm sẵn vì Python thường không tự làm được (tô màn hình, đọc phím, mở ảnh) |
+| Lệnh tự đặt | `def` / `pq_def` | hàm bé tự viết, ví dụ `draw_bird(x, y)` |
+| Tham số | parameter | hộp nhận số mỗi lần gọi (`x`, `y` trong `def draw_bird(x, y)`) |
+| Lời gọi | `Call` / `RunResult.calls` | một lần hàm của bé chạy, kèm số nó nhận; hiện ở 📞 Cuộc gọi |
+| Khối gọi | `pq_call` | khối gọi một `def` của bé, toolbox tự thêm |

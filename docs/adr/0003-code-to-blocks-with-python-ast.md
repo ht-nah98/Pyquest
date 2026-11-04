@@ -17,6 +17,7 @@ trình phân tích Skulpt, lần cập nhật cuối là 03/2025. PyQuest dùng 
   thấy hàm draw_bird đâu?"): nạp ngầm là "phép màu" với học sinh và code chép ra ngoài không chạy. Nay runtime **không**
   nạp gì (như Python thật); mọi bài mở đầu bằng `from pyquest import *`, có khối riêng "📦 dùng thư viện pyquest"; thiếu
   dòng đó thì lỗi nói rõ cần thêm gì. Nút 📘 Thư viện liệt kê các lệnh (`content/reference/pyquest.json`).
+  Thư viện nay chỉ giữ mảnh gốc; `draw_bird` do bé tự viết (ADR 0004).
 - Khung code là nguồn chuẩn **trong lúc bé gõ**: gõ xong mới dựng lại khối, không viết lại chữ bé gõ. Bé sửa khối thì code
   mới được sinh lại.
 

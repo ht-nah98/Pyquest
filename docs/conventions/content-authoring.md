@@ -8,7 +8,7 @@ Mỗi bài theo `docs/pedagogy/lesson-rhythm.md`: Hiểu → Thiết kế → Ch
 
 ## 2. Slide
 - Mỗi slide **một ý**. `text` ≤ 280 ký tự, `title` ≤ 60. Không vừa thì tách thành hai slide, đừng rút gọn câu.
-- Giọng học sinh cấp 2: gọi "em", câu ngắn, không chê. Thuật ngữ Python giữ tiếng Anh (`print`, `draw_bird`) và giải
+- Giọng học sinh cấp 2: gọi "em", câu ngắn, không chê. Thuật ngữ Python giữ tiếng Anh (`print`, `draw_rect`) và giải
   thích bằng tiếng Việt ngay lần đầu xuất hiện.
 - `coachNotes`: gợi ý giảng cho HLV (câu hỏi cho lớp, hoạt động trên giấy). Chỉ hiện ở cửa sổ ghi chú.
 - `quiz`: 2–5 lựa chọn, `explain` nói **vì sao** đáp án đúng. Ở chế độ Tự học, bé phải chọn đúng mới qua.
@@ -35,7 +35,11 @@ Mỗi bài theo `docs/pedagogy/lesson-rhythm.md`: Hiểu → Thiết kế → Ch
 |---|---|
 | `noError` | chạy hết, không lỗi, không bị dừng vì chạy mãi |
 | `printed` | có bong bóng `print` đúng nguyên văn |
-| `drew` | có vẽ `sprite` (tùy chọn `at`, `tolerance`; `customImage`: phải dùng ảnh chọn bằng `use_sprite`) |
+| `drew` | có vẽ ảnh thuộc nhóm `sprite` (`bird` khớp `bird-rong`; tùy chọn `at`, `tolerance`; `customImage`: ảnh khác ảnh đầu của nhóm) |
+| `drewRects` | một khung có ít nhất `min` ô `draw_rect` (không tính ô phủ cả sân); tùy chọn `at` |
+| `called` | hàm bé tự viết `name` chạy ít nhất `min` lần; `distinct`: với số khác nhau |
+| `sameShape` | mọi lời gọi `name` vẽ ra cùng một hình, chỉ dời chỗ |
+| `shifts` | chạy lại với dòng `var = n` thành `n + by`: **mọi** mảnh dời đúng `by` theo `axis` (chỉ chế độ script) |
 | `drewCount` | trong một khung hình có ít nhất `min` hình `sprite` |
 | `drewText` | có chữ `text` được vẽ (vd điểm số) |
 | `varEquals` | biến cấp module bằng `value` (số, chữ, True/False) |
