@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.omc/
+.superpowers/
+apps/web/public/pyodide/
+apps/web/public/blockly-media/
+*.log
+.env.local
+test-results/
+playwright-report/
+coverage/
+__pycache__/

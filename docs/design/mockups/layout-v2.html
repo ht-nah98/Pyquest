@@ -1,0 +1,77 @@
+<h2>Bản B, sửa lần 2: ưu tiên khối và code, sân chơi nhỏ, có nút toàn màn hình</h2>
+<p class="subtitle">Ba khung dưới đây là cùng một màn học ở ba trạng thái: trên laptop, trên iPad nằm ngang, và lúc bấm "Chơi toàn màn hình".</p>
+
+<style>
+  .scr{border:2px solid #8886;border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:5px;font-size:11px;font-family:ui-monospace,monospace;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;font-family:system-ui;font-size:11px;padding:2px 4px;opacity:.85}
+  .row{display:flex;gap:6px;flex:1;min-height:0}
+  .pn{border:1px solid #8884;border-radius:6px;padding:6px;overflow:hidden;display:flex;flex-direction:column;gap:4px}
+  .ttl{font-weight:700;font-family:system-ui;font-size:11px;opacity:.8;display:flex;align-items:center;gap:6px}
+  .blk{border-radius:4px;padding:4px 7px;color:#fff;font-family:system-ui;font-size:10.5px;width:max-content}
+  .b1{background:#5b80a5}.b2{background:#5ba55b;margin-left:12px}.b3{background:#a55b80;margin-left:12px}
+  .code{background:#1e1e2e;color:#cdd6f4;border-radius:4px;padding:6px;line-height:1.5;white-space:pre;font-size:10.5px;flex:1}
+  .kw{color:#cba6f7}.nm{color:#fab387}.hl{background:#f9731633;outline:1px solid #f97316;border-radius:2px}
+  .sky{flex:1;background:linear-gradient(#7dd3fc,#bae6fd);border-radius:4px;position:relative;min-height:40px}
+  .bird{position:absolute;left:30%;top:42%;width:14px;height:10px;background:#facc15;border-radius:50%;border:2px solid #92400e}
+  .pipe{position:absolute;width:14px;background:#22c55e;border:2px solid #166534}
+  .btn{border-radius:4px;padding:3px 8px;font-family:system-ui;font-weight:700;width:max-content;font-size:10.5px}
+  .run{background:#f97316;color:#fff}.full{background:#334155;color:#fff}
+  .guide{font-family:system-ui;font-size:10.5px;line-height:1.45}
+  .watch{font-family:system-ui;font-size:10px;background:#8881;border-radius:4px;padding:3px}
+  .cap{font-family:system-ui;font-size:12px;font-weight:700;margin:14px 0 6px}
+  .note{font-family:system-ui;font-size:12px;opacity:.8;margin-top:5px}
+</style>
+
+<div class="cap">① Laptop 1280×720: khối và code chiếm khoảng 70% màn hình</div>
+<div class="scr" style="width:100%;max-width:900px;height:330px">
+  <div class="top"><span>← Khóa Flappy · <b>Bài 3: Vòng lặp</b></span><span>📘 Hướng dẫn ▾ · 💡 Gợi ý</span></div>
+  <div class="row">
+    <div class="pn" style="flex:1"><div class="ttl">🧩 Khối</div>
+      <div class="blk b1">lặp mãi</div><div class="blk b2 hl">y = y + 2</div><div class="blk b3">vẽ chim tại (x, y)</div>
+      <div style="flex:1"></div><div class="guide" style="opacity:.6">kéo khối từ khay ⟵</div></div>
+    <div class="pn" style="flex:1"><div class="ttl">🐍 Python</div>
+      <div class="code"><span class="kw">while</span> True:
+    <span class="hl"><span class="nm">y</span> = y + 2</span>
+    ve_chim(x, y)</div></div>
+    <div class="pn" style="width:26%"><div class="ttl">🎮 Sân chơi</div>
+      <div style="display:flex;gap:4px"><span class="btn run">▶ Chạy</span><span class="btn full">⛶ Chơi toàn màn hình</span></div>
+      <div class="sky" style="flex:0 0 120px"><div class="bird"></div><div class="pipe" style="right:16%;top:0;height:32%"></div><div class="pipe" style="right:16%;bottom:0;height:28%"></div></div>
+      <div class="watch">y = 118 · tốc độ = 2</div>
+      <div class="guide" style="border-top:1px solid #8884;padding-top:4px">📘 <b>Nhiệm vụ:</b> cho chim rơi mãi bằng <b>while True</b><br>✅ chim rơi<br>⬜ chạm đất thì dừng</div></div>
+  </div>
+</div>
+<p class="note">Khối nào đang chọn thì dòng code tương ứng sáng lên, và ngược lại (ô viền cam). Hai khung khối và code kéo được vạch ngăn để đổi tỉ lệ.</p>
+
+<div class="cap">② iPad nằm ngang (1180×820): bố cục giữ nguyên, nút to hơn để bấm bằng ngón tay</div>
+<div class="scr" style="width:100%;max-width:640px;height:440px">
+  <div class="top"><span>← <b>Bài 3</b></span><span>📘 · 💡</span></div>
+  <div class="row">
+    <div class="pn" style="flex:1"><div class="ttl">🧩 Khối</div>
+      <div class="blk b1" style="padding:7px 10px">lặp mãi</div><div class="blk b2" style="padding:7px 10px">y = y + 2</div><div class="blk b3" style="padding:7px 10px">vẽ chim tại (x, y)</div></div>
+    <div class="pn" style="flex:1"><div class="ttl">🐍 Python</div>
+      <div class="code" style="font-size:11.5px"><span class="kw">while</span> True:
+    <span class="nm">y</span> = y + 2
+    ve_chim(x, y)</div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;font-family:system-ui;font-size:10px">
+        <span class="btn" style="background:#8882">Tab ⇥</span><span class="btn" style="background:#8882">:</span><span class="btn" style="background:#8882">( )</span><span class="btn" style="background:#8882">=</span><span class="btn" style="background:#8882">while</span><span class="btn" style="background:#8882">if</span></div></div>
+  </div>
+  <div class="pn" style="flex-direction:row;align-items:center;gap:8px;height:80px">
+    <div class="sky" style="flex:0 0 140px;height:100%"><div class="bird"></div><div class="pipe" style="right:16%;top:0;height:32%"></div></div>
+    <div style="display:flex;flex-direction:column;gap:4px"><span class="btn run" style="padding:7px 14px">▶ Chạy</span><span class="btn full" style="padding:7px 14px">⛶ Toàn màn hình</span></div>
+    <div class="guide">📘 cho chim rơi mãi bằng <b>while True</b> ▾</div>
+  </div>
+</div>
+<p class="note">Trên iPad, sân chơi chuyển xuống thành một dải dưới cùng để khối và code có đủ chỗ. Có thêm một hàng phím tắt (Tab, dấu hai chấm, ngoặc, while, if…) vì bàn phím ảo của iPad gõ Python rất khổ.</p>
+
+<div class="cap">③ Bấm "⛶ Chơi toàn màn hình": chỉ còn game do bé viết</div>
+<div class="scr" style="width:100%;max-width:640px;height:300px;padding:0;overflow:hidden">
+  <div class="sky" style="border-radius:8px;position:relative">
+    <div class="bird" style="width:26px;height:19px;left:28%"></div>
+    <div class="pipe" style="width:30px;right:22%;top:0;height:36%"></div><div class="pipe" style="width:30px;right:22%;bottom:0;height:30%"></div>
+    <div class="pipe" style="width:30px;right:-2%;top:0;height:22%"></div><div class="pipe" style="width:30px;right:-2%;bottom:0;height:44%"></div>
+    <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);font-family:system-ui;font-weight:800;font-size:26px;color:#fff;text-shadow:0 2px 0 #0004">7</div>
+    <div style="position:absolute;top:10px;right:10px;display:flex;gap:6px"><span class="btn" style="background:#0006;color:#fff">↻ Chơi lại</span><span class="btn" style="background:#0006;color:#fff">✕ Về code</span></div>
+    <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-family:system-ui;font-size:11px;color:#0f172a;opacity:.7">Bấm Space hoặc chạm màn hình để vỗ cánh</div>
+  </div>
+</div>
+<p class="note">Bấm Esc hoặc "✕ Về code" để quay lại đúng chỗ đang sửa. Sau khi chơi xong lượt, ô biến vẫn hiện để bé xem lại.</p>
