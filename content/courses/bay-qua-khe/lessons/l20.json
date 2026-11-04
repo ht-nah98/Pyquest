@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 20,
   "title": "Ngẫu nhiên",
-  "draft": true,
   "summary": "random_int(80, 300): mỗi cột một độ cao, game bất ngờ hơn.",
   "steps": [
     {

@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 1,
   "title": "Tọa độ và gọi lệnh",
-  "draft": true,
   "summary": "Màn hình là lưới điểm: gọi draw_rect với các con số để tô ô màu đúng chỗ.",
   "steps": [
     {

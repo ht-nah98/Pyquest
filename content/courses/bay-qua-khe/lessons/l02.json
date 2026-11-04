@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 2,
   "title": "Biến",
-  "draft": true,
   "summary": "Biến là cái hộp có tên: x, y, color giữ số và chữ để lệnh vẽ đọc ra.",
   "steps": [
     {

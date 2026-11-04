@@ -18,18 +18,23 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
   pq_for_range: { FROM: num(0), TO: num(5) },
   pq_compare: { A: num(0), B: num(0) },
   pq_random: { A: num(1), B: num(10) },
+  pq_list: { ITEM0: num(40), ITEM1: num(160), ITEM2: num(280) },
+  pq_append: { VALUE: num(0) },
+  pq_index: { INDEX: num(0) },
 };
 
 /** Blocks whose shape is set by extraState in the toolbox. */
 const DEFAULT_EXTRA: Record<string, ToolboxEntry['extraState']> = {
   pq_if_chain: { elifs: 1, else: true },
+  pq_list: { items: 3 },
 };
 
 export type ToolboxEntry = {
   kind: 'block';
   type: string;
   inputs?: Record<string, object>;
-  extraState?: { name: string; params: string[] } | { elifs: number; else: boolean };
+  extraState?:
+    { name: string; params: string[] } | { elifs: number; else: boolean } | { items: number };
 };
 export type ToolboxCategory = {
   kind: 'category';
@@ -50,7 +55,8 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
     types: ['pq_clear', 'pq_draw_rect', 'pq_draw_image', 'pq_draw_text', 'pq_print'],
   },
   { name: 'Biến', colour: '330', types: ['pq_assign', 'pq_aug', 'pq_var_get', 'pq_global'] },
-  { name: 'Lặp', colour: '30', types: ['pq_for', 'pq_for_range', 'pq_while'] },
+  { name: 'Lặp', colour: '30', types: ['pq_for', 'pq_for_range', 'pq_for_each', 'pq_while'] },
+  { name: 'Danh sách', colour: '200', types: ['pq_list', 'pq_append', 'pq_len', 'pq_index'] },
   {
     name: 'Điều kiện',
     colour: '260',

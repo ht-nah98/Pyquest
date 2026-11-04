@@ -53,11 +53,14 @@ test('a game-mode lesson is graded by its scripted test run, then plays', async 
   await expect(page.getByTestId('play-screen')).toBeVisible();
 });
 
-test('the coach sees draft lessons; a child does not', async ({ page, browser, baseURL }) => {
+test('a child sees later lessons locked; the coach can open them', async ({
+  page,
+  browser,
+  baseURL,
+}) => {
   await asCoach(page);
   await page.goto('/c/bay-qua-khe');
-  await expect(page.getByTestId('lesson-l17')).toHaveAttribute('data-status', 'open');
-  await expect(page.getByTestId('lesson-l17')).toContainText('Bản nháp');
+  await expect(page.getByTestId('lesson-l17')).not.toContainText('Bản nháp');
   const kidContext = await browser.newContext(baseURL === undefined ? {} : { baseURL });
   const kid = await kidContext.newPage();
   await kid.goto('/');
@@ -65,6 +68,6 @@ test('the coach sees draft lessons; a child does not', async ({ page, browser, b
   await kid.getByTestId('create').click();
   await kid.waitForURL('**/courses');
   await kid.goto('/c/bay-qua-khe');
-  await expect(kid.getByTestId('lesson-l17')).toHaveAttribute('data-status', 'hidden');
+  await expect(kid.getByTestId('lesson-l17')).toHaveAttribute('data-status', 'locked');
   await kidContext.close();
 });

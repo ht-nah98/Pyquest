@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 10,
   "title": "Lệnh tính ra kết quả: return",
-  "draft": true,
   "summary": "def … return: lệnh tự đặt không chỉ vẽ mà còn tính và trả lời.",
   "steps": [
     {

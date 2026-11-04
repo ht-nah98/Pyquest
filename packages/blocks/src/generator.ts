@@ -1,6 +1,6 @@
 import { Blockly, type Block, type Workspace } from './blockly';
 import { Order, pythonGenerator } from './blockly';
-import { callOf, chainOf, rawCode, registerBlocks } from './defs';
+import { callOf, chainOf, itemsOf, rawCode, registerBlocks } from './defs';
 
 const PRECEDENCE: Record<string, number> = { '+': 1, '-': 1, '*': 2, '/': 2, '%': 2 };
 const ATOMIC = 3;
@@ -102,6 +102,22 @@ function installGenerators(): void {
     Order.FUNCTION_CALL,
   ];
   g['pq_raw'] = (block) => `${rawCode(block)}\n`;
+  g['pq_list'] = (block) => {
+    const items = Array.from(
+      { length: itemsOf(block) },
+      (_, i) => value(block, `ITEM${String(i)}`) || '0',
+    );
+    return [`[${items.join(', ')}]`, Order.ATOMIC];
+  };
+  g['pq_for_each'] = (block) =>
+    `for ${String(block.getFieldValue('VAR'))} in ${value(block, 'LIST') || '[]'}:\n${body(block, 'DO')}`;
+  g['pq_append'] = (block) =>
+    `${String(block.getFieldValue('NAME'))}.append(${value(block, 'VALUE') || '0'})\n`;
+  g['pq_len'] = (block) => [`len(${value(block, 'A') || '[]'})`, Order.FUNCTION_CALL];
+  g['pq_index'] = (block) => [
+    `${String(block.getFieldValue('NAME'))}[${value(block, 'INDEX') || '0'}]`,
+    Order.MEMBER,
+  ];
   g['pq_while'] = (block) => `while ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}`;
   g['pq_not'] = (block) => [
     `not ${pythonGenerator.valueToCode(block, 'A', Order.LOGICAL_NOT) || 'False'}`,

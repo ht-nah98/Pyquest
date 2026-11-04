@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 13,
   "title": "Vì sao có ảnh",
-  "draft": true,
   "summary": "Chim thật có 1760 điểm màu: lưu thành file ảnh, rồi đổi ruột draw_bird sang draw_image.",
   "steps": [
     {

@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 18,
   "title": "Vẽ cột",
-  "draft": true,
   "summary": "def draw_pipe(x, gap_y): lần hai tự đặt lệnh, lần này cho cặp cột chắn đường.",
   "steps": [
     {

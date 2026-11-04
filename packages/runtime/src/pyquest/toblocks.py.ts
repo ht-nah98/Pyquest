@@ -60,7 +60,15 @@ def _expr(src, node, nested=False):
             and not any(isinstance(v, ast.BoolOp) for v in node.values)):
         return {"type": "pq_logic", "fields": {"OP": "and" if isinstance(node.op, ast.And) else "or"},
                 "inputs": {"A": _expr(src, node.values[0], "logic"), "B": _expr(src, node.values[1], "logic")}}
+    if isinstance(node, ast.List):
+        return {"type": "pq_list", "extraState": {"items": len(node.elts)},
+                "inputs": {"ITEM" + str(i): _expr(src, e) for i, e in enumerate(node.elts)}}
+    if (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name)
+            and not isinstance(node.slice, (ast.Slice, ast.Tuple))):
+        return {"type": "pq_index", "fields": {"NAME": node.value.id}, "inputs": {"INDEX": _expr(src, node.slice)}}
     if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and not node.keywords:
+        if node.func.id == "len" and len(node.args) == 1:
+            return {"type": "pq_len", "inputs": {"A": _expr(src, node.args[0])}}
         if node.func.id == "key_pressed" and not node.args:
             return {"type": "pq_key_pressed"}
         if node.func.id == "random_int" and len(node.args) == 2:
@@ -151,7 +159,9 @@ def _stmt(ctx, node):
         if isinstance(node, ast.For) and not node.orelse and isinstance(node.target, ast.Name):
             args = _range_args(node)
             if args is None:
-                return None
+                return {"type": "pq_for_each", "fields": {"VAR": node.target.id},
+                        "inputs": {"LIST": _expr(src, node.iter)},
+                        "statements": {"DO": _body(ctx, node.body, node.lineno)}}
             do = _body(ctx, node.body, node.lineno)
             if len(args) == 1:
                 return {"type": "pq_for", "fields": {"VAR": node.target.id},
@@ -188,6 +198,12 @@ def _stmt(ctx, node):
 
     if ctx.has_comment(node.lineno, node.end_lineno):
         return None
+    if (isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)
+            and isinstance(node.value.func, ast.Attribute) and node.value.func.attr == "append"
+            and isinstance(node.value.func.value, ast.Name) and len(node.value.args) == 1
+            and not node.value.keywords):
+        return {"type": "pq_append", "fields": {"NAME": node.value.func.value.id},
+                "inputs": {"VALUE": _expr(src, node.value.args[0])}}
     if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name):
         call = node.value
         spec = _CALLS.get(call.func.id)

@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 24,
   "title": "Thư viện của em",
-  "draft": true,
   "summary": "Tách chim ra file riêng như pyquest; thêm màn bắt đầu và màn thua.",
   "steps": [
     {

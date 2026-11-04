@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 15,
   "title": "Trọng lực",
-  "draft": true,
   "summary": "Rơi nhanh dần: mỗi khung hình tốc độ tăng thêm một chút.",
   "steps": [
     {

@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 12,
   "title": "Lặp với while",
-  "draft": true,
   "summary": "while điều_kiện: lặp chừng nào còn đúng, khi chưa biết trước số vòng.",
   "steps": [
     {

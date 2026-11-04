@@ -37,7 +37,7 @@ test('a lesson has several exercises: the next opens when one is done; typing on
   await expect(page).toHaveURL(/ex=l07-e2/);
   await pythonReady(page);
   // Exercise 2 starts from its own starter, not from exercise 1's code.
-  expect(await codeText(page)).toContain('"gold"');
+  await expect.poll(() => codeText(page)).toContain('"gold"');
 
   // The coach-free child cannot skip to 3 yet; finish 2 first.
   await typeCode(
@@ -66,5 +66,26 @@ test('a lesson has several exercises: the next opens when one is done; typing on
   await page.goto('/l/l07/code');
   await pythonReady(page);
   await expect(page.getByTestId('exercise-l07-e3')).toHaveAttribute('aria-current', 'step');
-  expect(await codeText(page)).toContain('# đang làm bài 3');
+  await expect.poll(() => codeText(page)).toContain('# đang làm bài 3');
+});
+
+test('Bài 11: lists are real blocks (danh sách [ ], với mỗi x trong)', async ({ page }) => {
+  await newStudent(page);
+  await page.goto('/l/l11/code');
+  await pythonReady(page);
+  await typeCode(
+    page,
+    'from pyquest import *\n\nxs = [40, 160, 280]\nfor x in xs:\n    draw_rect(x, 300, 60, 60, "green")\n',
+  );
+  const canvasText = (t: string) =>
+    page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: t }).first();
+  await expect(canvasText('với mỗi')).toBeVisible();
+  await expect(canvasText('danh sách [')).toBeVisible();
+  await page.getByTestId('run').click();
+  await expect(page.getByTestId('goal-l11-e1-same')).toHaveAttribute('data-ok', 'true');
+  await page.locator('.blocklyToolboxCategory', { hasText: 'Danh sách' }).first().click();
+  await expect(
+    page.locator('.blocklyFlyout .blocklyText', { hasText: 'danh sách [' }).first(),
+  ).toBeVisible();
+  await page.screenshot({ path: `${SHOTS}/lists-l11.png` });
 });

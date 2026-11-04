@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 14,
   "title": "Hoạt hình là gì",
-  "draft": true,
   "summary": "Game vẽ lại mỗi khung hình: update() đổi số, draw() vẽ lại.",
   "steps": [
     {

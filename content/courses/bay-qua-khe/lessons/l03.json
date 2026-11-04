@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 3,
   "title": "Phép tính",
-  "draft": true,
   "summary": "x + 30, y + 14, y = y + 100: tính từ số đã có để đặt hình theo nhau.",
   "steps": [
     {

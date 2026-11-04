@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 23,
   "title": "Gói thành đối tượng",
-  "draft": true,
   "summary": "class Bird: gom vị trí, tốc độ và hành động của chim vào một chỗ.",
   "steps": [
     {

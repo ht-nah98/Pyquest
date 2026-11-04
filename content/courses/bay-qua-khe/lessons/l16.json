@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 16,
   "title": "Nếu… thì…",
-  "draft": true,
   "summary": "if y > 480: chạm đất thì dừng lại.",
   "steps": [
     {

@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 8,
   "title": "Nhiều lựa chọn: elif",
-  "draft": true,
   "summary": "if … elif … else: thử từng điều kiện từ trên xuống, chọn cái đúng đầu tiên.",
   "steps": [
     {

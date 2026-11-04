@@ -69,6 +69,16 @@ describe('Python → blocks → Python', () => {
     'if y < 200:\n    c = "blue"\nelif y < 400:\n    c = "green"\nelse:\n    c = "brown"',
     'if a:\n    pass\nelif b:\n    pass\nelif c:\n    pass',
     'def inside(px, x):\n    return px > x\n\n\nif inside(3, 1):\n    print("trong")',
+    'xs = [40, 160, 280]',
+    'xs = []',
+    'for x in xs:\n    draw_rect(x, 300, 60, 60, "green")',
+    'xs.append(220)',
+    'n = len(xs)',
+    'h = hs[i] + 1',
+    'for i in range(len(hs)):\n    draw_rect(i * 80 + 40, 550 - hs[i], 60, hs[i], "teal")',
+    'pairs = [[1, 2], [3, 4]]',
+    'for k in d.keys():\n    pass',
+    'pipes[i] = pipes[i] - 2',
   ])('%j survives the round trip', (source) => {
     expect(roundTrip(source).trimEnd()).toBe(source);
   });
@@ -142,6 +152,28 @@ describe('Python → blocks → Python', () => {
     ];
     expect(call?.type).toBe('pq_call_expr');
     expect(call?.extraState).toEqual({ name: 'inside', params: ['px', 'x'] });
+  });
+
+  test('lists are blocks: [ ], for each, append, len, xs[i]', () => {
+    const types = (src: string) => {
+      const tree = py.parseBlocks(src);
+      if (!tree.ok) throw new Error(tree.messageVi);
+      return tree.statements;
+    };
+    expect(types('xs = [40, 160]')[0]?.inputs?.['VALUE']).toMatchObject({
+      type: 'pq_list',
+      extraState: { items: 2 },
+    });
+    expect(types('for x in xs:\n    pass')[0]).toMatchObject({
+      type: 'pq_for_each',
+      fields: { VAR: 'x' },
+    });
+    expect(types('xs.append(5)')[0]).toMatchObject({ type: 'pq_append', fields: { NAME: 'xs' } });
+    expect(types('n = len(xs)')[0]?.inputs?.['VALUE']?.type).toBe('pq_len');
+    expect(types('h = hs[i]')[0]?.inputs?.['VALUE']).toMatchObject({
+      type: 'pq_index',
+      fields: { NAME: 'hs' },
+    });
   });
 
   test('a def that returns a value also gives a value block in the toolbox', () => {

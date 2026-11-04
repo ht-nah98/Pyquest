@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 5,
   "title": "Lặp với for",
-  "draft": true,
   "summary": "for i in range(8): làm một việc nhiều lần, mỗi lần i lớn thêm 1.",
   "steps": [
     {

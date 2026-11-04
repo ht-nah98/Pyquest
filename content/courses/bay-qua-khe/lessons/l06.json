@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 6,
   "title": "Vòng lặp lồng nhau",
-  "draft": true,
   "summary": "Một for nằm trong một for: vẽ cả lưới, cả tòa nhà nhiều cửa sổ.",
   "steps": [
     {

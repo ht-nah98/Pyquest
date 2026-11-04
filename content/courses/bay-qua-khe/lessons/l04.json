@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 4,
   "title": "Tự đặt lệnh",
-  "draft": true,
   "summary": "def: gom nhiều dòng thành một lệnh mới có tham số, gọi bao nhiêu lần cũng được.",
   "steps": [
     {

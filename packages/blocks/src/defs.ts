@@ -12,6 +12,7 @@ const LOOP = 30;
 const CONDITION = 260;
 const FUNCTION = 290;
 const EVENT = 45;
+const LIST = 200;
 
 /** Labels are Vietnamese; the code they make is English Python (spec §5). */
 const JSON_DEFS = [
@@ -314,6 +315,54 @@ const JSON_DEFS = [
     tooltip: 'while điều_kiện: lặp lại các lệnh bên trong chừng nào điều kiện còn đúng.',
   },
   {
+    type: 'pq_for_each',
+    message0: 'với mỗi %1 trong %2 %3 %4',
+    args0: [
+      { type: 'field_input', name: 'VAR', text: 'x' },
+      { type: 'input_value', name: 'LIST' },
+      { type: 'input_dummy' },
+      { type: 'input_statement', name: 'DO' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: LOOP,
+    tooltip: 'for x in xs: lấy lần lượt từng phần tử của danh sách cất vào x.',
+  },
+  {
+    type: 'pq_append',
+    message0: 'thêm %2 vào cuối %1',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'xs' },
+      { type: 'input_value', name: 'VALUE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: LIST,
+    tooltip: 'xs.append(giá trị): thêm một ngăn vào cuối danh sách.',
+  },
+  {
+    type: 'pq_len',
+    message0: 'số phần tử của %1',
+    args0: [{ type: 'input_value', name: 'A' }],
+    output: 'Number',
+    colour: LIST,
+    tooltip: 'len(xs): danh sách có mấy ngăn.',
+  },
+  {
+    type: 'pq_index',
+    message0: '%1 ngăn số %2',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'xs' },
+      { type: 'input_value', name: 'INDEX' },
+    ],
+    inputsInline: true,
+    output: null,
+    colour: LIST,
+    tooltip: 'xs[i]: giá trị ở ngăn số i. Ngăn đầu là số 0.',
+  },
+  {
     type: 'pq_key_pressed',
     message0: 'đang bấm Space / chạm?',
     output: 'Boolean',
@@ -404,6 +453,32 @@ const RAW_BLOCK = {
 
 type CallBlock = Block & { fnName: string; params: string[]; renderInputs(): void };
 type ChainBlock = Block & { elifs: number; hasElse: boolean; renderInputs(): void };
+type ListBlock = Block & { items: number; renderInputs(): void };
+
+/** [a, b, c]: a list with a fixed number of slots (extraState { items }). */
+const LIST_BLOCK = {
+  init(this: ListBlock) {
+    this.items = 3;
+    this.setOutput(true);
+    this.setInputsInline(true);
+    this.setColour(LIST);
+    this.setTooltip('Danh sách: một hộp có nhiều ngăn đánh số từ 0.');
+    this.renderInputs();
+  },
+  renderInputs(this: ListBlock) {
+    for (const input of [...this.inputList]) this.removeInput(input.name);
+    this.appendDummyInput('OPEN').appendField('danh sách [');
+    for (let i = 0; i < this.items; i++) this.appendValueInput(`ITEM${String(i)}`);
+    this.appendDummyInput('CLOSE').appendField(']');
+  },
+  saveExtraState(this: ListBlock) {
+    return { items: this.items };
+  },
+  loadExtraState(this: ListBlock, state: { items?: number }) {
+    this.items = state.items ?? 3;
+    this.renderInputs();
+  },
+};
 
 /** if … elif … elif … else: one block for the whole chain (extraState { elifs, else }). */
 const IF_CHAIN_BLOCK = {
@@ -492,6 +567,7 @@ export const BLOCK_TYPES = [
   'pq_call',
   'pq_call_expr',
   'pq_if_chain',
+  'pq_list',
 ] as const;
 
 let registered = false;
@@ -504,6 +580,7 @@ export function registerBlocks(): void {
   Blockly.Blocks['pq_call'] = CALL_BLOCK;
   Blockly.Blocks['pq_call_expr'] = CALL_EXPR_BLOCK;
   Blockly.Blocks['pq_if_chain'] = IF_CHAIN_BLOCK;
+  Blockly.Blocks['pq_list'] = LIST_BLOCK;
   registered = true;
 }
 
@@ -511,6 +588,11 @@ export function registerBlocks(): void {
 export function callOf(block: Block): { name: string; params: string[] } {
   const b = block as CallBlock;
   return { name: b.fnName, params: b.params };
+}
+
+/** How many slots a list block has, for the generator. */
+export function itemsOf(block: Block): number {
+  return (block as ListBlock).items;
 }
 
 /** An if/elif/else block's shape, for the generator. */

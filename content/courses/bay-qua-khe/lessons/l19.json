@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 19,
   "title": "Nhiều cột",
-  "draft": true,
   "summary": "Danh sách pipes = [450, 650]: một biến giữ nhiều cột.",
   "steps": [
     {

@@ -3,7 +3,6 @@
   "courseId": "bay-qua-khe",
   "order": 11,
   "title": "Danh sách",
-  "draft": true,
   "summary": "[40, 160, 280]: một hộp có nhiều ngăn; for đi qua từng ngăn.",
   "steps": [
     {
@@ -41,8 +40,8 @@
       "slides": [
         {
           "id": "l11-code",
-          "title": "Danh sách viết bằng tay",
-          "text": "Danh sách chưa có khối: em gõ trong khung Python, bên khối hiện thành khối code chữ."
+          "title": "Khối danh sách",
+          "text": "Nhóm Danh sách có khối danh sách [ … ], thêm vào cuối, số phần tử, ngăn số i. Nhóm Lặp có khối \"với mỗi x trong …\". Kéo khối hay gõ đều được."
         }
       ]
     },
@@ -71,8 +70,11 @@
         "pq_import",
         "pq_number",
         "pq_text",
+        "pq_list",
+        "pq_for_each",
         "pq_draw_rect",
-        "pq_var_get"
+        "pq_var_get",
+        "pq_assign"
       ],
       "mode": "script",
       "goals": [
@@ -91,9 +93,10 @@
         "main.py": "from pyquest import *\n\nxs = [40, 160, 280]\nfor x in xs:\n    draw_rect(x, 300, 60, 60, \"green\")\n"
       },
       "walkthrough": [
-        "Bài này em gõ vòng lặp trong khung Python.",
-        "for x in xs:",
-        "    draw_rect(x, 300, 60, 60, \"green\")"
+        "Khối \"đặt xs = danh sách [40, 160, 280]\" đã có sẵn.",
+        "Mở nhóm Lặp, kéo khối \"với mỗi x trong …\" đặt bên dưới. Ô sau chữ trong: kéo khối biến, gõ xs.",
+        "Kéo khối vẽ hình chữ nhật vào bên trong. Ô x: kéo khối biến x vào. Còn lại: 300, 60, 60, green.",
+        "Trong Python: for x in xs: rồi dòng draw_rect thụt vào."
       ],
       "hints": [
         "for x in xs: lấy từng số của xs."
@@ -103,12 +106,22 @@
       "id": "l11-e2",
       "title": "Thêm vào cuối",
       "task": "xs = [20, 120]. Thêm 220 và 320 bằng xs.append(…), rồi vẽ mỗi x một ô vàng (gold) cạnh 60 ở (x, 300).",
-      "input": "typing",
+      "input": "blocks",
       "starter": {
         "main.py": "from pyquest import *\n\nxs = [20, 120]\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_append",
+        "pq_for_each",
+        "pq_draw_rect",
+        "pq_var_get",
+        "pq_list",
+        "pq_assign"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -126,7 +139,9 @@
         "main.py": "from pyquest import *\n\nxs = [20, 120]\nxs.append(220)\nxs.append(320)\nfor x in xs:\n    draw_rect(x, 300, 60, 60, \"gold\")\n"
       },
       "walkthrough": [
-        "xs.append(220) thêm 220 vào cuối danh sách.",
+        "Mở nhóm Danh sách, kéo khối \"thêm … vào cuối xs\" đặt dưới dòng xs = ….",
+        "Gõ 220. Kéo thêm một khối nữa, gõ 320.",
+        "Kéo khối \"với mỗi x trong xs\" và vẽ ô vàng (gold) cạnh 60 ở (x, 300) bên trong.",
         "Vẽ sau khi đã thêm, để vòng lặp thấy đủ 4 số."
       ],
       "hints": [
