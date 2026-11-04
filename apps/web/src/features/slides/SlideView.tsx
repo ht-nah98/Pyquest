@@ -1,6 +1,8 @@
 import type { Slide } from '@pyquest/content-schema';
 import { catalog, type CatalogCourse } from '../../content/catalog';
 import type { LessonState } from '../../storage/store';
+import { AssetPicker } from './widgets/AssetPicker';
+import { Flipbook } from './widgets/Flipbook';
 import { Gravity } from './widgets/Gravity';
 import { Grid } from './widgets/Grid';
 import { RoadmapBuilder } from './widgets/RoadmapBuilder';
@@ -70,6 +72,20 @@ export function SlideView({
         {slide.widget?.kind === 'sampleGame' && <SampleGame source={ctx.course.sampleGame ?? ''} />}
         {slide.widget?.kind === 'grid' && <Grid />}
         {slide.widget?.kind === 'gravity' && <Gravity />}
+        {slide.widget?.kind === 'flipbook' && <Flipbook />}
+        {slide.widget?.kind === 'assetPicker' && (
+          <AssetPicker
+            group={
+              typeof slide.widget.props?.['group'] === 'string'
+                ? slide.widget.props['group']
+                : 'bird'
+            }
+            picked={ctx.state.picks?.['bird']}
+            onPick={(id) => {
+              ctx.update({ picks: { ...ctx.state.picks, bird: id } });
+            }}
+          />
+        )}
         {slide.widget?.kind === 'roadmapBuilder' && (
           <RoadmapBuilder
             parts={ctx.course.roadmap}

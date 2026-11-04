@@ -1,20 +1,20 @@
-import * as Blockly from 'blockly/core';
-import { Order, pythonGenerator } from 'blockly/python';
+import { Blockly, type Block, type Workspace } from './blockly';
+import { Order, pythonGenerator } from './blockly';
 import { rawCode, registerBlocks } from './defs';
 
 const PRECEDENCE: Record<string, number> = { '+': 1, '-': 1, '*': 2, '/': 2 };
 const ATOMIC = 3;
 
-const value = (block: Blockly.Block, name: string): string =>
+const value = (block: Block, name: string): string =>
   pythonGenerator.valueToCode(block, name, Order.NONE) || '';
 
 /** Our own precedence so `a + b + c` stays as typed instead of Blockly's `(a + b) + c`. */
-function precedenceOf(block: Blockly.Block | null): number {
+function precedenceOf(block: Block | null): number {
   if (block?.type !== 'pq_arith') return ATOMIC;
   return PRECEDENCE[String(block.getFieldValue('OP'))] ?? ATOMIC;
 }
 
-function operand(block: Blockly.Block, name: string, needsAbove: number): string {
+function operand(block: Block, name: string, needsAbove: number): string {
   const code = value(block, name);
   const child = block.getInputTargetBlock(name);
   return precedenceOf(child) < needsAbove ? `(${code})` : code;
@@ -24,7 +24,7 @@ function operand(block: Blockly.Block, name: string, needsAbove: number): string
 const INDENT = '    ';
 
 /** An indented statement body; an empty body becomes `pass` so the code still runs. */
-function body(block: Blockly.Block, name: string): string {
+function body(block: Block, name: string): string {
   const code = pythonGenerator.statementToCode(block, name);
   return code === '' ? `${INDENT}pass\n` : code;
 }
@@ -36,7 +36,7 @@ function installGenerators(): void {
   registerBlocks();
   pythonGenerator.INDENT = INDENT;
   const g = pythonGenerator.forBlock;
-  const call = (fn: string, names: string[]) => (block: Blockly.Block) =>
+  const call = (fn: string, names: string[]) => (block: Block) =>
     `${fn}(${names.map((n) => value(block, n)).join(', ')})\n`;
 
   g['pq_draw_bird'] = call('draw_bird', ['X', 'Y']);
@@ -97,7 +97,7 @@ function installGenerators(): void {
 }
 
 /** Python for a whole workspace. */
-export function workspaceToPython(ws: Blockly.Workspace): string {
+export function workspaceToPython(ws: Workspace): string {
   installGenerators();
   return pythonGenerator.workspaceToCode(ws);
 }
@@ -115,16 +115,16 @@ export function toPython(state: object): string {
 }
 
 /** First code line (1-based) of every statement block, nested ones too, so a selected block lights up its line. */
-export function lineMap(ws: Blockly.Workspace): Map<string, number> {
+export function lineMap(ws: Workspace): Map<string, number> {
   installGenerators();
   pythonGenerator.init(ws);
   const map = new Map<string, number>();
-  const size = (b: Blockly.Block): number => {
+  const size = (b: Block): number => {
     const code = pythonGenerator.blockToCode(b, true);
     const text = typeof code === 'string' ? code : code[0];
     return Math.max(1, text.replace(/\n$/, '').split('\n').length);
   };
-  const place = (first: Blockly.Block | null, start: number): number => {
+  const place = (first: Block | null, start: number): number => {
     let line = start;
     for (let b = first; b !== null; b = b.getNextBlock()) {
       map.set(b.id, line);

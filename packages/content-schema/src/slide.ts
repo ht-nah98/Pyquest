@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const WidgetSchema = z.object({
-  kind: z.enum(['sampleGame', 'gravity', 'roadmapBuilder', 'grid']),
+  kind: z.enum(['sampleGame', 'gravity', 'roadmapBuilder', 'grid', 'flipbook', 'assetPicker']),
   props: z.record(z.string(), z.unknown()).optional(),
 });
 

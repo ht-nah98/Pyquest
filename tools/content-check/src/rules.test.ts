@@ -124,6 +124,12 @@ describe('checkContent', () => {
     ).toContain('nope');
   });
 
+  test('code the block editor would change is reported (rule 9)', async () => {
+    const l = lesson();
+    (l['code'] as { starter: Record<string, string> }).starter = { 'main.py': "draw_bird(1,2)\n" };
+    expect((await checkContent(input(l), py)).join('\n')).toMatch(/round trip/);
+  });
+
   test('stray files are reported', async () => {
     const i = input(lesson());
     i.strayFiles = ['courses/c/.omc/state.json'];

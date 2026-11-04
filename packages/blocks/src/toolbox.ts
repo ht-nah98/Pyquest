@@ -22,17 +22,65 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
 };
 
 export type ToolboxEntry = { kind: 'block'; type: string; inputs?: Record<string, object> };
-export type Toolbox = { kind: 'flyoutToolbox'; contents: ToolboxEntry[] };
+export type ToolboxCategory = {
+  kind: 'category';
+  name: string;
+  colour: string;
+  contents: ToolboxEntry[];
+};
+export type Toolbox =
+  | { kind: 'flyoutToolbox'; contents: ToolboxEntry[] }
+  | { kind: 'categoryToolbox'; contents: ToolboxCategory[] };
 
-/** A flyout with exactly the blocks a lesson allows, in the lesson's order. */
-export function toolboxFor(ids: readonly string[]): Toolbox {
+/** Category of each block, in the order the categories appear. Colours match defs.ts families. */
+const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
+  {
+    name: 'Vẽ',
+    colour: '210',
+    types: [
+      'pq_clear',
+      'pq_draw_bird',
+      'pq_draw_sprite',
+      'pq_use_sprite',
+      'pq_draw_rect',
+      'pq_draw_text',
+      'pq_print',
+    ],
+  },
+  { name: 'Biến', colour: '330', types: ['pq_assign', 'pq_aug', 'pq_var_get', 'pq_global'] },
+  { name: 'Lặp', colour: '30', types: ['pq_for', 'pq_for_range'] },
+  {
+    name: 'Điều kiện',
+    colour: '260',
+    types: ['pq_if', 'pq_if_else', 'pq_compare', 'pq_logic', 'pq_key_pressed'],
+  },
+  { name: 'Lệnh tự đặt', colour: '290', types: ['pq_def'] },
+  { name: 'Số và chữ', colour: '160', types: ['pq_number', 'pq_text', 'pq_arith', 'pq_random'] },
+];
+
+/** Up to this many blocks: one flyout. More: categories, so the flyout never pushes the workspace away. */
+const FLYOUT_MAX = 6;
+
+function entry(type: string): ToolboxEntry {
   const known: readonly string[] = BLOCK_TYPES;
-  return {
-    kind: 'flyoutToolbox',
-    contents: ids.map((type) => {
-      if (!known.includes(type)) throw new Error(`unknown block "${type}" in toolbox`);
-      const inputs = DEFAULT_INPUTS[type];
-      return inputs === undefined ? { kind: 'block', type } : { kind: 'block', type, inputs };
-    }),
-  };
+  if (!known.includes(type)) throw new Error(`unknown block "${type}" in toolbox`);
+  const inputs = DEFAULT_INPUTS[type];
+  return inputs === undefined ? { kind: 'block', type } : { kind: 'block', type, inputs };
+}
+
+/** The toolbox for a lesson: exactly the blocks it allows. */
+export function toolboxFor(ids: readonly string[]): Toolbox {
+  const entries = ids.map(entry);
+  if (ids.length <= FLYOUT_MAX) return { kind: 'flyoutToolbox', contents: entries };
+  const contents: ToolboxCategory[] = [];
+  for (const cat of CATEGORIES) {
+    const inCat = cat.types.filter((t) => ids.includes(t)).map(entry);
+    if (inCat.length > 0)
+      contents.push({ kind: 'category', name: cat.name, colour: cat.colour, contents: inCat });
+  }
+  const placed = new Set(CATEGORIES.flatMap((c) => c.types));
+  const rest = ids.filter((t) => !placed.has(t)).map(entry);
+  if (rest.length > 0)
+    contents.push({ kind: 'category', name: 'Khác', colour: '60', contents: rest });
+  return { kind: 'categoryToolbox', contents };
 }

@@ -3,5 +3,129 @@
   "courseId": "bay-qua-khe",
   "order": 4,
   "title": "Tính rồi gán lại",
-  "hidden": true
+  "draft": true,
+  "summary": "y = y + 100: lấy số cũ, tính ra số mới, cất lại vào hộp.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l04-step",
+          "title": "Đi từng bước",
+          "text": "Chim muốn đi xuống. Vị trí mới = vị trí cũ + một bước. Trong Python viết: y = y + 100.",
+          "coachNotes": "Cho một bé đứng lên bước từng bước trên sàn kẻ ô; lớp đọc số ô sau mỗi bước."
+        },
+        {
+          "id": "l04-order",
+          "title": "Máy tính tính bên phải trước",
+          "text": "Với y = y + 100, máy tính lấy số đang trong hộp y, cộng thêm 100, rồi cất kết quả lại vào hộp y.",
+          "coachNotes": "Viết: y đang là 100. y = y + 100 → bên phải là 100 + 100 = 200 → cất 200 vào y."
+        },
+        {
+          "id": "l04-quiz",
+          "quiz": {
+            "question": "y đang là 150. Chạy y = y + 100. Bây giờ y là bao nhiêu?",
+            "choices": [
+              "100",
+              "150",
+              "250"
+            ],
+            "answer": 2,
+            "explain": "Bên phải: 150 + 100 = 250, rồi cất 250 vào y."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l04-plan",
+          "title": "Phác ra giấy",
+          "text": "Em muốn 3 con chim xếp dọc, cách nhau 100. Con đầu ở y = 100. Hai con sau ở y bao nhiêu?",
+          "coachNotes": "Đáp án: 200 và 300. Cho bé ghi ra giấy trước khi code."
+        },
+        {
+          "id": "l04-quiz-plan",
+          "quiz": {
+            "question": "Bắt đầu y = 100, cộng 100 hai lần. Con chim cuối ở y bao nhiêu?",
+            "choices": [
+              "200",
+              "300",
+              "400"
+            ],
+            "answer": 1,
+            "explain": "100 → 200 → 300."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l04-code",
+          "title": "Ba con chim xếp dọc",
+          "text": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l04-try",
+          "title": "Đổi bước nhảy",
+          "text": "Chạy thử. Đổi 100 thành 50: các chim xích lại gần nhau. Python còn cách viết ngắn: y += 100 cũng là y = y + 100."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "y = 100\ndraw_bird(100, y)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_assign",
+      "pq_var_get",
+      "pq_number",
+      "pq_arith",
+      "pq_aug",
+      "pq_draw_bird",
+      "pq_clear",
+      "pq_text"
+    ],
+    "mode": "script",
+    "goals": [
+      {
+        "id": "l04-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l04-g-three",
+        "label": "Vẽ 3 con chim",
+        "kind": "drewCount",
+        "sprite": "bird",
+        "min": 3
+      },
+      {
+        "id": "l04-g-y",
+        "label": "Cuối cùng y là 300",
+        "kind": "varEquals",
+        "name": "y",
+        "value": 300
+      }
+    ],
+    "solution": {
+      "main.py": "y = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
+    },
+    "hints": [
+      "Sau mỗi lần vẽ, thêm dòng y = y + 100.",
+      "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."
+    ]
+  },
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
 }

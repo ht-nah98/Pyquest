@@ -78,6 +78,7 @@ function meets(goal: Goal, r: RunResult): boolean {
         (e) =>
           e.t === 'sprite' &&
           e.sprite === goal.sprite &&
+          (goal.customImage !== true || e.asset !== undefined) &&
           (goal.at === undefined ||
             (Math.abs(e.x - goal.at[0]) <= tolerance && Math.abs(e.y - goal.at[1]) <= tolerance)),
       );

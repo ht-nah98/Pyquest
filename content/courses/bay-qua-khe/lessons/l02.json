@@ -3,5 +3,152 @@
   "courseId": "bay-qua-khe",
   "order": 2,
   "title": "Hộp đựng số",
-  "hidden": true
+  "draft": true,
+  "summary": "Biến là cái hộp có tên để máy tính nhớ vị trí của chim.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l02-box",
+          "title": "Biến là cái hộp có tên",
+          "text": "Muốn nhớ chim đang ở đâu, máy tính cất số vào những cái hộp có tên. Hộp x cất vị trí ngang, hộp y cất vị trí dọc. Cái hộp đó gọi là biến.",
+          "coachNotes": "Vẽ hai cái hộp lên bảng, ghi tên x và y. Hỏi lớp: vì sao game cần nhớ vị trí chim? (vì chim di chuyển, mỗi lúc một chỗ)."
+        },
+        {
+          "id": "l02-assign",
+          "title": "Dấu = nghĩa là \"cất vào\"",
+          "text": "x = 100 không phải \"x bằng 100\" như trong vở toán. Nó nghĩa là: cất số 100 vào hộp x. Cất số mới vào thì số cũ bị thay mất.",
+          "coachNotes": "Diễn: bỏ một tờ giấy ghi 100 vào hộp x, rồi bỏ tờ 250 vào: tờ 100 bị lấy ra. Máy tính chạy từ trên xuống dưới."
+        },
+        {
+          "id": "l02-quiz-last",
+          "quiz": {
+            "question": "Chạy hai dòng x = 100 rồi x = 250. Hộp x đang cất số nào?",
+            "choices": [
+              "100",
+              "250",
+              "350"
+            ],
+            "answer": 1,
+            "explain": "Dòng sau cất số 250 vào hộp x, thay chỗ số 100."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l02-names",
+          "title": "Đặt tên cho dễ hiểu",
+          "text": "Tên biến viết thường, không dấu, không khoảng trắng; nối các chữ bằng dấu gạch dưới: bird_x, speed. Tên rõ nghĩa giúp một tuần sau em đọc lại vẫn hiểu.",
+          "coachNotes": "Cho lớp đặt tên cho: điểm số, tốc độ rơi, vị trí cột. Gợi ý: score, speed, pipe_x."
+        },
+        {
+          "id": "l02-quiz-name",
+          "quiz": {
+            "question": "Tên biến nào viết đúng trong Python?",
+            "choices": [
+              "vị trí",
+              "bird y",
+              "bird_y"
+            ],
+            "answer": 2,
+            "explain": "Tên biến không có dấu tiếng Việt và không có khoảng trắng; dùng dấu gạch dưới _ để nối."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l02-code",
+          "title": "Vẽ chim bằng biến",
+          "text": "Đặt x = 100 và y = 200, rồi vẽ chim bằng draw_bird(x, y). Lệnh vẽ sẽ lấy số trong hộp x và hộp y.",
+          "coachNotes": "Cho bé nhìn ô giá trị biến dưới sân chơi sau khi chạy: đó là bên trong các cái hộp."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l02-try",
+          "title": "Đổi số trong hộp",
+          "text": "Chạy thử. Ô dưới sân chơi cho em xem trong hộp đang có gì. Thử thêm dòng print(x) để chim nói giá trị của x."
+        },
+        {
+          "id": "l02-quiz-move",
+          "quiz": {
+            "question": "Muốn chim sang phải 50 bước mà không sửa dòng draw_bird, em sửa ở đâu?",
+            "choices": [
+              "Sửa dòng x = …",
+              "Sửa dòng draw_bird",
+              "Không sửa được"
+            ],
+            "answer": 0,
+            "explain": "Lệnh vẽ đọc số trong hộp x, nên chỉ cần cất số mới vào x."
+          }
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "x = 0\ny = 0\ndraw_bird(x, y)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_assign",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird",
+      "pq_print",
+      "pq_text",
+      "pq_clear"
+    ],
+    "mode": "script",
+    "goals": [
+      {
+        "id": "l02-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l02-g-x",
+        "label": "Hộp x cất 100",
+        "kind": "varEquals",
+        "name": "x",
+        "value": 100
+      },
+      {
+        "id": "l02-g-y",
+        "label": "Hộp y cất 200",
+        "kind": "varEquals",
+        "name": "y",
+        "value": 200
+      },
+      {
+        "id": "l02-g-bird",
+        "label": "Chim ở (100, 200)",
+        "kind": "drew",
+        "sprite": "bird",
+        "at": [
+          100,
+          200
+        ]
+      }
+    ],
+    "solution": {
+      "main.py": "x = 100\ny = 200\ndraw_bird(x, y)\n"
+    },
+    "hints": [
+      "Sửa số 0 ở dòng x = 0 và y = 0.",
+      "x = 100 rồi y = 200; dòng draw_bird(x, y) giữ nguyên."
+    ]
+  },
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
 }

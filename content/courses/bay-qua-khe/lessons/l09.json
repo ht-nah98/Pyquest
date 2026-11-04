@@ -3,5 +3,139 @@
   "courseId": "bay-qua-khe",
   "order": 9,
   "title": "Nút bay",
-  "hidden": true
+  "draft": true,
+  "summary": "Bấm thì tốc độ thành số âm: chim vọt lên.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l09-up",
+          "title": "Bay lên là tốc độ âm",
+          "text": "y nhỏ là ở trên. Muốn chim vọt lên, cho speed thành số âm, ví dụ -8. Trọng lực vẫn cộng 0.5 mỗi khung, nên chim lên chậm dần rồi lại rơi.",
+          "widget": {
+            "kind": "gravity"
+          },
+          "coachNotes": "Ghi bảng: speed -8, -7.5, -7… 0, 0.5, 1… → chim lên, khựng lại, rồi rơi. Đường bay cong."
+        },
+        {
+          "id": "l09-key",
+          "title": "Hỏi bàn phím",
+          "text": "key_pressed() trả lời True khi em đang bấm Space hoặc chạm màn hình. Kết hợp với if: if key_pressed(): speed = -8.",
+          "coachNotes": "Đây là sự kiện: chương trình phản ứng với người chơi."
+        },
+        {
+          "id": "l09-quiz",
+          "quiz": {
+            "question": "speed = -8 rồi y = y + speed. Chim đi đâu?",
+            "choices": [
+              "Lên trên",
+              "Xuống dưới",
+              "Đứng yên"
+            ],
+            "answer": 0,
+            "explain": "Cộng số âm là trừ: y nhỏ đi nên chim lên trên."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l09-feel",
+          "title": "Cảm giác vỗ cánh",
+          "text": "-8 có vừa không? -4 thì nhảy lè tè, -15 thì vọt mất khỏi màn hình. Nhà làm game thật chỉnh con số này rất lâu.",
+          "coachNotes": "Cho mỗi bé chọn một số, chơi thử rồi so sánh. Không có đáp án duy nhất."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l09-code",
+          "title": "Thêm nút bay",
+          "text": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l09-try",
+          "title": "Chơi thử!",
+          "text": "Bấm ⛶ toàn màn hình, nhấn Space để bay. Chỉnh -8 và 0.5 tới khi em thấy chơi \"sướng tay\" nhất."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_def",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird",
+      "pq_clear",
+      "pq_text",
+      "pq_if",
+      "pq_compare",
+      "pq_draw_rect",
+      "pq_key_pressed"
+    ],
+    "mode": "game",
+    "goals": [
+      {
+        "id": "l09-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l09-g-flap",
+        "label": "Bấm thì chim bay lên",
+        "kind": "risesAfterTap",
+        "sprite": "bird",
+        "taps": [
+          40,
+          60
+        ]
+      },
+      {
+        "id": "l09-g-ground",
+        "label": "Vẫn không chìm qua đất",
+        "kind": "staysWithin",
+        "sprite": "bird",
+        "axis": "y",
+        "max": 480
+      }
+    ],
+    "solution": {
+      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+    },
+    "hints": [
+      "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",
+      "Bên trong: speed = -8.",
+      "if key_pressed():\n    speed = -8"
+    ],
+    "test": {
+      "frames": 90,
+      "taps": [
+        40,
+        60
+      ]
+    }
+  },
+  "unlocksRoadmap": [
+    "flap"
+  ],
+  "docsUnlocked": []
 }

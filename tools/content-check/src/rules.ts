@@ -1,4 +1,4 @@
-import { BLOCK_TYPES } from '@pyquest/blocks';
+import { BLOCK_TYPES, registerBlocks, toPython, treeToState } from '@pyquest/blocks';
 import { checkGoals, runGameTest } from '@pyquest/checker';
 import {
   AssetManifestSchema,
@@ -131,6 +131,18 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
   for (const goal of code.goals) {
     if (goal.kind === 'drew' && !ctx.assetIds.has(goal.sprite)) {
       ctx.err(where, `goal ${goal.id} sprite "${goal.sprite}" is not in the asset library`);
+    }
+  }
+
+  // Rule 9: what the lesson ships must survive code → blocks → code unchanged, or the editor would
+  // rewrite it the moment the child touches a block.
+  registerBlocks();
+  for (const [kind, files] of [['starter', code.starter], ['solution', code.solution]] as const) {
+    const source = files[code.main] ?? '';
+    const tree = ctx.py.parseBlocks(source);
+    const back = tree.ok ? toPython(treeToState(tree.statements)) : null;
+    if (back === null || back.trimEnd() !== source.trimEnd()) {
+      ctx.err(where, `${kind} code does not survive the blocks round trip`);
     }
   }
 

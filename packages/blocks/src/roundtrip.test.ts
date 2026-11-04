@@ -44,6 +44,7 @@ describe('Python → blocks → Python', () => {
     'if y >= 520:\n    y = 520\nelse:\n    y = y + 2',
     'def update():\n    global y\n    y += 2',
     'def draw():\n    clear("skyblue")\n    draw_bird(100, y)',
+    'y = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    draw_bird(100, y)',
     'if key_pressed():\n    speed = -8',
     'x = random_int(1, 5)\nx += 1',
     'draw_sprite("pipe", 200, 300)\ndraw_text("0", 200, 60)',
@@ -91,7 +92,16 @@ describe('lineMap and toolbox', () => {
 
   test('toolboxFor lists only the allowed blocks, in order', () => {
     const tb = toolboxFor(['pq_draw_bird', 'pq_number']);
-    expect(tb.contents.map((c) => c.type)).toEqual(['pq_draw_bird', 'pq_number']);
+    expect(tb.kind).toBe('flyoutToolbox');
+    if (tb.kind === 'flyoutToolbox') expect(tb.contents.map((c) => c.type)).toEqual(['pq_draw_bird', 'pq_number']);
+  });
+
+  test('more than 6 blocks become a category toolbox, grouped by family in a fixed order', () => {
+    const tb = toolboxFor(['pq_draw_bird', 'pq_if', 'pq_assign', 'pq_for', 'pq_def', 'pq_number', 'pq_compare']);
+    expect(tb.kind).toBe('categoryToolbox');
+    if (tb.kind !== 'categoryToolbox') return;
+    expect(tb.contents.map((c) => c.name)).toEqual(['Vẽ', 'Biến', 'Lặp', 'Điều kiện', 'Lệnh tự đặt', 'Số và chữ']);
+    expect(tb.contents.find((c) => c.name === 'Điều kiện')?.contents.map((b) => b.type)).toEqual(['pq_if', 'pq_compare']);
   });
 
   test('toolboxFor rejects an unknown block id', () => {

@@ -1,10 +1,12 @@
-import * as Blockly from 'blockly/core';
+import { Blockly, type Block } from './blockly';
 
 /** Block colours by family, so a child links a colour with a kind of command. */
 const DRAW = 210;
 const VALUE = 160;
 const VARIABLE = 330;
 const RAW = 60;
+const BLANK = '#c8ccd4';
+const COMMENT = '#8fb996';
 const LOOP = 30;
 const CONDITION = 260;
 const FUNCTION = 290;
@@ -313,6 +315,9 @@ const JSON_DEFS = [
       { type: 'input_dummy' },
       { type: 'input_statement', name: 'BODY' },
     ],
+    // A file is one stack of statements (variables, then def update, then def draw…), so def chains too.
+    previousStatement: null,
+    nextStatement: null,
     colour: FUNCTION,
     tooltip:
       'def tên(): gom các lệnh lại dưới một cái tên. update() và draw() được gọi mỗi khung hình.',
@@ -327,7 +332,7 @@ const JSON_DEFS = [
   },
 ];
 
-type RawBlock = Blockly.Block & { code: string; renderLines(): void };
+type RawBlock = Block & { code: string; renderLines(): void };
 
 /** "Code chữ": a statement we have no block for, shown line by line and kept exactly (ADR 0003). */
 const RAW_BLOCK = {
@@ -341,7 +346,14 @@ const RAW_BLOCK = {
   },
   renderLines(this: RawBlock) {
     for (const input of [...this.inputList]) this.removeInput(input.name);
-    const lines = this.code === '' ? [''] : this.code.split('\n');
+    // A blank line or a comment is not code to worry about: show it quietly.
+    if (this.code.trim() === '') {
+      this.setColour(BLANK);
+      this.appendDummyInput('L0').appendField(new Blockly.FieldLabelSerializable('dòng trống'));
+      return;
+    }
+    this.setColour(this.code.trimStart().startsWith('#') ? COMMENT : RAW);
+    const lines = this.code.split('\n');
     lines.forEach((line, i) => {
       this.appendDummyInput(`L${String(i)}`).appendField(
         new Blockly.FieldLabelSerializable(line.replace(/ /g, ' ')),
@@ -370,6 +382,6 @@ export function registerBlocks(): void {
 }
 
 /** The raw block's code, for the generator. */
-export function rawCode(block: Blockly.Block): string {
+export function rawCode(block: Block): string {
   return (block as RawBlock).code;
 }

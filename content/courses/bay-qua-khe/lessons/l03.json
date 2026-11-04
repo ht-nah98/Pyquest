@@ -3,5 +3,128 @@
   "courseId": "bay-qua-khe",
   "order": 3,
   "title": "Chuẩn bị nhân vật",
-  "hidden": true
+  "draft": true,
+  "summary": "File, thư mục, đường dẫn: chọn nhân vật cho game của em.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l03-files",
+          "title": "Mọi thứ đều là file",
+          "text": "Ảnh, nhạc, code của em đều được máy tính cất trong file. File được xếp vào thư mục, giống vở được xếp vào ngăn cặp.",
+          "coachNotes": "Mở thư mục trên máy tính thật cho lớp xem: thư mục chứa thư mục con, chứa file. Đuôi .png là ảnh, .py là code Python."
+        },
+        {
+          "id": "l03-path",
+          "title": "Đường dẫn là đường đi tới file",
+          "text": "images/bird-cu.png nghĩa là: vào thư mục images, lấy file bird-cu.png. Dấu / ngăn tên thư mục với tên file.",
+          "coachNotes": "Viết lên bảng: du-an-cua-em / images / bird-cu.png. Cho bé đọc to từng chặng."
+        },
+        {
+          "id": "l03-quiz-path",
+          "quiz": {
+            "question": "Đường dẫn images/bird-vet.png chỉ tới đâu?",
+            "choices": [
+              "File bird-vet.png trong thư mục images",
+              "Thư mục bird-vet trong file images",
+              "Một đoạn code"
+            ],
+            "answer": 0,
+            "explain": "Phần trước dấu / là thư mục, phần sau là tên file."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l03-pick-idea",
+          "title": "Chọn nhân vật hợp với game",
+          "text": "Nhân vật nên nổi trên nền trời, nhìn rõ hướng bay sang phải. Em thích nhân vật nào? Vì sao?",
+          "coachNotes": "Cho bé nói lý do chọn: màu nổi trên nền, dễ thấy cánh vỗ. Không có đáp án sai."
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "l03-library",
+          "title": "Chọn ảnh trong kho",
+          "text": "Bấm chọn một nhân vật. Xem ảnh nằm ở đâu trong dự án và đường dẫn tới nó. Em sẽ cần đường dẫn này khi viết code.",
+          "widget": {
+            "kind": "assetPicker",
+            "props": {
+              "group": "bird"
+            }
+          },
+          "coachNotes": "Kho hình do HLV sinh bằng AI. Hỏi: nếu gõ sai một chữ trong đường dẫn thì sao? (máy không tìm thấy file)."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l03-code",
+          "title": "Dùng ảnh bằng đường dẫn",
+          "text": "Thêm dòng use_sprite(\"bird\", \"images/bird-cu.png\") lên đầu, thay bird-cu bằng tên ảnh em chọn. Lệnh này đổi hình của chim.",
+          "coachNotes": "Cố tình gõ sai đường dẫn để lớp thấy thông báo \"Không tìm thấy file\": lỗi này rất hay gặp khi làm phần mềm thật."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l03-try",
+          "title": "Thử nhiều nhân vật",
+          "text": "Chạy thử. Đổi sang ảnh khác chỉ bằng cách sửa đường dẫn. Thử gõ sai một chữ trong đường dẫn xem máy báo gì."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "x = 100\ny = 300\ndraw_bird(x, y)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_use_sprite",
+      "pq_text",
+      "pq_assign",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird"
+    ],
+    "mode": "script",
+    "goals": [
+      {
+        "id": "l03-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l03-g-bird",
+        "label": "Chim dùng ảnh em chọn",
+        "kind": "drew",
+        "sprite": "bird",
+        "customImage": true
+      }
+    ],
+    "solution": {
+      "main.py": "use_sprite(\"bird\", \"images/bird-cu.png\")\nx = 100\ny = 300\ndraw_bird(x, y)\n"
+    },
+    "hints": [
+      "Kéo khối \"dùng ảnh … cho …\" lên trên cùng.",
+      "Đường dẫn bắt đầu bằng images/ và kết thúc bằng .png.",
+      "Ví dụ: use_sprite(\"bird\", \"images/bird-vet.png\")"
+    ]
+  },
+  "unlocksRoadmap": [
+    "bird"
+  ],
+  "docsUnlocked": []
 }

@@ -11,6 +11,8 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     sprite: z.string().min(1),
     at: z.tuple([z.number(), z.number()]).optional(),
     tolerance: z.number().nonnegative().optional(),
+    /** The sprite must be drawn with a picture chosen by use_sprite (Bài 3). */
+    customImage: z.boolean().optional(),
   }),
   z.object({
     ...base,

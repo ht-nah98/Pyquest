@@ -3,5 +3,140 @@
   "courseId": "bay-qua-khe",
   "order": 8,
   "title": "Nếu… thì…",
-  "hidden": true
+  "draft": true,
+  "summary": "if y > 480: chạm đất thì dừng lại.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l08-rule",
+          "title": "Luật của game",
+          "text": "Game nào cũng có luật: nếu chạm đất thì dừng, nếu đụng cột thì thua. Python viết luật bằng if: nếu điều kiện đúng thì làm các dòng thụt vào bên dưới.",
+          "coachNotes": "Hỏi lớp luật trong trò chơi quen thuộc: nếu… thì…"
+        },
+        {
+          "id": "l08-compare",
+          "title": "So sánh",
+          "text": "y > 480 hỏi: y có lớn hơn 480 không? Câu trả lời là True (đúng) hoặc False (sai). Còn có <, >=, <=, == (bằng), != (khác).",
+          "coachNotes": "== là so sánh, = là cất vào hộp. Đây là lỗi rất hay gặp."
+        },
+        {
+          "id": "l08-quiz",
+          "quiz": {
+            "question": "y = 500. Điều kiện y > 480 là gì?",
+            "choices": [
+              "True (đúng)",
+              "False (sai)"
+            ],
+            "answer": 0,
+            "explain": "500 lớn hơn 480."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l08-ground",
+          "title": "Mặt đất ở đâu?",
+          "text": "Mặt đất bắt đầu ở y = 520. Chim cao 40, nên khi y = 480 thì chân chim vừa chạm đất. Vượt quá 480 là chìm xuống đất.",
+          "coachNotes": "Vẽ chim là hình chữ nhật cao 40 trên lưới: góc trên ở y, đáy ở y + 40."
+        },
+        {
+          "id": "l08-quiz-fix",
+          "quiz": {
+            "question": "Chim lỡ xuống y = 490. Nên làm gì?",
+            "choices": [
+              "Kéo y về 480 và cho speed = 0",
+              "Cho speed lớn hơn",
+              "Không làm gì"
+            ],
+            "answer": 0,
+            "explain": "Đặt lại đúng mặt đất và ngừng rơi."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l08-code",
+          "title": "Chạm đất thì dừng",
+          "text": "Trong update(), sau y = y + speed, thêm: if y > 480: rồi hai dòng thụt vào: y = 480 và speed = 0."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l08-try",
+          "title": "Xem chim đáp đất",
+          "text": "Chạy toàn màn hình. Chim có đáp đúng mặt cỏ không? Nếu chìm hoặc lơ lửng, chỉnh số 480."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_def",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird",
+      "pq_clear",
+      "pq_text",
+      "pq_if",
+      "pq_compare",
+      "pq_draw_rect"
+    ],
+    "mode": "game",
+    "goals": [
+      {
+        "id": "l08-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l08-g-fall",
+        "label": "Chim đi xuống",
+        "kind": "moves",
+        "sprite": "bird",
+        "axis": "y",
+        "dir": 1
+      },
+      {
+        "id": "l08-g-ground",
+        "label": "Không chìm qua mặt đất",
+        "kind": "staysWithin",
+        "sprite": "bird",
+        "axis": "y",
+        "max": 480
+      }
+    ],
+    "solution": {
+      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+    },
+    "hints": [
+      "Dùng khối \"nếu … thì\" với điều kiện y > 480.",
+      "Bên trong: y = 480 và speed = 0.",
+      "if y > 480:\n    y = 480\n    speed = 0"
+    ],
+    "test": {
+      "frames": 90,
+      "taps": []
+    }
+  },
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
 }

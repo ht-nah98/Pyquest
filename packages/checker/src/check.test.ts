@@ -44,6 +44,13 @@ describe('checkGoals', () => {
     expect(one({ id: 'g', label: 'l', kind: 'drew', sprite: 'bird' }, ok)).toBe(true);
   });
 
+  test('drew with customImage needs a picture chosen by use_sprite', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'drew', sprite: 'bird', customImage: true };
+    expect(one(g, ok)).toBe(false);
+    const swapped: RunResult = { ...ok, events: [{ t: 'sprite', sprite: 'bird', asset: 'bird-cu', x: 1, y: 2, frame: 0 }] };
+    expect(one(g, swapped)).toBe(true);
+  });
+
   test('varEquals for numbers and text', () => {
     expect(one({ id: 'g', label: 'l', kind: 'varEquals', name: 'x', value: 100 }, ok)).toBe(true);
     expect(one({ id: 'g', label: 'l', kind: 'varEquals', name: 'name', value: 'Lửa' }, ok)).toBe(

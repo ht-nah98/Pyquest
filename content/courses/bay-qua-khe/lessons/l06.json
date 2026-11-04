@@ -3,5 +3,136 @@
   "courseId": "bay-qua-khe",
   "order": 6,
   "title": "Hoạt hình là gì",
-  "hidden": true
+  "draft": true,
+  "summary": "Game vẽ lại mỗi khung hình: update() đổi số, draw() vẽ lại.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l06-flip",
+          "title": "Phim là nhiều ảnh tĩnh",
+          "text": "Phim hoạt hình là nhiều ảnh, mỗi ảnh khác nhau một chút, chiếu thật nhanh. Mỗi ảnh gọi là một khung hình. Bấm Chiếu rồi kéo tốc độ lên xem.",
+          "widget": {
+            "kind": "flipbook"
+          },
+          "coachNotes": "Hoạt động giấy: cho bé làm sách lật 8 trang ở góc vở, vẽ chấm tròn thấp dần. Lật nhanh → chấm rơi."
+        },
+        {
+          "id": "l06-loop",
+          "title": "Vòng lặp của game",
+          "text": "Game làm đi làm lại 60 lần mỗi giây: update() đổi các con số (chim xuống một chút), rồi draw() xóa và vẽ lại tất cả.",
+          "coachNotes": "Vẽ vòng tròn lên bảng: update → draw → update → draw… Nền tảng PyQuest tự gọi hai lệnh này cho em."
+        },
+        {
+          "id": "l06-quiz",
+          "quiz": {
+            "question": "Chim trông như đang rơi là nhờ đâu?",
+            "choices": [
+              "Mỗi khung hình y tăng một chút rồi vẽ lại",
+              "Ảnh chim tự chạy",
+              "Vẽ thật nhiều chim cùng lúc"
+            ],
+            "answer": 0,
+            "explain": "update() tăng y, draw() vẽ lại ở chỗ mới. Nhanh quá nên mắt thấy như chuyển động."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l06-def",
+          "title": "Tự đặt lệnh với def",
+          "text": "def update(): gom các dòng thụt vào bên dưới thành một lệnh tên update. Muốn update đổi hộp y nằm bên ngoài, dòng đầu phải viết global y.",
+          "coachNotes": "global: \"dùng hộp y chung của cả chương trình\". Quên global thì Python báo lỗi."
+        },
+        {
+          "id": "l06-quiz-speed",
+          "quiz": {
+            "question": "Mỗi khung hình y tăng 3, game chạy 60 khung mỗi giây. Một giây chim rơi bao xa?",
+            "choices": [
+              "3",
+              "60",
+              "180"
+            ],
+            "answer": 2,
+            "explain": "3 × 60 = 180."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l06-code",
+          "title": "Cho chim rơi",
+          "text": "Trong update(), thay pass bằng hai dòng: global y và y = y + 3. Bấm Chạy: máy tự thử 60 khung hình rồi cho em xem chim rơi.",
+          "coachNotes": "Chim rơi khỏi màn hình là đúng! Bài 8 mới làm mặt đất."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l06-try",
+          "title": "Nhanh hay chậm?",
+          "text": "Đổi 3 thành 1 rồi thành 10. Số nào trông đẹp nhất? Bấm ⛶ để xem toàn màn hình."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "y = 100\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_def",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird",
+      "pq_clear",
+      "pq_text"
+    ],
+    "mode": "game",
+    "goals": [
+      {
+        "id": "l06-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l06-g-fall",
+        "label": "Chim đi xuống",
+        "kind": "moves",
+        "sprite": "bird",
+        "axis": "y",
+        "dir": 1
+      }
+    ],
+    "solution": {
+      "main.py": "y = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+    },
+    "hints": [
+      "Trong update(), dòng đầu: global y",
+      "Dòng thứ hai: y = y + 3",
+      "Xóa dòng pass đi."
+    ],
+    "test": {
+      "frames": 60,
+      "taps": []
+    }
+  },
+  "unlocksRoadmap": [
+    "motion"
+  ],
+  "docsUnlocked": []
 }

@@ -9,8 +9,8 @@ describe('catalog', () => {
 
   test('hidden lessons stay on the roadmap but cannot be opened', () => {
     const course = catalog.course('bay-qua-khe');
-    expect(course?.lessons[5]?.hidden).toBe(true);
-    expect(catalog.openLesson('l05')).toBeUndefined();
+    expect(course?.lessons[10]?.hidden).toBe(true);
+    expect(catalog.openLesson('l10')).toBeUndefined();
     expect(catalog.openLesson('l01')?.title).toBe('Màn hình là tờ giấy kẻ ô');
   });
 

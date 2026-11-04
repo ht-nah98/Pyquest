@@ -3,5 +3,129 @@
   "courseId": "bay-qua-khe",
   "order": 7,
   "title": "Trọng lực",
-  "hidden": true
+  "draft": true,
+  "summary": "Rơi nhanh dần: mỗi khung hình tốc độ tăng thêm một chút.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l07-gravity",
+          "title": "Rơi nhanh dần",
+          "text": "Thả một quả bóng: lúc đầu chậm, càng rơi càng nhanh. Vì trọng lực làm tốc độ tăng thêm sau mỗi khoảnh khắc. Kéo thanh trượt rồi thả chim xem.",
+          "widget": {
+            "kind": "gravity"
+          },
+          "coachNotes": "Thả thật một cục tẩy. Chỉ trên màn: khoảng cách giữa các chấm giãn dần = rơi nhanh dần."
+        },
+        {
+          "id": "l07-two",
+          "title": "Hai con số",
+          "text": "Cần hai hộp: y là vị trí, speed là tốc độ. Mỗi khung hình: speed tăng 0.5 (trọng lực), rồi y tăng thêm speed.",
+          "coachNotes": "Ghi bảng 4 khung đầu: speed 0.5, 1, 1.5, 2 → y 100.5, 101.5, 103, 105. Bước càng ngày càng dài."
+        },
+        {
+          "id": "l07-quiz",
+          "quiz": {
+            "question": "speed đang là 2. Khung hình tới: speed = speed + 0.5 rồi y = y + speed. y tăng thêm bao nhiêu?",
+            "choices": [
+              "0.5",
+              "2",
+              "2.5"
+            ],
+            "answer": 2,
+            "explain": "speed thành 2.5 trước, rồi y cộng thêm 2.5."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l07-feel",
+          "title": "Trọng lực bao nhiêu thì vừa?",
+          "text": "Trọng lực nhỏ: chim bồng bềnh như trên mặt trăng. Lớn: rơi như hòn đá. Game hay cần vừa phải. Em đoán số nào?",
+          "coachNotes": "Dùng thanh trượt ở slide trước so sánh 0.2, 0.5, 1.0."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l07-code",
+          "title": "Thêm tốc độ",
+          "text": "Thêm speed = 0 ở trên cùng. Trong update(): global y, speed, rồi speed = speed + 0.5 và y = y + speed (thay cho y = y + 3)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l07-try",
+          "title": "Chỉnh trọng lực",
+          "text": "Chạy và xem toàn màn hình. Thử 0.2 và 1. Ghi lại số em thích nhất, Bài 9 sẽ cần nó."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "y = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_def",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird",
+      "pq_clear",
+      "pq_text"
+    ],
+    "mode": "game",
+    "goals": [
+      {
+        "id": "l07-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l07-g-fall",
+        "label": "Chim đi xuống",
+        "kind": "moves",
+        "sprite": "bird",
+        "axis": "y",
+        "dir": 1
+      },
+      {
+        "id": "l07-g-faster",
+        "label": "Rơi nhanh dần",
+        "kind": "speedsUp",
+        "sprite": "bird",
+        "axis": "y"
+      }
+    ],
+    "solution": {
+      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+    },
+    "hints": [
+      "Thêm dòng speed = 0 dưới dòng y = 100.",
+      "global y, speed để update đổi được cả hai hộp.",
+      "speed = speed + 0.5 rồi y = y + speed"
+    ],
+    "test": {
+      "frames": 40,
+      "taps": []
+    }
+  },
+  "unlocksRoadmap": [
+    "gravity"
+  ],
+  "docsUnlocked": []
 }

@@ -13,6 +13,8 @@ export type LessonState = {
   files: Record<string, string>;
   workspace?: object;
   roadmapOrder?: string[];
+  /** Pictures chosen in the Chuẩn bị step, by group (Bài 3). */
+  picks?: Record<string, string>;
   done: boolean;
   doneSteps: StepKind[];
 };
