@@ -2,6 +2,12 @@ import type { Goal } from '@pyquest/content-schema';
 import type { RunResult } from '@pyquest/runtime';
 import type { GoalResult } from '@pyquest/checker';
 
+/** How Python itself would print the value: True/False, text in quotes. */
+function pythonRepr(v: number | string | boolean): string {
+  if (typeof v === 'boolean') return v ? 'True' : 'False';
+  return typeof v === 'string' ? `"${v}"` : String(v);
+}
+
 /** Variable values from the last run: what replaces a log (spec §1). */
 export function VarWatch({ result }: { result: RunResult | null }) {
   const vars = Object.entries(result?.vars ?? {});
@@ -10,7 +16,7 @@ export function VarWatch({ result }: { result: RunResult | null }) {
     <div className="rounded-[8px] bg-paper-2 px-2 py-1 font-code text-sm" data-testid="var-watch">
       {vars.map(([k, v]) => (
         <span key={k} className="mr-3 inline-block">
-          {k} = <b>{typeof v === 'string' ? `"${v}"` : String(v)}</b>
+          {k} = <b>{pythonRepr(v)}</b>
         </span>
       ))}
     </div>

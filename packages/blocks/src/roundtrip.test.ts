@@ -49,6 +49,8 @@ describe('Python → blocks → Python', () => {
     'x = random_int(1, 5)\nx += 1',
     'draw_sprite("pipe", 200, 300)\ndraw_text("0", 200, 60)',
     'use_sprite("bird", "images/bird-cu.png")\ndraw_bird(100, 300)',
+    'if pipe_x + 52 < 100 and not scored:\n    score = score + 1',
+    'if x < 3 or (a if b else c):\n    pass',
     'for i in range(2):\n    for j in range(2):\n        draw_bird(i * 50, j * 50)',
     'for i in range(3):\n    # mỗi vòng một chim\n    draw_bird(i, 0)',
   ])('%j survives the round trip', (source) => {

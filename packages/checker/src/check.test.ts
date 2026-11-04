@@ -47,7 +47,10 @@ describe('checkGoals', () => {
   test('drew with customImage needs a picture chosen by use_sprite', () => {
     const g: Goal = { id: 'g', label: 'l', kind: 'drew', sprite: 'bird', customImage: true };
     expect(one(g, ok)).toBe(false);
-    const swapped: RunResult = { ...ok, events: [{ t: 'sprite', sprite: 'bird', asset: 'bird-cu', x: 1, y: 2, frame: 0 }] };
+    const swapped: RunResult = {
+      ...ok,
+      events: [{ t: 'sprite', sprite: 'bird', asset: 'bird-cu', x: 1, y: 2, frame: 0 }],
+    };
     expect(one(g, swapped)).toBe(true);
   });
 
@@ -171,5 +174,90 @@ describe('runGameTest', () => {
       { frames: 10, taps: [] },
     );
     expect(r.error?.line).toBe(3);
+  });
+});
+
+describe('more goals for lessons 12–16', () => {
+  const pipes = (ys: number[][]): RunResult => ({
+    events: ys.flatMap((frameYs) => [
+      ...frameYs.map((y) => ({ t: 'sprite', sprite: 'pipe', x: 0, y, frame: 0 }) as const),
+      { t: 'frame' } as const,
+    ]),
+    vars: {},
+    stoppedByLimit: false,
+  });
+
+  test('distinctCount: how many different values a sprite took', () => {
+    const g: Goal = {
+      id: 'g',
+      label: 'l',
+      kind: 'distinctCount',
+      sprite: 'pipe',
+      axis: 'y',
+      min: 5,
+    };
+    expect(
+      one(
+        g,
+        pipes([
+          [1, 2],
+          [1, 2],
+          [1, 2],
+        ]),
+      ),
+    ).toBe(false);
+    expect(
+      one(
+        g,
+        pipes([
+          [1, 2],
+          [3, 4],
+          [5, 6],
+        ]),
+      ),
+    ).toBe(true);
+  });
+
+  test('drewText: some text event shows exactly this text', () => {
+    const r: RunResult = {
+      events: [{ t: 'text', text: '1', x: 0, y: 0, size: 24, color: 'white' }],
+      vars: {},
+      stoppedByLimit: false,
+    };
+    expect(one({ id: 'g', label: 'l', kind: 'drewText', text: '1' }, r)).toBe(true);
+    expect(one({ id: 'g', label: 'l', kind: 'drewText', text: '2' }, r)).toBe(false);
+  });
+
+  test('staysWithin can look at a window of frames only', () => {
+    const r: RunResult = {
+      events: [300, 300, 300, 200, 100].flatMap((y) => [
+        { t: 'sprite', sprite: 'bird', x: 0, y, frame: 0 } as const,
+        { t: 'frame' } as const,
+      ]),
+      vars: {},
+      stoppedByLimit: false,
+    };
+    const g: Goal = {
+      id: 'g',
+      label: 'l',
+      kind: 'staysWithin',
+      sprite: 'bird',
+      axis: 'y',
+      min: 290,
+      max: 310,
+      frames: [0, 2],
+    };
+    expect(one(g, r)).toBe(true);
+    expect(one({ ...g, frames: [0, 4] }, r)).toBe(false);
+  });
+
+  test('varEquals works for True/False', () => {
+    const r: RunResult = { events: [], vars: { game_over: true }, stoppedByLimit: false };
+    expect(one({ id: 'g', label: 'l', kind: 'varEquals', name: 'game_over', value: true }, r)).toBe(
+      true,
+    );
+    expect(
+      one({ id: 'g', label: 'l', kind: 'varEquals', name: 'game_over', value: false }, r),
+    ).toBe(false);
   });
 });

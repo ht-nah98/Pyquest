@@ -33,6 +33,8 @@ export function SlideView({
 }) {
   const image = slide.image === undefined ? undefined : catalog.imageUrl(slide.image);
   const visual = slide.widget !== undefined || image !== undefined;
+  const groupProp = slide.widget?.props?.['group'];
+  const pickerGroup = typeof groupProp === 'string' ? groupProp : 'bird';
 
   const words = (
     <div
@@ -75,14 +77,10 @@ export function SlideView({
         {slide.widget?.kind === 'flipbook' && <Flipbook />}
         {slide.widget?.kind === 'assetPicker' && (
           <AssetPicker
-            group={
-              typeof slide.widget.props?.['group'] === 'string'
-                ? slide.widget.props['group']
-                : 'bird'
-            }
-            picked={ctx.state.picks?.['bird']}
+            group={pickerGroup}
+            picked={ctx.state.picks?.[pickerGroup]}
             onPick={(id) => {
-              ctx.update({ picks: { ...ctx.state.picks, bird: id } });
+              ctx.update({ picks: { ...ctx.state.picks, [pickerGroup]: id } });
             }}
           />
         )}

@@ -38,7 +38,10 @@ function meets(goal: Goal, r: RunResult): boolean {
       return first !== undefined && last !== undefined && (last - first) * goal.dir > 0;
     }
     case 'staysWithin': {
-      const pos = defined(track(r, goal.sprite, goal.axis));
+      const all = track(r, goal.sprite, goal.axis);
+      const pos = defined(
+        goal.frames === undefined ? all : all.slice(goal.frames[0], goal.frames[1] + 1),
+      );
       return (
         pos.length > 0 &&
         pos.every(
@@ -64,6 +67,14 @@ function meets(goal: Goal, r: RunResult): boolean {
       const avg = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
       return avg(steps.slice(-third)) > avg(steps.slice(0, third)) + 1e-9;
     }
+    case 'distinctCount': {
+      const values = new Set<number>();
+      for (const e of r.events)
+        if (e.t === 'sprite' && e.sprite === goal.sprite) values.add(e[goal.axis]);
+      return values.size >= goal.min;
+    }
+    case 'drewText':
+      return r.events.some((e) => e.t === 'text' && e.text === goal.text);
     case 'drewCount':
       return framesOf(r.events).some(
         (f) => f.filter((e) => e.t === 'sprite' && e.sprite === goal.sprite).length >= goal.min,

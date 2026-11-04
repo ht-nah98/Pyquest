@@ -15,10 +15,15 @@ _ATOMIC = (ast.Call, ast.Attribute, ast.Subscript, ast.Name, ast.Constant, ast.L
            ast.Set, ast.ListComp, ast.DictComp, ast.SetComp, ast.GeneratorExp, ast.JoinedStr)
 
 
+_BINDS_LOOSER_THAN_AND = (ast.BoolOp, ast.IfExp, ast.Lambda, ast.NamedExpr)
+
+
 def _raw_expr(src, node, nested=False):
     code = ast.get_source_segment(src, node)
-    # Inside + - * / a low-precedence expression keeps its brackets, or its meaning would change.
-    if nested and not isinstance(node, _ATOMIC):
+    # Keep the brackets an expression needs where it sits, or its meaning would change:
+    # inside + - * / anything non-atomic; inside and/or only what binds looser than "and".
+    if (nested == "logic" and isinstance(node, _BINDS_LOOSER_THAN_AND)) or (
+            nested is True and not isinstance(node, _ATOMIC)):
         code = "(" + code + ")"
     return {"type": "pq_raw_expr", "fields": {"CODE": code}}
 
@@ -48,7 +53,7 @@ def _expr(src, node, nested=False):
     if (isinstance(node, ast.BoolOp) and len(node.values) == 2
             and not any(isinstance(v, ast.BoolOp) for v in node.values)):
         return {"type": "pq_logic", "fields": {"OP": "and" if isinstance(node.op, ast.And) else "or"},
-                "inputs": {"A": _expr(src, node.values[0], True), "B": _expr(src, node.values[1], True)}}
+                "inputs": {"A": _expr(src, node.values[0], "logic"), "B": _expr(src, node.values[1], "logic")}}
     if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and not node.keywords:
         if node.func.id == "key_pressed" and not node.args:
             return {"type": "pq_key_pressed"}

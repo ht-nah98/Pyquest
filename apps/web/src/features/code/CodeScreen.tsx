@@ -15,6 +15,7 @@ import { BlockCodeSync, type SyncError } from './blockCodeSync';
 import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
 import { PythonPane, type PythonPaneHandle } from './PythonPane';
 import { ErrorBubble, VarWatch } from './RunPanel';
+import { FileTabs } from './FileTabs';
 import { TaskCard } from './TaskCard';
 
 const PARSE_DELAY_MS = 600;
@@ -48,6 +49,9 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const [running, setRunning] = useState(false);
 
   const main = code?.main ?? 'main.py';
+  // Several files (Bài 16): one is open in both panes at a time; Run always starts from main.
+  const [active, setActive] = useState(main);
+  const activeRef = useRef(main);
   const files =
     state !== null && Object.keys(state.files).length > 0 ? state.files : (code?.starter ?? {});
   const filesRef = useRef(files);
@@ -86,10 +90,13 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const saveCode = useCallback(
     (text: string) => {
       update((s) => ({
-        files: { ...(Object.keys(s.files).length > 0 ? s.files : filesRef.current), [main]: text },
+        files: {
+          ...(Object.keys(s.files).length > 0 ? s.files : filesRef.current),
+          [activeRef.current]: text,
+        },
       }));
     },
-    [update, main],
+    [update],
   );
 
   /** Rebuild the blocks from this code; a stopped worker just leaves the blocks stale until the next try. */
@@ -117,12 +124,23 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
       sync.current = s;
       // Saved blocks are only a first paint: the code is the truth, so always re-parse it (review C1).
       if (state?.workspace !== undefined) s.loadState(state.workspace);
-      reparse(filesRef.current[main] ?? '');
+      reparse(filesRef.current[activeRef.current] ?? '');
     },
     // Runs once, when Blockly is injected.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
+
+  /** Switch both panes to another file of the project. */
+  const openFile = useCallback((f: string) => {
+    if (f === activeRef.current) return;
+    activeRef.current = f;
+    setActive(f);
+    sync.current?.markCodeDirty();
+    reparse(filesRef.current[f] ?? '');
+    // reparse only touches refs and the stable update().
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onBlocksEdit = useCallback(() => {
     const s = sync.current;
@@ -163,7 +181,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
       void python
         .warmUp()
         .then(() => {
-          reparse(filesRef.current[main] ?? '');
+          reparse(filesRef.current[activeRef.current] ?? '');
         })
         .catch(() => undefined);
     }
@@ -260,13 +278,15 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             }}
           />
           <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[10px] border-2 border-ink bg-code-bg">
-            <h2 className="border-b-2 border-ink bg-paper px-3 py-1 text-base">
-              🐍 Python · {main}
+            <h2 className="flex items-center gap-1 border-b-2 border-ink bg-paper px-2 py-1 text-base">
+              <span className="px-1">🐍</span>
+              <FileTabs files={Object.keys(files)} main={main} active={active} onOpen={openFile} />
             </h2>
             <div className="relative min-h-0 flex-1">
               <PythonPane
+                key={active}
                 ref={pyPane}
-                initial={files[main] ?? ''}
+                initial={files[active] ?? ''}
                 onChange={onCodeChange}
                 onCursorLine={(line) => blocks.current?.highlightLine(line)}
               />

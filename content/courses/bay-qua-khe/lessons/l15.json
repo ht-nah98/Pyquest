@@ -3,5 +3,143 @@
   "courseId": "bay-qua-khe",
   "order": 15,
   "title": "Gói thành đối tượng",
-  "hidden": true
+  "draft": true,
+  "summary": "class Bird: gom vị trí, tốc độ và hành động của chim vào một chỗ.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l15-mess",
+          "title": "Code bắt đầu rối",
+          "text": "y, speed, cách bay, cách vẽ chim đang nằm rải rác khắp file. Thêm chim thứ hai là phải chép lại mọi thứ. Lập trình viên gom chúng lại thành một đối tượng.",
+          "coachNotes": "Mở code Bài 14, tô màu mọi dòng liên quan tới chim: rải khắp nơi."
+        },
+        {
+          "id": "l15-class",
+          "title": "class là bản thiết kế",
+          "text": "class Bird: là bản thiết kế con chim: nó biết gì (self.y, self.speed) và làm được gì (update, draw). bird = Bird() làm ra một con chim thật theo bản thiết kế.",
+          "coachNotes": "So sánh: bản vẽ ngôi nhà (class) và ngôi nhà xây xong (đối tượng). Một bản vẽ xây được nhiều nhà."
+        },
+        {
+          "id": "l15-quiz",
+          "quiz": {
+            "question": "Trong class Bird, self.y là gì?",
+            "choices": [
+              "y của chính con chim này",
+              "Một biến chung của cả game",
+              "Một lệnh vẽ"
+            ],
+            "answer": 0,
+            "explain": "self nghĩa là \"chính nó\": mỗi con chim có y riêng."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l15-split",
+          "title": "Cái gì thuộc về chim?",
+          "text": "Thuộc về chim: vị trí, tốc độ, vỗ cánh, rơi, chạm đất, tự vẽ mình. Không thuộc về chim: cột, điểm số.",
+          "coachNotes": "Cho lớp chia các dòng code Bài 14 vào hai cột: \"của chim\" và \"của game\"."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l15-code",
+          "title": "Hoàn thành Bird.update",
+          "text": "class Bird đã có sẵn __init__ và draw. Viết update(self): giống update của Bài 14, nhưng dùng self.y và self.speed thay cho y và speed."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l15-try",
+          "title": "Vẫn chơi như cũ",
+          "text": "Chạy toàn màn hình: game phải chơi y như Bài 14. Code gọn hơn nhưng người chơi không thấy khác: đó gọi là dọn code."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "GAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        pass\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_def",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird",
+      "pq_draw_sprite",
+      "pq_clear",
+      "pq_text",
+      "pq_if",
+      "pq_if_else",
+      "pq_compare",
+      "pq_logic",
+      "pq_key_pressed",
+      "pq_for",
+      "pq_draw_text",
+      "pq_random"
+    ],
+    "mode": "game",
+    "goals": [
+      {
+        "id": "l15-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l15-g-flap",
+        "label": "Bấm thì chim bay lên",
+        "kind": "risesAfterTap",
+        "sprite": "bird",
+        "taps": [
+          31,
+          62
+        ]
+      },
+      {
+        "id": "l15-g-score",
+        "label": "Vẫn ghi được điểm",
+        "kind": "varEquals",
+        "name": "score",
+        "value": 1
+      }
+    ],
+    "solution": {
+      "main.py": "GAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+    },
+    "hints": [
+      "Thay pass trong update(self) bằng code bay và rơi.",
+      "Dùng self.speed và self.y.",
+      "if key_pressed():\n    self.speed = -8\nself.speed = self.speed + 0.5\nself.y = self.y + self.speed"
+    ],
+    "test": {
+      "frames": 200,
+      "taps": [
+        0,
+        31,
+        62,
+        93,
+        124,
+        155,
+        186
+      ]
+    }
+  },
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
 }

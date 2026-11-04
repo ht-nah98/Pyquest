@@ -3,5 +3,123 @@
   "courseId": "bay-qua-khe",
   "order": 10,
   "title": "Tự đặt lệnh",
-  "hidden": true
+  "draft": true,
+  "summary": "def draw_pipe(x, gap_y): đặt tên cho một nhóm lệnh rồi dùng lại.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l10-why",
+          "title": "Một cặp cột = hai lệnh",
+          "text": "Mỗi chướng ngại gồm cột trên (lật ngược) và cột dưới, cách nhau một khe GAP. Vẽ 5 cặp là 10 dòng gần giống nhau: dễ sai, khó sửa.",
+          "coachNotes": "Cho lớp đếm: muốn đổi bề rộng khe thì phải sửa bao nhiêu chỗ?"
+        },
+        {
+          "id": "l10-def",
+          "title": "Tự đặt lệnh có tham số",
+          "text": "def draw_pipe(x, gap_y): gom hai lệnh vẽ thành một lệnh mới. x và gap_y là tham số: mỗi lần gọi, em đưa vào số khác nhau.",
+          "coachNotes": "So với Bài 1: draw_bird(x, y) cũng là một lệnh có tham số, chỉ là do PyQuest viết sẵn."
+        },
+        {
+          "id": "l10-quiz",
+          "quiz": {
+            "question": "Gọi draw_pipe(280, 250). Bên trong lệnh, gap_y bằng bao nhiêu?",
+            "choices": [
+              "280",
+              "250",
+              "150"
+            ],
+            "answer": 1,
+            "explain": "Tham số nhận số theo thứ tự: x = 280, gap_y = 250."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l10-gap",
+          "title": "Thiết kế khe cột",
+          "text": "Khe là chỗ chim bay qua. GAP = 150 vừa với chim cao 40. Khe 60 thì gần như không qua được, 300 thì quá dễ.",
+          "coachNotes": "Viết hằng số viết HOA (GAP) để biết đây là con số thiết kế, không đổi khi chạy."
+        },
+        {
+          "id": "l10-quiz-gap",
+          "quiz": {
+            "question": "Muốn game khó hơn một chút, em sửa gì?",
+            "choices": [
+              "Giảm GAP",
+              "Tăng GAP",
+              "Đổi tên draw_pipe"
+            ],
+            "answer": 0,
+            "explain": "Khe hẹp hơn thì khó luồn qua hơn."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l10-code",
+          "title": "Viết lệnh draw_pipe",
+          "text": "Đặt hai dòng vẽ cột vào trong def draw_pipe(x, gap_y):, thay 100 bằng x, 150 bằng gap_y. Rồi gọi draw_pipe hai lần với số khác nhau."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l10-try",
+          "title": "Một dòng, một cặp cột",
+          "text": "Chạy thử. Gọi thêm draw_pipe lần thứ ba. Thử đổi GAP: mọi cặp cột đổi theo, chỉ sửa một chỗ."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "GAP = 150\n\nclear(\"skyblue\")\ndraw_sprite(\"pipe\", 100, 150 - 440, flip=True)\ndraw_sprite(\"pipe\", 100, 150 + GAP)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_def",
+      "pq_draw_sprite",
+      "pq_clear",
+      "pq_text",
+      "pq_number",
+      "pq_var_get",
+      "pq_arith",
+      "pq_assign"
+    ],
+    "mode": "script",
+    "goals": [
+      {
+        "id": "l10-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l10-g-pipes",
+        "label": "Vẽ ít nhất 2 cặp cột",
+        "kind": "drewCount",
+        "sprite": "pipe",
+        "min": 4
+      }
+    ],
+    "solution": {
+      "main.py": "GAP = 150\n\n\ndef draw_pipe(x, gap_y):\n    draw_sprite(\"pipe\", x, gap_y - 440, flip=True)\n    draw_sprite(\"pipe\", x, gap_y + GAP)\n\n\nclear(\"skyblue\")\ndraw_pipe(100, 150)\ndraw_pipe(280, 250)\n"
+    },
+    "hints": [
+      "Dòng def draw_pipe(x, gap_y): rồi hai dòng vẽ thụt vào bên dưới.",
+      "Bên trong dùng x và gap_y thay cho 100 và 150.",
+      "Gọi: draw_pipe(100, 150) và draw_pipe(280, 250)"
+    ]
+  },
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
 }

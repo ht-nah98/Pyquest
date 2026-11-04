@@ -3,5 +3,135 @@
   "courseId": "bay-qua-khe",
   "order": 11,
   "title": "Nhiều cột",
-  "hidden": true
+  "draft": true,
+  "summary": "Danh sách pipes = [450, 650]: một biến giữ nhiều cột.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l11-list",
+          "title": "Danh sách",
+          "text": "pipes = [450, 650] là một danh sách: một cái hộp có nhiều ngăn đánh số. pipes[0] là ngăn đầu (450), pipes[1] là ngăn thứ hai (650).",
+          "coachNotes": "Vẽ dãy hộp liền nhau, đánh số 0, 1, 2 bên dưới. Python đếm từ 0, giống range()."
+        },
+        {
+          "id": "l11-move",
+          "title": "Băng chuyền cột",
+          "text": "Chim đứng yên ở x = 100, còn cột trượt sang trái 2 bước mỗi khung. Cột ra khỏi mép trái thì đưa nó về bên phải để dùng lại.",
+          "coachNotes": "Như băng chuyền siêu thị: hàng chạy qua, người đứng yên. Đây là mẹo của rất nhiều game chạy cảnh."
+        },
+        {
+          "id": "l11-quiz",
+          "quiz": {
+            "question": "pipes = [450, 650]. pipes[1] là bao nhiêu?",
+            "choices": [
+              "450",
+              "650",
+              "1"
+            ],
+            "answer": 1,
+            "explain": "Đếm từ 0: pipes[0] = 450, pipes[1] = 650."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l11-spacing",
+          "title": "Khoảng cách giữa các cột",
+          "text": "Hai cột cách nhau 200: đủ chỗ cho chim lấy lại độ cao. Cột ra khỏi màn ở x < -76 (bề rộng hình cột) thì cộng 400 để quay về bên phải.",
+          "coachNotes": "Cho bé tính: cột ở -78 + 400 = 322, vẫn cách cột kia 200."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l11-code",
+          "title": "Cho cột chạy",
+          "text": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l11-try",
+          "title": "Thêm cột",
+          "text": "Chạy toàn màn hình. Thêm một số vào danh sách, ví dụ [450, 650, 850], xem có thêm cột không."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": {
+      "main.py": "GAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
+    },
+    "main": "main.py",
+    "toolbox": [
+      "pq_def",
+      "pq_global",
+      "pq_assign",
+      "pq_aug",
+      "pq_arith",
+      "pq_var_get",
+      "pq_number",
+      "pq_draw_bird",
+      "pq_draw_sprite",
+      "pq_clear",
+      "pq_text",
+      "pq_if",
+      "pq_if_else",
+      "pq_compare",
+      "pq_logic",
+      "pq_key_pressed",
+      "pq_for",
+      "pq_draw_text",
+      "pq_random"
+    ],
+    "mode": "game",
+    "goals": [
+      {
+        "id": "l11-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l11-g-move",
+        "label": "Cột trượt sang trái",
+        "kind": "moves",
+        "sprite": "pipe",
+        "axis": "x",
+        "dir": -1
+      },
+      {
+        "id": "l11-g-two",
+        "label": "Có 2 cặp cột",
+        "kind": "drewCount",
+        "sprite": "pipe",
+        "min": 4
+      }
+    ],
+    "solution": {
+      "main.py": "GAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
+    },
+    "hints": [
+      "for i in range(len(pipes)): đi qua từng ngăn.",
+      "pipes[i] = pipes[i] - 2",
+      "if pipes[i] < -76:\n    pipes[i] = pipes[i] + 400"
+    ],
+    "test": {
+      "frames": 60,
+      "taps": []
+    }
+  },
+  "unlocksRoadmap": [
+    "pipes"
+  ],
+  "docsUnlocked": []
 }

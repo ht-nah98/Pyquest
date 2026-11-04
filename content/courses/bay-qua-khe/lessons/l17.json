@@ -3,5 +3,89 @@
   "courseId": "bay-qua-khe",
   "order": 17,
   "title": "Ra mắt",
-  "hidden": true
+  "draft": true,
+  "summary": "Chơi thử chéo, nhận góp ý, sửa lỗi, đặt tên và giới thiệu game của em.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l17-launch",
+          "title": "Ra mắt là gì",
+          "text": "Sản phẩm thật không dừng ở \"chạy được\". Người khác chơi thử, góp ý, rồi mình sửa. Lặp lại vài vòng mới ra mắt.",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "Kể ví dụ: game nổi tiếng nào cũng có bản thử nghiệm cho người chơi thật trước khi phát hành."
+        },
+        {
+          "id": "l17-feedback",
+          "title": "Góp ý thế nào cho có ích",
+          "text": "Nói điều mình thấy, không chê người: \"Mình thua ở cột thứ 3 vì khe hẹp quá\" có ích hơn \"game dở\".",
+          "coachNotes": "Tập nói: 1 điều em thích, 1 điều làm em bối rối, 1 gợi ý."
+        },
+        {
+          "id": "l17-quiz",
+          "quiz": {
+            "question": "Câu góp ý nào có ích nhất?",
+            "choices": [
+              "Game chán quá",
+              "Mình không biết bấm gì để bắt đầu",
+              "Tốt"
+            ],
+            "answer": 1,
+            "explain": "Câu đó chỉ ra đúng chỗ cần sửa: màn chờ chưa rõ."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l17-name",
+          "title": "Đặt tên và câu giới thiệu",
+          "text": "Đặt tên game của em, viết một câu giới thiệu không quá 12 chữ. Tên hay thì dễ nhớ và nói được game về cái gì.",
+          "coachNotes": "Mỗi bé đọc tên và câu giới thiệu trước lớp."
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "l17-look",
+          "title": "Chọn diện mạo cuối cùng",
+          "text": "Chọn nền cho bản ra mắt. Kiểm tra lại: chim, cột, chữ điểm có nổi trên nền này không?",
+          "widget": {
+            "kind": "assetPicker",
+            "props": {
+              "group": "background"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l17-swap",
+          "title": "Chơi chéo",
+          "text": "Đổi máy với bạn, chơi game của nhau 3 phút. Ghi lại: 1 điều thích, 1 điều bối rối, 1 gợi ý. Rồi về sửa game của mình.",
+          "coachNotes": "Chia cặp. Bé ghi góp ý lên giấy; HLV gom lại các lỗi chung để chữa trên bảng."
+        },
+        {
+          "id": "l17-done",
+          "title": "Em đã làm ra một sản phẩm",
+          "text": "Từ một ý tưởng, em đã thiết kế, chuẩn bị, viết code, chơi thử và sửa. Đó chính là cách người ta làm phần mềm thật!",
+          "coachNotes": "Tổng kết lộ trình: mọi phần đã sáng. Gợi ý phần nâng cao: thêm âm thanh, huy chương, nhiều nhân vật."
+        }
+      ]
+    }
+  ],
+  "unlocksRoadmap": [
+    "launch"
+  ],
+  "docsUnlocked": []
 }

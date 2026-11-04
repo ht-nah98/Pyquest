@@ -56,6 +56,7 @@ test('the coach sees draft lessons; a child does not', async ({ page, browser, b
   await kid.goto('/');
   await kid.getByTestId('nickname').fill('Lan');
   await kid.getByTestId('create').click();
+  await kid.waitForURL('**/courses');
   await kid.goto('/c/bay-qua-khe');
   await expect(kid.getByTestId('lesson-l09')).toHaveAttribute('data-status', 'hidden');
   await kidContext.close();
