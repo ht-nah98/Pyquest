@@ -161,11 +161,21 @@ describe('walkthrough and the library reference', () => {
     expect(() => parseLesson(l)).toThrow();
   });
 
-  test('a library entry needs a name, a signature, Vietnamese words and the lesson that teaches it', () => {
+  test('a library entry says what it does, why it exists and the lesson that teaches it', () => {
+    const entry = {
+      name: 'draw_rect',
+      signature: 'draw_rect(x, y, rộng, cao, màu)',
+      vi: 'Tô một khối.',
+      why: 'Tô từng điểm thì quá lâu.',
+      example: 'draw_rect(0, 0, 10, 10, "red")',
+      lesson: 'l01',
+    };
     const ok = LibraryRefSchema.parse({
-      entries: [{ name: 'draw_bird', signature: 'draw_bird(x, y)', vi: 'Vẽ chim.', example: 'draw_bird(100, 300)', lesson: 'l01' }],
+      entries: [{ ...entry, inside: '_emit gửi lệnh vẽ cho trang web.' }],
     });
-    expect(ok.entries[0]?.name).toBe('draw_bird');
+    expect(ok.entries[0]?.why).toBe('Tô từng điểm thì quá lâu.');
+    const { why: _why, ...noWhy } = entry;
+    expect(() => LibraryRefSchema.parse({ entries: [noWhy] })).toThrow();
     expect(() => LibraryRefSchema.parse({ entries: [{ name: 'x' }] })).toThrow();
   });
 });

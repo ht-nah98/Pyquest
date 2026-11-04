@@ -11,7 +11,7 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     sprite: z.string().min(1),
     at: z.tuple([z.number(), z.number()]).optional(),
     tolerance: z.number().nonnegative().optional(),
-    /** The sprite must be drawn with a picture chosen by use_sprite (Bài 3). */
+    /** A picture of the group other than the group's first one, e.g. bird-rong for "bird" (Bài 5). */
     customImage: z.boolean().optional(),
   }),
   z.object({
@@ -56,6 +56,30 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     ...base,
     kind: z.literal('speedsUp'),
     sprite: z.string().min(1),
+    axis: z.enum(['x', 'y']),
+  }),
+  // Drawing from the smallest pieces (spec 2026-11-04-from-smallest-pieces).
+  /** At least min boxes in one picture; a box covering the whole stage (a background) does not count. */
+  z.object({ ...base, kind: z.literal('drewRects'), min: z.int().positive() }),
+  /** The child's own function ran at least min times; distinct: with different arguments. */
+  z.object({
+    ...base,
+    kind: z.literal('called'),
+    name: z.string().min(1),
+    min: z.int().positive().optional(),
+    distinct: z.boolean().optional(),
+  }),
+  /** Every call of name drew the same picture, only moved: its pieces are placed from x and y. */
+  z.object({ ...base, kind: z.literal('sameShape'), name: z.string().min(1) }),
+  /**
+   * Run again with "var = n" changed to n + by: the picture moves by exactly that much on axis.
+   * Catches a bird typed with fixed numbers that only looks right.
+   */
+  z.object({
+    ...base,
+    kind: z.literal('shifts'),
+    var: z.string().min(1),
+    by: z.number(),
     axis: z.enum(['x', 'y']),
   }),
   z.object({

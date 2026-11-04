@@ -1,7 +1,7 @@
 import type { Goal } from '@pyquest/content-schema';
 import type { RunResult } from '@pyquest/runtime';
 import { describe, expect, test } from 'vitest';
-import { checkGoals, runGameTest } from './index';
+import { checkGoals, runGameTest, shiftSource } from './index';
 
 const ok: RunResult = {
   events: [
@@ -10,6 +10,7 @@ const ok: RunResult = {
   ],
   vars: { x: 100, name: 'Lửa' },
   stoppedByLimit: false,
+  calls: [],
 };
 const broken: RunResult = { ...ok, error: { line: 1, messageVi: 'lỗi', raw: 'X' } };
 
@@ -44,12 +45,21 @@ describe('checkGoals', () => {
     expect(one({ id: 'g', label: 'l', kind: 'drew', sprite: 'bird' }, ok)).toBe(true);
   });
 
-  test('drew with customImage needs a picture chosen by use_sprite', () => {
+  test('a picture matches its group: "bird" is also "bird-rong"', () => {
+    const rong: RunResult = {
+      ...ok,
+      events: [{ t: 'sprite', sprite: 'bird-rong', x: 100, y: 200, frame: 0 }],
+    };
+    expect(one({ id: 'g', label: 'l', kind: 'drew', sprite: 'bird' }, rong)).toBe(true);
+    expect(one({ id: 'g', label: 'l', kind: 'drew', sprite: 'bir' }, rong)).toBe(false);
+  });
+
+  test("drew with customImage needs a picture other than the group's first one", () => {
     const g: Goal = { id: 'g', label: 'l', kind: 'drew', sprite: 'bird', customImage: true };
     expect(one(g, ok)).toBe(false);
     const swapped: RunResult = {
       ...ok,
-      events: [{ t: 'sprite', sprite: 'bird', asset: 'bird-cu', x: 1, y: 2, frame: 0 }],
+      events: [{ t: 'sprite', sprite: 'bird-cu', x: 1, y: 2, frame: 0 }],
     };
     expect(one(g, swapped)).toBe(true);
   });
@@ -86,6 +96,7 @@ describe('game-mode goals over frames', () => {
     events: ys.flatMap((y) => frame(y)),
     vars: {},
     stoppedByLimit: false,
+    calls: [],
   });
 
   test('moves: the sprite ends lower (down) than it started', () => {
@@ -130,6 +141,7 @@ describe('game-mode goals over frames', () => {
       ),
       vars: {},
       stoppedByLimit: false,
+      calls: [],
     };
     expect(one(g, three)).toBe(true);
     expect(one({ ...g, min: 4 }, three)).toBe(false);
@@ -142,7 +154,7 @@ describe('runGameTest', () => {
     let y = 0;
     const r = await runGameTest(
       {
-        start: () => Promise.resolve({ events: [], vars: {}, stoppedByLimit: false }),
+        start: () => Promise.resolve({ events: [], vars: {}, stoppedByLimit: false, calls: [] }),
         step: (input) => {
           inputs.push(input.tapped);
           y += input.tapped ? -5 : 2;
@@ -150,6 +162,7 @@ describe('runGameTest', () => {
             events: [{ t: 'sprite', sprite: 'bird', x: 0, y, frame: 0 }, { t: 'frame' }],
             vars: { y },
             stoppedByLimit: false,
+            calls: [],
           };
         },
       },
@@ -163,11 +176,12 @@ describe('runGameTest', () => {
   test('stops at the first error', async () => {
     const r = await runGameTest(
       {
-        start: () => Promise.resolve({ events: [], vars: {}, stoppedByLimit: false }),
+        start: () => Promise.resolve({ events: [], vars: {}, stoppedByLimit: false, calls: [] }),
         step: () => ({
           events: [],
           vars: {},
           stoppedByLimit: false,
+          calls: [],
           error: { line: 3, messageVi: 'x', raw: 'E' },
         }),
       },
@@ -185,6 +199,7 @@ describe('more goals for lessons 12–16', () => {
     ]),
     vars: {},
     stoppedByLimit: false,
+    calls: [],
   });
 
   test('distinctCount: how many different values a sprite took', () => {
@@ -223,6 +238,7 @@ describe('more goals for lessons 12–16', () => {
       events: [{ t: 'text', text: '1', x: 0, y: 0, size: 24, color: 'white' }],
       vars: {},
       stoppedByLimit: false,
+      calls: [],
     };
     expect(one({ id: 'g', label: 'l', kind: 'drewText', text: '1' }, r)).toBe(true);
     expect(one({ id: 'g', label: 'l', kind: 'drewText', text: '2' }, r)).toBe(false);
@@ -236,6 +252,7 @@ describe('more goals for lessons 12–16', () => {
       ]),
       vars: {},
       stoppedByLimit: false,
+      calls: [],
     };
     const g: Goal = {
       id: 'g',
@@ -252,12 +269,115 @@ describe('more goals for lessons 12–16', () => {
   });
 
   test('varEquals works for True/False', () => {
-    const r: RunResult = { events: [], vars: { game_over: true }, stoppedByLimit: false };
+    const r: RunResult = {
+      events: [],
+      vars: { game_over: true },
+      stoppedByLimit: false,
+      calls: [],
+    };
     expect(one({ id: 'g', label: 'l', kind: 'varEquals', name: 'game_over', value: true }, r)).toBe(
       true,
     );
     expect(
       one({ id: 'g', label: 'l', kind: 'varEquals', name: 'game_over', value: false }, r),
     ).toBe(false);
+  });
+});
+
+const rect = (x: number, y: number, by?: number) =>
+  ({ t: 'rect', x, y, w: 10, h: 10, color: 'red', ...(by === undefined ? {} : { by }) }) as const;
+const bird = (x: number, y: number, by?: number) => [rect(x, y + 10, by), rect(x + 30, y + 14, by)];
+const result = (events: RunResult['events'], calls: RunResult['calls'] = []): RunResult => ({
+  events,
+  vars: {},
+  stoppedByLimit: false,
+  calls,
+});
+const call = (id: number, x: number, y: number, parent: number | null = null) => ({
+  id,
+  parent,
+  name: 'draw_bird',
+  args: { x, y },
+  line: 3,
+});
+
+describe('goals for drawing from the smallest pieces', () => {
+  test('drewRects: enough boxes in one picture, a full-stage background does not count', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'drewRects', min: 2 };
+    expect(one(g, result(bird(0, 0)))).toBe(true);
+    expect(one(g, result([rect(0, 0)]))).toBe(false);
+    const sky = { t: 'rect', x: 0, y: 0, w: 400, h: 600, color: 'blue' } as const;
+    expect(one(g, result([sky, rect(0, 0)]))).toBe(false);
+  });
+
+  test("called: the child's function ran enough times, with different numbers when asked", () => {
+    const g: Goal = {
+      id: 'g',
+      label: 'l',
+      kind: 'called',
+      name: 'draw_bird',
+      min: 2,
+      distinct: true,
+    };
+    expect(one(g, result([], [call(0, 1, 2), call(1, 5, 2)]))).toBe(true);
+    expect(one(g, result([], [call(0, 1, 2), call(1, 1, 2)]))).toBe(false);
+    expect(one(g, result([], [call(0, 1, 2)]))).toBe(false);
+    expect(
+      one({ id: 'g', label: 'l', kind: 'called', name: 'draw_bird' }, result([], [call(0, 1, 2)])),
+    ).toBe(true);
+  });
+
+  test('sameShape: every call draws the same picture, only moved', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'sameShape', name: 'draw_bird' };
+    const two = result([...bird(0, 0, 0), ...bird(100, 50, 1)], [call(0, 0, 0), call(1, 100, 50)]);
+    expect(one(g, two)).toBe(true);
+    // The beak typed as a fixed number stays behind on the second bird.
+    const stuck = result(
+      [...bird(0, 0, 0), rect(100, 60, 1), rect(30, 14, 1)],
+      [call(0, 0, 0), call(1, 100, 50)],
+    );
+    expect(one(g, stuck)).toBe(false);
+    expect(one(g, result(bird(0, 0, 0), [call(0, 0, 0)]))).toBe(false);
+  });
+
+  test('sameShape counts drawings made by calls inside the call', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'sameShape', name: 'draw_bird' };
+    const calls = [
+      call(0, 0, 0),
+      { ...call(1, 0, 0, 0), name: 'wing' },
+      call(2, 50, 0),
+      { ...call(3, 50, 0, 2), name: 'wing' },
+    ];
+    const nested = result([rect(0, 0, 0), rect(5, 5, 1), rect(50, 0, 2), rect(55, 5, 3)], calls);
+    expect(one(g, nested)).toBe(true);
+  });
+
+  test('shifts: changing the variable moves the picture by the same amount', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'shifts', var: 'x', by: 50, axis: 'x' };
+    const before = result([{ t: 'clear', color: 'sky' }, ...bird(100, 300)]);
+    expect(
+      checkGoals([g], before, result([{ t: 'clear', color: 'sky' }, ...bird(150, 300)]))[0]?.ok,
+    ).toBe(true);
+    // Fixed numbers: nothing moves.
+    expect(checkGoals([g], before, before)[0]?.ok).toBe(false);
+    // One piece moves twice as far: wrong.
+    const odd = result([{ t: 'clear', color: 'sky' }, rect(150, 310), rect(230, 314)]);
+    expect(checkGoals([g], before, odd)[0]?.ok).toBe(false);
+    // No second run (the variable line was not found): not met.
+    expect(checkGoals([g], before)[0]?.ok).toBe(false);
+  });
+});
+
+describe('shiftSource', () => {
+  test('adds to the one line that sets the variable', () => {
+    expect(shiftSource('from pyquest import *\nx = 100\ny = 3\n', 'x', 50)).toBe(
+      'from pyquest import *\nx = 150\ny = 3\n',
+    );
+  });
+
+  test('gives nothing when the line is missing or set twice', () => {
+    expect(shiftSource('y = 1\n', 'x', 5)).toBeUndefined();
+    expect(shiftSource('x = 1\nx = 2\n', 'x', 5)).toBeUndefined();
+    expect(shiftSource('x = y + 1\n', 'x', 5)).toBeUndefined();
   });
 });
