@@ -2,7 +2,7 @@
 import { PyRunner } from '@pyquest/runtime';
 import type { WorkerReply, WorkerRequest } from './protocol';
 
-// The library's picture names, so use_sprite("bird", "images/x.png") can check the path.
+// The library's picture names, so draw_image("images/x.png", …) can check the path.
 const manifests = import.meta.glob<{ assets: { id: string }[] }>(
   '@content/assets/library/manifest.json',
   {

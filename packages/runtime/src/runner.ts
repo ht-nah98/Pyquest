@@ -6,6 +6,7 @@ import { TOBLOCKS_SOURCE } from './pyquest/toblocks.py.ts';
 import type {
   BlockNode,
   BlockTree,
+  Call,
   DrawEvent,
   Files,
   GameInput,
@@ -20,6 +21,8 @@ type RawResult = {
   events: DrawEvent[];
   vars: Record<string, number | string | boolean>;
   stoppedByLimit: boolean;
+  calls: Call[];
+  callsTruncated?: true;
   error?: { type: string; msg: string; line: number | null };
 };
 
@@ -35,7 +38,7 @@ export class PyRunner {
     private readonly setAssetsFn: HostFn,
   ) {}
 
-  /** The picture names in the library, so use_sprite can check a path. */
+  /** The picture names in the library, so draw_image can check a path. */
   setAssets(ids: readonly string[]): void {
     this.setAssetsFn(JSON.stringify(ids));
   }
@@ -122,7 +125,9 @@ function toResult(json: string): RunResult {
     events: raw.events,
     vars: raw.vars,
     stoppedByLimit: raw.stoppedByLimit,
+    calls: raw.calls,
   };
+  if (raw.callsTruncated === true) result.callsTruncated = true;
   if (raw.error !== undefined) {
     result.error = {
       line: raw.error.line,

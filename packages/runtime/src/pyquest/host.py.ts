@@ -59,18 +59,54 @@ def _error(exc, user_files):
     return {"type": kind, "msg": msg, "line": line}
 
 
+MAX_CALLS = 300
+
+
+def _arg(value):
+    """An argument as the 📞 calls panel shows it: numbers, words and True/False as they are."""
+    if isinstance(value, (bool, int, str)) or (isinstance(value, float) and value == value
+                                               and abs(value) != float("inf")):
+        return value
+    text = repr(value)
+    return text if len(text) <= 30 else text[:29] + "…"
+
+
 def _tracer(user_files, max_lines):
     count = [0]
+    state = pyquest._state
+    pushed = set()
 
     def local(frame, event, arg):
         if event == "line":
             count[0] += 1
             if count[0] > max_lines:
                 raise _LineLimit()
+        elif event == "return" and id(frame) in pushed:
+            pushed.discard(id(frame))
+            state["stack"].pop()
         return local
 
     def global_(frame, event, arg):
-        return local if frame.f_code.co_filename in user_files else None
+        code = frame.f_code
+        if code.co_filename not in user_files:
+            return None
+        if event == "call" and not code.co_name.startswith("<"):
+            # One of the child's own functions starts: remember it, so its drawings know who made them.
+            calls = state["calls"]
+            cid = None
+            if len(calls) < MAX_CALLS:
+                cid = len(calls)
+                caller = frame.f_back
+                line = caller.f_lineno if caller is not None and caller.f_code.co_filename in user_files else None
+                names = code.co_varnames[:code.co_argcount]
+                calls.append({"id": cid, "parent": state["stack"][-1] if state["stack"] else None,
+                              "name": code.co_name, "args": {n: _arg(frame.f_locals.get(n)) for n in names},
+                              "line": line})
+            else:
+                state["calls_truncated"] = True
+            state["stack"].append(cid)
+            pushed.add(id(frame))
+        return local
 
     return global_
 
@@ -135,7 +171,11 @@ def _run_module(files, main, seed, max_events, max_lines):
 
 
 def _result(g, err, stopped):
-    out = {"events": pyquest._state["events"], "vars": _vars(g) if g else {}, "stoppedByLimit": stopped}
+    st = pyquest._state
+    out = {"events": st["events"], "vars": _vars(g) if g else {}, "stoppedByLimit": stopped,
+           "calls": st["calls"]}
+    if st["calls_truncated"]:
+        out["callsTruncated"] = True
     if err is not None:
         out["error"] = err
     return json.dumps(out)
@@ -166,6 +206,9 @@ def step(keys_json, tapped):
         return json.dumps({"events": [], "vars": {}, "stoppedByLimit": False,
                            "error": {"type": "PyQuestError", "msg": "not started", "line": None}})
     pyquest._state["events"] = []
+    pyquest._state["calls"] = []
+    pyquest._state["calls_truncated"] = False
+    pyquest._state["stack"] = []
     pyquest._state["keys"] = set(json.loads(keys_json))
     pyquest._state["tapped"] = bool(tapped)
 

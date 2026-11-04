@@ -7,9 +7,10 @@ import random as _random
 WIDTH = 400
 HEIGHT = 600
 
+# Only the smallest pieces: what plain Python cannot do by itself (paint the screen, read the keyboard,
+# load a picture file). Everything a game needs on top, like draw_bird, the child writes with def.
 __all__ = [
-    "WIDTH", "HEIGHT", "clear", "draw_bird", "draw_sprite", "draw_rect", "draw_text",
-    "key_pressed", "random_int", "print", "use_sprite",
+    "WIDTH", "HEIGHT", "clear", "draw_rect", "draw_image", "draw_text", "key_pressed", "random_int", "print",
 ]
 
 
@@ -22,7 +23,7 @@ class _EventLimit(Exception):
 
 
 _state = {"events": [], "max": 5000, "keys": set(), "tapped": False, "rng": _random.Random(1),
-          "assets": set(), "alias": {}}
+          "assets": set(), "stack": [], "calls": [], "calls_truncated": False}
 
 
 def _reset(seed, max_events):
@@ -31,12 +32,17 @@ def _reset(seed, max_events):
     _state["keys"] = set()
     _state["tapped"] = False
     _state["rng"] = _random.Random(seed)
-    _state["alias"] = {}
+    _state["stack"] = []
+    _state["calls"] = []
+    _state["calls_truncated"] = False
 
 
 def _emit(event):
+    """Sends one drawing order to the page. "by" says which of the child's calls drew it."""
     if len(_state["events"]) >= _state["max"]:
         raise _EventLimit()
+    if _state["stack"] and _state["stack"][-1] is not None:
+        event["by"] = _state["stack"][-1]
     _state["events"].append(event)
 
 
@@ -51,28 +57,14 @@ def clear(color="skyblue"):
     _emit({"t": "clear", "color": str(color)})
 
 
-def draw_bird(x, y, frame=0):
-    """Draw the bird with its top-left corner at (x, y)."""
-    draw_sprite("bird", x, y, frame)
-
-
-def draw_sprite(name, x, y, frame=0, flip=False):
-    """Draw a picture from the asset library. flip=True draws it upside down."""
-    name = str(name)
-    event = {"t": "sprite", "sprite": name, "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)}
-    if name in _state["alias"]:
-        event["asset"] = _state["alias"][name]
-    if flip:
-        event["flip"] = True
-    _emit(event)
-
-
 def draw_rect(x, y, w, h, color="green"):
+    """Fill a box w wide and h tall, its top-left corner at (x, y)."""
     _emit({"t": "rect", "x": _num(x, "x"), "y": _num(y, "y"), "w": _num(w, "w"), "h": _num(h, "h"),
            "color": str(color)})
 
 
 def draw_text(text, x, y, size=24, color="white"):
+    """Write text with its centre at (x, y)."""
     _emit({"t": "text", "text": str(text), "x": _num(x, "x"), "y": _num(y, "y"), "size": _num(size, "size"),
            "color": str(color)})
 
@@ -91,8 +83,8 @@ def _closest_asset(asset):
     return close[0] if close else None
 
 
-def use_sprite(name, path):
-    """Draw the sprite called name with a picture file from the library, e.g. "images/bird-cu.png"."""
+def _picture(path):
+    """images/bird-cu.png -> "bird-cu", the picture's name in the library."""
     path = str(path)
     if not (path.startswith("images/") and path.endswith(".png")):
         raise PyQuestError("Ảnh phải nằm trong thư mục images/ và có đuôi .png")
@@ -101,7 +93,15 @@ def use_sprite(name, path):
         guess = _closest_asset(asset)
         hint = "" if guess is None else ". Có phải em muốn images/" + guess + ".png?"
         raise PyQuestError("Không tìm thấy file " + path + hint)
-    _state["alias"][str(name)] = asset
+    return asset
+
+
+def draw_image(path, x, y, frame=0, flip=False):
+    """Paste a whole picture file with its top-left corner at (x, y). flip=True draws it upside down."""
+    event = {"t": "sprite", "sprite": _picture(path), "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)}
+    if flip:
+        event["flip"] = True
+    _emit(event)
 
 
 def key_pressed(key="space"):
