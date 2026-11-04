@@ -1,0 +1,18 @@
+{
+  "entries": [
+    { "name": "from pyquest import *", "signature": "from pyquest import *", "vi": "Mở hộp lệnh làm sẵn của PyQuest. Đặt ở dòng đầu mọi file. Thiếu dòng này thì Python không biết draw_bird, clear… là gì.", "example": "from pyquest import *", "lesson": "l00" },
+    { "name": "print", "signature": "print(giá trị, …)", "vi": "Lệnh có sẵn của Python. Trong PyQuest, chữ in ra hiện thành bong bóng thoại trên sân chơi.", "example": "print(\"Mình sẽ làm game!\")", "lesson": "l00" },
+    { "name": "draw_bird", "signature": "draw_bird(x, y)", "vi": "Vẽ chim, góc trên bên trái của hình nằm ở điểm (x, y). Chim rộng 44, cao 40.", "example": "draw_bird(100, 300)", "lesson": "l01" },
+    { "name": "clear", "signature": "clear(màu)", "vi": "Tô kín sân chơi bằng một màu (tên màu tiếng Anh: \"skyblue\", \"green\"…). Thường đặt ở đầu draw().", "example": "clear(\"skyblue\")", "lesson": "l01" },
+    { "name": "WIDTH, HEIGHT", "signature": "WIDTH = 400, HEIGHT = 600", "vi": "Bề rộng và chiều cao sân chơi. Góc trên bên trái là (0, 0), y càng lớn càng thấp.", "example": "draw_bird(WIDTH / 2, HEIGHT / 2)", "lesson": "l01" },
+    { "name": "use_sprite", "signature": "use_sprite(tên, đường dẫn)", "vi": "Đổi hình của một nhân vật bằng một file ảnh trong thư mục images. Sai đường dẫn thì báo \"Không tìm thấy file\".", "example": "use_sprite(\"bird\", \"images/bird-cu.png\")", "lesson": "l03" },
+    { "name": "draw_rect", "signature": "draw_rect(x, y, rộng, cao, màu)", "vi": "Vẽ hình chữ nhật, góc trên bên trái ở (x, y).", "example": "draw_rect(0, 520, 400, 80, \"green\")", "lesson": "l08" },
+    { "name": "update", "signature": "def update():", "vi": "Em tự viết. PyQuest gọi update() 60 lần mỗi giây để đổi các con số (vị trí, tốc độ…).", "example": "def update():\n    global y\n    y = y + 3", "lesson": "l06" },
+    { "name": "draw", "signature": "def draw():", "vi": "Em tự viết. PyQuest gọi draw() sau mỗi update() để vẽ lại cả màn hình.", "example": "def draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)", "lesson": "l06" },
+    { "name": "key_pressed", "signature": "key_pressed()", "vi": "True khi đang bấm Space hoặc chạm màn hình, False khi không bấm.", "example": "if key_pressed():\n    speed = -8", "lesson": "l09" },
+    { "name": "draw_sprite", "signature": "draw_sprite(tên, x, y, flip=False)", "vi": "Vẽ một hình trong kho (\"pipe\", \"background\"…). flip=True vẽ lộn ngược (cột phía trên).", "example": "draw_sprite(\"pipe\", 200, 300)", "lesson": "l10" },
+    { "name": "random_int", "signature": "random_int(a, b)", "vi": "Một số nguyên bất kỳ từ a tới b (có cả a và b), như tung xúc xắc.", "example": "gap_y = random_int(80, 300)", "lesson": "l12" },
+    { "name": "draw_text", "signature": "draw_text(chữ, x, y, cỡ=24, màu=\"white\")", "vi": "Viết chữ, (x, y) là tâm của chữ. Số phải đổi thành chữ bằng str() trước.", "example": "draw_text(str(score), 200, 60, 56)", "lesson": "l14" },
+    { "name": "str", "signature": "str(số)", "vi": "Lệnh có sẵn của Python: đổi số thành chữ, ví dụ 7 thành \"7\".", "example": "draw_text(\"Điểm: \" + str(score), 200, 60)", "lesson": "l14" }
+  ]
+}

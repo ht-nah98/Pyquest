@@ -88,10 +88,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "x = 100\ny = 300\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_bird(x, y)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_use_sprite",
       "pq_text",
       "pq_assign",
@@ -114,8 +115,16 @@
         "customImage": true
       }
     ],
+    "walkthrough": [
+      "Ở bước Chuẩn bị em đã chọn ảnh và thấy đường dẫn, ví dụ images/bird-vet.png.",
+      "Kéo khối \"dùng ảnh … cho …\" đặt ngay dưới khối 📦 thư viện.",
+      "Ô đầu giữ chữ bird (nhân vật cần đổi hình). Ô sau gõ đường dẫn ảnh em chọn.",
+      "Trong khung Python sẽ là: use_sprite(\"bird\", \"images/bird-vet.png\")",
+      "Bấm ▶ Chạy: chim đổi thành nhân vật mới.",
+      "Thử gõ sai một chữ trong đường dẫn để xem máy báo lỗi gì, rồi sửa lại cho đúng."
+    ],
     "solution": {
-      "main.py": "use_sprite(\"bird\", \"images/bird-cu.png\")\nx = 100\ny = 300\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nuse_sprite(\"bird\", \"images/bird-cu.png\")\nx = 100\ny = 300\ndraw_bird(x, y)\n"
     },
     "hints": [
       "Kéo khối \"dùng ảnh … cho …\" lên trên cùng.",

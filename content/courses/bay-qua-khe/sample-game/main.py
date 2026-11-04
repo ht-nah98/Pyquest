@@ -1,6 +1,9 @@
 # Bay Qua Khe — game mẫu cho Bài 0.
 # Cuối khóa, em sẽ tự viết được một game như thế này.
 
+from pyquest import *
+
+
 GRAVITY = 0.45      # mỗi khung hình chim rơi nhanh thêm bấy nhiêu
 FLAP = -7.5         # bấm một lần: tốc độ thành số âm, tức là bay lên
 GAP = 150           # khe giữa hai cột

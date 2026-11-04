@@ -73,10 +73,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "y = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_def",
       "pq_global",
       "pq_assign",
@@ -111,8 +112,15 @@
         "axis": "y"
       }
     ],
+    "walkthrough": [
+      "Dưới dòng y = 100, thêm dòng speed = 0.",
+      "Trong update(): sửa global y thành global y, speed.",
+      "Thay dòng y = y + 3 bằng hai dòng: speed = speed + 0.5 rồi y = y + speed.",
+      "Bấm ▶ Chạy. Ô biến cho thấy speed tăng dần sau mỗi khung hình.",
+      "Thử đổi 0.5 thành 0.2 hoặc 1 rồi chạy lại, so sánh cảm giác rơi."
+    ],
     "solution": {
-      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
     },
     "hints": [
       "Thêm dòng speed = 0 dưới dòng y = 100.",

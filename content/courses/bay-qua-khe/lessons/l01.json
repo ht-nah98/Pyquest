@@ -70,6 +70,12 @@
           "title": "Gọi lệnh vẽ",
           "text": "Lệnh draw_bird(x, y) vẽ chim tại điểm (x, y). Hai số trong ngoặc gọi là tham số. Kéo khối \"vẽ chim\", hoặc gõ: draw_bird(100, 300)",
           "coachNotes": "Chỉ cho bé: góc trên bên trái của hình chim nằm đúng ở (x, y). Thêm khối tô nền nếu bé muốn đổi màu trời."
+        },
+        {
+          "id": "l01-library",
+          "title": "Hộp lệnh làm sẵn",
+          "text": "draw_bird không phải lệnh có sẵn của Python. Nó nằm trong thư viện pyquest: một hộp lệnh làm sẵn. Dòng from pyquest import * ở đầu file mở hộp đó ra. Bấm 📘 Thư viện để xem mọi lệnh.",
+          "coachNotes": "Xóa thử dòng from pyquest import * rồi chạy: máy báo \"chưa có lệnh draw_bird\". Thư viện = đồ nghề người khác làm sẵn để mình dùng lại; lập trình viên thật dùng thư viện suốt."
         }
       ]
     },
@@ -98,10 +104,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": ""
+      "main.py": "from pyquest import *\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_draw_bird",
       "pq_number",
       "pq_clear",
@@ -126,8 +133,15 @@
         ]
       }
     ],
+    "walkthrough": [
+      "Kéo khối \"vẽ chim tại x … y …\" thả ngay dưới khối 📦 dùng thư viện pyquest.",
+      "Bấm vào ô số đầu (x) gõ 100, ô số sau (y) gõ 300.",
+      "Muốn đổi màu trời: kéo thêm khối \"tô nền màu\" đặt TRƯỚC khối vẽ chim.",
+      "Nhìn khung Python: khối vừa ghép đã thành dòng draw_bird(100, 300).",
+      "Bấm ▶ Chạy. Chim hiện ở bên trái, giữa chiều cao."
+    ],
     "solution": {
-      "main.py": "clear(\"skyblue\")\ndraw_bird(100, 300)\n"
+      "main.py": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_bird(100, 300)\n"
     },
     "hints": [
       "Kéo khối \"vẽ chim\" vào vùng ghép.",

@@ -7,6 +7,10 @@ export function translateError(type: string, msg: string, line: number | null): 
     return 'Game cần hàm update() để chạy mỗi khung hình.';
   }
   if (type === 'PyQuestError') return `${at}${msg}.`;
+  if (type === 'MissingImport') {
+    const name = /name '([^']+)'/.exec(msg)?.[1] ?? '';
+    return `${at}chưa có lệnh ${name}. Thêm dòng from pyquest import * ở đầu file.`;
+  }
   if (type === 'IndentationError' || type === 'TabError') return `${at}thụt lề chưa đúng.`;
   if (type === 'SyntaxError') {
     if (/never closed|unexpected EOF|unmatched|does not match/.test(msg))

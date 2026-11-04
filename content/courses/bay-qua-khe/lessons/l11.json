@@ -70,10 +70,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "GAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_def",
       "pq_global",
       "pq_assign",
@@ -117,8 +118,15 @@
         "min": 4
       }
     ],
+    "walkthrough": [
+      "Trong update(), xóa dòng pass.",
+      "Gõ: for i in range(len(pipes)):",
+      "Thụt vào: pipes[i] = pipes[i] - 2",
+      "Thụt vào tiếp: if pipes[i] < -76: rồi thụt thêm: pipes[i] = pipes[i] + 400",
+      "Bấm ▶ Chạy, rồi ⛶ để xem cột chạy vòng."
+    ],
     "solution": {
-      "main.py": "GAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_sprite(\"pipe\", x, 200 - 440, flip=True)\n        draw_sprite(\"pipe\", x, 200 + GAP)\n"
     },
     "hints": [
       "for i in range(len(pipes)): đi qua từng ngăn.",

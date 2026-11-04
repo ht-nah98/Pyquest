@@ -82,10 +82,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_def",
       "pq_global",
       "pq_assign",
@@ -124,8 +125,15 @@
         "max": 480
       }
     ],
+    "walkthrough": [
+      "Trong update(), tìm dòng y = y + speed.",
+      "Ngay dưới, cùng thụt lề, gõ: if y > 480:",
+      "Hai dòng thụt vào thêm 4 dấu cách nữa: y = 480 và speed = 0.",
+      "Dùng khối cũng được: khối \"nếu … thì\" + khối so sánh y > 480.",
+      "Bấm ▶ Chạy: chim rơi rồi đứng trên cỏ."
+    ],
     "solution": {
-      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "hints": [
       "Dùng khối \"nếu … thì\" với điều kiện y > 480.",

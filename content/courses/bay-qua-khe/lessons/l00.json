@@ -125,10 +125,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "print(\"Xin chào!\")\n"
+      "main.py": "from pyquest import *\n\nprint(\"Xin chào!\")\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_print",
       "pq_text"
     ],
@@ -146,8 +147,15 @@
         "text": "Mình sẽ làm game!"
       }
     ],
+    "walkthrough": [
+      "Nhìn khung Python: dòng 1 from pyquest import * mở thư viện; dòng 3 print(\"Xin chào!\") làm nhân vật nói.",
+      "Ở khung Khối, bấm vào chữ Xin chào! trong khối \"nói\" rồi gõ: Mình sẽ làm game!",
+      "Hoặc sửa thẳng trong khung Python. Giữ nguyên hai dấu ngoặc kép \" \" bao quanh chữ.",
+      "Bấm ▶ Chạy và xem bong bóng hiện trên sân chơi.",
+      "Hai mục tiêu ✅ là xong. Bấm \"Quay lại bài\" để đi tiếp."
+    ],
     "solution": {
-      "main.py": "print(\"Mình sẽ làm game!\")\n"
+      "main.py": "from pyquest import *\n\nprint(\"Mình sẽ làm game!\")\n"
     },
     "hints": [
       "Chỉ cần sửa chữ bên trong dấu ngoặc kép.",

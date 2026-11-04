@@ -52,7 +52,11 @@ def _error(exc, user_files):
                 line = tb.tb_lineno
             tb = tb.tb_next
     msg = exc.msg if isinstance(exc, SyntaxError) else str(exc)
-    return {"type": type(exc).__name__, "msg": msg, "line": line}
+    kind = type(exc).__name__
+    # A pyquest command used without "from pyquest import *": say what to add.
+    if isinstance(exc, NameError) and getattr(exc, "name", None) in pyquest.__all__:
+        kind = "MissingImport"
+    return {"type": kind, "msg": msg, "line": line}
 
 
 def _tracer(user_files, max_lines):
@@ -74,6 +78,7 @@ def _tracer(user_files, max_lines):
 def _exec(fn, user_files, max_lines):
     """Runs fn() under the line limit. Returns (error, stopped_by_limit)."""
     sys.settrace(_tracer(user_files, max_lines))
+    out, sys.stdout = sys.stdout, _Bubbles()
     try:
         fn()
         return None, False
@@ -83,12 +88,35 @@ def _exec(fn, user_files, max_lines):
         return _error(exc, user_files), False
     finally:
         sys.settrace(None)
+        try:
+            sys.stdout.flush()
+        except (pyquest._EventLimit, _LineLimit):
+            pass
+        sys.stdout = out
 
 
 def _module_globals(main):
-    g = {"__name__": "__main__", "__file__": os.path.join(PROJECT, main), "__builtins__": __builtins__}
-    exec("from pyquest import *", g)
-    return g
+    # Like real Python: nothing is imported for the child. Lesson code starts with "from pyquest import *".
+    return {"__name__": "__main__", "__file__": os.path.join(PROJECT, main), "__builtins__": __builtins__}
+
+
+class _Bubbles:
+    """sys.stdout during a run: a plain print() (no import) still becomes a speech bubble."""
+
+    def __init__(self):
+        self.buf = ""
+
+    def write(self, text):
+        self.buf += text
+        while "\n" in self.buf:
+            line, self.buf = self.buf.split("\n", 1)
+            pyquest._emit({"t": "say", "text": line})
+        return len(text)
+
+    def flush(self):
+        if self.buf:
+            pyquest._emit({"t": "say", "text": self.buf})
+            self.buf = ""
 
 
 def _run_module(files, main, seed, max_events, max_lines):

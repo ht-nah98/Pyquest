@@ -23,6 +23,8 @@ export const LessonCodeSchema = z
     test: z
       .object({ frames: z.int().positive().max(600), taps: z.array(z.int().nonnegative()) })
       .optional(),
+    /** Numbered "Các bước" shown in the task card: the detailed how-to of this code step. */
+    walkthrough: z.array(z.string().min(1).max(200)).max(8).optional(),
     /** Revealed one at a time by 💡 Gợi ý; the last one may nearly give the answer. */
     hints: z.array(z.string().min(1).max(160)).max(5).optional(),
   })

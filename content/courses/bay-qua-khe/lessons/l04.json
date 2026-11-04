@@ -83,10 +83,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "y = 100\ndraw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\ndraw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_assign",
       "pq_var_get",
       "pq_number",
@@ -118,8 +119,15 @@
         "value": 300
       }
     ],
+    "walkthrough": [
+      "Code đã có: y = 100 và vẽ chim lần 1.",
+      "Thêm dòng y = y + 100 (khối \"đặt y = …\" với khối phép tính y + 100, hoặc gõ thẳng).",
+      "Thêm draw_bird(100, y) để vẽ chim lần 2.",
+      "Lặp lại một lần nữa: y = y + 100 rồi draw_bird(100, y).",
+      "Bấm ▶ Chạy: 3 chim xếp dọc, ô biến báo y = 300."
+    ],
     "solution": {
-      "main.py": "y = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
     },
     "hints": [
       "Sau mỗi lần vẽ, thêm dòng y = y + 100.",

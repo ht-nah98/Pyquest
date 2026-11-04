@@ -17,6 +17,8 @@ Mỗi bài theo `docs/pedagogy/lesson-rhythm.md`: Hiểu → Thiết kế → Ch
   thư mục và đường dẫn).
 
 ## 3. Phần code
+- Code của bài luôn **bắt đầu bằng `from pyquest import *`** (runtime không nạp ngầm gì, như Python thật).
+- `walkthrough`: tối đa 8 bước, mỗi bước ≤ 200 ký tự — hướng dẫn chi tiết "làm gì, ở đâu" hiện trong thẻ Nhiệm vụ.
 - `starter`: dự án lúc bé bắt đầu. **Không được tự thỏa mọi mục tiêu.**
 - `solution`: lời giải mẫu, phải qua hết `goals`.
 - `toolbox`: chỉ các khối bài này dạy (id trong `packages/blocks/src/defs.ts`).
@@ -52,6 +54,7 @@ Mỗi bài theo `docs/pedagogy/lesson-rhythm.md`: Hiểu → Thiết kế → Ch
 1. Mọi JSON qua schema. 2. `lessonIds` khớp các tệp, `order` đúng vị trí. 3. Lời giải qua hết mục tiêu (seed 1).
 4. Code khởi đầu **không** qua hết mục tiêu. 5. Khối trong toolbox có tồn tại. 6. Ảnh slide và sprite của mục tiêu có
 trong kho hình. 7. Game mẫu chạy 300 khung (có bấm) không lỗi. 8. Không có tệp lạ trong `content/`.
+10. `content/reference/pyquest.json` (📘 Thư viện) hợp lệ và mỗi lệnh trỏ tới một bài có thật.
 9. Code khởi đầu và lời giải đi qua **khối rồi về lại code** không đổi một ký tự (nếu không, trình soạn sẽ viết lại code
 của bài ngay khi bé chạm vào khối). Bài `game` được chấm bằng lần chạy thử theo `test`, giống hệt trên trang.
 Thêm tệp mới trong `content/` thì khởi động lại `npm run dev` (AGENTS.md §9.3).

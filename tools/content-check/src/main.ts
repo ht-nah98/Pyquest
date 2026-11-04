@@ -13,6 +13,7 @@ const ALLOWED = [
   /^courses\/[a-z0-9-]+\/lessons\/l\d{2}\.json$/,
   /^courses\/[a-z0-9-]+\/sample-game\/[a-z0-9_]+\.py$/,
   /^assets\/library\/manifest\.json$/,
+  /^reference\/pyquest\.json$/,
   /^assets\/library\/[a-z0-9-]+\.png$/,
 ];
 
@@ -44,6 +45,9 @@ const input: ContentInput = {
     : { assets: [] },
   assetFiles: existsSync(LIBRARY) ? readdirSync(LIBRARY) : [],
   strayFiles: files.filter((f) => !ALLOWED.some((re) => re.test(f))),
+  library: existsSync(join(CONTENT, 'reference/pyquest.json'))
+    ? readJson(join(CONTENT, 'reference/pyquest.json'))
+    : undefined,
 };
 
 const py = await PyRunner.create();

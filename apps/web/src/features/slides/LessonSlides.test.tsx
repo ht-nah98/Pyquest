@@ -62,14 +62,14 @@ describe('self-study mode', () => {
     const { store, kid, ui } = await setup();
     await store.saveLessonState(kid.id, 'l01', {
       stepIndex: 2,
-      slideIndex: 5,
+      slideIndex: 6,
       quizAnswers: { 'l01-quiz-corner': 1, 'l01-quiz-where': 0 },
       files: {},
       done: false,
       doneSteps: [],
     });
     ui();
-    await screen.findByTestId('slide-l01-call');
+    await screen.findByTestId('slide-l01-library');
     expect(screen.getByTestId('to-code')).toBeTruthy();
     expect(next().disabled).toBe(true);
   });

@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { asCoach, pythonReady, typeCode } from './helpers';
 
-const FLAP = `y = 100
+const FLAP = `from pyquest import *
+
+y = 100
 speed = 0
 
 

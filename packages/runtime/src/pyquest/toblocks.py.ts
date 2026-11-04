@@ -143,6 +143,9 @@ def _stmt(ctx, node):
     if isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and type(node.op) in _AUG:
         return {"type": "pq_aug", "fields": {"NAME": node.target.id, "OP": _AUG[type(node.op)]},
                 "inputs": {"VALUE": _expr(src, node.value)}}
+    if (isinstance(node, ast.ImportFrom) and node.module == "pyquest" and node.level == 0
+            and [a.name for a in node.names] == ["*"]):
+        return {"type": "pq_import"}
     if isinstance(node, ast.Global):
         return {"type": "pq_global", "fields": {"NAMES": ", ".join(node.names)}}
     return None

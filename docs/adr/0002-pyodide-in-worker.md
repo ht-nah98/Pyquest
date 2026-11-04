@@ -14,7 +14,8 @@ phải chạy trên Node.
   nút Dừng `terminate()` worker rồi dựng worker mới.
 - **Phục vụ nội bộ:** postinstall chép `node_modules/pyodide` vào `apps/web/public/pyodide/`, nên lớp học qua LAN không
   cần Internet. Không precache vào PWA.
-- `print()` của bé hiện thành bong bóng thoại (sự kiện `say`), không ghi ra console.
+- `print()` của bé hiện thành bong bóng thoại (sự kiện `say`), không ghi ra console: `pyquest.print` và cả `print` gốc
+  của Python (khi chưa import) đều thành bong bóng, vì `sys.stdout` được thay trong lúc chạy.
 
 ## Hệ quả
 - Lần đầu mở trang phải tải khoảng 10 MB (wasm + stdlib), từ lần sau trình duyệt dùng cache. Nút Chạy hiện

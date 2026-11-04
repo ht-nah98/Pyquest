@@ -26,7 +26,7 @@ function lesson(overrides: Record<string, unknown> = {}): Record<string, unknown
       toolbox: ['pq_draw_bird', 'pq_number'],
       mode: 'script',
       goals: [{ id: 'g-bird', label: 'Chim', kind: 'drew', sprite: 'bird', at: [100, 300] }],
-      solution: { 'main.py': 'draw_bird(100, 300)\n' },
+      solution: { 'main.py': 'from pyquest import *\ndraw_bird(100, 300)\n' },
     },
     unlocksRoadmap: ['stage'],
     docsUnlocked: [],
@@ -90,7 +90,7 @@ describe('checkContent', () => {
   test('a starter that already passes every goal is reported', async () => {
     const l = lesson();
     (l['code'] as { starter: Record<string, string> }).starter = {
-      'main.py': 'draw_bird(100, 300)\n',
+      'main.py': 'from pyquest import *\ndraw_bird(100, 300)\n',
     };
     expect((await checkContent(input(l), py)).join('\n')).toMatch(/starter/);
   });
@@ -126,8 +126,24 @@ describe('checkContent', () => {
 
   test('code the block editor would change is reported (rule 9)', async () => {
     const l = lesson();
-    (l['code'] as { starter: Record<string, string> }).starter = { 'main.py': "draw_bird(1,2)\n" };
+    (l['code'] as { starter: Record<string, string> }).starter = { 'main.py': 'draw_bird(1,2)\n' };
     expect((await checkContent(input(l), py)).join('\n')).toMatch(/round trip/);
+  });
+
+  test('a library entry pointing at an unknown lesson is reported (rule 10)', async () => {
+    const i = input(lesson());
+    i.library = {
+      entries: [
+        {
+          name: 'draw_bird',
+          signature: 'draw_bird(x, y)',
+          vi: 'Vẽ chim.',
+          example: 'draw_bird(1, 2)',
+          lesson: 'l99',
+        },
+      ],
+    };
+    expect((await checkContent(i, py)).join('\n')).toContain('l99');
   });
 
   test('stray files are reported', async () => {
@@ -138,7 +154,7 @@ describe('checkContent', () => {
 
   test('a sample game that crashes is reported', async () => {
     const i = input(lesson());
-    i.courses[0]!.sampleGame = 'def update():\n    boom()\n';
+    i.courses[0]!.sampleGame = 'from pyquest import *\ndef update():\n    boom()\n';
     expect((await checkContent(i, py)).join('\n')).toMatch(/sample game/);
   });
 });

@@ -13,7 +13,10 @@ trình phân tích Skulpt, lần cập nhật cuối là 03/2025. PyQuest dùng 
   cây JSON; `treeToState` chuyển cây đó thành JSON của Blockly.
 - Câu lệnh chưa có khối thì thành **khối "code chữ"** (`pq_raw`), giữ nguyên từng ký tự. Biểu thức chưa có khối thì thành
   `pq_raw_expr`. Dòng chú thích `#` đứng riêng được giữ; câu lệnh có chú thích cuối dòng thì giữ nguyên cả câu.
-- Không tự thêm `from pyquest import *`: runtime đã nạp sẵn. Bé gõ dòng đó thì nó thành khối code chữ.
+- ~~Không tự thêm `from pyquest import *`: runtime đã nạp sẵn.~~ **Sửa 04/11/2026 sau câu hỏi của HLV** ("không
+  thấy hàm draw_bird đâu?"): nạp ngầm là "phép màu" với học sinh và code chép ra ngoài không chạy. Nay runtime **không**
+  nạp gì (như Python thật); mọi bài mở đầu bằng `from pyquest import *`, có khối riêng "📦 dùng thư viện pyquest"; thiếu
+  dòng đó thì lỗi nói rõ cần thêm gì. Nút 📘 Thư viện liệt kê các lệnh (`content/reference/pyquest.json`).
 - Khung code là nguồn chuẩn **trong lúc bé gõ**: gõ xong mới dựng lại khối, không viết lại chữ bé gõ. Bé sửa khối thì code
   mới được sinh lại.
 

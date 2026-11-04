@@ -18,6 +18,7 @@ function roundTrip(source: string): string {
 describe('Python → blocks → Python', () => {
   test.each([
     'draw_bird(100, 200)',
+    'from pyquest import *\n\ndraw_bird(100, 300)',
     'x = 100\ny = 200\ndraw_bird(x, y)',
     'y = y + 2',
     'y = (y + 2) * 3',
@@ -60,6 +61,11 @@ describe('Python → blocks → Python', () => {
   test('a statement with a trailing comment stays exactly as typed', () => {
     const source = 'draw_bird(1, 2)  # góc trên';
     expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('the pyquest import is its own block', () => {
+    const tree = py.parseBlocks('from pyquest import *\ndraw_bird(1, 2)');
+    expect(tree.ok && tree.statements.map((s) => s.type)).toEqual(['pq_import', 'pq_draw_bird']);
   });
 
   test('loops, conditions and functions become real blocks, not raw code', () => {

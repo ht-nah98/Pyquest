@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { AssetSchema, CourseSchema, isOpenLesson, parseLesson } from './index';
+import { AssetSchema, CourseSchema, isOpenLesson, LibraryRefSchema, parseLesson } from './index';
 
 function validLesson(): Record<string, unknown> {
   return {
@@ -149,6 +149,24 @@ describe('drafts, summaries, hints and course parts', () => {
     expect(() =>
       CourseSchema.parse({ ...base, parts: [{ title: 'A', lessonIds: ['l00', 'l02'] }] }),
     ).toThrow(/parts/);
+  });
+});
+
+describe('walkthrough and the library reference', () => {
+  test('code may carry numbered walkthrough steps (at most 8, each ≤ 200 characters)', () => {
+    const l = validLesson();
+    (l['code'] as Record<string, unknown>)['walkthrough'] = ['Kéo khối "vẽ chim".', 'Sửa hai số.'];
+    expect(() => parseLesson(l)).not.toThrow();
+    (l['code'] as Record<string, unknown>)['walkthrough'] = ['a'.repeat(201)];
+    expect(() => parseLesson(l)).toThrow();
+  });
+
+  test('a library entry needs a name, a signature, Vietnamese words and the lesson that teaches it', () => {
+    const ok = LibraryRefSchema.parse({
+      entries: [{ name: 'draw_bird', signature: 'draw_bird(x, y)', vi: 'Vẽ chim.', example: 'draw_bird(100, 300)', lesson: 'l01' }],
+    });
+    expect(ok.entries[0]?.name).toBe('draw_bird');
+    expect(() => LibraryRefSchema.parse({ entries: [{ name: 'x' }] })).toThrow();
   });
 });
 

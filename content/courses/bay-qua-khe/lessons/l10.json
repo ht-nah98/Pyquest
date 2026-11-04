@@ -83,10 +83,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "GAP = 150\n\nclear(\"skyblue\")\ndraw_sprite(\"pipe\", 100, 150 - 440, flip=True)\ndraw_sprite(\"pipe\", 100, 150 + GAP)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\n\nclear(\"skyblue\")\ndraw_sprite(\"pipe\", 100, 150 - 440, flip=True)\ndraw_sprite(\"pipe\", 100, 150 + GAP)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_def",
       "pq_draw_sprite",
       "pq_clear",
@@ -111,8 +112,15 @@
         "min": 4
       }
     ],
+    "walkthrough": [
+      "Dưới dòng GAP = 150, gõ: def draw_pipe(x, gap_y):",
+      "Chuyển hai dòng draw_sprite vào trong lệnh mới (thụt vào 4 dấu cách).",
+      "Trong hai dòng đó: thay số 100 bằng x, thay số 150 bằng gap_y.",
+      "Cuối file, không thụt lề: draw_pipe(100, 150) rồi draw_pipe(280, 250).",
+      "Bấm ▶ Chạy: 2 cặp cột hiện ra."
+    ],
     "solution": {
-      "main.py": "GAP = 150\n\n\ndef draw_pipe(x, gap_y):\n    draw_sprite(\"pipe\", x, gap_y - 440, flip=True)\n    draw_sprite(\"pipe\", x, gap_y + GAP)\n\n\nclear(\"skyblue\")\ndraw_pipe(100, 150)\ndraw_pipe(280, 250)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\n\n\ndef draw_pipe(x, gap_y):\n    draw_sprite(\"pipe\", x, gap_y - 440, flip=True)\n    draw_sprite(\"pipe\", x, gap_y + GAP)\n\n\nclear(\"skyblue\")\ndraw_pipe(100, 150)\ndraw_pipe(280, 250)\n"
     },
     "hints": [
       "Dòng def draw_pipe(x, gap_y): rồi hai dòng vẽ thụt vào bên dưới.",

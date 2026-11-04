@@ -16,7 +16,9 @@ import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
 import { PythonPane, type PythonPaneHandle } from './PythonPane';
 import { ErrorBubble, VarWatch } from './RunPanel';
 import { FileTabs } from './FileTabs';
+import { LibraryPanel } from './LibraryPanel';
 import { TaskCard } from './TaskCard';
+import { useSession } from '../../app/session';
 
 const PARSE_DELAY_MS = 600;
 
@@ -47,6 +49,8 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const [syncError, setSyncError] = useState<SyncError | null>(null);
   const [split, setSplit] = useState(50);
   const [running, setRunning] = useState(false);
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const { profile } = useSession();
 
   const main = code?.main ?? 'main.py';
   // Several files (Bài 16): one is open in both panes at a time; Run always starts from main.
@@ -281,6 +285,17 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             <h2 className="flex items-center gap-1 border-b-2 border-ink bg-paper px-2 py-1 text-base">
               <span className="px-1">🐍</span>
               <FileTabs files={Object.keys(files)} main={main} active={active} onOpen={openFile} />
+              <span className="flex-1" />
+              <button
+                type="button"
+                className="rounded-full border-2 border-ink bg-white px-3 py-0.5 text-sm font-bold"
+                onClick={() => {
+                  setLibraryOpen((o) => !o);
+                }}
+                data-testid="library-toggle"
+              >
+                📘 Thư viện
+              </button>
             </h2>
             <div className="relative min-h-0 flex-1">
               <PythonPane
@@ -290,6 +305,14 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
                 onChange={onCodeChange}
                 onCursorLine={(line) => blocks.current?.highlightLine(line)}
               />
+              {libraryOpen && (
+                <LibraryPanel
+                  uptoOrder={profile?.role === 'coach' ? undefined : lesson.order}
+                  onClose={() => {
+                    setLibraryOpen(false);
+                  }}
+                />
+              )}
               {syncError !== null && (
                 <p
                   className="absolute inset-x-2 bottom-2 z-[85] rounded-[8px] border-2 border-oops bg-oops-soft px-3 py-1 text-ink"
@@ -309,6 +332,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             goals={code.goals}
             results={goals}
             hints={code.hints ?? []}
+            walkthrough={code.walkthrough ?? []}
           />
           <div className="flex gap-2 max-[1279px]:w-44 max-[1279px]:flex-col">
             {running ? (

@@ -39,6 +39,7 @@ function installGenerators(): void {
   const call = (fn: string, names: string[]) => (block: Block) =>
     `${fn}(${names.map((n) => value(block, n)).join(', ')})\n`;
 
+  g['pq_import'] = () => 'from pyquest import *\n';
   g['pq_draw_bird'] = call('draw_bird', ['X', 'Y']);
   g['pq_print'] = call('print', ['VALUE']);
   g['pq_clear'] = (block) => {

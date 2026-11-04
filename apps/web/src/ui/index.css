@@ -57,6 +57,13 @@
     line-height: 1.15;
     text-wrap: balance;
   }
+  /* Blockly hides parts of its SVG with the attribute display="none"; Tailwind's preflight rule
+     svg { display: block } would beat that attribute and leave e.g. a closed flyout's scrollbar
+     standing across the workspace. An attribute selector is more specific, so it wins. */
+  [display='none'] {
+    display: none;
+  }
+
   :focus-visible {
     outline: 3px solid var(--color-brand);
     outline-offset: 2px;

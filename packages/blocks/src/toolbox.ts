@@ -34,6 +34,7 @@ export type Toolbox =
 
 /** Category of each block, in the order the categories appear. Colours match defs.ts families. */
 const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
+  { name: 'Thư viện', colour: '20', types: ['pq_import'] },
   {
     name: 'Vẽ',
     colour: '210',

@@ -1,6 +1,8 @@
 import {
   AssetManifestSchema,
   CourseSchema,
+  LibraryRefSchema,
+  type LibraryEntry,
   isOpenLesson,
   parseLesson,
   type Asset,
@@ -24,6 +26,10 @@ const sampleGames = import.meta.glob<string>('@content/courses/*/sample-game/mai
   import: 'default',
 });
 const manifestFile = import.meta.glob<unknown>('@content/assets/library/manifest.json', {
+  eager: true,
+  import: 'default',
+});
+const libraryFile = import.meta.glob<unknown>('@content/reference/pyquest.json', {
   eager: true,
   import: 'default',
 });
@@ -58,7 +64,17 @@ function build() {
   const manifest = AssetManifestSchema.parse(Object.values(manifestFile)[0] ?? { assets: [] });
   const urls = new Map<string, string>();
   for (const [path, url] of Object.entries(assetUrls)) urls.set(path.split('/').pop() ?? '', url);
-  return { courses, assets: new Map(manifest.assets.map((a) => [a.id, a])), urls };
+  const library = LibraryRefSchema.parse(
+    Object.values(libraryFile)[0] ?? {
+      entries: [{ name: '-', signature: '-', vi: '-', example: '-', lesson: 'l00' }],
+    },
+  );
+  return {
+    courses,
+    assets: new Map(manifest.assets.map((a) => [a.id, a])),
+    urls,
+    library: library.entries,
+  };
 }
 
 const data = build();
@@ -90,6 +106,13 @@ export const catalog = {
   assetUrl(id: string): string | undefined {
     const a = data.assets.get(id);
     return a === undefined ? undefined : data.urls.get(a.file);
+  },
+  /** pyquest commands taught up to (and including) this lesson order; all of them when order is undefined. */
+  library(uptoOrder?: number): LibraryEntry[] {
+    if (uptoOrder === undefined) return data.library;
+    const orderOf = new Map<string, number>();
+    for (const c of data.courses.values()) for (const l of c.lessons) orderOf.set(l.id, l.order);
+    return data.library.filter((e) => (orderOf.get(e.lesson) ?? Infinity) <= uptoOrder);
   },
   /** A slide image by file name. */
   imageUrl(file: string): string | undefined {

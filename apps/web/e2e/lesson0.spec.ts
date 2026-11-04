@@ -42,7 +42,7 @@ test('a child goes through lesson 0 in self-study mode and lesson 1 opens', asyn
   await page.getByTestId('to-code').click();
   await pythonReady(page);
   expect(await codeText(page)).toContain('print("Xin chào!")');
-  await typeCode(page, 'print("Mình sẽ làm game!")');
+  await typeCode(page, 'from pyquest import *\nprint("Mình sẽ làm game!")');
   await page.getByTestId('run').click();
   await expect(page.getByTestId('bubble')).toHaveText('Mình sẽ làm game!');
   await expect(page.getByTestId('goal-l00-g-say')).toHaveAttribute('data-ok', 'true');

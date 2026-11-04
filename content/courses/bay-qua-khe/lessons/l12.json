@@ -76,10 +76,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "GAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_sprite(\"pipe\", pipe[0], pipe[1] - 440, flip=True)\n        draw_sprite(\"pipe\", pipe[0], pipe[1] + GAP)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_sprite(\"pipe\", pipe[0], pipe[1] - 440, flip=True)\n        draw_sprite(\"pipe\", pipe[0], pipe[1] + GAP)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_def",
       "pq_global",
       "pq_assign",
@@ -116,8 +117,14 @@
         "min": 6
       }
     ],
+    "walkthrough": [
+      "Trong update(), tìm dòng pipe[0] = pipe[0] + 440.",
+      "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)",
+      "Bấm ▶ Chạy: máy chạy thử 520 khung hình để thấy cột quay lại nhiều lần.",
+      "Bấm ⛶: mỗi lần cột quay lại, khe ở một độ cao khác."
+    ],
     "solution": {
-      "main.py": "GAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_sprite(\"pipe\", pipe[0], pipe[1] - 440, flip=True)\n        draw_sprite(\"pipe\", pipe[0], pipe[1] + GAP)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_sprite(\"pipe\", pipe[0], pipe[1] - 440, flip=True)\n        draw_sprite(\"pipe\", pipe[0], pipe[1] + GAP)\n"
     },
     "hints": [
       "Tìm dòng pipe[0] = pipe[0] + 440.",

@@ -81,10 +81,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "GAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    return False\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    return False\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_def",
       "pq_global",
       "pq_assign",
@@ -120,8 +121,15 @@
         "value": true
       }
     ],
+    "walkthrough": [
+      "Tìm def hits(): bên trong chỉ có return False.",
+      "Thay bằng: if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:  (chim ở hẳn bên trái hoặc hẳn bên phải cột)",
+      "Thụt vào dòng dưới: return False",
+      "Dòng cuối của hits(), thẳng hàng với if: return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP",
+      "Bấm ▶ Chạy: không bấm gì nên chim rơi, đụng cột dưới, game_over thành True."
+    ],
     "solution": {
-      "main.py": "GAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      "main.py": "from pyquest import *\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 150\ngame_over = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap - 440, flip=True)\n    draw_sprite(\"pipe\", pipe_x - 12, pipe_gap + GAP)\n    draw_bird(100, y)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
     },
     "hints": [
       "Dòng đầu của hits(): if (chim bên trái cột) or (chim bên phải cột): return False",

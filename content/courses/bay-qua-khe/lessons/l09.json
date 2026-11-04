@@ -73,10 +73,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_def",
       "pq_global",
       "pq_assign",
@@ -118,8 +119,15 @@
         "max": 480
       }
     ],
+    "walkthrough": [
+      "Trong update(), ngay dưới dòng global y, speed, gõ: if key_pressed():",
+      "Dòng thụt vào thêm: speed = -8",
+      "Khối tương ứng: \"nếu … thì\" với khối \"đang bấm Space / chạm?\", bên trong \"đặt speed = -8\".",
+      "Bấm ▶ Chạy: máy thử bấm ở khung 40 và 60 để chấm.",
+      "Bấm ⛶ rồi nhấn Space để tự chơi. Chỉnh -8 và 0.5 tới khi vừa tay."
+    ],
     "solution": {
-      "main.py": "y = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
+      "main.py": "from pyquest import *\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
     },
     "hints": [
       "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",

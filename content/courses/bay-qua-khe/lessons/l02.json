@@ -97,10 +97,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "x = 0\ny = 0\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nx = 0\ny = 0\ndraw_bird(x, y)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_assign",
       "pq_var_get",
       "pq_number",
@@ -141,8 +142,15 @@
         ]
       }
     ],
+    "walkthrough": [
+      "Dòng x = 0: đổi 0 thành 100 (sửa số trong khối \"đặt x\" hoặc gõ trong khung Python).",
+      "Dòng y = 0: đổi 0 thành 200.",
+      "Giữ nguyên dòng draw_bird(x, y): nó tự lấy số đang cất trong hộp x và hộp y.",
+      "Bấm ▶ Chạy, nhìn ô biến dưới sân chơi: x = 100, y = 200.",
+      "Thử thêm dòng print(x) để chim nói giá trị của x."
+    ],
     "solution": {
-      "main.py": "x = 100\ny = 200\ndraw_bird(x, y)\n"
+      "main.py": "from pyquest import *\n\nx = 100\ny = 200\ndraw_bird(x, y)\n"
     },
     "hints": [
       "Sửa số 0 ở dòng x = 0 và y = 0.",

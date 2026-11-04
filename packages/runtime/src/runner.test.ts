@@ -6,8 +6,10 @@ beforeAll(async () => {
   py = await PyRunner.create();
 });
 
+const IMPORT = 'from pyquest import *\n';
+/** Lesson code always starts with the import, like real Python. */
 const run = (code: string, maxEvents = 5000) =>
-  py.runScript({ 'main.py': code }, 'main.py', { seed: 1, maxEvents });
+  py.runScript({ 'main.py': IMPORT + code }, 'main.py', { seed: 1, maxEvents });
 
 describe('script mode', () => {
   test('draw_bird records a sprite event', async () => {
@@ -16,9 +18,16 @@ describe('script mode', () => {
     expect(r.events).toContainEqual({ t: 'sprite', sprite: 'bird', x: 100, y: 200, frame: 0 });
   });
 
-  test('explicit "from pyquest import *" also works', async () => {
-    const r = await run('from pyquest import *\ndraw_bird(1, 2)');
-    expect(r.events).toContainEqual({ t: 'sprite', sprite: 'bird', x: 1, y: 2, frame: 0 });
+  test('without the import, draw_bird is unknown and the message says what to add', async () => {
+    const r = await py.runScript({ 'main.py': 'draw_bird(1, 2)' }, 'main.py', { seed: 1, maxEvents: 100 });
+    expect(r.error?.line).toBe(1);
+    expect(r.error?.messageVi).toContain('from pyquest import *');
+  });
+
+  test('plain print works without the import and still becomes a bubble', async () => {
+    const r = await py.runScript({ 'main.py': 'print("chào", 3)' }, 'main.py', { seed: 1, maxEvents: 100 });
+    expect(r.error).toBeUndefined();
+    expect(r.events).toContainEqual({ t: 'say', text: 'chào 3' });
   });
 
   test('draw_sprite can flip a picture upside down', async () => {
@@ -50,14 +59,14 @@ describe('script mode', () => {
 
   test('a missing bracket is a Vietnamese syntax error on line 1', async () => {
     const r = await run('draw_bird(1, 2');
-    expect(r.error?.line).toBe(1);
+    expect(r.error?.line).toBe(2);
     expect(r.error?.messageVi).toContain('thiếu dấu ngoặc');
     expect(r.events).toEqual([]);
   });
 
   test('an unknown command names itself', async () => {
     const r = await run('x = 1\ndrw_bird(1, 2)');
-    expect(r.error?.line).toBe(2);
+    expect(r.error?.line).toBe(3);
     expect(r.error?.messageVi).toContain('drw_bird');
   });
 
@@ -68,7 +77,7 @@ describe('script mode', () => {
   });
 
   test('an endless empty loop stops at the line limit', async () => {
-    const r = await py.runScript({ 'main.py': 'while True:\n    pass' }, 'main.py', {
+    const r = await py.runScript({ 'main.py': IMPORT + 'while True:\n    pass' }, 'main.py', {
       seed: 1,
       maxEvents: 5000,
       maxLines: 20_000,
@@ -123,7 +132,7 @@ describe('pictures from the library by path', () => {
   test('a wrong path is a Vietnamese error naming the file', async () => {
     py.setAssets(['bird', 'bird-cu']);
     const r = await run('use_sprite("bird", "images/bird-meo.png")');
-    expect(r.error?.line).toBe(1);
+    expect(r.error?.line).toBe(2);
     expect(r.error?.messageVi).toContain('images/bird-meo.png');
   });
 
@@ -137,7 +146,7 @@ describe('pictures from the library by path', () => {
 describe('game mode', () => {
   test('step calls update then draw each frame', async () => {
     const code =
-      'y = 0\ndef update():\n    global y\n    y += 10\ndef draw():\n    draw_bird(0, y)';
+      IMPORT + 'y = 0\ndef update():\n    global y\n    y += 10\ndef draw():\n    draw_bird(0, y)';
     const start = await py.startGame({ 'main.py': code }, 'main.py', { seed: 1 });
     expect(start.error).toBeUndefined();
     const ys = [1, 2, 3].map(() => {
@@ -150,7 +159,7 @@ describe('game mode', () => {
 
   test('key_pressed sees space and taps', async () => {
     const code =
-      'hits = 0\ndef update():\n    global hits\n    if key_pressed():\n        hits += 1';
+      IMPORT + 'hits = 0\ndef update():\n    global hits\n    if key_pressed():\n        hits += 1';
     await py.startGame({ 'main.py': code }, 'main.py', { seed: 1 });
     py.step({ keys: ['space'], tapped: false });
     py.step({ keys: [], tapped: true });

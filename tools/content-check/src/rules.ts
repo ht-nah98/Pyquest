@@ -3,6 +3,7 @@ import { checkGoals, runGameTest } from '@pyquest/checker';
 import {
   AssetManifestSchema,
   CourseSchema,
+  LibraryRefSchema,
   isOpenLesson,
   parseLesson,
   type Lesson,
@@ -22,6 +23,8 @@ export type ContentInput = {
   assetFiles: string[];
   /** Files under content/ that match no known pattern. */
   strayFiles: string[];
+  /** content/reference/pyquest.json (📘 Thư viện). */
+  library?: unknown;
 };
 
 const SEED = 1;
@@ -33,6 +36,19 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
   const err = (where: string, msg: string) => errors.push(`${where}: ${msg}`);
 
   for (const stray of input.strayFiles) err(stray, 'stray file in content/ (rule 8)');
+
+  // Rule 10: the library reference parses and points at lessons that exist.
+  const allLessonIds = new Set(
+    input.courses.flatMap((c) => c.lessons.map((l) => (l.json as { id?: string }).id ?? '')),
+  );
+  if (input.library !== undefined) {
+    const lib = LibraryRefSchema.safeParse(input.library);
+    if (!lib.success) err('reference/pyquest.json', lib.error.message);
+    else
+      for (const e of lib.data.entries)
+        if (!allLessonIds.has(e.lesson))
+          err('reference/pyquest.json', `${e.name}: unknown lesson ${e.lesson}`);
+  }
 
   const manifest = AssetManifestSchema.safeParse(input.manifest);
   if (manifest.success) py.setAssets(manifest.data.assets.map((a) => a.id));
@@ -137,7 +153,10 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
   // Rule 9: what the lesson ships must survive code → blocks → code unchanged, or the editor would
   // rewrite it the moment the child touches a block.
   registerBlocks();
-  for (const [kind, files] of [['starter', code.starter], ['solution', code.solution]] as const) {
+  for (const [kind, files] of [
+    ['starter', code.starter],
+    ['solution', code.solution],
+  ] as const) {
     const source = files[code.main] ?? '';
     const tree = ctx.py.parseBlocks(source);
     const back = tree.ok ? toPython(treeToState(tree.statements)) : null;

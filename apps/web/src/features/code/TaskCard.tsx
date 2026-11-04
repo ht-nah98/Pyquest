@@ -10,21 +10,35 @@ export function TaskCard({
   goals,
   results,
   hints,
+  walkthrough,
 }: {
   title: string | undefined;
   text: string | undefined;
   goals: readonly Goal[];
   results: readonly GoalResult[];
   hints: readonly string[];
+  walkthrough: readonly string[];
 }) {
   const [shown, setShown] = useState(0);
   return (
     <section
-      className="flex max-h-[45%] min-h-0 flex-col gap-2 overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
+      className="flex max-h-[55%] min-h-0 flex-col gap-2 overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
       data-testid="task-card"
     >
       <h2 className="font-display text-lg text-brand-deep">🎯 {title ?? 'Nhiệm vụ'}</h2>
       {text !== undefined && <p className="text-[15px] leading-snug">{text}</p>}
+      {walkthrough.length > 0 && (
+        <details open className="rounded-[8px] bg-white px-2 py-1" data-testid="walkthrough">
+          <summary className="cursor-pointer font-display text-sm font-bold">📋 Các bước</summary>
+          <ol className="mt-1 list-decimal space-y-1 pl-5 text-[15px] leading-snug">
+            {walkthrough.map((w) => (
+              <li key={w} className="whitespace-pre-line">
+                {w}
+              </li>
+            ))}
+          </ol>
+        </details>
+      )}
       <GoalList goals={goals} results={results} />
       {hints.slice(0, shown).map((h, i) => (
         <p key={h} className="rounded-[8px] bg-sun/40 px-2 py-1 text-[15px]" data-testid="hint">

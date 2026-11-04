@@ -83,10 +83,11 @@
   ],
   "code": {
     "starter": {
-      "main.py": "draw_bird(0, 300)\n"
+      "main.py": "from pyquest import *\n\ndraw_bird(0, 300)\n"
     },
     "main": "main.py",
     "toolbox": [
+      "pq_import",
       "pq_for",
       "pq_for_range",
       "pq_var_get",
@@ -112,8 +113,16 @@
         "min": 8
       }
     ],
+    "walkthrough": [
+      "Xóa dòng draw_bird(0, 300) cũ (kéo khối đó vào thùng rác).",
+      "Kéo khối \"lặp … lần, đếm bằng i\", đổi số lần thành 8.",
+      "Kéo khối \"vẽ chim\" thả VÀO TRONG khối lặp (khe ở giữa khối).",
+      "Ô x: dùng khối phép tính i × 50. Ô y: 300.",
+      "Trong khung Python: for i in range(8): và dòng thụt vào draw_bird(i * 50, 300).",
+      "Bấm ▶ Chạy: 8 chim thành một hàng ngang."
+    ],
     "solution": {
-      "main.py": "for i in range(8):\n    draw_bird(i * 50, 300)\n"
+      "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_bird(i * 50, 300)\n"
     },
     "hints": [
       "Kéo khối \"lặp … lần\" ra, đặt khối vẽ chim vào bên trong.",

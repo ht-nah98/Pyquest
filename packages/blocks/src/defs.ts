@@ -5,6 +5,7 @@ const DRAW = 210;
 const VALUE = 160;
 const VARIABLE = 330;
 const RAW = 60;
+const LIBRARY = 20;
 const BLANK = '#c8ccd4';
 const COMMENT = '#8fb996';
 const LOOP = 30;
@@ -14,6 +15,14 @@ const EVENT = 45;
 
 /** Labels are Vietnamese; the code they make is English Python (spec §5). */
 const JSON_DEFS = [
+  {
+    type: 'pq_import',
+    message0: '📦 dùng thư viện pyquest',
+    previousStatement: null,
+    nextStatement: null,
+    colour: LIBRARY,
+    tooltip: 'from pyquest import *: mở hộp lệnh làm sẵn (draw_bird, clear, key_pressed…). Luôn đặt ở dòng đầu.',
+  },
   {
     type: 'pq_draw_bird',
     message0: 'vẽ chim tại x %1 y %2',
