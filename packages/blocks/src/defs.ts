@@ -5,6 +5,10 @@ const DRAW = 210;
 const VALUE = 160;
 const VARIABLE = 330;
 const RAW = 60;
+const LOOP = 30;
+const CONDITION = 260;
+const FUNCTION = 290;
+const EVENT = 45;
 
 /** Labels are Vietnamese; the code they make is English Python (spec §5). */
 const JSON_DEFS = [
@@ -110,6 +114,194 @@ const JSON_DEFS = [
     inputsInline: true,
     output: 'Number',
     colour: VALUE,
+  },
+  {
+    type: 'pq_draw_sprite',
+    message0: 'vẽ hình %1 tại x %2 y %3',
+    args0: [
+      { type: 'input_value', name: 'NAME' },
+      { type: 'input_value', name: 'X' },
+      { type: 'input_value', name: 'Y' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DRAW,
+    tooltip: 'draw_sprite(tên, x, y): vẽ một hình trong kho hình.',
+  },
+  {
+    type: 'pq_draw_text',
+    message0: 'viết chữ %1 tại x %2 y %3',
+    args0: [
+      { type: 'input_value', name: 'TEXT' },
+      { type: 'input_value', name: 'X' },
+      { type: 'input_value', name: 'Y' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DRAW,
+    tooltip: 'draw_text(chữ, x, y): viết chữ, (x, y) là tâm của chữ.',
+  },
+  {
+    type: 'pq_aug',
+    message0: '%1 %2 %3',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'x' },
+      {
+        type: 'field_dropdown',
+        name: 'OP',
+        options: [
+          ['+=', '+='],
+          ['-=', '-='],
+        ],
+      },
+      { type: 'input_value', name: 'VALUE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: VARIABLE,
+    tooltip: 'x += 2: cộng thêm 2 vào x. x -= 2: bớt đi 2.',
+  },
+  {
+    type: 'pq_global',
+    message0: 'dùng biến chung %1',
+    args0: [{ type: 'field_input', name: 'NAMES', text: 'y' }],
+    previousStatement: null,
+    nextStatement: null,
+    colour: VARIABLE,
+    tooltip: 'global: trong một lệnh tự đặt, muốn đổi biến bên ngoài thì khai báo ở đây.',
+  },
+  {
+    type: 'pq_for',
+    message0: 'lặp %1 lần, đếm bằng %2 %3 %4',
+    args0: [
+      { type: 'input_value', name: 'COUNT' },
+      { type: 'field_input', name: 'VAR', text: 'i' },
+      { type: 'input_dummy' },
+      { type: 'input_statement', name: 'DO' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: LOOP,
+    tooltip: 'for i in range(n): làm các lệnh bên trong n lần, i = 0, 1, 2…',
+  },
+  {
+    type: 'pq_for_range',
+    message0: 'lặp %1 từ %2 đến trước %3 %4 %5',
+    args0: [
+      { type: 'field_input', name: 'VAR', text: 'i' },
+      { type: 'input_value', name: 'FROM' },
+      { type: 'input_value', name: 'TO' },
+      { type: 'input_dummy' },
+      { type: 'input_statement', name: 'DO' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: LOOP,
+    tooltip: 'for i in range(a, b): i chạy từ a tới b - 1.',
+  },
+  {
+    type: 'pq_if',
+    message0: 'nếu %1 thì %2 %3',
+    args0: [
+      { type: 'input_value', name: 'COND' },
+      { type: 'input_dummy' },
+      { type: 'input_statement', name: 'DO' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: CONDITION,
+  },
+  {
+    type: 'pq_if_else',
+    message0: 'nếu %1 thì %2 %3 không thì %4',
+    args0: [
+      { type: 'input_value', name: 'COND' },
+      { type: 'input_dummy' },
+      { type: 'input_statement', name: 'DO' },
+      { type: 'input_statement', name: 'ELSE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: CONDITION,
+  },
+  {
+    type: 'pq_compare',
+    message0: '%1 %2 %3',
+    args0: [
+      { type: 'input_value', name: 'A' },
+      {
+        type: 'field_dropdown',
+        name: 'OP',
+        options: [
+          ['==', '=='],
+          ['!=', '!='],
+          ['<', '<'],
+          ['<=', '<='],
+          ['>', '>'],
+          ['>=', '>='],
+        ],
+      },
+      { type: 'input_value', name: 'B' },
+    ],
+    inputsInline: true,
+    output: 'Boolean',
+    colour: CONDITION,
+  },
+  {
+    type: 'pq_logic',
+    message0: '%1 %2 %3',
+    args0: [
+      { type: 'input_value', name: 'A' },
+      {
+        type: 'field_dropdown',
+        name: 'OP',
+        options: [
+          ['và (and)', 'and'],
+          ['hoặc (or)', 'or'],
+        ],
+      },
+      { type: 'input_value', name: 'B' },
+    ],
+    inputsInline: true,
+    output: 'Boolean',
+    colour: CONDITION,
+  },
+  {
+    type: 'pq_key_pressed',
+    message0: 'đang bấm Space / chạm?',
+    output: 'Boolean',
+    colour: EVENT,
+    tooltip: 'key_pressed(): đúng (True) khi bấm Space hoặc chạm màn hình.',
+  },
+  {
+    type: 'pq_random',
+    message0: 'số ngẫu nhiên từ %1 đến %2',
+    args0: [
+      { type: 'input_value', name: 'A' },
+      { type: 'input_value', name: 'B' },
+    ],
+    inputsInline: true,
+    output: 'Number',
+    colour: VALUE,
+  },
+  {
+    type: 'pq_def',
+    message0: 'tự đặt lệnh %1 %2 %3',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'update' },
+      { type: 'input_dummy' },
+      { type: 'input_statement', name: 'BODY' },
+    ],
+    colour: FUNCTION,
+    tooltip:
+      'def tên(): gom các lệnh lại dưới một cái tên. update() và draw() được gọi mỗi khung hình.',
   },
   {
     type: 'pq_raw_expr',

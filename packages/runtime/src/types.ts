@@ -31,6 +31,8 @@ export type BlockNode = {
   type: string;
   fields?: Record<string, string | number>;
   inputs?: Record<string, BlockNode>;
+  /** Nested statement lists: DO / ELSE / BODY. */
+  statements?: Record<string, BlockNode[]>;
   extraState?: { code: string };
 };
 

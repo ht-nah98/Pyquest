@@ -38,6 +38,17 @@ describe('Python → blocks → Python', () => {
     '@decorate\ndef f():\n    pass',
     'x = 1\n\ny = 2',
     "print('hi')",
+    'for i in range(3):\n    draw_bird(i * 50, 100)\n    print(i)',
+    'for i in range(1, 4):\n    print(i)',
+    'if x > 3:\n    print("lớn")',
+    'if y >= 520:\n    y = 520\nelse:\n    y = y + 2',
+    'def update():\n    global y\n    y += 2',
+    'def draw():\n    clear("skyblue")\n    draw_bird(100, y)',
+    'if key_pressed():\n    speed = -8',
+    'x = random_int(1, 5)\nx += 1',
+    'draw_sprite("pipe", 200, 300)\ndraw_text("0", 200, 60)',
+    'for i in range(2):\n    for j in range(2):\n        draw_bird(i * 50, j * 50)',
+    'for i in range(3):\n    # mỗi vòng một chim\n    draw_bird(i, 0)',
   ])('%j survives the round trip', (source) => {
     expect(roundTrip(source).trimEnd()).toBe(source);
   });
@@ -45,6 +56,13 @@ describe('Python → blocks → Python', () => {
   test('a statement with a trailing comment stays exactly as typed', () => {
     const source = 'draw_bird(1, 2)  # góc trên';
     expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('loops, conditions and functions become real blocks, not raw code', () => {
+    const tree = py.parseBlocks(
+      'for i in range(3):\n    print(i)\nif i > 1:\n    print(i)\ndef update():\n    pass',
+    );
+    expect(tree.ok && tree.statements.map((s) => s.type)).toEqual(['pq_for', 'pq_if', 'pq_def']);
   });
 
   test('unsupported statements become one raw block each', () => {
@@ -60,13 +78,13 @@ describe('Python → blocks → Python', () => {
 });
 
 describe('lineMap and toolbox', () => {
-  test('three chained blocks sit on lines 1, 2 and 3; a two-line raw block pushes the next', () => {
+  test('blocks sit on their lines, nested ones too (for on 2, its body on 3, next on 4)', () => {
     const tree = py.parseBlocks('x = 1\nfor i in range(2):\n    pass\ndraw_bird(x, 2)');
     if (!tree.ok) throw new Error('parse');
     const ws = new Blockly.Workspace();
     Blockly.serialization.workspaces.load(treeToState(tree.statements), ws);
     const lines = [...lineMap(ws).values()].sort((a, b) => a - b);
-    expect(lines).toEqual([1, 2, 4]);
+    expect(lines).toEqual([1, 2, 3, 4]);
     ws.dispose();
   });
 

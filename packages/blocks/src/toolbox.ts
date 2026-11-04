@@ -11,6 +11,13 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
   pq_draw_rect: { X: num(0), Y: num(550), W: num(400), H: num(50), COLOR: text('green') },
   pq_assign: { VALUE: num(0) },
   pq_arith: { A: num(1), B: num(1) },
+  pq_draw_sprite: { NAME: text('pipe'), X: num(200), Y: num(300) },
+  pq_draw_text: { TEXT: text('0'), X: num(200), Y: num(60) },
+  pq_aug: { VALUE: num(1) },
+  pq_for: { COUNT: num(3) },
+  pq_for_range: { FROM: num(0), TO: num(5) },
+  pq_compare: { A: num(0), B: num(0) },
+  pq_random: { A: num(1), B: num(10) },
 };
 
 export type ToolboxEntry = { kind: 'block'; type: string; inputs?: Record<string, object> };

@@ -20,11 +20,21 @@ function operand(block: Blockly.Block, name: string, needsAbove: number): string
   return precedenceOf(child) < needsAbove ? `(${code})` : code;
 }
 
+/** Python's own indent (4 spaces), so code → blocks → code gives back what the child typed. */
+const INDENT = '    ';
+
+/** An indented statement body; an empty body becomes `pass` so the code still runs. */
+function body(block: Blockly.Block, name: string): string {
+  const code = pythonGenerator.statementToCode(block, name);
+  return code === '' ? `${INDENT}pass\n` : code;
+}
+
 let installed = false;
 
 function installGenerators(): void {
   if (installed) return;
   registerBlocks();
+  pythonGenerator.INDENT = INDENT;
   const g = pythonGenerator.forBlock;
   const call = (fn: string, names: string[]) => (block: Blockly.Block) =>
     `${fn}(${names.map((n) => value(block, n)).join(', ')})\n`;
@@ -52,6 +62,35 @@ function installGenerators(): void {
     return [code, p === 1 ? Order.ADDITIVE : Order.MULTIPLICATIVE];
   };
   g['pq_raw_expr'] = (block) => [String(block.getFieldValue('CODE')), Order.ATOMIC];
+  g['pq_draw_sprite'] = call('draw_sprite', ['NAME', 'X', 'Y']);
+  g['pq_draw_text'] = call('draw_text', ['TEXT', 'X', 'Y']);
+  g['pq_aug'] = (block) =>
+    `${String(block.getFieldValue('NAME'))} ${String(block.getFieldValue('OP'))} ${value(block, 'VALUE') || '0'}\n`;
+  g['pq_global'] = (block) => `global ${String(block.getFieldValue('NAMES'))}\n`;
+  g['pq_for'] = (block) =>
+    `for ${String(block.getFieldValue('VAR'))} in range(${value(block, 'COUNT') || '0'}):\n${body(block, 'DO')}`;
+  g['pq_for_range'] = (block) =>
+    `for ${String(block.getFieldValue('VAR'))} in range(${value(block, 'FROM') || '0'}, ${value(block, 'TO') || '0'}):\n${body(block, 'DO')}`;
+  g['pq_if'] = (block) => `if ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}`;
+  g['pq_if_else'] = (block) =>
+    `if ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}else:\n${body(block, 'ELSE')}`;
+  g['pq_def'] = (block) => `def ${String(block.getFieldValue('NAME'))}():\n${body(block, 'BODY')}`;
+  g['pq_compare'] = (block) => [
+    `${value(block, 'A')} ${String(block.getFieldValue('OP'))} ${value(block, 'B')}`,
+    Order.RELATIONAL,
+  ];
+  g['pq_logic'] = (block) => {
+    const op = String(block.getFieldValue('OP'));
+    return [
+      `${value(block, 'A')} ${op} ${value(block, 'B')}`,
+      op === 'and' ? Order.LOGICAL_AND : Order.LOGICAL_OR,
+    ];
+  };
+  g['pq_key_pressed'] = () => ['key_pressed()', Order.FUNCTION_CALL];
+  g['pq_random'] = (block) => [
+    `random_int(${value(block, 'A')}, ${value(block, 'B')})`,
+    Order.FUNCTION_CALL,
+  ];
   g['pq_raw'] = (block) => `${rawCode(block)}\n`;
   installed = true;
 }
@@ -74,20 +113,35 @@ export function toPython(state: object): string {
   }
 }
 
-/** First code line (1-based) of every statement block, so a selected block can light up its line. */
+/** First code line (1-based) of every statement block, nested ones too, so a selected block lights up its line. */
 export function lineMap(ws: Blockly.Workspace): Map<string, number> {
   installGenerators();
   pythonGenerator.init(ws);
   const map = new Map<string, number>();
+  const size = (b: Blockly.Block): number => {
+    const code = pythonGenerator.blockToCode(b, true);
+    const text = typeof code === 'string' ? code : code[0];
+    return Math.max(1, text.replace(/\n$/, '').split('\n').length);
+  };
+  const place = (first: Blockly.Block | null, start: number): number => {
+    let line = start;
+    for (let b = first; b !== null; b = b.getNextBlock()) {
+      map.set(b.id, line);
+      let inner = line + 1;
+      for (const input of b.inputList) {
+        if (input.type !== Blockly.inputs.inputTypes.STATEMENT) continue;
+        if (input.name === 'ELSE') inner += 1; // the `else:` line
+        const child = b.getInputTargetBlock(input.name);
+        inner = child === null ? inner + 1 : place(child, inner);
+      }
+      line += size(b);
+    }
+    return line;
+  };
   let line = 1;
   for (const top of ws.getTopBlocks(true)) {
     if (top.outputConnection !== null) continue;
-    for (let b: Blockly.Block | null = top; b !== null; b = b.getNextBlock()) {
-      map.set(b.id, line);
-      const code = pythonGenerator.blockToCode(b, true);
-      const text = typeof code === 'string' ? code : code[0];
-      line += Math.max(1, text.replace(/\n$/, '').split('\n').length);
-    }
+    line = place(top, line);
   }
   return map;
 }
