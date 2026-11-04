@@ -102,6 +102,12 @@ export default defineConfig(
     },
   },
 
+  // Tests index fixtures they just built.
+  {
+    files: [`**/*.test.{ts,tsx}`, `apps/web/e2e/**/*.ts`],
+    rules: { '@typescript-eslint/no-non-null-assertion': 'off' },
+  },
+
   // Tools may print to the terminal.
   {
     files: [`tools/**/*.${SRC}`],
