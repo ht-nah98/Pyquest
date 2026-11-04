@@ -25,7 +25,11 @@
           "id": "l06-quiz",
           "quiz": {
             "question": "y đang là 150. Chạy y = y + 100. Bây giờ y là bao nhiêu?",
-            "choices": ["100", "150", "250"],
+            "choices": [
+              "100",
+              "150",
+              "250"
+            ],
             "answer": 2,
             "explain": "Bên phải: 150 + 100 = 250, rồi cất 250 vào y."
           }
@@ -45,7 +49,11 @@
           "id": "l06-quiz-plan",
           "quiz": {
             "question": "Bắt đầu y = 100, cộng 100 hai lần. Con chim cuối ở y bao nhiêu?",
-            "choices": ["200", "300", "400"],
+            "choices": [
+              "200",
+              "300",
+              "400"
+            ],
             "answer": 1,
             "explain": "100 → 200 → 300."
           }
@@ -58,7 +66,8 @@
         {
           "id": "l06-code",
           "title": "Ba con chim xếp dọc",
-          "text": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi."
+          "text": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi.",
+          "coachNotes": "Đầu file có sẵn def draw_bird (bé viết ở Bài 5) với ảnh mặc định images/bird.png; bé đổi đường dẫn sang ảnh của mình nếu muốn."
         }
       ]
     },
@@ -120,7 +129,10 @@
     "solution": {
       "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
     },
-    "hints": ["Sau mỗi lần vẽ, thêm dòng y = y + 100.", "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."]
+    "hints": [
+      "Sau mỗi lần vẽ, thêm dòng y = y + 100.",
+      "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."
+    ]
   },
   "unlocksRoadmap": [],
   "docsUnlocked": []
