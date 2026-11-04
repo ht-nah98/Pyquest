@@ -13,6 +13,7 @@ export type SyncError = { line: number | null; messageVi: string };
 export class BlockCodeSync {
   /** True while blocks are being rebuilt from code; the page ignores Blockly events then. */
   applying = false;
+  private disposed = false;
 
   constructor(
     private readonly ws: Blockly.Workspace,
@@ -30,6 +31,8 @@ export class BlockCodeSync {
 
   async fromCode(source: string): Promise<boolean> {
     const tree = await this.parse(source);
+    // The editor may have closed (or React remounted it) while Python was parsing.
+    if (this.disposed) return false;
     if (!tree.ok) {
       this.on.onError({ line: tree.line, messageVi: tree.messageVi });
       return false;
@@ -56,6 +59,15 @@ export class BlockCodeSync {
       Blockly.Events.enable();
       this.applying = false;
     }
+  }
+
+  /** Stop touching the workspace: it is being disposed. */
+  dispose(): void {
+    this.disposed = true;
+  }
+
+  usesWorkspace(ws: Blockly.Workspace): boolean {
+    return this.ws === ws;
   }
 
   saveState(): object {

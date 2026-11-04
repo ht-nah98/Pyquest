@@ -59,7 +59,9 @@ export const PythonPane = forwardRef<
   const view = useRef<EditorView | null>(null);
   const programmatic = useRef(false);
   const cb = useRef({ onChange, onCursorLine });
-  cb.current = { onChange, onCursorLine };
+  useEffect(() => {
+    cb.current = { onChange, onCursorLine };
+  });
 
   useEffect(() => {
     if (host.current === null) return;

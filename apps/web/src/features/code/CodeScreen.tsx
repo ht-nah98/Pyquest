@@ -185,6 +185,12 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
                 toolbox={code.toolbox}
                 onEdit={onBlocksEdit}
                 onReady={onReady}
+                onDispose={(ws) => {
+                  if (sync.current?.usesWorkspace(ws) === true) {
+                    sync.current.dispose();
+                    sync.current = null;
+                  }
+                }}
                 onSelectLine={(line) => pyPane.current?.highlight(line, 'select')}
               />
             </div>

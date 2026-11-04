@@ -19,12 +19,15 @@ export const BlocksPane = forwardRef<
     onEdit: () => void;
     onSelectLine: (line: number | null) => void;
     onReady: (ws: Blockly.WorkspaceSvg) => void;
+    onDispose: (ws: Blockly.WorkspaceSvg) => void;
   }
->(function BlocksPane({ toolbox, onEdit, onSelectLine, onReady }, ref) {
+>(function BlocksPane({ toolbox, onEdit, onSelectLine, onReady, onDispose }, ref) {
   const host = useRef<HTMLDivElement>(null);
   const ws = useRef<Blockly.WorkspaceSvg | null>(null);
-  const cb = useRef({ onEdit, onSelectLine, onReady });
-  cb.current = { onEdit, onSelectLine, onReady };
+  const cb = useRef({ onEdit, onSelectLine, onReady, onDispose });
+  useEffect(() => {
+    cb.current = { onEdit, onSelectLine, onReady, onDispose };
+  });
 
   useEffect(() => {
     if (host.current === null) return;
@@ -59,6 +62,7 @@ export const BlocksPane = forwardRef<
     resize.observe(host.current);
     return () => {
       resize.disconnect();
+      cb.current.onDispose(w);
       w.dispose();
       ws.current = null;
     };

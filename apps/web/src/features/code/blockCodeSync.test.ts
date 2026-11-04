@@ -45,6 +45,14 @@ describe('BlockCodeSync', () => {
     expect(seen.errors.at(-1)).toContain('Dòng 1');
   });
 
+  test('a parse that finishes after dispose() touches nothing', async () => {
+    const { ws, sync } = setup();
+    const pending = sync.fromCode('draw_bird(1, 2)');
+    sync.dispose();
+    ws.dispose();
+    expect(await pending).toBe(false);
+  });
+
   test('while applying code, block events are ignored', async () => {
     const { sync } = setup();
     const p = sync.fromCode('draw_bird(1, 2)');
