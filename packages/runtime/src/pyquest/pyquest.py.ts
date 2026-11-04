@@ -50,9 +50,12 @@ def draw_bird(x, y, frame=0):
     draw_sprite("bird", x, y, frame)
 
 
-def draw_sprite(name, x, y, frame=0):
-    """Draw a picture from the asset library."""
-    _emit({"t": "sprite", "sprite": str(name), "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)})
+def draw_sprite(name, x, y, frame=0, flip=False):
+    """Draw a picture from the asset library. flip=True draws it upside down."""
+    event = {"t": "sprite", "sprite": str(name), "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)}
+    if flip:
+        event["flip"] = True
+    _emit(event)
 
 
 def draw_rect(x, y, w, h, color="green"):

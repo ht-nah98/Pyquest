@@ -1,0 +1,12 @@
+{
+  "name": "@pyquest/content-check",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@pyquest/blocks": "*",
+    "@pyquest/checker": "*",
+    "@pyquest/content-schema": "*",
+    "@pyquest/runtime": "*"
+  }
+}

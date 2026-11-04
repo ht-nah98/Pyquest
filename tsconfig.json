@@ -1,4 +1,4 @@
 {
   "files": [],
-  "references": [{ "path": "tsconfig.node.json" }, { "path": "packages/content-schema" }, { "path": "packages/runtime" }, { "path": "packages/checker" }, { "path": "packages/blocks" }]
+  "references": [{ "path": "tsconfig.node.json" }, { "path": "packages/content-schema" }, { "path": "packages/runtime" }, { "path": "packages/checker" }, { "path": "packages/blocks" }, { "path": "tools/content-check" }]
 }

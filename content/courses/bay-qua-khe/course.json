@@ -1,0 +1,21 @@
+{
+  "id": "bay-qua-khe",
+  "title": "Bay Qua Khe",
+  "summary": "Tự làm một game bay luồn qua khe bằng Python, từ ý tưởng tới sản phẩm chơi được.",
+  "lessonIds": [
+    "l00", "l01", "l02", "l03", "l04", "l05", "l06", "l07", "l08",
+    "l09", "l10", "l11", "l12", "l13", "l14", "l15", "l16", "l17"
+  ],
+  "roadmap": [
+    { "id": "stage", "label": "Sân khấu", "icon": "🏞️" },
+    { "id": "bird", "label": "Nhân vật", "icon": "🐦" },
+    { "id": "motion", "label": "Chuyển động", "icon": "🎞️" },
+    { "id": "gravity", "label": "Trọng lực", "icon": "⬇️" },
+    { "id": "flap", "label": "Nút bay", "icon": "⬆️" },
+    { "id": "pipes", "label": "Cột chắn", "icon": "🎋" },
+    { "id": "collision", "label": "Va chạm", "icon": "💥" },
+    { "id": "score", "label": "Điểm số", "icon": "🔢" },
+    { "id": "screens", "label": "Màn hình", "icon": "🖥️" },
+    { "id": "launch", "label": "Ra mắt", "icon": "🚀" }
+  ]
+}

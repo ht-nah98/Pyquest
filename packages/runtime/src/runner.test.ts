@@ -21,6 +21,18 @@ describe('script mode', () => {
     expect(r.events).toContainEqual({ t: 'sprite', sprite: 'bird', x: 1, y: 2, frame: 0 });
   });
 
+  test('draw_sprite can flip a picture upside down', async () => {
+    const r = await run('draw_sprite("pipe", 10, 20, flip=True)');
+    expect(r.events).toContainEqual({
+      t: 'sprite',
+      sprite: 'pipe',
+      x: 10,
+      y: 20,
+      frame: 0,
+      flip: true,
+    });
+  });
+
   test('print becomes a speech bubble', async () => {
     const r = await run('print("xin chào")');
     expect(r.events).toContainEqual({ t: 'say', text: 'xin chào' });

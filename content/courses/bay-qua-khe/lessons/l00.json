@@ -1,0 +1,126 @@
+{
+  "id": "l00",
+  "courseId": "bay-qua-khe",
+  "order": 0,
+  "title": "Làm game là làm gì?",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "l00-hello",
+          "title": "Mình sẽ làm một game",
+          "text": "Cuối khóa này, em sẽ có một game do chính em viết bằng Python. Chơi thử bản mẫu trước nhé!",
+          "widget": { "kind": "sampleGame" },
+          "coachNotes": "Cho cả lớp chơi 2–3 lượt. Hỏi: được mấy điểm? Vì sao thua? Ghi các câu trả lời lên bảng, lát nữa dùng để tách game thành từng phần."
+        },
+        {
+          "id": "l00-parts",
+          "title": "Game này gồm những gì?",
+          "text": "Nhìn kỹ lại: có sân khấu (nền, mặt đất), một nhân vật biết bay, các cột chắn đường, điểm số, và luật thua. Mỗi thứ là một phần em sẽ tự làm.",
+          "coachNotes": "Chỉ vào từng phần trên màn chiếu. Gợi ý thêm các phần ẩn: trọng lực, chuyển động, màn hình bắt đầu / thua."
+        },
+        {
+          "id": "l00-quiz-gravity",
+          "quiz": {
+            "question": "Vì sao chim cứ rơi xuống khi em không bấm gì?",
+            "choices": ["Vì có trọng lực kéo xuống", "Vì em bấm sai phím", "Vì cột đẩy chim"],
+            "answer": 0,
+            "explain": "Mỗi khung hình, game kéo chim xuống một chút. Đó là trọng lực, một phần em sẽ tự làm."
+          }
+        },
+        {
+          "id": "l00-process",
+          "title": "Làm phần mềm cũng có quy trình",
+          "text": "1. Ý tưởng → 2. Thiết kế → 3. Chuẩn bị → 4. Code → 5. Chơi thử → 6. Sửa. Xong một phần thì quay lại bước 1 cho phần tiếp theo.",
+          "coachNotes": "Nhấn mạnh: người làm game thật không code ngay. Họ hiểu, phác ra giấy, chuẩn bị hình, rồi mới code. Mỗi bài của khóa đi đúng nhịp này."
+        },
+        {
+          "id": "l00-quiz-process",
+          "quiz": {
+            "question": "Trước khi code nút bay, mình nên làm gì?",
+            "choices": [
+              "Code luôn cho nhanh",
+              "Hiểu chim bay thế nào và thiết kế cách bay",
+              "Vẽ thêm thật nhiều cột"
+            ],
+            "answer": 1,
+            "explain": "Hiểu và thiết kế trước thì code ít phải sửa lại."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "l00-roadmap",
+          "title": "Vẽ lộ trình của em",
+          "text": "Kéo các phần của game vào thứ tự em sẽ làm. Phần nào cần có trước thì xếp lên trên.",
+          "widget": { "kind": "roadmapBuilder" },
+          "coachNotes": "Không có một thứ tự duy nhất đúng. Gợi ý: sân khấu → nhân vật → chuyển động → trọng lực → nút bay → cột → va chạm → điểm → màn hình → ra mắt. Hỏi bé vì sao xếp như vậy."
+        },
+        {
+          "id": "l00-quiz-order",
+          "quiz": {
+            "question": "Phần nào nên làm đầu tiên?",
+            "choices": ["Điểm số", "Sân khấu và nhân vật", "Màn hình thua"],
+            "answer": 1,
+            "explain": "Chưa có sân khấu và nhân vật thì chưa có gì để tính điểm hay để thua."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "l00-tools",
+          "title": "Dụng cụ của em",
+          "text": "Màn code có 3 khung: Khối (kéo thả), Python (code chữ) và Sân chơi (xem kết quả). Sửa bên Khối thì bên Python đổi theo, và ngược lại.",
+          "coachNotes": "Mở màn code, chỉ từng khung. Kéo thử một khối cho bé thấy code tự hiện ra."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "l00-first-line",
+          "title": "Dòng code đầu tiên",
+          "text": "Lệnh print(\"...\") làm nhân vật nói một câu trên sân chơi. Hãy cho nó nói: Mình sẽ làm game!",
+          "coachNotes": "Bé có thể sửa chữ trong khối, hoặc gõ thẳng trong khung Python. Cả hai cách đều đúng."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "l00-try",
+          "title": "Chạy thử",
+          "text": "Bấm ▶ Chạy. Thấy bong bóng chưa? Thử đổi sang câu khác rồi chạy lại. Em vừa viết code Python thật đấy!"
+        },
+        {
+          "id": "l00-next",
+          "title": "Bài sau",
+          "text": "Màn hình là một tờ giấy kẻ ô. Em sẽ đặt nhân vật vào đúng chỗ bằng hai con số.",
+          "coachNotes": "Nếu còn giờ: cho bé xem lại lộ trình vừa xếp và đánh dấu phần sẽ làm ở bài sau (sân khấu)."
+        }
+      ]
+    }
+  ],
+  "code": {
+    "starter": { "main.py": "print(\"Xin chào!\")\n" },
+    "main": "main.py",
+    "toolbox": ["pq_print", "pq_text"],
+    "mode": "script",
+    "goals": [
+      { "id": "l00-g-run", "label": "Chạy không lỗi", "kind": "noError" },
+      { "id": "l00-g-say", "label": "Nói: Mình sẽ làm game!", "kind": "printed", "text": "Mình sẽ làm game!" }
+    ],
+    "solution": { "main.py": "print(\"Mình sẽ làm game!\")\n" }
+  },
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
+}

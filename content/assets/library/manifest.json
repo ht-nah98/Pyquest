@@ -1,0 +1,44 @@
+{
+  "assets": [
+    {
+      "id": "background",
+      "group": "background",
+      "file": "background.png",
+      "width": 400,
+      "height": 600,
+      "frames": 1,
+      "credit": "placeholder",
+      "label": "Ruộng bậc thang (tạm)"
+    },
+    {
+      "id": "bird",
+      "group": "bird",
+      "file": "bird.png",
+      "width": 32,
+      "height": 24,
+      "frames": 3,
+      "credit": "placeholder",
+      "label": "Chim én (tạm)"
+    },
+    {
+      "id": "ground",
+      "group": "ground",
+      "file": "ground.png",
+      "width": 400,
+      "height": 80,
+      "frames": 1,
+      "credit": "placeholder",
+      "label": "Đất ruộng (tạm)"
+    },
+    {
+      "id": "pipe",
+      "group": "pipe",
+      "file": "pipe.png",
+      "width": 52,
+      "height": 320,
+      "frames": 1,
+      "credit": "placeholder",
+      "label": "Cột tre (tạm)"
+    }
+  ]
+}
