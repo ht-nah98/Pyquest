@@ -41,10 +41,10 @@ export function Gravity() {
   };
 
   return (
-    <div className="flex h-full min-h-60 items-start gap-6" data-testid="gravity">
+    <div className="flex h-full w-full min-h-60 items-stretch gap-6" data-testid="gravity">
       <svg
         viewBox={`0 0 120 ${String(H)}`}
-        className="h-full max-h-[440px] rounded-[10px] border-2 border-ink bg-[#e8f4fb]"
+        className="h-full max-h-full rounded-[10px] border-2 border-ink bg-[#e8f4fb]"
       >
         <rect x={0} y={H - 10} width={120} height={10} fill="#5aa36a" />
         {dots.map((y, i) => (

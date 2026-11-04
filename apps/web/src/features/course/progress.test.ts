@@ -52,6 +52,14 @@ describe('lessonStatus', () => {
   });
 });
 
+test('a draft lesson is hidden from children but open for the coach', () => {
+  const draft: Lesson = { ...(open('l01', 1) as object), draft: true } as Lesson;
+  const list = [open('l00', 0), draft];
+  const s = new Map([['l00', done()]]);
+  expect(lessonStatus(list, 'l01', s, 'student')).toBe('hidden');
+  expect(lessonStatus(list, 'l01', s, 'coach')).toBe('open');
+});
+
 test('litRoadmap lights the parts of finished lessons only', () => {
   const states = new Map([
     ['l01', done()],

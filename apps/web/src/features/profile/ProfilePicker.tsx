@@ -111,9 +111,15 @@ export function ProfilePicker() {
         </Button>
       </Panel>
 
-      <details className="rounded-[var(--radius-card)] border-2 border-dashed border-ink-soft p-4">
-        <summary className="cursor-pointer text-ink-soft">HLV</summary>
-        <div className="mt-3 flex gap-2">
+      <Panel className="flex flex-wrap items-center gap-3 border-dashed bg-brand-soft p-4">
+        <span className="font-display text-xl">🧑‍🏫 Huấn luyện viên</span>
+        <form
+          className="flex gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void coach();
+          }}
+        >
           <input
             type="password"
             inputMode="numeric"
@@ -122,16 +128,16 @@ export function ProfilePicker() {
               setPin(e.target.value);
               setPinWrong(false);
             }}
-            className="min-h-11 w-40 rounded-[10px] border-2 border-ink bg-white px-3"
+            className="min-h-11 w-36 rounded-[10px] border-2 border-ink bg-white px-3"
             placeholder="Mã PIN"
             data-testid="coach-pin"
           />
-          <Button tone="brand" onClick={() => void coach()} data-testid="coach-enter">
-            Vào
+          <Button tone="brand" type="submit" data-testid="coach-enter">
+            Vào xem mọi bài
           </Button>
-        </div>
-        {pinWrong && <p className="mt-2 text-oops">PIN chưa đúng.</p>}
-      </details>
+        </form>
+        {pinWrong && <p className="text-oops">PIN chưa đúng.</p>}
+      </Panel>
     </main>
   );
 }

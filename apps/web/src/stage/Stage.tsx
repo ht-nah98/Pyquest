@@ -31,11 +31,13 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
       const el = canvas.current;
       if (el === null) return;
       // Backing store = displayed size × devicePixelRatio, so pictures stay sharp when the stage is big.
+      let first = true;
       const fit = () => {
         const k = Math.min(el.clientWidth / STAGE_WIDTH, el.clientHeight / STAGE_HEIGHT);
         const scale = Math.max(1, k * (window.devicePixelRatio || 1));
         const w = Math.round(STAGE_WIDTH * scale);
-        if (el.width === w) return;
+        if (el.width === w && !first) return;
+        first = false;
         el.width = w;
         el.height = Math.round(STAGE_HEIGHT * scale);
         const c = el.getContext('2d');

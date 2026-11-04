@@ -13,6 +13,7 @@ export function lessonStatus(
   const index = lessons.findIndex((l) => l.id === lessonId);
   const lesson = lessons[index];
   if (lesson === undefined || !isOpenLesson(lesson)) return 'hidden';
+  if (lesson.draft === true && role !== 'coach') return 'hidden';
   if (states.get(lessonId)?.done === true) return 'done';
   if (role === 'coach' || index === 0) return 'open';
   const before = lessons[index - 1];

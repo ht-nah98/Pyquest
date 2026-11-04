@@ -7,6 +7,8 @@ export type Profile = { id: string; nickname: string; avatar: string; role: Role
 export type LessonState = {
   stepIndex: number;
   slideIndex: number;
+  /** The furthest slide reached; a child may jump back to any slide up to here. */
+  furthestSlide?: number;
   quizAnswers: Record<string, number>;
   files: Record<string, string>;
   workspace?: object;

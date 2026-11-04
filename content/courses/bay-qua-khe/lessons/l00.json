@@ -3,6 +3,7 @@
   "courseId": "bay-qua-khe",
   "order": 0,
   "title": "Làm game là làm gì?",
+  "summary": "Chơi game mẫu, tách game thành từng phần, vẽ lộ trình của em.",
   "steps": [
     {
       "kind": "understand",
@@ -11,7 +12,9 @@
           "id": "l00-hello",
           "title": "Mình sẽ làm một game",
           "text": "Cuối khóa này, em sẽ có một game do chính em viết bằng Python. Chơi thử bản mẫu trước nhé!",
-          "widget": { "kind": "sampleGame" },
+          "widget": {
+            "kind": "sampleGame"
+          },
           "coachNotes": "Cho cả lớp chơi 2–3 lượt. Hỏi: được mấy điểm? Vì sao thua? Ghi các câu trả lời lên bảng, lát nữa dùng để tách game thành từng phần."
         },
         {
@@ -24,7 +27,11 @@
           "id": "l00-quiz-gravity",
           "quiz": {
             "question": "Vì sao chim cứ rơi xuống khi em không bấm gì?",
-            "choices": ["Vì có trọng lực kéo xuống", "Vì em bấm sai phím", "Vì cột đẩy chim"],
+            "choices": [
+              "Vì có trọng lực kéo xuống",
+              "Vì em bấm sai phím",
+              "Vì cột đẩy chim"
+            ],
             "answer": 0,
             "explain": "Mỗi khung hình, game kéo chim xuống một chút. Đó là trọng lực, một phần em sẽ tự làm."
           }
@@ -57,14 +64,20 @@
           "id": "l00-roadmap",
           "title": "Vẽ lộ trình của em",
           "text": "Kéo các phần của game vào thứ tự em sẽ làm. Phần nào cần có trước thì xếp lên trên.",
-          "widget": { "kind": "roadmapBuilder" },
+          "widget": {
+            "kind": "roadmapBuilder"
+          },
           "coachNotes": "Không có một thứ tự duy nhất đúng. Gợi ý: sân khấu → nhân vật → chuyển động → trọng lực → nút bay → cột → va chạm → điểm → màn hình → ra mắt. Hỏi bé vì sao xếp như vậy."
         },
         {
           "id": "l00-quiz-order",
           "quiz": {
             "question": "Phần nào nên làm đầu tiên?",
-            "choices": ["Điểm số", "Sân khấu và nhân vật", "Màn hình thua"],
+            "choices": [
+              "Điểm số",
+              "Sân khấu và nhân vật",
+              "Màn hình thua"
+            ],
             "answer": 1,
             "explain": "Chưa có sân khấu và nhân vật thì chưa có gì để tính điểm hay để thua."
           }
@@ -111,15 +124,35 @@
     }
   ],
   "code": {
-    "starter": { "main.py": "print(\"Xin chào!\")\n" },
+    "starter": {
+      "main.py": "print(\"Xin chào!\")\n"
+    },
     "main": "main.py",
-    "toolbox": ["pq_print", "pq_text"],
+    "toolbox": [
+      "pq_print",
+      "pq_text"
+    ],
     "mode": "script",
     "goals": [
-      { "id": "l00-g-run", "label": "Chạy không lỗi", "kind": "noError" },
-      { "id": "l00-g-say", "label": "Nói: Mình sẽ làm game!", "kind": "printed", "text": "Mình sẽ làm game!" }
+      {
+        "id": "l00-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
+      {
+        "id": "l00-g-say",
+        "label": "Nói: Mình sẽ làm game!",
+        "kind": "printed",
+        "text": "Mình sẽ làm game!"
+      }
     ],
-    "solution": { "main.py": "print(\"Mình sẽ làm game!\")\n" }
+    "solution": {
+      "main.py": "print(\"Mình sẽ làm game!\")\n"
+    },
+    "hints": [
+      "Chỉ cần sửa chữ bên trong dấu ngoặc kép.",
+      "Gõ đúng: Mình sẽ làm game! (có dấu chấm than)."
+    ]
   },
   "unlocksRoadmap": [],
   "docsUnlocked": []

@@ -4,7 +4,7 @@ import { asCoach, codeText, framesOf, newStudent, pythonReady, typeCode } from '
 test('a child goes through lesson 0 in self-study mode and lesson 1 opens', async ({ page }) => {
   await newStudent(page);
   await page.getByTestId('course-bay-qua-khe').click();
-  await expect(page.getByTestId('lessons').locator('li')).toHaveCount(18);
+  await expect(page.locator('[data-testid^=lesson-l]')).toHaveCount(18);
   await expect(page.getByTestId('lesson-l00')).toHaveAttribute('data-status', 'open');
   await expect(page.getByTestId('lesson-l01')).toHaveAttribute('data-status', 'locked');
   await expect(page.getByTestId('lesson-l05')).toHaveAttribute('data-status', 'hidden');
@@ -56,7 +56,10 @@ test('a child goes through lesson 0 in self-study mode and lesson 1 opens', asyn
   await expect(page.getByTestId('lesson-l01')).toHaveAttribute('data-status', 'open');
 });
 
-test('the coach presents lesson 0 and the notes window follows the slides', async ({ page, context }) => {
+test('the coach presents lesson 0 and the notes window follows the slides', async ({
+  page,
+  context,
+}) => {
   await asCoach(page);
   await page.goto('/l/l00');
   await expect(page.locator('[data-mode=present]')).toBeVisible();

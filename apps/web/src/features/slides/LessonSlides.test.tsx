@@ -36,10 +36,11 @@ describe('self-study mode', () => {
     fireEvent.click(next());
     await screen.findByTestId('slide-l01-quiz-corner');
     expect(next().disabled).toBe(true);
-    fireEvent.click(screen.getByRole('button', { name: 'Góc trên bên trái' }));
-    expect((await screen.findByTestId('quiz-explain')).textContent).toContain('sát đáy');
+    fireEvent.click(screen.getByRole('button', { name: /Góc trên bên trái/ }));
+    expect((await screen.findByTestId('quiz-explain')).textContent).toContain('Chưa đúng');
     expect(next().disabled).toBe(true);
-    fireEvent.click(screen.getByRole('button', { name: 'Góc dưới bên trái' }));
+    fireEvent.click(screen.getByRole('button', { name: /Góc dưới bên trái/ }));
+    expect((await screen.findByTestId('quiz-explain')).textContent).toContain('sát đáy');
     await waitFor(() => {
       expect(next().disabled).toBe(false);
     });

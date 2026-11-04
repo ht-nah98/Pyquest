@@ -19,6 +19,8 @@ export const LessonCodeSchema = z
     mode: z.enum(['script', 'game']),
     goals: z.array(GoalSchema).min(1),
     solution: FilesSchema,
+    /** Revealed one at a time by 💡 Gợi ý; the last one may nearly give the answer. */
+    hints: z.array(z.string().min(1).max(160)).max(5).optional(),
   })
   .superRefine((code, ctx) => {
     if (!(code.main in code.starter)) {
@@ -46,6 +48,10 @@ const OpenLessonSchema = z
     order: z.int().nonnegative(),
     title: z.string().min(1).max(60),
     hidden: z.literal(false).optional(),
+    /** Written but not yet approved by the coach: only the coach sees it (AGENTS.md §9.5). */
+    draft: z.boolean().optional(),
+    /** One line under the title on the course map. */
+    summary: z.string().min(1).max(120).optional(),
     steps: z.array(StepSchema).min(1),
     code: LessonCodeSchema.optional(),
     unlocksRoadmap: z.array(z.string()),

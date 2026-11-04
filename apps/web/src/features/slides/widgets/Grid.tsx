@@ -34,10 +34,10 @@ export function Grid() {
     );
   }
   return (
-    <div className="flex h-full min-h-60 items-start gap-4">
+    <div className="flex h-full w-full min-h-60 items-stretch gap-4">
       <svg
         viewBox={`-52 -28 ${String(W + 64)} ${String(H + 40)}`}
-        className="h-full max-h-[440px] touch-none rounded-[10px] border-2 border-ink bg-white"
+        className="h-full max-h-full touch-none rounded-[10px] border-2 border-ink bg-white"
         data-testid="grid"
         onPointerDown={(e) => {
           const svg = e.currentTarget;
@@ -78,10 +78,10 @@ export function Grid() {
             {y}
           </text>
         ))}
-        <text x={W - 4} y={-8} fontSize={20} textAnchor="end" fill="#3776ab">
+        <text x={150} y={-8} fontSize={20} textAnchor="middle" fill="#3776ab" fontWeight="bold">
           x →
         </text>
-        <text x={-6} y={H + 4} fontSize={20} textAnchor="end" fill="#3776ab">
+        <text x={-30} y={150} fontSize={20} textAnchor="middle" fill="#3776ab" fontWeight="bold">
           y ↓
         </text>
         {pt !== null && (
@@ -100,7 +100,9 @@ export function Grid() {
           </g>
         )}
       </svg>
-      <p className="max-w-56 text-base text-ink-soft">Bấm vào lưới. Điểm em bấm có tọa độ nào?</p>
+      <p className="max-w-56 self-start rounded-[10px] bg-brand-soft p-3 text-lg">
+        Bấm vào lưới. Điểm em bấm có tọa độ nào?
+      </p>
     </div>
   );
 }

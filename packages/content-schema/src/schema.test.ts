@@ -108,6 +108,50 @@ describe('parseLesson', () => {
   });
 });
 
+describe('drafts, summaries, hints and course parts', () => {
+  test('a draft lesson with a summary and code hints parses', () => {
+    const l = validLesson();
+    l['draft'] = true;
+    l['summary'] = 'Đặt chim vào đúng chỗ bằng hai con số.';
+    (l['code'] as Record<string, unknown>)['hints'] = [
+      'Kéo khối "vẽ chim".',
+      'Số đầu là x, số sau là y.',
+    ];
+    const lesson = parseLesson(l);
+    if (!isOpenLesson(lesson)) throw new Error('open');
+    expect(lesson.draft).toBe(true);
+    expect(lesson.code?.hints).toHaveLength(2);
+  });
+
+  test('a summary longer than 120 characters is rejected', () => {
+    const l = validLesson();
+    l['summary'] = 'a'.repeat(121);
+    expect(() => parseLesson(l)).toThrow();
+  });
+
+  test('course parts must cover lessonIds in order', () => {
+    const base = {
+      id: 'c',
+      title: 'Khóa',
+      summary: 'Tóm tắt.',
+      lessonIds: ['l00', 'l01', 'l02'],
+      roadmap: [],
+    };
+    expect(() =>
+      CourseSchema.parse({
+        ...base,
+        parts: [
+          { title: 'A', lessonIds: ['l00'] },
+          { title: 'B', lessonIds: ['l01', 'l02'] },
+        ],
+      }),
+    ).not.toThrow();
+    expect(() =>
+      CourseSchema.parse({ ...base, parts: [{ title: 'A', lessonIds: ['l00', 'l02'] }] }),
+    ).toThrow(/parts/);
+  });
+});
+
 describe('CourseSchema and AssetSchema', () => {
   test('parse a course and an asset', () => {
     const course = CourseSchema.parse({

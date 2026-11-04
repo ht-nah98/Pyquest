@@ -1,19 +1,20 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { useSession } from '../../app/session';
 import { catalog } from '../../content/catalog';
 import { Button } from '../../ui/Button';
 import { TopBar } from '../../ui/TopBar';
 import { useLessonState } from '../lesson/useLessonState';
-import { flatten } from './flatten';
+import { flatten, STEP_ICON, STEP_LABEL, type FlatSlide } from './flatten';
 import { presentChannel } from './presentChannel';
 import { SlideView } from './SlideView';
-import { StepBar } from './StepBar';
+import { SlideProgress, StepBar } from './StepBar';
 
 /**
  * A lesson's slides in one of two modes (pedagogy/lesson-rhythm.md):
  * - present (coach, in class): big type, ←/→/Space, N opens the notes window, no quiz gate;
  * - self (child, at home): Tiếp waits for a right quiz answer and for the code goals.
+ * The coach also gets ☰ Các màn: every slide of the lesson, one click away.
  */
 export function LessonSlides() {
   const { lessonId = '' } = useParams();
@@ -24,17 +25,23 @@ export function LessonSlides() {
   const course = catalog.courseOf(lessonId);
   const { state, update } = useLessonState(lessonId);
   const flat = useMemo(() => (lesson === undefined ? [] : flatten(lesson)), [lesson]);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const isCoach = profile?.role === 'coach';
   const present = isCoach && params.get('mode') !== 'self';
   const index = Math.min(state?.slideIndex ?? 0, Math.max(0, flat.length - 1));
   const current = flat[index];
+  const furthest = Math.max(state?.furthestSlide ?? 0, index);
 
   const go = useCallback(
     (to: number) => {
       const target = flat[Math.max(0, Math.min(flat.length - 1, to))];
       if (target === undefined) return;
-      update({ slideIndex: target.index, stepIndex: target.stepIndex });
+      update((s) => ({
+        slideIndex: target.index,
+        stepIndex: target.stepIndex,
+        furthestSlide: Math.max(s.furthestSlide ?? 0, target.index),
+      }));
     },
     [flat, update],
   );
@@ -45,7 +52,7 @@ export function LessonSlides() {
   const lastOfCode =
     current?.kind === 'code' && flat[index + 1]?.kind !== 'code' && lesson?.code !== undefined;
   const codeOk = !lastOfCode || state?.doneSteps.includes('code') === true;
-  const canNext = present || (quizOk && codeOk);
+  const canNext = present || isCoach || (quizOk && codeOk);
   const isLast = index === flat.length - 1;
 
   useEffect(() => {
@@ -79,86 +86,176 @@ export function LessonSlides() {
   if (state === null || current === undefined) return null;
 
   const finish = () => {
-    const doneSteps = lesson.steps.map((s) => s.kind);
-    update({ done: true, doneSteps });
+    update({ done: true, doneSteps: lesson.steps.map((s) => s.kind) });
     void navigate(`/c/${course.id}`);
   };
 
-  const ctx = { course, state, update };
-
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="flex h-dvh flex-col overflow-hidden">
       <TopBar
-        title={`Bài ${String(lesson.order)}: ${lesson.title}`}
+        title={`Bài ${String(lesson.order)} · ${lesson.title}`}
         back={`/c/${course.id}`}
         right={
           isCoach ? (
-            <Link
-              to={`/l/${lessonId}?mode=${present ? 'self' : 'present'}`}
-              className="rounded-full bg-white/15 px-3 py-1"
-              data-testid="toggle-mode"
-            >
-              {present ? '👀 Xem như bé' : '📽️ Trình chiếu'}
-            </Link>
+            <>
+              {lesson.draft === true && (
+                <span className="rounded-full bg-sun px-3 py-1 text-ink">Bản nháp</span>
+              )}
+              <Link
+                to={`/l/${lessonId}?mode=${present ? 'self' : 'present'}`}
+                className="rounded-full bg-white/15 px-3 py-1"
+                data-testid="toggle-mode"
+              >
+                {present ? '👀 Xem như bé' : '📽️ Trình chiếu'}
+              </Link>
+            </>
           ) : undefined
         }
       />
+
       <div
-        className={`flex min-h-0 flex-1 flex-col gap-4 ${present ? 'px-10 py-6' : 'px-6 py-4'}`}
-        data-mode={present ? 'present' : 'self'}
+        className={`flex items-center justify-between gap-4 ${present ? 'px-10 pt-5' : 'px-6 pt-4'}`}
       >
         <StepBar lesson={lesson} current={current.stepIndex} done={state.doneSteps} big={present} />
-        <SlideView
-          key={current.slide.id}
-          slide={current.slide}
-          big={present}
-          ctx={ctx}
-          answer={state.quizAnswers[current.slide.id]}
-          onAnswer={(i) => {
-            update((s) => ({ quizAnswers: { ...s.quizAnswers, [current.slide.id]: i } }));
-          }}
-        />
-        <footer className="flex flex-wrap items-center gap-3">
-          <Button
-            onClick={() => {
-              go(index - 1);
-            }}
-            disabled={index === 0}
-            data-testid="slide-prev"
-          >
-            ← Trước
+        {isCoach && (
+          <Button onClick={() => { setMenuOpen((o) => !o); }} data-testid="slide-menu-toggle">
+            ☰ Các màn
           </Button>
-          <span className="font-pixel text-2xl text-ink-soft" data-testid="slide-count">
-            {index + 1}/{flat.length}
-          </span>
-          {current.kind === 'code' && lesson.code !== undefined && (
-            <Link to={`/l/${lessonId}/code`} data-testid="to-code">
-              <Button tone="sun">🐍 Sang màn code</Button>
-            </Link>
-          )}
-          {!codeOk && <span className="text-ink-soft">Làm xong phần code để đi tiếp.</span>}
-          <span className="flex-1" />
-          {isLast ? (
-            <Button tone="go" onClick={finish} disabled={!canNext} data-testid="slide-finish">
-              Xong bài ✓
-            </Button>
-          ) : (
-            <Button
-              tone="brand"
-              onClick={() => {
-                go(index + 1);
-              }}
-              disabled={!canNext}
-              data-testid="slide-next"
-            >
-              Tiếp →
-            </Button>
-          )}
-        </footer>
-        {present && (
-          <p className="text-sm text-ink-soft">Phím ←/→ để chuyển · N mở ghi chú giảng</p>
         )}
       </div>
+
+      <main
+        className={`relative min-h-0 flex-1 ${present ? 'px-10 py-6' : 'px-6 py-5'}`}
+        data-mode={present ? 'present' : 'self'}
+      >
+        <div className="mx-auto h-full max-w-[1500px]">
+          <SlideView
+            key={current.slide.id}
+            slide={current.slide}
+            big={present}
+            ctx={{ course, state, update }}
+            answer={state.quizAnswers[current.slide.id]}
+            onAnswer={(i) => {
+              update((s) => ({ quizAnswers: { ...s.quizAnswers, [current.slide.id]: i } }));
+            }}
+          />
+        </div>
+        {menuOpen && (
+          <SlideMenu
+            flat={flat}
+            index={index}
+            onJump={(i) => {
+              go(i);
+              setMenuOpen(false);
+            }}
+            codeHref={lesson.code === undefined ? undefined : `/l/${lessonId}/code`}
+          />
+        )}
+      </main>
+
+      <footer className="flex items-center justify-center gap-4 border-t-2 border-ink/15 bg-paper px-6 py-3">
+        <Button onClick={() => { go(index - 1); }} disabled={index === 0} data-testid="slide-prev">
+          ← Trước
+        </Button>
+        <div className="flex flex-col items-center gap-1">
+          <SlideProgress
+            flat={flat}
+            index={index}
+            reachable={(i) => isCoach || i <= furthest}
+            onJump={go}
+          />
+          <span className="font-pixel text-xl text-ink-soft" data-testid="slide-count">
+            {index + 1}/{flat.length}
+          </span>
+        </div>
+        {current.kind === 'code' && lesson.code !== undefined && (
+          <Link to={`/l/${lessonId}/code`} data-testid="to-code">
+            <Button tone="sun" className="text-xl">
+              🐍 Sang màn code
+            </Button>
+          </Link>
+        )}
+        {isLast ? (
+          <Button
+            tone="go"
+            onClick={finish}
+            disabled={!canNext}
+            data-testid="slide-finish"
+            className="min-w-40 text-xl"
+          >
+            Xong bài ✓
+          </Button>
+        ) : (
+          <Button
+            tone="brand"
+            onClick={() => { go(index + 1); }}
+            disabled={!canNext}
+            data-testid="slide-next"
+            className="min-w-40 text-xl"
+          >
+            Tiếp →
+          </Button>
+        )}
+        {!codeOk && !isCoach && (
+          <span className="text-ink-soft">Làm xong phần code để đi tiếp.</span>
+        )}
+        {present && (
+          <span className="absolute bottom-1 right-3 text-xs text-ink-soft">
+            ←/→ chuyển · N ghi chú
+          </span>
+        )}
+      </footer>
     </div>
+  );
+}
+
+/** Coach-only list of every slide of the lesson, grouped by step. */
+function SlideMenu({
+  flat,
+  index,
+  onJump,
+  codeHref,
+}: {
+  flat: readonly FlatSlide[];
+  index: number;
+  onJump: (i: number) => void;
+  codeHref: string | undefined;
+}) {
+  return (
+    <nav
+      className="absolute right-4 top-2 z-[90] max-h-[calc(100%-1rem)] w-[380px] overflow-y-auto rounded-[var(--radius-card)] border-2 border-ink bg-white p-3 shadow-hard"
+      data-testid="slide-menu"
+    >
+      {flat.map((f, i) => (
+        <div key={f.slide.id}>
+          {(i === 0 || flat[i - 1]?.kind !== f.kind) && (
+            <p className="mt-2 px-2 font-display text-sm font-extrabold uppercase text-ink-soft">
+              {STEP_ICON[f.kind]} {STEP_LABEL[f.kind]}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              onJump(f.index);
+            }}
+            className={`flex w-full items-baseline gap-2 rounded-[8px] px-2 py-1 text-left hover:bg-brand-soft ${f.index === index ? 'bg-sun' : ''}`}
+          >
+            <span className="font-pixel text-lg text-brand">{f.index + 1}</span>
+            <span className="truncate">
+              {f.slide.title ??
+                (f.slide.quiz !== undefined ? `❓ ${f.slide.quiz.question}` : (f.slide.text ?? ''))}
+            </span>
+          </button>
+        </div>
+      ))}
+      {codeHref !== undefined && (
+        <Link
+          to={codeHref}
+          className="mt-2 block rounded-[8px] bg-brand-soft px-2 py-2 font-display font-bold"
+        >
+          🐍 Mở màn code
+        </Link>
+      )}
+    </nav>
   );
 }

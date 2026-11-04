@@ -3,6 +3,7 @@
   "courseId": "bay-qua-khe",
   "order": 1,
   "title": "Màn hình là tờ giấy kẻ ô",
+  "summary": "Màn hình là lưới tọa độ: đặt chim vào đúng chỗ bằng hai con số.",
   "steps": [
     {
       "kind": "understand",
@@ -11,7 +12,9 @@
           "id": "l01-grid",
           "title": "Mỗi điểm có hai con số",
           "text": "Mỗi điểm trên sân chơi có hai số: x là sang phải bao xa, y là xuống dưới bao xa. Góc trên bên trái là (0, 0). Bấm thử vào lưới!",
-          "widget": { "kind": "grid" },
+          "widget": {
+            "kind": "grid"
+          },
           "coachNotes": "Bấm vài điểm trên lưới chiếu, hỏi lớp đoán tọa độ trước khi bấm. Cho bé lên bảng chỉ điểm (200, 300)."
         },
         {
@@ -24,7 +27,11 @@
           "id": "l01-quiz-corner",
           "quiz": {
             "question": "Điểm (0, 600) nằm ở đâu?",
-            "choices": ["Góc trên bên trái", "Góc dưới bên trái", "Giữa màn hình"],
+            "choices": [
+              "Góc trên bên trái",
+              "Góc dưới bên trái",
+              "Giữa màn hình"
+            ],
             "answer": 1,
             "explain": "x = 0 là sát mép trái, y = 600 là sát đáy."
           }
@@ -44,7 +51,11 @@
           "id": "l01-quiz-where",
           "quiz": {
             "question": "Chim ở (100, 300) nằm ở đâu?",
-            "choices": ["Bên trái, giữa chiều cao", "Bên phải, sát đáy", "Chính giữa, sát mép trên"],
+            "choices": [
+              "Bên trái, giữa chiều cao",
+              "Bên phải, sát đáy",
+              "Chính giữa, sát mép trên"
+            ],
             "answer": 0,
             "explain": "x = 100 là gần mép trái; y = 300 là nửa của chiều cao 600."
           }
@@ -74,7 +85,10 @@
           "id": "l01-quiz-up",
           "quiz": {
             "question": "Muốn chim lên cao hơn, em đổi y thế nào?",
-            "choices": ["Tăng y", "Giảm y"],
+            "choices": [
+              "Tăng y",
+              "Giảm y"
+            ],
             "answer": 1,
             "explain": "y nhỏ hơn thì gần mép trên hơn."
           }
@@ -83,22 +97,46 @@
     }
   ],
   "code": {
-    "starter": { "main.py": "" },
+    "starter": {
+      "main.py": ""
+    },
     "main": "main.py",
-    "toolbox": ["pq_draw_bird", "pq_number", "pq_clear", "pq_text", "pq_print"],
+    "toolbox": [
+      "pq_draw_bird",
+      "pq_number",
+      "pq_clear",
+      "pq_text",
+      "pq_print"
+    ],
     "mode": "script",
     "goals": [
-      { "id": "l01-g-run", "label": "Chạy không lỗi", "kind": "noError" },
+      {
+        "id": "l01-g-run",
+        "label": "Chạy không lỗi",
+        "kind": "noError"
+      },
       {
         "id": "l01-g-bird",
         "label": "Chim ở (100, 300)",
         "kind": "drew",
         "sprite": "bird",
-        "at": [100, 300]
+        "at": [
+          100,
+          300
+        ]
       }
     ],
-    "solution": { "main.py": "clear(\"skyblue\")\ndraw_bird(100, 300)\n" }
+    "solution": {
+      "main.py": "clear(\"skyblue\")\ndraw_bird(100, 300)\n"
+    },
+    "hints": [
+      "Kéo khối \"vẽ chim\" vào vùng ghép.",
+      "Số đầu là x (sang phải), số sau là y (xuống dưới).",
+      "Cần: draw_bird(100, 300)"
+    ]
   },
-  "unlocksRoadmap": ["stage"],
+  "unlocksRoadmap": [
+    "stage"
+  ],
   "docsUnlocked": []
 }

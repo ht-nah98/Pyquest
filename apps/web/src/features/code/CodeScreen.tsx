@@ -14,7 +14,8 @@ import { useLessonState } from '../lesson/useLessonState';
 import { BlockCodeSync, type SyncError } from './blockCodeSync';
 import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
 import { PythonPane, type PythonPaneHandle } from './PythonPane';
-import { ErrorBubble, GoalList, VarWatch } from './RunPanel';
+import { ErrorBubble, VarWatch } from './RunPanel';
+import { TaskCard } from './TaskCard';
 
 const PARSE_DELAY_MS = 600;
 
@@ -189,6 +190,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
 
   if (lesson === undefined || code === undefined || state === null) return null;
   const allOk = goals.length > 0 && goals.every((g) => g.ok);
+  const task = lesson.steps.find((st) => st.kind === 'code')?.slides[0];
   const codeDone = state.doneSteps.includes('code');
 
   return (
@@ -263,15 +265,23 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
           </section>
         </div>
 
-        <aside className="flex min-h-0 w-[26%] shrink-0 flex-col gap-2 max-[1279px]:h-[240px] max-[1279px]:w-full max-[1279px]:flex-row">
-          <div className="flex flex-wrap gap-2 max-[1279px]:w-40 max-[1279px]:flex-col">
+        <aside className="flex min-h-0 w-[28%] min-w-[340px] shrink-0 flex-col gap-2 max-[1279px]:h-[250px] max-[1279px]:w-full max-[1279px]:min-w-0 max-[1279px]:flex-row">
+          <TaskCard
+            title={task?.title}
+            text={task?.text}
+            goals={code.goals}
+            results={goals}
+            hints={code.hints ?? []}
+          />
+          <div className="flex gap-2 max-[1279px]:w-44 max-[1279px]:flex-col">
             {running ? (
-              <Button tone="oops" onClick={stop} data-testid="stop">
+              <Button tone="oops" onClick={stop} data-testid="stop" className="flex-1 text-xl">
                 ■ Dừng
               </Button>
             ) : status === 'failed' ? (
               <Button
                 tone="sun"
+                className="flex-1"
                 onClick={() => {
                   void python.warmUp().catch(() => undefined);
                 }}
@@ -282,6 +292,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             ) : (
               <Button
                 tone="go"
+                className="flex-1 text-xl"
                 onClick={() => void run()}
                 disabled={status === 'loading' || status === 'idle'}
                 data-testid="run"
@@ -290,17 +301,18 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
               </Button>
             )}
             <Button
+              title="Chơi toàn màn hình"
               onClick={() => {
                 flush();
                 void navigate(`/l/${lessonId}/play`);
               }}
               data-testid="fullscreen"
             >
-              ⛶ Chơi toàn màn hình
+              ⛶<span className="max-[1279px]:inline hidden"> Toàn màn hình</span>
             </Button>
           </div>
           <div
-            className="min-h-0 flex-1 touch-none"
+            className="relative min-h-0 flex-1 touch-none"
             onPointerDown={() => {
               loop.press('space', true);
             }}
@@ -310,10 +322,9 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
           >
             <Stage ref={stage} className="h-full" />
           </div>
-          <div className="flex min-w-0 flex-col gap-2 max-[1279px]:w-72">
+          <div className="flex min-w-0 flex-col gap-2 max-[1279px]:w-64">
             <ErrorBubble result={result} />
             <VarWatch result={result} />
-            <GoalList goals={code.goals} results={goals} />
             {(allOk || codeDone) && (
               <Link to={`/l/${lessonId}`} data-testid="code-done">
                 <Button tone="sun" className="w-full">

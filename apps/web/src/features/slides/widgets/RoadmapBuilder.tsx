@@ -52,7 +52,7 @@ export function RoadmapBuilder({
   return (
     <ol
       ref={list}
-      className="grid max-w-4xl grid-cols-1 gap-2 sm:grid-cols-2"
+      className="mx-auto flex w-full max-w-md flex-col gap-1.5 self-center"
       data-testid="roadmap-builder"
     >
       {ids.map((id, i) => {
@@ -62,7 +62,7 @@ export function RoadmapBuilder({
           <li
             key={id}
             data-id={id}
-            className={`flex touch-none select-none items-center gap-2 rounded-[10px] border-2 border-ink bg-white px-3 py-2 ${dragging === id ? 'opacity-60' : ''}`}
+            className={`flex touch-none select-none items-center gap-2 rounded-[10px] border-2 border-ink bg-white px-3 py-1 ${dragging === id ? 'opacity-60' : ''}`}
             onPointerDown={(e) => {
               (e.target as Element).setPointerCapture(e.pointerId);
               setDragging(id);

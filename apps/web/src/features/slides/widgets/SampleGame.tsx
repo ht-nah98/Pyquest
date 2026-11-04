@@ -1,32 +1,35 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePyStatus } from '../../../runtime/client';
 import { Stage, type StageHandle } from '../../../stage/Stage';
-import { useGameLoop } from '../../../stage/useGameLoop';
 import { useGameKeys } from '../../../stage/useGameKeys';
+import { useGameLoop } from '../../../stage/useGameLoop';
 import { Button } from '../../../ui/Button';
 
-/** The finished sample game, playable on the slide (Space, click or tap to flap). */
+/**
+ * The finished sample game, filling the slide's visual box. It starts by itself on its "ready" screen
+ * (the game waits for the first flap), so the slide never shows an empty stage.
+ */
 export function SampleGame({ source }: { source: string }) {
   const stage = useRef<StageHandle>(null);
   const box = useRef<HTMLDivElement>(null);
-  const [playing, setPlaying] = useState(false);
   const status = usePyStatus();
   const loop = useGameLoop(stage, () => undefined);
-  useGameKeys(playing, loop.press);
+  useGameKeys(true, loop.press);
 
-  const play = () => {
-    setPlaying(true);
-    void loop.start({ 'main.py': source }, 'main.py');
+  const start = () => {
+    void loop.start({ 'main.py': source }, 'main.py').catch(() => undefined);
   };
 
+  useEffect(() => {
+    start();
+    // Start once when the slide opens; ↻ restarts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div
-      ref={box}
-      className="flex h-full max-h-[460px] items-stretch gap-4 bg-paper"
-      data-testid="sample-game"
-    >
+    <div ref={box} className="flex h-full w-full min-h-0 gap-4 bg-paper" data-testid="sample-game">
       <div
-        className="h-full min-h-60 touch-none"
+        className="relative min-h-0 flex-1 touch-none"
         onPointerDown={() => {
           loop.press('space', true);
         }}
@@ -35,16 +38,15 @@ export function SampleGame({ source }: { source: string }) {
         }}
       >
         <Stage ref={stage} className="h-full" testId="sample-stage" />
+        {status === 'loading' && (
+          <p className="absolute inset-0 grid place-items-center text-xl text-ink-soft">
+            Đang chuẩn bị Python…
+          </p>
+        )}
       </div>
-      <div className="flex flex-col gap-3">
-        <Button tone="go" onClick={play} data-testid="sample-play">
-          {status === 'loading'
-            ? 'Đang chuẩn bị Python…'
-            : status === 'failed'
-              ? '⚠️ Chưa tải được Python. Thử lại'
-              : playing
-                ? '↻ Chơi lại'
-                : '▶ Chơi thử'}
+      <div className="flex w-48 shrink-0 flex-col gap-3">
+        <Button tone="go" onClick={start} data-testid="sample-play">
+          {status === 'failed' ? '⚠️ Thử tải lại' : '↻ Chơi lại'}
         </Button>
         <Button
           onClick={() => void box.current?.requestFullscreen()}
@@ -52,8 +54,9 @@ export function SampleGame({ source }: { source: string }) {
         >
           ⛶ Toàn màn hình
         </Button>
-        <p className="max-w-56 text-base text-ink-soft">
-          Bấm Space, bấm chuột hoặc chạm vào sân để bay.
+        <p className="rounded-[10px] bg-brand-soft p-3 text-base">
+          <b>Cách chơi:</b> bấm <kbd className="rounded border border-ink bg-white px-1">Space</kbd>
+          , bấm chuột hoặc chạm vào sân để vỗ cánh. Bay qua khe giữa hai cột!
         </p>
       </div>
     </div>

@@ -11,7 +11,6 @@ export async function newStudent(page: Page, name = 'Minh'): Promise<void> {
 
 export async function asCoach(page: Page): Promise<void> {
   await page.goto('/');
-  await page.locator('summary').click();
   await page.getByTestId('coach-pin').fill(COACH_PIN);
   await page.getByTestId('coach-enter').click();
   await page.waitForURL('**/courses');
@@ -32,9 +31,9 @@ export async function typeCode(page: Page, code: string): Promise<void> {
 }
 
 export async function codeText(page: Page): Promise<string> {
-  return page.locator('.cm-content').evaluate((el) =>
-    [...el.querySelectorAll('.cm-line')].map((l) => l.textContent).join('\n'),
-  );
+  return page
+    .locator('.cm-content')
+    .evaluate((el) => [...el.querySelectorAll('.cm-line')].map((l) => l.textContent).join('\n'));
 }
 
 /** Asserts the page itself never scrolls (AGENTS.md §9.10). */
