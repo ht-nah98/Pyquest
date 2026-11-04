@@ -27,3 +27,6 @@
 | Tham số | parameter | hộp nhận số mỗi lần gọi (`x`, `y` trong `def draw_bird(x, y)`) |
 | Lời gọi | `Call` / `RunResult.calls` | một lần hàm của bé chạy, kèm số nó nhận; hiện ở 📞 Cuộc gọi |
 | Khối gọi | `pq_call` | khối gọi một `def` của bé, toolbox tự thêm |
+| Bài tập | `Exercise` / `lesson.exercises` | một nhiệm vụ code trong bài; bài sau mở khi bài trước đạt |
+| Kéo khối / gõ code | `input: 'blocks' \| 'typing'` | bài tập gõ code: khối chỉ để xem |
+| Hình mẫu | goal `matches`, nút 👀 | hình của lời giải, hiện mờ trên sân để so |

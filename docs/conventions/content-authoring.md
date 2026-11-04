@@ -36,6 +36,7 @@ Mỗi bài theo `docs/pedagogy/lesson-rhythm.md`: Hiểu → Thiết kế → Ch
 | `noError` | chạy hết, không lỗi, không bị dừng vì chạy mãi |
 | `printed` | có bong bóng `print` đúng nguyên văn |
 | `drew` | có vẽ ảnh thuộc nhóm `sprite` (`bird` khớp `bird-rong`; tùy chọn `at`, `tolerance`; `customImage`: ảnh khác ảnh đầu của nhóm) |
+| `matches` | hình cuối giống hình của lời giải (mảnh, chỗ, màu, nền; thứ tự tự do); có nút 👀 hình mẫu |
 | `drewRects` | một khung có ít nhất `min` ô `draw_rect` (không tính ô phủ cả sân); tùy chọn `at` |
 | `called` | hàm bé tự viết `name` chạy ít nhất `min` lần; `distinct`: với số khác nhau |
 | `sameShape` | mọi lời gọi `name` vẽ ra cùng một hình, chỉ dời chỗ |
@@ -62,3 +63,9 @@ trong kho hình. 7. Game mẫu chạy 300 khung (có bấm) không lỗi. 8. Kh�
 9. Code khởi đầu và lời giải đi qua **khối rồi về lại code** không đổi một ký tự (nếu không, trình soạn sẽ viết lại code
 của bài ngay khi bé chạm vào khối). Bài `game` được chấm bằng lần chạy thử theo `test`, giống hệt trên trang.
 Thêm tệp mới trong `content/` thì khởi động lại `npm run dev` (AGENTS.md §9.3).
+
+## Bài tập (ADR 0005)
+
+Bước Code của bài có `exercises`: 3–5 bài tập khó dần ở phần nền tảng, 1–3 ở phần game. 1–2 bài tập đầu `input: "blocks"`,
+sau đó `"typing"`. Mỗi bài tập có `id` dạng `lNN-eK`, `title` ≤ 60, `task` ≤ 280 (đề nói đủ số để vẽ được), code bắt đầu
+riêng, và thường có goal `matches`. Bài tập gõ code không cần `toolbox` (để `[]`).
