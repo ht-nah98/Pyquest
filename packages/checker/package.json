@@ -1,0 +1,13 @@
+{
+  "name": "@pyquest/checker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@pyquest/content-schema": "*",
+    "@pyquest/runtime": "*"
+  }
+}
