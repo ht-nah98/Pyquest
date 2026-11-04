@@ -82,58 +82,64 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_assign",
-      "pq_var_get",
-      "pq_number",
-      "pq_arith",
-      "pq_aug",
-      "pq_clear",
-      "pq_text"
-    ],
-    "mode": "script",
-    "goals": [
-      {
-        "id": "l06-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l06-e1",
+      "title": "Ba con chim xếp dọc",
+      "task": "Vẽ chim, rồi y = y + 100, rồi vẽ chim, cứ thế 3 lần. Dòng draw_bird(100, y) không đổi, chỉ hộp y đổi.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\n"
       },
-      {
-        "id": "l06-g-three",
-        "label": "Vẽ 3 con chim",
-        "kind": "drewCount",
-        "sprite": "bird",
-        "min": 3
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_assign",
+        "pq_var_get",
+        "pq_number",
+        "pq_arith",
+        "pq_aug",
+        "pq_clear",
+        "pq_text"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l06-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l06-g-three",
+          "label": "Vẽ 3 con chim",
+          "kind": "drewCount",
+          "sprite": "bird",
+          "min": 3
+        },
+        {
+          "id": "l06-g-y",
+          "label": "Cuối cùng y là 300",
+          "kind": "varEquals",
+          "name": "y",
+          "value": 300
+        }
+      ],
+      "walkthrough": [
+        "Code đã có: y = 100 và vẽ chim lần 1.",
+        "Thêm dòng y = y + 100 (khối \"đặt y = …\" với khối phép tính y + 100, hoặc gõ thẳng).",
+        "Thêm draw_bird(100, y) để vẽ chim lần 2.",
+        "Lặp lại một lần nữa: y = y + 100 rồi draw_bird(100, y).",
+        "Bấm ▶ Chạy: 3 chim xếp dọc, ô biến báo y = 300."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
       },
-      {
-        "id": "l06-g-y",
-        "label": "Cuối cùng y là 300",
-        "kind": "varEquals",
-        "name": "y",
-        "value": 300
-      }
-    ],
-    "walkthrough": [
-      "Code đã có: y = 100 và vẽ chim lần 1.",
-      "Thêm dòng y = y + 100 (khối \"đặt y = …\" với khối phép tính y + 100, hoặc gõ thẳng).",
-      "Thêm draw_bird(100, y) để vẽ chim lần 2.",
-      "Lặp lại một lần nữa: y = y + 100 rồi draw_bird(100, y).",
-      "Bấm ▶ Chạy: 3 chim xếp dọc, ô biến báo y = 300."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\ny = y + 100\ndraw_bird(100, y)\n"
-    },
-    "hints": [
-      "Sau mỗi lần vẽ, thêm dòng y = y + 100.",
-      "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."
-    ]
-  },
+      "hints": [
+        "Sau mỗi lần vẽ, thêm dòng y = y + 100.",
+        "Thứ tự: vẽ, cộng, vẽ, cộng, vẽ."
+      ]
+    }
+  ],
   "unlocksRoadmap": [],
   "docsUnlocked": []
 }

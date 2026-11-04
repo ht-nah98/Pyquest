@@ -1,6 +1,9 @@
 import { describe, expect, test } from 'vitest';
 import { AssetSchema, CourseSchema, isOpenLesson, LibraryRefSchema, parseLesson } from './index';
 
+/** The first exercise of a test lesson, to change one field. */
+const ex = (l: Record<string, unknown>) => (l['exercises'] as Record<string, unknown>[])[0];
+
 function validLesson(): Record<string, unknown> {
   return {
     id: 'l01',
@@ -26,17 +29,23 @@ function validLesson(): Record<string, unknown> {
       { kind: 'code', slides: [{ id: 's3', text: 'Vẽ chim.' }] },
       { kind: 'playtest', slides: [{ id: 's4', text: 'Đổi số, chạy lại.' }] },
     ],
-    code: {
-      starter: { 'main.py': '' },
-      main: 'main.py',
-      toolbox: ['pq_draw_bird'],
-      mode: 'script',
-      goals: [
-        { id: 'g1', label: 'Không lỗi', kind: 'noError' },
-        { id: 'g2', label: 'Vẽ chim ở (100, 300)', kind: 'drew', sprite: 'bird', at: [100, 300] },
-      ],
-      solution: { 'main.py': 'draw_bird(100, 300)\n' },
-    },
+    exercises: [
+      {
+        id: 'l01-e1',
+        title: 'Vẽ chim',
+        task: 'Vẽ chim ở (100, 300).',
+        input: 'blocks',
+        starter: { 'main.py': '' },
+        main: 'main.py',
+        toolbox: ['pq_draw_bird'],
+        mode: 'script',
+        goals: [
+          { id: 'g1', label: 'Không lỗi', kind: 'noError' },
+          { id: 'g2', label: 'Vẽ chim ở (100, 300)', kind: 'drew', sprite: 'bird', at: [100, 300] },
+        ],
+        solution: { 'main.py': 'draw_bird(100, 300)\n' },
+      },
+    ],
     unlocksRoadmap: ['stage'],
     docsUnlocked: [],
   };
@@ -87,15 +96,32 @@ describe('parseLesson', () => {
     expect(() => parseLesson(l)).toThrow(/answer/);
   });
 
+  test('exercises need unique ids and say how the child answers (blocks or typing)', () => {
+    const l = validLesson();
+    const first = ex(l) as Record<string, unknown>;
+    l['exercises'] = [first, { ...first }];
+    expect(() => parseLesson(l)).toThrow(/duplicate exercise id/);
+    l['exercises'] = [{ ...first, input: 'voice' }];
+    expect(() => parseLesson(l)).toThrow();
+    l['exercises'] = [first, { ...first, id: 'l01-e2', input: 'typing' }];
+    expect(isOpenLesson(parseLesson(l)) && parseLesson(l)).toBeTruthy();
+  });
+
+  test('a code step needs exercises, and exercises need a code step', () => {
+    const l = validLesson();
+    delete l['exercises'];
+    expect(() => parseLesson(l)).toThrow(/code/);
+  });
+
   test('rejects code.main missing from the starter files', () => {
     const l = validLesson();
-    (l['code'] as { main: string }).main = 'game.py';
+    (ex(l) as { main: string }).main = 'game.py';
     expect(() => parseLesson(l)).toThrow(/main/);
   });
 
   test('rejects a drew goal without a sprite', () => {
     const l = validLesson();
-    const code = l['code'] as { goals: Record<string, unknown>[] };
+    const code = ex(l) as { goals: Record<string, unknown>[] };
     delete code.goals[1]!['sprite'];
     expect(() => parseLesson(l)).toThrow();
   });
@@ -113,14 +139,14 @@ describe('drafts, summaries, hints and course parts', () => {
     const l = validLesson();
     l['draft'] = true;
     l['summary'] = 'Đặt chim vào đúng chỗ bằng hai con số.';
-    (l['code'] as Record<string, unknown>)['hints'] = [
+    (ex(l) as Record<string, unknown>)['hints'] = [
       'Kéo khối "vẽ chim".',
       'Số đầu là x, số sau là y.',
     ];
     const lesson = parseLesson(l);
     if (!isOpenLesson(lesson)) throw new Error('open');
     expect(lesson.draft).toBe(true);
-    expect(lesson.code?.hints).toHaveLength(2);
+    expect(lesson.exercises?.[0]?.hints).toHaveLength(2);
   });
 
   test('a summary longer than 120 characters is rejected', () => {
@@ -155,9 +181,9 @@ describe('drafts, summaries, hints and course parts', () => {
 describe('walkthrough and the library reference', () => {
   test('code may carry numbered walkthrough steps (at most 8, each ≤ 200 characters)', () => {
     const l = validLesson();
-    (l['code'] as Record<string, unknown>)['walkthrough'] = ['Kéo khối "vẽ chim".', 'Sửa hai số.'];
+    (ex(l) as Record<string, unknown>)['walkthrough'] = ['Kéo khối "vẽ chim".', 'Sửa hai số.'];
     expect(() => parseLesson(l)).not.toThrow();
-    (l['code'] as Record<string, unknown>)['walkthrough'] = ['a'.repeat(201)];
+    (ex(l) as Record<string, unknown>)['walkthrough'] = ['a'.repeat(201)];
     expect(() => parseLesson(l)).toThrow();
   });
 

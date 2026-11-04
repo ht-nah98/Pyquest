@@ -25,7 +25,11 @@
           "id": "l13-quiz",
           "quiz": {
             "question": "pipes = [450, 650]. pipes[1] là bao nhiêu?",
-            "choices": ["450", "650", "1"],
+            "choices": [
+              "450",
+              "650",
+              "1"
+            ],
             "answer": 1,
             "explain": "Đếm từ 0: pipes[0] = 450, pipes[1] = 650."
           }
@@ -64,75 +68,83 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
-      "pq_var_get",
-      "pq_number",
-      "pq_draw_image",
-      "pq_clear",
-      "pq_text",
-      "pq_if",
-      "pq_if_else",
-      "pq_compare",
-      "pq_logic",
-      "pq_key_pressed",
-      "pq_for",
-      "pq_draw_text",
-      "pq_random"
-    ],
-    "mode": "game",
-    "goals": [
-      {
-        "id": "l13-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l13-e1",
+      "title": "Cho cột chạy",
+      "task": "Trong update(): for i in range(len(pipes)): trừ pipes[i] đi 2. Nếu pipes[i] < -76 thì cộng thêm 400. len(pipes) là số ngăn của danh sách.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
       },
-      {
-        "id": "l13-g-move",
-        "label": "Cột trượt sang trái",
-        "kind": "moves",
-        "sprite": "pipe",
-        "axis": "x",
-        "dir": -1
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_image",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_key_pressed",
+        "pq_for",
+        "pq_draw_text",
+        "pq_random"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l13-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l13-g-move",
+          "label": "Cột trượt sang trái",
+          "kind": "moves",
+          "sprite": "pipe",
+          "axis": "x",
+          "dir": -1
+        },
+        {
+          "id": "l13-g-two",
+          "label": "Có 2 cặp cột",
+          "kind": "drewCount",
+          "sprite": "pipe",
+          "min": 4
+        }
+      ],
+      "walkthrough": [
+        "Trong update(), xóa dòng pass.",
+        "Gõ: for i in range(len(pipes)):",
+        "Thụt vào: pipes[i] = pipes[i] - 2",
+        "Thụt vào tiếp: if pipes[i] < -76: rồi thụt thêm: pipes[i] = pipes[i] + 400",
+        "Bấm ▶ Chạy, rồi ⛶ để xem cột chạy vòng."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
       },
-      {
-        "id": "l13-g-two",
-        "label": "Có 2 cặp cột",
-        "kind": "drewCount",
-        "sprite": "pipe",
-        "min": 4
+      "hints": [
+        "for i in range(len(pipes)): đi qua từng ngăn.",
+        "pipes[i] = pipes[i] - 2",
+        "if pipes[i] < -76:\n    pipes[i] = pipes[i] + 400"
+      ],
+      "test": {
+        "frames": 60,
+        "taps": []
       }
-    ],
-    "walkthrough": [
-      "Trong update(), xóa dòng pass.",
-      "Gõ: for i in range(len(pipes)):",
-      "Thụt vào: pipes[i] = pipes[i] - 2",
-      "Thụt vào tiếp: if pipes[i] < -76: rồi thụt thêm: pipes[i] = pipes[i] + 400",
-      "Bấm ▶ Chạy, rồi ⛶ để xem cột chạy vòng."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [450, 650]\n\n\ndef update():\n    for i in range(len(pipes)):\n        pipes[i] = pipes[i] - 2\n        if pipes[i] < -76:\n            pipes[i] = pipes[i] + 400\n\n\ndef draw():\n    clear(\"skyblue\")\n    for x in pipes:\n        draw_pipe(x, 200)\n"
-    },
-    "hints": [
-      "for i in range(len(pipes)): đi qua từng ngăn.",
-      "pipes[i] = pipes[i] - 2",
-      "if pipes[i] < -76:\n    pipes[i] = pipes[i] + 400"
-    ],
-    "test": {
-      "frames": 60,
-      "taps": []
     }
-  },
-  "unlocksRoadmap": ["pipes"],
+  ],
+  "unlocksRoadmap": [
+    "pipes"
+  ],
   "docsUnlocked": []
 }

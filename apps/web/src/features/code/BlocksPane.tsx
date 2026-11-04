@@ -27,12 +27,17 @@ export const BlocksPane = forwardRef<
   BlocksPaneHandle,
   {
     toolbox: string[];
+    /** Typing exercise: the blocks mirror the code but cannot be dragged, and there is no toolbox. */
+    readOnly?: boolean;
     onEdit: () => void;
     onSelectLine: (line: number | null) => void;
     onReady: (ws: Blockly.WorkspaceSvg) => void;
     onDispose: (ws: Blockly.WorkspaceSvg) => void;
   }
->(function BlocksPane({ toolbox, onEdit, onSelectLine, onReady, onDispose }, ref) {
+>(function BlocksPane(
+  { toolbox, readOnly = false, onEdit, onSelectLine, onReady, onDispose },
+  ref,
+) {
   const host = useRef<HTMLDivElement>(null);
   const ws = useRef<Blockly.WorkspaceSvg | null>(null);
   const refresh = useRef<() => void>(() => undefined);
@@ -49,7 +54,7 @@ export const BlocksPane = forwardRef<
       localeSet = true;
     }
     const w = Blockly.inject(host.current, {
-      toolbox: toolboxFor(toolbox),
+      ...(readOnly ? { readOnly: true } : { toolbox: toolboxFor(toolbox) }),
       media: '/blockly-media/',
       renderer: 'zelos',
       trashcan: true,
@@ -61,6 +66,7 @@ export const BlocksPane = forwardRef<
     // Every def in the code gets a call block in the toolbox ("Lệnh tự đặt"), like Scratch's My Blocks.
     let defsKey = '[]';
     const refreshCalls = () => {
+      if (readOnly) return;
       const calls = callBlocksFor(defsOn(w));
       const key = JSON.stringify(calls);
       if (key === defsKey) return;
@@ -93,7 +99,7 @@ export const BlocksPane = forwardRef<
       w.dispose();
       ws.current = null;
     };
-    // The toolbox of a lesson never changes while the screen is open.
+    // The toolbox and read-only mode of an exercise never change while it is open (key per exercise).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -27,7 +27,11 @@
           "id": "l00-quiz-gravity",
           "quiz": {
             "question": "Vì sao chim cứ rơi xuống khi em không bấm gì?",
-            "choices": ["Vì có trọng lực kéo xuống", "Vì em bấm sai phím", "Vì cột đẩy chim"],
+            "choices": [
+              "Vì có trọng lực kéo xuống",
+              "Vì em bấm sai phím",
+              "Vì cột đẩy chim"
+            ],
             "answer": 0,
             "explain": "Mỗi khung hình, game kéo chim xuống một chút. Đó là trọng lực, một phần em sẽ tự làm."
           }
@@ -69,7 +73,11 @@
           "id": "l00-quiz-order",
           "quiz": {
             "question": "Phần nào nên làm đầu tiên?",
-            "choices": ["Điểm số", "Sân khấu và nhân vật", "Màn hình thua"],
+            "choices": [
+              "Điểm số",
+              "Sân khấu và nhân vật",
+              "Màn hình thua"
+            ],
             "answer": 1,
             "explain": "Chưa có sân khấu và nhân vật thì chưa có gì để tính điểm hay để thua."
           }
@@ -115,41 +123,51 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\nprint(\"Xin chào!\")\n"
-    },
-    "main": "main.py",
-    "toolbox": ["pq_import", "pq_print", "pq_text"],
-    "mode": "script",
-    "goals": [
-      {
-        "id": "l00-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l00-e1",
+      "title": "Dòng code đầu tiên",
+      "task": "Lệnh print(\"...\") làm nhân vật nói một câu trên sân chơi. Hãy cho nó nói: Mình sẽ làm game!",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nprint(\"Xin chào!\")\n"
       },
-      {
-        "id": "l00-g-say",
-        "label": "Nói: Mình sẽ làm game!",
-        "kind": "printed",
-        "text": "Mình sẽ làm game!"
-      }
-    ],
-    "walkthrough": [
-      "Nhìn khung Python: dòng 1 from pyquest import * mở thư viện; dòng 3 print(\"Xin chào!\") làm nhân vật nói.",
-      "Ở khung Khối, bấm vào chữ Xin chào! trong khối \"nói\" rồi gõ: Mình sẽ làm game!",
-      "Hoặc sửa thẳng trong khung Python. Giữ nguyên hai dấu ngoặc kép \" \" bao quanh chữ.",
-      "Bấm ▶ Chạy và xem bong bóng hiện trên sân chơi.",
-      "Hai mục tiêu ✅ là xong. Bấm \"Quay lại bài\" để đi tiếp."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\nprint(\"Mình sẽ làm game!\")\n"
-    },
-    "hints": [
-      "Chỉ cần sửa chữ bên trong dấu ngoặc kép.",
-      "Gõ đúng: Mình sẽ làm game! (có dấu chấm than)."
-    ]
-  },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_print",
+        "pq_text"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l00-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l00-g-say",
+          "label": "Nói: Mình sẽ làm game!",
+          "kind": "printed",
+          "text": "Mình sẽ làm game!"
+        }
+      ],
+      "walkthrough": [
+        "Nhìn khung Python: dòng 1 from pyquest import * mở thư viện; dòng 3 print(\"Xin chào!\") làm nhân vật nói.",
+        "Ở khung Khối, bấm vào chữ Xin chào! trong khối \"nói\" rồi gõ: Mình sẽ làm game!",
+        "Hoặc sửa thẳng trong khung Python. Giữ nguyên hai dấu ngoặc kép \" \" bao quanh chữ.",
+        "Bấm ▶ Chạy và xem bong bóng hiện trên sân chơi.",
+        "Hai mục tiêu ✅ là xong. Bấm \"Quay lại bài\" để đi tiếp."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nprint(\"Mình sẽ làm game!\")\n"
+      },
+      "hints": [
+        "Chỉ cần sửa chữ bên trong dấu ngoặc kép.",
+        "Gõ đúng: Mình sẽ làm game! (có dấu chấm than)."
+      ]
+    }
+  ],
   "unlocksRoadmap": [],
   "docsUnlocked": []
 }

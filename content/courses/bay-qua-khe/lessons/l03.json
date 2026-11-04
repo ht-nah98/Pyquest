@@ -25,7 +25,11 @@
           "id": "l03-quiz-move",
           "quiz": {
             "question": "Mỏ là draw_rect(x + 30, y + 14, 8, 8, \"orange\"). Đặt x = 200 thì mỏ ở x bằng mấy?",
-            "choices": ["30", "200", "230"],
+            "choices": [
+              "30",
+              "200",
+              "230"
+            ],
             "answer": 2,
             "explain": "x + 30 = 200 + 30 = 230. Mỏ luôn cách góc chim 30 bước."
           }
@@ -66,7 +70,11 @@
           "id": "l03-quiz-fixed",
           "quiz": {
             "question": "Em viết mỏ là draw_rect(130, 314, 8, 8, \"orange\"). Đổi x thì sao?",
-            "choices": ["Mỏ dời theo chim", "Mỏ đứng yên, chim bay mất mỏ", "Máy báo lỗi"],
+            "choices": [
+              "Mỏ dời theo chim",
+              "Mỏ đứng yên, chim bay mất mỏ",
+              "Máy báo lỗi"
+            ],
             "answer": 1,
             "explain": "130 là số cố định, không đọc hộp x. Viết x + 30 thì mỏ mới đi theo chim."
           }
@@ -74,60 +82,66 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, \"red\")\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_assign",
-      "pq_var_get",
-      "pq_number",
-      "pq_arith",
-      "pq_draw_rect",
-      "pq_text",
-      "pq_clear"
-    ],
-    "mode": "script",
-    "goals": [
-      {
-        "id": "l03-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l03-e1",
+      "title": "Ghép chim theo x, y",
+      "task": "Thân chim đã có sẵn. Thêm mỏ, cánh, mắt bằng draw_rect, mỗi khối tính từ x và y. Máy sẽ thử đổi x để xem cả con chim có dời theo không.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, \"red\")\n"
       },
-      {
-        "id": "l03-g-pieces",
-        "label": "Chim có ít nhất 3 khối",
-        "kind": "drewRects",
-        "min": 3
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_assign",
+        "pq_var_get",
+        "pq_number",
+        "pq_arith",
+        "pq_draw_rect",
+        "pq_text",
+        "pq_clear"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l03-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l03-g-pieces",
+          "label": "Chim có ít nhất 3 khối",
+          "kind": "drewRects",
+          "min": 3
+        },
+        {
+          "id": "l03-g-follow",
+          "label": "Đổi x thì cả chim dời theo",
+          "kind": "shifts",
+          "var": "x",
+          "by": 50,
+          "axis": "x"
+        }
+      ],
+      "walkthrough": [
+        "Khung Python đã có x, y và thân chim: draw_rect(x, y + 10, 30, 20, \"red\").",
+        "Kéo thêm một khối \"vẽ hình chữ nhật\" đặt dưới thân. Đây là mỏ.",
+        "Ô x của mỏ: kéo khối \"+\" (Số và chữ) vào, ghép thành x + 30. Ô y: y + 14.",
+        "Rộng 8, cao 8, màu orange. Trong Python: draw_rect(x + 30, y + 14, 8, 8, \"orange\")",
+        "Làm thêm cánh và mắt theo thiết kế giấy của em, khối nào cũng tính từ x và y.",
+        "Bấm ▶ Chạy. Rồi đổi x = 100 thành 250, chạy lại: cả chim phải dời theo."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, \"red\")\ndraw_rect(x + 30, y + 14, 8, 8, \"orange\")\ndraw_rect(x + 8, y, 14, 10, \"red\")\ndraw_rect(x + 20, y + 13, 4, 4, \"black\")\n"
       },
-      {
-        "id": "l03-g-follow",
-        "label": "Đổi x thì cả chim dời theo",
-        "kind": "shifts",
-        "var": "x",
-        "by": 50,
-        "axis": "x"
-      }
-    ],
-    "walkthrough": [
-      "Khung Python đã có x, y và thân chim: draw_rect(x, y + 10, 30, 20, \"red\").",
-      "Kéo thêm một khối \"vẽ hình chữ nhật\" đặt dưới thân. Đây là mỏ.",
-      "Ô x của mỏ: kéo khối \"+\" (Số và chữ) vào, ghép thành x + 30. Ô y: y + 14.",
-      "Rộng 8, cao 8, màu orange. Trong Python: draw_rect(x + 30, y + 14, 8, 8, \"orange\")",
-      "Làm thêm cánh và mắt theo thiết kế giấy của em, khối nào cũng tính từ x và y.",
-      "Bấm ▶ Chạy. Rồi đổi x = 100 thành 250, chạy lại: cả chim phải dời theo."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y + 10, 30, 20, \"red\")\ndraw_rect(x + 30, y + 14, 8, 8, \"orange\")\ndraw_rect(x + 8, y, 14, 10, \"red\")\ndraw_rect(x + 20, y + 13, 4, 4, \"black\")\n"
-    },
-    "hints": [
-      "Mỗi khối của chim là một dòng draw_rect.",
-      "Ô x viết x + số, ô y viết y + số. Đừng gõ số cố định.",
-      "Ví dụ mỏ: draw_rect(x + 30, y + 14, 8, 8, \"orange\")"
-    ]
-  },
+      "hints": [
+        "Mỗi khối của chim là một dòng draw_rect.",
+        "Ô x viết x + số, ô y viết y + số. Đừng gõ số cố định.",
+        "Ví dụ mỏ: draw_rect(x + 30, y + 14, 8, 8, \"orange\")"
+      ]
+    }
+  ],
   "unlocksRoadmap": [],
   "docsUnlocked": []
 }

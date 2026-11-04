@@ -11,8 +11,16 @@ export const REQUIRED_STEPS: readonly StepKind[] = ['understand', 'playtest'];
 
 const FilesSchema = z.record(z.string().min(1), z.string());
 
-export const LessonCodeSchema = z
+/**
+ * One exercise of a lesson's code step. A lesson has several, easiest first (spec foundations-first §4).
+ * input: 'blocks' = drag blocks or type; 'typing' = type Python only, the blocks just mirror the code.
+ */
+export const ExerciseSchema = z
   .object({
+    id: z.string().min(1),
+    title: z.string().min(1).max(60),
+    task: z.string().min(1).max(280),
+    input: z.enum(['blocks', 'typing']),
     starter: FilesSchema,
     main: z.string().min(1),
     toolbox: z.array(z.string().min(1)),
@@ -59,7 +67,7 @@ const OpenLessonSchema = z
     /** One line under the title on the course map. */
     summary: z.string().min(1).max(120).optional(),
     steps: z.array(StepSchema).min(1),
-    code: LessonCodeSchema.optional(),
+    exercises: z.array(ExerciseSchema).min(1).optional(),
     unlocksRoadmap: z.array(z.string()),
     docsUnlocked: z.array(z.string()),
   })
@@ -82,12 +90,23 @@ const OpenLessonSchema = z
         path: ['steps'],
       });
     }
-    if (kinds.includes('code') !== (lesson.code !== undefined)) {
+    if (kinds.includes('code') !== (lesson.exercises !== undefined)) {
       ctx.addIssue({
         code: 'custom',
-        message: 'a "code" step and the code block go together',
-        path: ['code'],
+        message: 'a "code" step and its exercises go together',
+        path: ['exercises'],
       });
+    }
+    const exerciseIds = new Set<string>();
+    for (const e of lesson.exercises ?? []) {
+      if (exerciseIds.has(e.id)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `duplicate exercise id "${e.id}"`,
+          path: ['exercises'],
+        });
+      }
+      exerciseIds.add(e.id);
     }
     const seen = new Set<string>();
     for (const step of lesson.steps) {
@@ -118,7 +137,7 @@ export const LessonSchema = z.union([HiddenLessonSchema, OpenLessonSchema]);
 export type OpenLesson = z.infer<typeof OpenLessonSchema>;
 export type HiddenLesson = z.infer<typeof HiddenLessonSchema>;
 export type Lesson = z.infer<typeof LessonSchema>;
-export type LessonCode = z.infer<typeof LessonCodeSchema>;
+export type Exercise = z.infer<typeof ExerciseSchema>;
 
 export function isOpenLesson(lesson: Lesson): lesson is OpenLesson {
   return lesson.hidden !== true;

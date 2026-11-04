@@ -7,16 +7,35 @@ const STAGE_HEIGHT = 600;
 
 export type GoalResult = { id: string; ok: boolean };
 
+/** Extra runs some goals compare against: the program with its variable moved, and the solution. */
+export type CheckExtra = { shifted?: RunResult; expected?: RunResult };
+
 /**
  * Pure: grades a finished run against a lesson's goals. Never runs Python itself.
- * shifted: the same program run again through shiftSource, for 'shifts' goals.
+ * extra.shifted: the program run again through shiftSource ('shifts'); extra.expected: the solution's run
+ * ('matches').
  */
 export function checkGoals(
   goals: readonly Goal[],
   result: RunResult,
-  shifted?: RunResult,
+  extra: CheckExtra = {},
 ): GoalResult[] {
-  return goals.map((goal) => ({ id: goal.id, ok: meets(goal, result, shifted) }));
+  return goals.map((goal) => ({ id: goal.id, ok: meets(goal, result, extra) }));
+}
+
+/** True when a goal compares with the solution's picture, so the solution must be run too. */
+export function needsExpected(goals: readonly Goal[]): boolean {
+  return goals.some((g) => g.kind === 'matches');
+}
+
+/** The last picture of a run as sorted keys: background colour, then every piece. Order of drawing is ignored. */
+function pictureOf(r: RunResult): string[] {
+  const frames = framesOf(r.events);
+  const last = frames[frames.length - 1] ?? [];
+  let sky = '';
+  for (const e of last) if (e.t === 'clear') sky = e.color;
+  const keys = pieces(last).map((p) => `${p.t} ${String(p.x)} ${String(p.y)} ${p.rest}`);
+  return [`clear ${sky}`, ...keys.sort()];
 }
 
 /** Goals that need a second run of the program (see shiftSource). */
@@ -105,8 +124,15 @@ function track(r: RunResult, sprite: string, axis: 'x' | 'y'): (number | undefin
 
 const defined = (xs: (number | undefined)[]): number[] => xs.filter((v) => v !== undefined);
 
-function meets(goal: Goal, r: RunResult, shifted: RunResult | undefined): boolean {
+function meets(goal: Goal, r: RunResult, extra: CheckExtra): boolean {
+  const { shifted, expected } = extra;
   switch (goal.kind) {
+    case 'matches': {
+      if (expected === undefined || r.error !== undefined) return false;
+      const a = pictureOf(r);
+      const b = pictureOf(expected);
+      return a.length === b.length && a.every((k, i) => k === b[i]);
+    }
     case 'drewRects': {
       const at = goal.at;
       return framesOf(r.events).some((f) => {

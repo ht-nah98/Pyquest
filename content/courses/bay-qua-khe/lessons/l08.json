@@ -52,7 +52,11 @@
           "id": "l08-quiz-speed",
           "quiz": {
             "question": "Mỗi khung hình y tăng 3, game chạy 60 khung mỗi giây. Một giây chim rơi bao xa?",
-            "choices": ["3", "60", "180"],
+            "choices": [
+              "3",
+              "60",
+              "180"
+            ],
             "answer": 2,
             "explain": "3 × 60 = 180."
           }
@@ -81,55 +85,67 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
-      "pq_var_get",
-      "pq_number",
-      "pq_clear",
-      "pq_text"
-    ],
-    "mode": "game",
-    "goals": [
-      {
-        "id": "l08-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l08-e1",
+      "title": "Cho chim rơi",
+      "task": "Trong update(), thay pass bằng hai dòng: global y và y = y + 3. Bấm Chạy: máy tự thử 60 khung hình rồi cho em xem chim rơi.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    pass\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
       },
-      {
-        "id": "l08-g-fall",
-        "label": "Chim đi xuống",
-        "kind": "moves",
-        "sprite": "bird",
-        "axis": "y",
-        "dir": 1
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_clear",
+        "pq_text"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l08-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l08-g-fall",
+          "label": "Chim đi xuống",
+          "kind": "moves",
+          "sprite": "bird",
+          "axis": "y",
+          "dir": 1
+        }
+      ],
+      "walkthrough": [
+        "Tìm def update(): bên trong chỉ có pass (nghĩa là \"chưa làm gì\").",
+        "Xóa pass. Gõ global y (thụt vào 4 dấu cách, thẳng hàng với chỗ pass cũ).",
+        "Dòng tiếp theo, cùng thụt lề: y = y + 3",
+        "Bấm ▶ Chạy: máy tự chạy thử 60 khung hình để chấm, rồi chim rơi trên sân.",
+        "Bấm ⛶ để xem toàn màn hình. Chim rơi khỏi màn hình là đúng: Bài 10 mới có mặt đất."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
+      },
+      "hints": [
+        "Trong update(), dòng đầu: global y",
+        "Dòng thứ hai: y = y + 3",
+        "Xóa dòng pass đi."
+      ],
+      "test": {
+        "frames": 60,
+        "taps": []
       }
-    ],
-    "walkthrough": [
-      "Tìm def update(): bên trong chỉ có pass (nghĩa là \"chưa làm gì\").",
-      "Xóa pass. Gõ global y (thụt vào 4 dấu cách, thẳng hàng với chỗ pass cũ).",
-      "Dòng tiếp theo, cùng thụt lề: y = y + 3",
-      "Bấm ▶ Chạy: máy tự chạy thử 60 khung hình để chấm, rồi chim rơi trên sân.",
-      "Bấm ⛶ để xem toàn màn hình. Chim rơi khỏi màn hình là đúng: Bài 10 mới có mặt đất."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
-    },
-    "hints": ["Trong update(), dòng đầu: global y", "Dòng thứ hai: y = y + 3", "Xóa dòng pass đi."],
-    "test": {
-      "frames": 60,
-      "taps": []
     }
-  },
-  "unlocksRoadmap": ["motion"],
+  ],
+  "unlocksRoadmap": [
+    "motion"
+  ],
   "docsUnlocked": []
 }

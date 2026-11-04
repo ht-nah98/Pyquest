@@ -28,7 +28,11 @@
           "id": "l11-quiz",
           "quiz": {
             "question": "speed = -8 rồi y = y + speed. Chim đi đâu?",
-            "choices": ["Lên trên", "Xuống dưới", "Đứng yên"],
+            "choices": [
+              "Lên trên",
+              "Xuống dưới",
+              "Đứng yên"
+            ],
             "answer": 0,
             "explain": "Cộng số âm là trừ: y nhỏ đi nên chim lên trên."
           }
@@ -67,70 +71,84 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
-      "pq_var_get",
-      "pq_number",
-      "pq_clear",
-      "pq_text",
-      "pq_if",
-      "pq_compare",
-      "pq_draw_rect",
-      "pq_key_pressed"
-    ],
-    "mode": "game",
-    "goals": [
-      {
-        "id": "l11-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l11-e1",
+      "title": "Thêm nút bay",
+      "task": "Trong update(), ngay sau dòng global, thêm if key_pressed(): và dòng thụt vào speed = -8. Máy sẽ thử bấm giúp em ở khung 40 và 60.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
       },
-      {
-        "id": "l11-g-flap",
-        "label": "Bấm thì chim bay lên",
-        "kind": "risesAfterTap",
-        "sprite": "bird",
-        "taps": [40, 60]
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_compare",
+        "pq_draw_rect",
+        "pq_key_pressed"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l11-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l11-g-flap",
+          "label": "Bấm thì chim bay lên",
+          "kind": "risesAfterTap",
+          "sprite": "bird",
+          "taps": [
+            40,
+            60
+          ]
+        },
+        {
+          "id": "l11-g-ground",
+          "label": "Vẫn không chìm qua đất",
+          "kind": "staysWithin",
+          "sprite": "bird",
+          "axis": "y",
+          "max": 480
+        }
+      ],
+      "walkthrough": [
+        "Trong update(), ngay dưới dòng global y, speed, gõ: if key_pressed():",
+        "Dòng thụt vào thêm: speed = -8",
+        "Khối tương ứng: \"nếu … thì\" với khối \"đang bấm Space / chạm?\", bên trong \"đặt speed = -8\".",
+        "Bấm ▶ Chạy: máy thử bấm ở khung 40 và 60 để chấm.",
+        "Bấm ⛶ rồi nhấn Space để tự chơi. Chỉnh -8 và 0.5 tới khi vừa tay."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
       },
-      {
-        "id": "l11-g-ground",
-        "label": "Vẫn không chìm qua đất",
-        "kind": "staysWithin",
-        "sprite": "bird",
-        "axis": "y",
-        "max": 480
+      "hints": [
+        "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",
+        "Bên trong: speed = -8.",
+        "if key_pressed():\n    speed = -8"
+      ],
+      "test": {
+        "frames": 90,
+        "taps": [
+          40,
+          60
+        ]
       }
-    ],
-    "walkthrough": [
-      "Trong update(), ngay dưới dòng global y, speed, gõ: if key_pressed():",
-      "Dòng thụt vào thêm: speed = -8",
-      "Khối tương ứng: \"nếu … thì\" với khối \"đang bấm Space / chạm?\", bên trong \"đặt speed = -8\".",
-      "Bấm ▶ Chạy: máy thử bấm ở khung 40 và 60 để chấm.",
-      "Bấm ⛶ rồi nhấn Space để tự chơi. Chỉnh -8 và 0.5 tới khi vừa tay."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_rect(0, 520, 400, 80, \"green\")\n    draw_bird(100, y)\n"
-    },
-    "hints": [
-      "Dùng khối \"nếu … thì\" với khối \"đang bấm Space / chạm?\".",
-      "Bên trong: speed = -8.",
-      "if key_pressed():\n    speed = -8"
-    ],
-    "test": {
-      "frames": 90,
-      "taps": [40, 60]
     }
-  },
-  "unlocksRoadmap": ["flap"],
+  ],
+  "unlocksRoadmap": [
+    "flap"
+  ],
   "docsUnlocked": []
 }

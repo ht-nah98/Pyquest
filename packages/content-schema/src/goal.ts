@@ -20,7 +20,7 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     name: z.string().min(1),
     value: z.union([z.number(), z.string(), z.boolean()]),
   }),
-  // Judged over the frames of a run (game mode: the scripted test run in LessonCode.test).
+  // Judged over the frames of a run (game mode: the scripted test run in Exercise.test).
   z.object({
     ...base,
     kind: z.literal('moves'),
@@ -58,6 +58,8 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     sprite: z.string().min(1),
     axis: z.enum(['x', 'y']),
   }),
+  /** The last picture equals the solution's: same pieces, places, colours and background; order free. */
+  z.object({ ...base, kind: z.literal('matches') }),
   // Drawing from the smallest pieces (spec 2026-11-04-from-smallest-pieces).
   /** At least min boxes in one picture; a box covering the whole stage (a background) does not count. */
   z.object({

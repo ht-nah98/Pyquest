@@ -25,7 +25,11 @@
           "id": "l14-quiz",
           "quiz": {
             "question": "random_int(1, 6) có thể cho số nào?",
-            "choices": ["0", "1 đến 6", "7"],
+            "choices": [
+              "0",
+              "1 đến 6",
+              "7"
+            ],
             "answer": 1,
             "explain": "Cả hai đầu 1 và 6 đều có thể ra."
           }
@@ -70,66 +74,72 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
-      "pq_var_get",
-      "pq_number",
-      "pq_draw_image",
-      "pq_clear",
-      "pq_text",
-      "pq_if",
-      "pq_if_else",
-      "pq_compare",
-      "pq_logic",
-      "pq_key_pressed",
-      "pq_for",
-      "pq_draw_text",
-      "pq_random"
-    ],
-    "mode": "game",
-    "goals": [
-      {
-        "id": "l14-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l14-e1",
+      "title": "Tung lại độ cao khe",
+      "task": "Trong update(), chỗ đưa cột về bên phải, thêm dòng pipe[1] = random_int(80, 300).",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
       },
-      {
-        "id": "l14-g-vary",
-        "label": "Khe cột cao thấp khác nhau",
-        "kind": "distinctCount",
-        "sprite": "pipe",
-        "axis": "y",
-        "min": 6
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_image",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_key_pressed",
+        "pq_for",
+        "pq_draw_text",
+        "pq_random"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l14-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l14-g-vary",
+          "label": "Khe cột cao thấp khác nhau",
+          "kind": "distinctCount",
+          "sprite": "pipe",
+          "axis": "y",
+          "min": 6
+        }
+      ],
+      "walkthrough": [
+        "Trong update(), tìm dòng pipe[0] = pipe[0] + 440.",
+        "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)",
+        "Bấm ▶ Chạy: máy chạy thử 520 khung hình để thấy cột quay lại nhiều lần.",
+        "Bấm ⛶: mỗi lần cột quay lại, khe ở một độ cao khác."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
+      },
+      "hints": [
+        "Tìm dòng pipe[0] = pipe[0] + 440.",
+        "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)"
+      ],
+      "test": {
+        "frames": 520,
+        "taps": []
       }
-    ],
-    "walkthrough": [
-      "Trong update(), tìm dòng pipe[0] = pipe[0] + 440.",
-      "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)",
-      "Bấm ▶ Chạy: máy chạy thử 520 khung hình để thấy cột quay lại nhiều lần.",
-      "Bấm ⛶: mỗi lần cột quay lại, khe ở một độ cao khác."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipes = [[400, 200], [620, 300]]\n\n\ndef update():\n    for pipe in pipes:\n        pipe[0] = pipe[0] - 2\n        if pipe[0] < -76:\n            pipe[0] = pipe[0] + 440\n            pipe[1] = random_int(80, 300)\n\n\ndef draw():\n    clear(\"skyblue\")\n    for pipe in pipes:\n        draw_pipe(pipe[0], pipe[1])\n"
-    },
-    "hints": [
-      "Tìm dòng pipe[0] = pipe[0] + 440.",
-      "Ngay dưới, cùng thụt lề: pipe[1] = random_int(80, 300)"
-    ],
-    "test": {
-      "frames": 520,
-      "taps": []
     }
-  },
+  ],
   "unlocksRoadmap": [],
   "docsUnlocked": []
 }

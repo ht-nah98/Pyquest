@@ -9,6 +9,9 @@ beforeAll(async () => {
 
 const slides = (id: string) => [{ id, text: 'Một ý.' }];
 
+/** The first exercise of a test lesson. */
+const ex = (l: Record<string, unknown>) => (l['exercises'] as Record<string, unknown>[])[0];
+
 function lesson(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     id: 'l00',
@@ -20,14 +23,20 @@ function lesson(overrides: Record<string, unknown> = {}): Record<string, unknown
       { kind: 'code', slides: slides('b') },
       { kind: 'playtest', slides: slides('c') },
     ],
-    code: {
-      starter: { 'main.py': '' },
-      main: 'main.py',
-      toolbox: ['pq_draw_image', 'pq_number'],
-      mode: 'script',
-      goals: [{ id: 'g-bird', label: 'Chim', kind: 'drew', sprite: 'bird', at: [100, 300] }],
-      solution: { 'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 100, 300)\n' },
-    },
+    exercises: [
+      {
+        id: 'l00-e1',
+        title: 'Vẽ chim',
+        task: 'Vẽ chim ở (100, 300).',
+        input: 'blocks',
+        starter: { 'main.py': '' },
+        main: 'main.py',
+        toolbox: ['pq_draw_image', 'pq_number'],
+        mode: 'script',
+        goals: [{ id: 'g-bird', label: 'Chim', kind: 'drew', sprite: 'bird', at: [100, 300] }],
+        solution: { 'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 100, 300)\n' },
+      },
+    ],
     unlocksRoadmap: ['stage'],
     docsUnlocked: [],
     ...overrides,
@@ -80,7 +89,7 @@ describe('checkContent', () => {
 
   test('a solution that misses a goal is reported with the goal id', async () => {
     const l = lesson();
-    (l['code'] as { solution: Record<string, string> }).solution = {
+    (ex(l) as { solution: Record<string, string> }).solution = {
       'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 101, 300)\n',
     };
     const errors = await checkContent(input(l), py);
@@ -89,7 +98,7 @@ describe('checkContent', () => {
 
   test('a starter that already passes every goal is reported', async () => {
     const l = lesson();
-    (l['code'] as { starter: Record<string, string> }).starter = {
+    (ex(l) as { starter: Record<string, string> }).starter = {
       'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 100, 300)\n',
     };
     expect((await checkContent(input(l), py)).join('\n')).toMatch(/starter/);
@@ -97,7 +106,7 @@ describe('checkContent', () => {
 
   test('an unknown toolbox block is reported', async () => {
     const l = lesson();
-    (l['code'] as { toolbox: string[] }).toolbox = ['pq_nope'];
+    (ex(l) as { toolbox: string[] }).toolbox = ['pq_nope'];
     expect((await checkContent(input(l), py)).join('\n')).toContain('pq_nope');
   });
 
@@ -126,7 +135,7 @@ describe('checkContent', () => {
 
   test('code the block editor would change is reported (rule 9)', async () => {
     const l = lesson();
-    (l['code'] as { starter: Record<string, string> }).starter = {
+    (ex(l) as { starter: Record<string, string> }).starter = {
       'main.py': 'draw_rect(1,2,3,4,"red")\n',
     };
     expect((await checkContent(input(l), py)).join('\n')).toMatch(/round trip/);
@@ -153,7 +162,7 @@ describe('checkContent', () => {
     const birdAt = (x: string) =>
       `from pyquest import *\n\nx = 100\ndraw_rect(${x}, 300, 30, 20, "red")\n`;
     const l = lesson();
-    const code = l['code'] as Record<string, unknown>;
+    const code = ex(l) as Record<string, unknown>;
     code['toolbox'] = ['pq_draw_rect', 'pq_assign', 'pq_var_get', 'pq_number', 'pq_text'];
     code['goals'] = [
       { id: 'g-follow', label: 'Theo x', kind: 'shifts', var: 'x', by: 50, axis: 'x' },
@@ -163,6 +172,26 @@ describe('checkContent', () => {
     expect(await checkContent(input(l), py)).toEqual([]);
     code['solution'] = { 'main.py': birdAt('100') };
     expect((await checkContent(input(l), py)).join('\n')).toContain('g-follow');
+  });
+
+  test('every exercise is checked on its own and named in the error', async () => {
+    const l = lesson();
+    const first = ex(l) as Record<string, unknown>;
+    l['exercises'] = [
+      first,
+      { ...first, id: 'l00-e2', solution: { 'main.py': 'from pyquest import *\n' } },
+    ];
+    expect((await checkContent(input(l), py)).join('\n')).toMatch(/l00-e2: solution misses/);
+  });
+
+  test('a matches goal compares with the solution picture', async () => {
+    const l = lesson();
+    const e = ex(l) as Record<string, unknown>;
+    e['toolbox'] = ['pq_draw_rect', 'pq_number', 'pq_text'];
+    e['goals'] = [{ id: 'g-same', label: 'Giống hình', kind: 'matches' }];
+    e['solution'] = { 'main.py': 'from pyquest import *\ndraw_rect(0, 0, 10, 10, "red")\n' };
+    e['starter'] = { 'main.py': 'from pyquest import *\ndraw_rect(0, 0, 10, 10, "blue")\n' };
+    expect(await checkContent(input(l), py)).toEqual([]);
   });
 
   test('stray files are reported', async () => {

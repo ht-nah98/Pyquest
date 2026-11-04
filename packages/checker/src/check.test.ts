@@ -1,7 +1,7 @@
 import type { Goal } from '@pyquest/content-schema';
 import type { RunResult } from '@pyquest/runtime';
 import { describe, expect, test } from 'vitest';
-import { checkGoals, runGameTest, shiftSource } from './index';
+import { checkGoals, needsExpected, runGameTest, shiftSource } from './index';
 
 const ok: RunResult = {
   events: [
@@ -356,16 +356,18 @@ describe('goals for drawing from the smallest pieces', () => {
     const g: Goal = { id: 'g', label: 'l', kind: 'shifts', var: 'x', by: 50, axis: 'x' };
     const before = result([{ t: 'clear', color: 'sky' }, ...bird(100, 300)]);
     expect(
-      checkGoals([g], before, result([{ t: 'clear', color: 'sky' }, ...bird(150, 300)]))[0]?.ok,
+      checkGoals([g], before, {
+        shifted: result([{ t: 'clear', color: 'sky' }, ...bird(150, 300)]),
+      })[0]?.ok,
     ).toBe(true);
     // Fixed numbers: nothing moves.
-    expect(checkGoals([g], before, before)[0]?.ok).toBe(false);
+    expect(checkGoals([g], before, { shifted: before })[0]?.ok).toBe(false);
     // The beak typed as a fixed number stays behind while the body moves: wrong.
     const beakStuck = result([{ t: 'clear', color: 'sky' }, rect(150, 310), rect(130, 314)]);
-    expect(checkGoals([g], before, beakStuck)[0]?.ok).toBe(false);
+    expect(checkGoals([g], before, { shifted: beakStuck })[0]?.ok).toBe(false);
     // One piece moves twice as far: wrong.
     const odd = result([{ t: 'clear', color: 'sky' }, rect(150, 310), rect(230, 314)]);
-    expect(checkGoals([g], before, odd)[0]?.ok).toBe(false);
+    expect(checkGoals([g], before, { shifted: odd })[0]?.ok).toBe(false);
     // No second run (the variable line was not found): not met.
     expect(checkGoals([g], before)[0]?.ok).toBe(false);
   });
@@ -425,4 +427,43 @@ test('drewRects with at: one of the boxes has its corner at that point', () => {
   });
   expect(checkGoals([g], box(100))[0]?.ok).toBe(true);
   expect(checkGoals([g], box(101))[0]?.ok).toBe(false);
+});
+
+describe("matches: the picture is the same as the solution's", () => {
+  const g: Goal = { id: 'g', label: 'l', kind: 'matches' };
+  const sky = { t: 'clear', color: 'skyblue' } as const;
+  const box = (x: number, color = 'red') => ({ t: 'rect', x, y: 0, w: 10, h: 10, color }) as const;
+  const want = result([sky, box(0), box(20, 'blue')]);
+
+  test('same pieces in any order match', () => {
+    expect(checkGoals([g], result([sky, box(20, 'blue'), box(0)]), { expected: want })[0]?.ok).toBe(
+      true,
+    );
+  });
+
+  test('a piece in another place, colour or size does not match', () => {
+    expect(checkGoals([g], result([sky, box(0), box(30, 'blue')]), { expected: want })[0]?.ok).toBe(
+      false,
+    );
+    expect(checkGoals([g], result([sky, box(0), box(20, 'red')]), { expected: want })[0]?.ok).toBe(
+      false,
+    );
+    expect(checkGoals([g], result([sky, box(0)]), { expected: want })[0]?.ok).toBe(false);
+  });
+
+  test('the background colour counts', () => {
+    const night = result([{ t: 'clear', color: 'navy' }, box(0), box(20, 'blue')]);
+    expect(checkGoals([g], night, { expected: want })[0]?.ok).toBe(false);
+  });
+
+  test('an extra copy of a piece does not match', () => {
+    expect(
+      checkGoals([g], result([sky, box(0), box(0), box(20, 'blue')]), { expected: want })[0]?.ok,
+    ).toBe(false);
+  });
+
+  test("without the solution's picture the goal is not met", () => {
+    expect(checkGoals([g], want)[0]?.ok).toBe(false);
+    expect(needsExpected([g])).toBe(true);
+  });
 });

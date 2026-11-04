@@ -1,14 +1,17 @@
 import {
   checkGoals,
+  needsExpected,
   needsShiftedRun,
   runGameTest,
   shiftSource,
+  type CheckExtra,
   type GoalResult,
 } from '@pyquest/checker';
-import type { Call, RunResult } from '@pyquest/runtime';
+import type { Exercise } from '@pyquest/content-schema';
+import type { Call, DrawEvent, RunResult } from '@pyquest/runtime';
 import type * as Blockly from 'blockly/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
 import { python, usePyStatus } from '../../runtime/client';
 import { Stage, type StageHandle } from '../../stage/Stage';
@@ -16,7 +19,10 @@ import { useGameKeys } from '../../stage/useGameKeys';
 import { useGameLoop } from '../../stage/useGameLoop';
 import { Button } from '../../ui/Button';
 import { TopBar } from '../../ui/TopBar';
+import type { LessonState } from '../../storage/store';
 import { useLessonState } from '../lesson/useLessonState';
+import { ExerciseBar } from './ExerciseBar';
+import { doneSteps, pickExercise, workOf } from './exercises';
 import { BlockCodeSync, type SyncError } from './blockCodeSync';
 import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
 import { PythonPane, type PythonPaneHandle } from './PythonPane';
@@ -36,15 +42,54 @@ const PARSE_DELAY_MS = 600;
 export function CodeScreen() {
   const { lessonId = '' } = useParams();
   const lesson = catalog.openLesson(lessonId);
-  if (lesson?.code === undefined) return <p className="p-8">Bài này không có phần code.</p>;
-  return <CodeEditor key={lessonId} lessonId={lessonId} />;
+  if (lesson?.exercises === undefined) return <p className="p-8">Bài này không có phần code.</p>;
+  return <CodeLesson key={lessonId} lessonId={lessonId} />;
 }
 
-function CodeEditor({ lessonId }: { lessonId: string }) {
+/** Holds the lesson's saved state (one hook for the whole screen) and picks the exercise from ?ex=. */
+function CodeLesson({ lessonId }: { lessonId: string }) {
+  const lesson = catalog.openLesson(lessonId);
+  const { state, update, flush } = useLessonState(lessonId);
+  const [params] = useSearchParams();
+  const { profile } = useSession();
+  const all = lesson?.exercises;
+  if (all === undefined || state === null) return null;
+  const isCoach = profile?.role === 'coach';
+  const ex = pickExercise(all, state, params.get('ex') ?? undefined, isCoach);
+  return (
+    <CodeEditor
+      key={ex.id}
+      lessonId={lessonId}
+      exercise={ex}
+      state={state}
+      update={update}
+      flush={flush}
+      isCoach={isCoach}
+    />
+  );
+}
+
+type Update = ReturnType<typeof useLessonState>['update'];
+
+function CodeEditor({
+  lessonId,
+  exercise,
+  state,
+  update,
+  flush,
+  isCoach,
+}: {
+  lessonId: string;
+  exercise: Exercise;
+  state: LessonState;
+  update: Update;
+  flush: () => void;
+  isCoach: boolean;
+}) {
   const navigate = useNavigate();
   const lesson = catalog.openLesson(lessonId);
-  const code = lesson?.code;
-  const { state, update, flush } = useLessonState(lessonId);
+  const code = exercise;
+  const all = useMemo(() => catalog.openLesson(lessonId)?.exercises ?? [code], [lessonId, code]);
   const status = usePyStatus();
   const blocks = useRef<BlocksPaneHandle>(null);
   const pyPane = useRef<PythonPaneHandle>(null);
@@ -63,32 +108,56 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const [picked, setPicked] = useState<number | null>(null);
   /** Game mode shows the calls of the test run's last frame: ids from here on. */
   const [callFrom, setCallFrom] = useState(0);
+  /** 👀 The solution's picture, faded over the stage ('matches' exercises). */
+  const [ghostOn, setGhostOn] = useState(false);
+  const expected = useRef<RunResult | null>(null);
   const { profile } = useSession();
 
-  const main = code?.main ?? 'main.py';
+  const main = code.main;
   // Several files (Bài 16): one is open in both panes at a time; Run always starts from main.
   const [active, setActive] = useState(main);
   const activeRef = useRef(main);
-  const files =
-    state !== null && Object.keys(state.files).length > 0 ? state.files : (code?.starter ?? {});
+  const files = workOf(state, all, code).files;
   const filesRef = useRef(files);
   useEffect(() => {
     filesRef.current = files;
   });
 
   const grade = useCallback(
-    (r: RunResult, shifted?: RunResult) => {
-      if (code === undefined || lesson === undefined) return;
-      const res = checkGoals(code.goals, r, shifted);
+    (r: RunResult, extra: CheckExtra = {}) => {
+      if (lesson === undefined) return;
+      const res = checkGoals(code.goals, r, extra);
       setGoals(res);
       if (res.every((g) => g.ok)) {
         update((s) => {
-          const before = lesson.steps.map((st) => st.kind).filter((k) => k !== 'playtest');
-          return { doneSteps: [...new Set([...s.doneSteps, ...before])] };
+          const done = [...new Set([...(s.exercisesDone ?? []), code.id])];
+          const kinds = lesson.steps.map((st) => st.kind);
+          return {
+            exercisesDone: done,
+            doneSteps: [...new Set([...s.doneSteps, ...doneSteps(kinds, all, done)])],
+          };
         });
       }
     },
-    [code, lesson, update],
+    [code, lesson, all, update],
+  );
+
+  // Coming back to the lesson opens this exercise again.
+  useEffect(() => {
+    if (state.exercise !== code.id) update({ exercise: code.id });
+    // Once, when the exercise opens.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Save the blocks of this exercise (a first paint next time; the code stays the truth). */
+  const saveWorkspace = useCallback(
+    (ws: object) => {
+      update((s) => {
+        const w = workOf(s, all, code);
+        return { exercises: { ...s.exercises, [code.id]: { ...w, workspace: ws } } };
+      });
+    },
+    [all, code, update],
   );
 
   const loop = useGameLoop(stage, (r) => {
@@ -98,7 +167,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     }
     if (r.error !== undefined || r.stoppedByLimit) setRunning(false);
   });
-  useGameKeys(running && code?.mode === 'game', loop.press);
+  useGameKeys(running && code.mode === 'game', loop.press);
 
   useEffect(() => {
     void python.warmUp().catch(() => undefined);
@@ -106,14 +175,17 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
 
   const saveCode = useCallback(
     (text: string) => {
-      update((s) => ({
-        files: {
-          ...(Object.keys(s.files).length > 0 ? s.files : filesRef.current),
-          [activeRef.current]: text,
-        },
-      }));
+      update((s) => {
+        const w = workOf(s, all, code);
+        return {
+          exercises: {
+            ...s.exercises,
+            [code.id]: { ...w, files: { ...w.files, [activeRef.current]: text } },
+          },
+        };
+      });
     },
-    [update],
+    [all, code, update],
   );
 
   /** Rebuild the blocks from this code; a stopped worker just leaves the blocks stale until the next try. */
@@ -121,7 +193,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     void sync.current
       ?.fromCode(text)
       .then((ok) => {
-        if (ok && sync.current !== null) update({ workspace: sync.current.saveState() });
+        if (ok && sync.current !== null) saveWorkspace(sync.current.saveState());
         if (ok) blocks.current?.refreshCalls();
       })
       .catch(() => undefined);
@@ -141,7 +213,8 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
       });
       sync.current = s;
       // Saved blocks are only a first paint: the code is the truth, so always re-parse it (review C1).
-      if (state?.workspace !== undefined) s.loadState(state.workspace);
+      const saved = workOf(state, all, code).workspace;
+      if (saved !== undefined) s.loadState(saved);
       blocks.current?.refreshCalls();
       reparse(filesRef.current[activeRef.current] ?? '');
     },
@@ -166,8 +239,8 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     if (s === null || s.applying) return;
     // Blocks behind newer typed code must never overwrite it (review C1).
     if (s.fromBlocks() === null) return;
-    update({ workspace: s.saveState() });
-  }, [update]);
+    saveWorkspace(s.saveState());
+  }, [saveWorkspace]);
 
   const onCodeChange = useCallback(
     (text: string) => {
@@ -215,14 +288,26 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     }
     const ids = familyOf(result.calls, call.id);
     // The live game numbers each frame's calls from 0; the test run numbered them on from callFrom.
-    const live = code?.mode === 'game' ? new Set([...ids].map((i) => i - callFrom)) : ids;
+    const live = code.mode === 'game' ? new Set([...ids].map((i) => i - callFrom)) : ids;
     stage.current?.highlight(live);
     pyPane.current?.highlight(call.line, 'select');
   };
 
+  /** The solution's run, once: the picture a 'matches' exercise compares with and 👀 shows. */
+  const solutionRun = async (): Promise<RunResult> => {
+    if (expected.current === null) expected.current = await python.run(code.solution, main);
+    return expected.current;
+  };
+
+  const toggleGhost = async () => {
+    const on = !ghostOn;
+    setGhostOn(on);
+    const events: DrawEvent[] | null = on ? (await solutionRun()).events : null;
+    stage.current?.ghost(events);
+  };
+
   const run = async () => {
     setRuns((n) => n + 1);
-    if (code === undefined) return;
     flush();
     setRunning(true);
     setPicked(null);
@@ -262,8 +347,12 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
         moved === undefined
           ? undefined
           : await python.run({ ...filesRef.current, [main]: moved }, main);
+      const solution = needsExpected(code.goals) ? await solutionRun() : undefined;
       await stage.current?.replay(r.events);
-      grade(r, shifted);
+      grade(r, {
+        ...(shifted === undefined ? {} : { shifted }),
+        ...(solution === undefined ? {} : { expected: solution }),
+      });
     } catch {
       /* stopped */
     } finally {
@@ -271,23 +360,35 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     }
   };
 
-  if (lesson === undefined || code === undefined || state === null) return null;
+  if (lesson === undefined) return null;
   const allOk = goals.length > 0 && goals.every((g) => g.ok);
-  const task = lesson.steps.find((st) => st.kind === 'code')?.slides[0];
-  const codeDone = state.doneSteps.includes('code');
+  const done = state.exercisesDone ?? [];
+  const exDone = done.includes(code.id);
+  const next = all[all.findIndex((e) => e.id === code.id) + 1];
+  const typing = code.input === 'typing';
   // The 📞 tab appears once the lesson teaches def, or the child's code made a call anyway.
   const showCalls = code.toolbox.includes('pq_def') || (result?.calls.length ?? 0) > 0;
 
   return (
     <div className="flex h-dvh flex-col overflow-hidden" data-testid="code-screen">
       <TopBar title={`Bài ${String(lesson.order)}: ${lesson.title}`} back={`/l/${lessonId}`} />
+      {all.length > 1 && (
+        <ExerciseBar lessonId={lessonId} all={all} current={code} done={done} isCoach={isCoach} />
+      )}
       <div className="flex min-h-0 flex-1 gap-2 p-2 max-[1279px]:flex-col">
         <div className="flex min-h-0 min-w-0 flex-1 gap-0">
           <section
             className="flex min-h-0 min-w-0 flex-col rounded-[10px] border-2 border-ink bg-white"
             style={{ flexBasis: `${String(split)}%` }}
           >
-            <h2 className="border-b-2 border-ink px-3 py-1 text-base">🧩 Khối</h2>
+            <h2 className="border-b-2 border-ink px-3 py-1 text-base" data-testid="blocks-title">
+              🧩 Khối
+              {typing && (
+                <span className="ml-2 text-sm font-normal text-ink-soft" data-testid="typing-note">
+                  ✍️ Bài này em gõ code, khối chỉ để xem
+                </span>
+              )}
+            </h2>
             <div className="relative min-h-0 flex-1">
               {syncError !== null && (
                 <div
@@ -302,6 +403,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
               <BlocksPane
                 ref={blocks}
                 toolbox={code.toolbox}
+                readOnly={typing}
                 onEdit={onBlocksEdit}
                 onReady={onReady}
                 onDispose={(ws) => {
@@ -408,8 +510,8 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             </section>
           ) : (
             <TaskCard
-              title={task?.title}
-              text={task?.text}
+              title={code.title}
+              text={code.task}
               goals={code.goals}
               results={goals}
               hints={code.hints ?? []}
@@ -448,12 +550,23 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
               title="Chơi toàn màn hình"
               onClick={() => {
                 flush();
-                void navigate(`/l/${lessonId}/play`);
+                void navigate(`/l/${lessonId}/play?ex=${code.id}`);
               }}
               data-testid="fullscreen"
             >
               ⛶<span className="max-[1279px]:inline hidden"> Toàn màn hình</span>
             </Button>
+            {needsExpected(code.goals) && (
+              <Button
+                title="Hiện mờ hình cần vẽ để so"
+                onClick={() => void toggleGhost()}
+                data-testid="ghost-toggle"
+                aria-pressed={ghostOn}
+                className={ghostOn ? 'bg-sun' : ''}
+              >
+                👀
+              </Button>
+            )}
           </div>
           <div
             className="relative min-h-[45%] flex-1 touch-none max-[1279px]:min-h-0"
@@ -469,13 +582,20 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
           <div className="flex min-w-0 flex-col gap-2 max-[1279px]:w-64">
             <ErrorBubble result={result} />
             <VarWatch result={result} />
-            {(allOk || codeDone) && (
-              <Link to={`/l/${lessonId}`} data-testid="code-done">
-                <Button tone="sun" className="w-full">
-                  🎉 Xong phần code! Quay lại bài →
-                </Button>
-              </Link>
-            )}
+            {(allOk || exDone) &&
+              (next === undefined ? (
+                <Link to={`/l/${lessonId}`} data-testid="code-done">
+                  <Button tone="sun" className="w-full">
+                    🎉 Xong phần code! Quay lại bài →
+                  </Button>
+                </Link>
+              ) : (
+                <Link to={`/l/${lessonId}/code?ex=${next.id}`} data-testid="next-exercise">
+                  <Button tone="sun" className="w-full">
+                    ✅ Đạt! Sang bài tập {all.indexOf(next) + 1} →
+                  </Button>
+                </Link>
+              ))}
           </div>
         </aside>
       </div>

@@ -25,7 +25,11 @@
           "id": "l17-quiz",
           "quiz": {
             "question": "Trong class Bird, self.y là gì?",
-            "choices": ["y của chính con chim này", "Một biến chung của cả game", "Một lệnh vẽ"],
+            "choices": [
+              "y của chính con chim này",
+              "Một biến chung của cả game",
+              "Một lệnh vẽ"
+            ],
             "answer": 0,
             "explain": "self nghĩa là \"chính nó\": mỗi con chim có y riêng."
           }
@@ -64,75 +68,92 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        pass\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
-      "pq_var_get",
-      "pq_number",
-      "pq_draw_image",
-      "pq_clear",
-      "pq_text",
-      "pq_if",
-      "pq_if_else",
-      "pq_compare",
-      "pq_logic",
-      "pq_key_pressed",
-      "pq_for",
-      "pq_draw_text",
-      "pq_random"
-    ],
-    "mode": "game",
-    "goals": [
-      {
-        "id": "l17-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l17-e1",
+      "title": "Hoàn thành Bird.update",
+      "task": "class Bird đã có sẵn __init__ và draw. Viết update(self): giống update của Bài 16, nhưng dùng self.y và self.speed thay cho y và speed.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        pass\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
       },
-      {
-        "id": "l17-g-flap",
-        "label": "Bấm thì chim bay lên",
-        "kind": "risesAfterTap",
-        "sprite": "bird",
-        "taps": [31, 62]
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_image",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_key_pressed",
+        "pq_for",
+        "pq_draw_text",
+        "pq_random"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l17-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l17-g-flap",
+          "label": "Bấm thì chim bay lên",
+          "kind": "risesAfterTap",
+          "sprite": "bird",
+          "taps": [
+            31,
+            62
+          ]
+        },
+        {
+          "id": "l17-g-score",
+          "label": "Vẫn ghi được điểm",
+          "kind": "varEquals",
+          "name": "score",
+          "value": 1
+        }
+      ],
+      "walkthrough": [
+        "Tìm trong class Bird dòng def update(self): bên trong chỉ có pass.",
+        "Xóa pass, viết phần bay và rơi của Bài 16, nhưng thêm self. trước y và speed.",
+        "if key_pressed(): rồi thụt vào self.speed = -8",
+        "self.speed = self.speed + 0.5 rồi self.y = self.y + self.speed",
+        "if self.y > 480: rồi thụt vào self.y = 480 và self.speed = 0",
+        "Bấm ▶ Chạy: game phải chơi y như Bài 16."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
       },
-      {
-        "id": "l17-g-score",
-        "label": "Vẫn ghi được điểm",
-        "kind": "varEquals",
-        "name": "score",
-        "value": 1
+      "hints": [
+        "Thay pass trong update(self) bằng code bay và rơi.",
+        "Dùng self.speed và self.y.",
+        "if key_pressed():\n    self.speed = -8\nself.speed = self.speed + 0.5\nself.y = self.y + self.speed"
+      ],
+      "test": {
+        "frames": 200,
+        "taps": [
+          0,
+          31,
+          62,
+          93,
+          124,
+          155,
+          186
+        ]
       }
-    ],
-    "walkthrough": [
-      "Tìm trong class Bird dòng def update(self): bên trong chỉ có pass.",
-      "Xóa pass, viết phần bay và rơi của Bài 16, nhưng thêm self. trước y và speed.",
-      "if key_pressed(): rồi thụt vào self.speed = -8",
-      "self.speed = self.speed + 0.5 rồi self.y = self.y + self.speed",
-      "if self.y > 480: rồi thụt vào self.y = 480 và self.speed = 0",
-      "Bấm ▶ Chạy: game phải chơi y như Bài 16."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\nclass Bird:\n    def __init__(self):\n        self.y = 300\n        self.speed = 0\n\n    def update(self):\n        if key_pressed():\n            self.speed = -8\n        self.speed = self.speed + 0.5\n        self.y = self.y + self.speed\n        if self.y > 480:\n            self.y = 480\n            self.speed = 0\n\n    def draw(self):\n        draw_bird(100, self.y)\n\n\nbird = Bird()\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return bird.y + 8 < pipe_gap or bird.y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global pipe_x, game_over, score, scored\n    if game_over:\n        return\n    bird.update()\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    bird.draw()\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
-    },
-    "hints": [
-      "Thay pass trong update(self) bằng code bay và rơi.",
-      "Dùng self.speed và self.y.",
-      "if key_pressed():\n    self.speed = -8\nself.speed = self.speed + 0.5\nself.y = self.y + self.speed"
-    ],
-    "test": {
-      "frames": 200,
-      "taps": [0, 31, 62, 93, 124, 155, 186]
     }
-  },
+  ],
   "unlocksRoadmap": [],
   "docsUnlocked": []
 }

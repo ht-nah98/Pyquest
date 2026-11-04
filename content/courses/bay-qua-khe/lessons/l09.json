@@ -28,7 +28,11 @@
           "id": "l09-quiz",
           "quiz": {
             "question": "speed đang là 2. Khung hình tới: speed = speed + 0.5 rồi y = y + speed. y tăng thêm bao nhiêu?",
-            "choices": ["0.5", "2", "2.5"],
+            "choices": [
+              "0.5",
+              "2",
+              "2.5"
+            ],
             "answer": 2,
             "explain": "speed thành 2.5 trước, rồi y cộng thêm 2.5."
           }
@@ -67,66 +71,74 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_def",
-      "pq_global",
-      "pq_assign",
-      "pq_aug",
-      "pq_arith",
-      "pq_var_get",
-      "pq_number",
-      "pq_clear",
-      "pq_text"
-    ],
-    "mode": "game",
-    "goals": [
-      {
-        "id": "l09-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l09-e1",
+      "title": "Thêm tốc độ",
+      "task": "Thêm speed = 0 ở trên cùng. Trong update(): global y, speed, rồi speed = speed + 0.5 và y = y + speed (thay cho y = y + 3).",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\n\n\ndef update():\n    global y\n    y = y + 3\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
       },
-      {
-        "id": "l09-g-fall",
-        "label": "Chim đi xuống",
-        "kind": "moves",
-        "sprite": "bird",
-        "axis": "y",
-        "dir": 1
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_clear",
+        "pq_text"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l09-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l09-g-fall",
+          "label": "Chim đi xuống",
+          "kind": "moves",
+          "sprite": "bird",
+          "axis": "y",
+          "dir": 1
+        },
+        {
+          "id": "l09-g-faster",
+          "label": "Rơi nhanh dần",
+          "kind": "speedsUp",
+          "sprite": "bird",
+          "axis": "y"
+        }
+      ],
+      "walkthrough": [
+        "Dưới dòng y = 100, thêm dòng speed = 0.",
+        "Trong update(): sửa global y thành global y, speed.",
+        "Thay dòng y = y + 3 bằng hai dòng: speed = speed + 0.5 rồi y = y + speed.",
+        "Bấm ▶ Chạy. Ô biến cho thấy speed tăng dần sau mỗi khung hình.",
+        "Thử đổi 0.5 thành 0.2 hoặc 1 rồi chạy lại, so sánh cảm giác rơi."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
       },
-      {
-        "id": "l09-g-faster",
-        "label": "Rơi nhanh dần",
-        "kind": "speedsUp",
-        "sprite": "bird",
-        "axis": "y"
+      "hints": [
+        "Thêm dòng speed = 0 dưới dòng y = 100.",
+        "global y, speed để update đổi được cả hai hộp.",
+        "speed = speed + 0.5 rồi y = y + speed"
+      ],
+      "test": {
+        "frames": 40,
+        "taps": []
       }
-    ],
-    "walkthrough": [
-      "Dưới dòng y = 100, thêm dòng speed = 0.",
-      "Trong update(): sửa global y thành global y, speed.",
-      "Thay dòng y = y + 3 bằng hai dòng: speed = speed + 0.5 rồi y = y + speed.",
-      "Bấm ▶ Chạy. Ô biến cho thấy speed tăng dần sau mỗi khung hình.",
-      "Thử đổi 0.5 thành 0.2 hoặc 1 rồi chạy lại, so sánh cảm giác rơi."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ny = 100\nspeed = 0\n\n\ndef update():\n    global y, speed\n    speed = speed + 0.5\n    y = y + speed\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_bird(100, y)\n"
-    },
-    "hints": [
-      "Thêm dòng speed = 0 dưới dòng y = 100.",
-      "global y, speed để update đổi được cả hai hộp.",
-      "speed = speed + 0.5 rồi y = y + speed"
-    ],
-    "test": {
-      "frames": 40,
-      "taps": []
     }
-  },
-  "unlocksRoadmap": ["gravity"],
+  ],
+  "unlocksRoadmap": [
+    "gravity"
+  ],
   "docsUnlocked": []
 }

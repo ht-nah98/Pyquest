@@ -25,7 +25,11 @@
           "id": "l02-quiz-last",
           "quiz": {
             "question": "Chạy hai dòng x = 100 rồi x = 250. Hộp x đang cất số nào?",
-            "choices": ["100", "250", "350"],
+            "choices": [
+              "100",
+              "250",
+              "350"
+            ],
             "answer": 1,
             "explain": "Dòng sau cất số 250 vào hộp x, thay chỗ số 100."
           }
@@ -45,7 +49,11 @@
           "id": "l02-quiz-name",
           "quiz": {
             "question": "Tên biến nào viết đúng trong Python?",
-            "choices": ["vị trí", "bird y", "bird_y"],
+            "choices": [
+              "vị trí",
+              "bird y",
+              "bird_y"
+            ],
             "answer": 2,
             "explain": "Tên biến không có dấu tiếng Việt và không có khoảng trắng; dùng dấu gạch dưới _ để nối."
           }
@@ -75,7 +83,11 @@
           "id": "l02-quiz-move",
           "quiz": {
             "question": "Muốn ô sang phải 50 bước mà không sửa dòng draw_rect, em sửa ở đâu?",
-            "choices": ["Sửa dòng x = …", "Sửa dòng draw_rect", "Không sửa được"],
+            "choices": [
+              "Sửa dòng x = …",
+              "Sửa dòng draw_rect",
+              "Không sửa được"
+            ],
             "answer": 0,
             "explain": "Lệnh vẽ đọc số trong hộp x, nên chỉ cần cất số mới vào x."
           }
@@ -83,66 +95,75 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\nx = 0\ny = 0\ndraw_rect(x, y, 40, 40, \"gold\")\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_assign",
-      "pq_var_get",
-      "pq_number",
-      "pq_draw_rect",
-      "pq_text",
-      "pq_print",
-      "pq_clear"
-    ],
-    "mode": "script",
-    "goals": [
-      {
-        "id": "l02-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l02-e1",
+      "title": "Vẽ ô bằng biến",
+      "task": "Đặt x = 100 và y = 300, rồi vẽ draw_rect(x, y, 40, 40, \"gold\"). Lệnh vẽ lấy số trong hộp x và hộp y.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nx = 0\ny = 0\ndraw_rect(x, y, 40, 40, \"gold\")\n"
       },
-      {
-        "id": "l02-g-x",
-        "label": "Hộp x cất 100",
-        "kind": "varEquals",
-        "name": "x",
-        "value": 100
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_assign",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_rect",
+        "pq_text",
+        "pq_print",
+        "pq_clear"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l02-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l02-g-x",
+          "label": "Hộp x cất 100",
+          "kind": "varEquals",
+          "name": "x",
+          "value": 100
+        },
+        {
+          "id": "l02-g-y",
+          "label": "Hộp y cất 300",
+          "kind": "varEquals",
+          "name": "y",
+          "value": 300
+        },
+        {
+          "id": "l02-g-box",
+          "label": "Ô vuông ở (100, 300)",
+          "kind": "drewRects",
+          "min": 1,
+          "at": [
+            100,
+            300
+          ]
+        }
+      ],
+      "walkthrough": [
+        "Khung Python đã có sẵn x = 0, y = 0 và một dòng draw_rect dùng x, y.",
+        "Bấm vào ô số của khối \"đặt x =\", gõ 100.",
+        "Bấm vào ô số của khối \"đặt y =\", gõ 300.",
+        "Để nguyên dòng draw_rect(x, y, 40, 40, \"gold\"): nó tự đọc số trong hộp.",
+        "Bấm ▶ Chạy. Nhìn ô dưới sân: x = 100, y = 300."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y, 40, 40, \"gold\")\n"
       },
-      {
-        "id": "l02-g-y",
-        "label": "Hộp y cất 300",
-        "kind": "varEquals",
-        "name": "y",
-        "value": 300
-      },
-      {
-        "id": "l02-g-box",
-        "label": "Ô vuông ở (100, 300)",
-        "kind": "drewRects",
-        "min": 1,
-        "at": [100, 300]
-      }
-    ],
-    "walkthrough": [
-      "Khung Python đã có sẵn x = 0, y = 0 và một dòng draw_rect dùng x, y.",
-      "Bấm vào ô số của khối \"đặt x =\", gõ 100.",
-      "Bấm vào ô số của khối \"đặt y =\", gõ 300.",
-      "Để nguyên dòng draw_rect(x, y, 40, 40, \"gold\"): nó tự đọc số trong hộp.",
-      "Bấm ▶ Chạy. Nhìn ô dưới sân: x = 100, y = 300."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\nx = 100\ny = 300\ndraw_rect(x, y, 40, 40, \"gold\")\n"
-    },
-    "hints": [
-      "Chỉ cần sửa hai dòng x = … và y = ….",
-      "x = 100 nghĩa là cất số 100 vào hộp x.",
-      "Cần: x = 100 và y = 300"
-    ]
-  },
+      "hints": [
+        "Chỉ cần sửa hai dòng x = … và y = ….",
+        "x = 100 nghĩa là cất số 100 vào hộp x.",
+        "Cần: x = 100 và y = 300"
+      ]
+    }
+  ],
   "unlocksRoadmap": [],
   "docsUnlocked": []
 }

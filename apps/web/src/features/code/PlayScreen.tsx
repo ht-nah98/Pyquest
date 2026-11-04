@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
 import { python } from '../../runtime/client';
 import { Stage, type StageHandle } from '../../stage/Stage';
 import { useGameKeys } from '../../stage/useGameKeys';
 import { useGameLoop } from '../../stage/useGameLoop';
 import { useLessonState } from '../lesson/useLessonState';
+import { workOf } from './exercises';
 
 /** ⛶ Fullscreen play of the child's own program. Esc or "Về code" goes back with the code untouched. */
 export function PlayScreen() {
   const { lessonId = '' } = useParams();
   const navigate = useNavigate();
-  const code = catalog.openLesson(lessonId)?.code;
+  const [params] = useSearchParams();
+  const exId = params.get('ex');
+  const all = catalog.openLesson(lessonId)?.exercises ?? [];
+  const code = all.find((e) => e.id === exId) ?? all[0];
   const { state } = useLessonState(lessonId);
   const stage = useRef<StageHandle>(null);
   const box = useRef<HTMLDivElement>(null);
@@ -25,7 +29,7 @@ export function PlayScreen() {
   const back = () => {
     loop.stop();
     if (document.fullscreenElement !== null) void document.exitFullscreen().catch(() => undefined);
-    void navigate(`/l/${lessonId}/code`);
+    void navigate(`/l/${lessonId}/code${code === undefined ? '' : `?ex=${code.id}`}`);
   };
 
   useEffect(() => {
@@ -48,7 +52,7 @@ export function PlayScreen() {
 
   useEffect(() => {
     if (state === null || code === undefined) return;
-    const files = Object.keys(state.files).length > 0 ? state.files : code.starter;
+    const files = workOf(state, all, code).files;
     if (code.mode === 'game') void loop.start(files, code.main);
     else
       void python.run(files, code.main).then((r) => {

@@ -15,7 +15,12 @@ export type StageHandle = {
    * Ids are the call ids of the events on screen.
    */
   highlight(ids: ReadonlySet<number> | null): void;
+  /** 👀 The picture to draw, faded over the stage so the child can compare (null: hide it). */
+  ghost(events: readonly DrawEvent[] | null): void;
 };
+
+/** How strong the 👀 picture-to-draw is. */
+const GHOST = 0.35;
 
 /** How faded a drawing is when another call is picked in the 📞 calls panel. */
 const FADED = 0.18;
@@ -36,9 +41,15 @@ function repaintAll(
   c: CanvasRenderingContext2D,
   events: readonly DrawEvent[],
   picked: ReadonlySet<number> | null,
+  ghost: readonly DrawEvent[] | null = null,
 ) {
   resetStage(c);
   for (const e of events) paintEvent(c, e, picked);
+  if (ghost === null) return;
+  // On top, faded, without its background: the child sees both pictures at once.
+  c.globalAlpha = GHOST;
+  for (const e of ghost) if (e.t !== 'clear') drawEvent(c, e);
+  c.globalAlpha = 1;
 }
 
 /**
@@ -54,9 +65,10 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
     /** What is on screen now, so a resize (new backing size) can redraw it. */
     const shown = useRef<DrawEvent[]>([]);
     const picked = useRef<ReadonlySet<number> | null>(null);
+    const ghostRef = useRef<readonly DrawEvent[] | null>(null);
 
     const repaint = (c: CanvasRenderingContext2D) => {
-      repaintAll(c, shown.current, picked.current);
+      repaintAll(c, shown.current, picked.current, ghostRef.current);
     };
 
     const ctx = () => canvas.current?.getContext('2d') ?? null;
@@ -76,7 +88,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
         el.height = Math.round(STAGE_HEIGHT * scale);
         const c = el.getContext('2d');
         if (c === null) return;
-        repaintAll(c, shown.current, picked.current);
+        repaintAll(c, shown.current, picked.current, ghostRef.current);
       };
       fit();
       const ro = new ResizeObserver(fit);
@@ -124,6 +136,8 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
           if (msPerEvent > 0 && e.t !== 'frame')
             await new Promise((r) => setTimeout(r, msPerEvent));
         }
+        // The 👀 picture stays on top once the child's picture is complete.
+        if (ghostRef.current !== null) repaint(c);
       },
       highlight(ids) {
         picked.current = ids;
@@ -131,6 +145,12 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
           'data-highlight',
           ids === null ? '' : [...ids].sort((a, b) => a - b).join(','),
         );
+        const c = ctx();
+        if (c !== null) repaint(c);
+      },
+      ghost(events) {
+        ghostRef.current = events;
+        canvas.current?.setAttribute('data-ghost', events === null ? 'off' : 'on');
         const c = ctx();
         if (c !== null) repaint(c);
       },

@@ -50,7 +50,7 @@ export function LessonSlides() {
   const quiz = current?.slide.quiz;
   const quizOk = quiz === undefined || state?.quizAnswers[current?.slide.id ?? ''] === quiz.answer;
   const lastOfCode =
-    current?.kind === 'code' && flat[index + 1]?.kind !== 'code' && lesson?.code !== undefined;
+    current?.kind === 'code' && flat[index + 1]?.kind !== 'code' && lesson?.exercises !== undefined;
   const codeOk = !lastOfCode || state?.doneSteps.includes('code') === true;
   const canNext = present || isCoach || (quizOk && codeOk);
   const isLast = index === flat.length - 1;
@@ -153,7 +153,7 @@ export function LessonSlides() {
               go(i);
               setMenuOpen(false);
             }}
-            codeHref={lesson.code === undefined ? undefined : `/l/${lessonId}/code`}
+            codeHref={lesson.exercises === undefined ? undefined : `/l/${lessonId}/code`}
           />
         )}
       </main>
@@ -179,7 +179,7 @@ export function LessonSlides() {
             {index + 1}/{flat.length}
           </span>
         </div>
-        {current.kind === 'code' && lesson.code !== undefined && (
+        {current.kind === 'code' && lesson.exercises !== undefined && (
           <Link to={`/l/${lessonId}/code`} data-testid="to-code">
             <Button tone="sun" className="text-xl">
               🐍 Sang màn code

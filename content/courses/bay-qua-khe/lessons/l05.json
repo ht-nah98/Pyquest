@@ -99,7 +99,11 @@
           "id": "l05-quiz-callers",
           "quiz": {
             "question": "Em đổi ruột draw_bird từ ô vuông sang ảnh. Hai dòng gọi draw_bird(…) có phải sửa không?",
-            "choices": ["Phải sửa cả hai", "Không cần sửa", "Phải xóa đi"],
+            "choices": [
+              "Phải sửa cả hai",
+              "Không cần sửa",
+              "Phải xóa đi"
+            ],
             "answer": 1,
             "explain": "Tên và tham số vẫn vậy, nên chỗ gọi giữ nguyên. Chỉ ruột của lệnh đổi."
           }
@@ -107,60 +111,68 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n    draw_rect(x + 20, y + 13, 4, 4, \"black\")\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_def",
-      "pq_draw_image",
-      "pq_draw_rect",
-      "pq_var_get",
-      "pq_number",
-      "pq_text",
-      "pq_arith"
-    ],
-    "mode": "script",
-    "goals": [
-      {
-        "id": "l05-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l05-e1",
+      "title": "Thay ruột, giữ tên",
+      "task": "Giữ nguyên dòng def draw_bird(x, y): và hai dòng gọi. Chỉ thay 4 dòng draw_rect bên trong bằng một dòng draw_image(\"images/bird-cu.png\", x, y), đổi bird-cu thành ảnh em chọn.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n    draw_rect(x + 20, y + 13, 4, 4, \"black\")\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
       },
-      {
-        "id": "l05-g-image",
-        "label": "Chim vẽ bằng ảnh nhân vật",
-        "kind": "drew",
-        "sprite": "bird"
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_draw_image",
+        "pq_draw_rect",
+        "pq_var_get",
+        "pq_number",
+        "pq_text",
+        "pq_arith"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l05-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l05-g-image",
+          "label": "Chim vẽ bằng ảnh nhân vật",
+          "kind": "drew",
+          "sprite": "bird"
+        },
+        {
+          "id": "l05-g-call",
+          "label": "Vẫn gọi draw_bird 2 lần như cũ",
+          "kind": "called",
+          "name": "draw_bird",
+          "min": 2,
+          "distinct": true
+        }
+      ],
+      "walkthrough": [
+        "Ở bước Chuẩn bị em đã chọn ảnh và thấy đường dẫn, ví dụ images/bird-vet.png.",
+        "Kéo 4 khối vẽ hình chữ nhật ra khỏi khối draw_bird, thả vào thùng rác.",
+        "Kéo khối \"vẽ ảnh … tại x … y …\" vào trong khối draw_bird.",
+        "Ô ảnh gõ đường dẫn em chọn. Ô x và ô y: kéo khối biến x và y vào.",
+        "Python sẽ là: draw_image(\"images/bird-vet.png\", x, y), thụt vào trong def.",
+        "Hai dòng draw_bird(…) ở dưới để nguyên. Bấm ▶ Chạy: hai con chim thành ảnh."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird-cu.png\", x, y)\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
       },
-      {
-        "id": "l05-g-call",
-        "label": "Vẫn gọi draw_bird 2 lần như cũ",
-        "kind": "called",
-        "name": "draw_bird",
-        "min": 2,
-        "distinct": true
-      }
-    ],
-    "walkthrough": [
-      "Ở bước Chuẩn bị em đã chọn ảnh và thấy đường dẫn, ví dụ images/bird-vet.png.",
-      "Kéo 4 khối vẽ hình chữ nhật ra khỏi khối draw_bird, thả vào thùng rác.",
-      "Kéo khối \"vẽ ảnh … tại x … y …\" vào trong khối draw_bird.",
-      "Ô ảnh gõ đường dẫn em chọn. Ô x và ô y: kéo khối biến x và y vào.",
-      "Python sẽ là: draw_image(\"images/bird-vet.png\", x, y), thụt vào trong def.",
-      "Hai dòng draw_bird(…) ở dưới để nguyên. Bấm ▶ Chạy: hai con chim thành ảnh."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird-cu.png\", x, y)\n\n\ndraw_bird(100, 300)\ndraw_bird(250, 150)\n"
-    },
-    "hints": [
-      "Chỉ sửa bên trong def draw_bird, không sửa hai dòng gọi.",
-      "Đường dẫn bắt đầu bằng images/ và kết thúc bằng .png.",
-      "Ví dụ: draw_image(\"images/bird-vet.png\", x, y)"
-    ]
-  },
-  "unlocksRoadmap": ["bird"],
+      "hints": [
+        "Chỉ sửa bên trong def draw_bird, không sửa hai dòng gọi.",
+        "Đường dẫn bắt đầu bằng images/ và kết thúc bằng .png.",
+        "Ví dụ: draw_image(\"images/bird-vet.png\", x, y)"
+      ]
+    }
+  ],
+  "unlocksRoadmap": [
+    "bird"
+  ],
   "docsUnlocked": []
 }

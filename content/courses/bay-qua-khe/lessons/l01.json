@@ -28,7 +28,11 @@
           "id": "l01-quiz-corner",
           "quiz": {
             "question": "Điểm (0, 600) nằm ở đâu?",
-            "choices": ["Góc trên bên trái", "Góc dưới bên trái", "Giữa màn hình"],
+            "choices": [
+              "Góc trên bên trái",
+              "Góc dưới bên trái",
+              "Giữa màn hình"
+            ],
             "answer": 1,
             "explain": "x = 0 là sát mép trái, y = 600 là sát đáy."
           }
@@ -94,7 +98,10 @@
           "id": "l01-quiz-up",
           "quiz": {
             "question": "Muốn ô vuông lên cao hơn, em đổi y thế nào?",
-            "choices": ["Tăng y", "Giảm y"],
+            "choices": [
+              "Tăng y",
+              "Giảm y"
+            ],
             "answer": 1,
             "explain": "y nhỏ hơn thì gần mép trên hơn."
           }
@@ -102,44 +109,62 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n"
-    },
-    "main": "main.py",
-    "toolbox": ["pq_import", "pq_draw_rect", "pq_number", "pq_text", "pq_clear", "pq_print"],
-    "mode": "script",
-    "goals": [
-      {
-        "id": "l01-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l01-e1",
+      "title": "Lệnh tô khối",
+      "task": "draw_rect(x, y, rộng, cao, màu) tô một hình chữ nhật, góc trên bên trái ở (x, y). Các giá trị trong ngoặc gọi là tham số. Ví dụ: draw_rect(100, 300, 40, 40, \"gold\")",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n"
       },
-      {
-        "id": "l01-g-box",
-        "label": "Ô vuông ở (100, 300)",
-        "kind": "drewRects",
-        "min": 1,
-        "at": [100, 300]
-      }
-    ],
-    "walkthrough": [
-      "Kéo khối \"vẽ hình chữ nhật\" thả ngay dưới khối 📦 dùng thư viện pyquest.",
-      "Ô x gõ 100, ô y gõ 300: đó là góc trên bên trái của ô.",
-      "Ô rộng và ô cao đều gõ 40. Ô màu gõ gold (vàng).",
-      "Nhìn khung Python: khối vừa ghép thành dòng draw_rect(100, 300, 40, 40, \"gold\").",
-      "Bấm ▶ Chạy. Ô vàng hiện ở bên trái, giữa chiều cao.",
-      "Muốn đổi màu trời: kéo thêm khối \"tô nền màu\" đặt TRƯỚC khối vẽ."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_rect(100, 300, 40, 40, \"gold\")\n"
-    },
-    "hints": [
-      "Kéo khối \"vẽ hình chữ nhật\" vào vùng ghép.",
-      "Hai số đầu là x và y của góc trên bên trái.",
-      "Cần: draw_rect(100, 300, 40, 40, \"gold\")"
-    ]
-  },
-  "unlocksRoadmap": ["stage"],
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_draw_rect",
+        "pq_number",
+        "pq_text",
+        "pq_clear",
+        "pq_print"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l01-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l01-g-box",
+          "label": "Ô vuông ở (100, 300)",
+          "kind": "drewRects",
+          "min": 1,
+          "at": [
+            100,
+            300
+          ]
+        }
+      ],
+      "walkthrough": [
+        "Kéo khối \"vẽ hình chữ nhật\" thả ngay dưới khối 📦 dùng thư viện pyquest.",
+        "Ô x gõ 100, ô y gõ 300: đó là góc trên bên trái của ô.",
+        "Ô rộng và ô cao đều gõ 40. Ô màu gõ gold (vàng).",
+        "Nhìn khung Python: khối vừa ghép thành dòng draw_rect(100, 300, 40, 40, \"gold\").",
+        "Bấm ▶ Chạy. Ô vàng hiện ở bên trái, giữa chiều cao.",
+        "Muốn đổi màu trời: kéo thêm khối \"tô nền màu\" đặt TRƯỚC khối vẽ."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_rect(100, 300, 40, 40, \"gold\")\n"
+      },
+      "hints": [
+        "Kéo khối \"vẽ hình chữ nhật\" vào vùng ghép.",
+        "Hai số đầu là x và y của góc trên bên trái.",
+        "Cần: draw_rect(100, 300, 40, 40, \"gold\")"
+      ]
+    }
+  ],
+  "unlocksRoadmap": [
+    "stage"
+  ],
   "docsUnlocked": []
 }

@@ -1,6 +1,7 @@
 import { BLOCK_TYPES, registerBlocks, toPython, treeToState } from '@pyquest/blocks';
 import {
   checkGoals,
+  needsExpected,
   needsShiftedRun,
   runGameTest,
   shiftSource,
@@ -12,6 +13,7 @@ import {
   LibraryRefSchema,
   isOpenLesson,
   parseLesson,
+  type Exercise,
   type Lesson,
   type OpenLesson,
 } from '@pyquest/content-schema';
@@ -144,9 +146,11 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
       }
     }
   }
-  const code = lesson.code;
-  if (code === undefined) return;
+  for (const ex of lesson.exercises ?? []) await checkExercise(ex, `${where}/${ex.id}`, ctx);
+}
 
+/** Every exercise is checked like a whole lesson used to be (spec foundations-first §4). */
+async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<void> {
   const known: readonly string[] = BLOCK_TYPES;
   for (const id of code.toolbox)
     if (!known.includes(id)) ctx.err(where, `unknown toolbox block "${id}"`);
@@ -182,14 +186,17 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
   }
   const starter = await gradeFiles(ctx.py, code, code.starter);
   if (starter.goals.every((g) => g.ok)) {
-    ctx.err(where, 'starter already passes every goal; the lesson would finish itself');
+    ctx.err(where, 'starter already passes every goal; the exercise would finish itself');
   }
 }
 
-/** Runs a lesson's files and grades them the way the page does, a 'shifts' goal's second run included. */
+/**
+ * Runs an exercise's files and grades them the way the page does: a 'shifts' goal's second run and a
+ * 'matches' goal's solution run included.
+ */
 async function gradeFiles(
   py: PyRunner,
-  code: NonNullable<OpenLesson['code']>,
+  code: Exercise,
   files: Record<string, string>,
 ): Promise<{ run: RunResult; goals: GoalResult[] }> {
   const run = await runLesson(py, code.mode, files, code.main, code.test);
@@ -200,7 +207,16 @@ async function gradeFiles(
     moved === undefined
       ? undefined
       : await runLesson(py, code.mode, { ...files, [code.main]: moved }, code.main, code.test);
-  return { run, goals: checkGoals(code.goals, run, shifted) };
+  const expected = needsExpected(code.goals)
+    ? await runLesson(py, code.mode, code.solution, code.main, code.test)
+    : undefined;
+  return {
+    run,
+    goals: checkGoals(code.goals, run, {
+      ...(shifted === undefined ? {} : { shifted }),
+      ...(expected === undefined ? {} : { expected }),
+    }),
+  };
 }
 
 async function runLesson(

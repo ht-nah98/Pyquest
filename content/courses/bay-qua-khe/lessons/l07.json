@@ -25,7 +25,11 @@
           "id": "l07-quiz",
           "quiz": {
             "question": "for i in range(3) chạy mấy lần, i lần lượt là gì?",
-            "choices": ["3 lần: 1, 2, 3", "3 lần: 0, 1, 2", "4 lần: 0, 1, 2, 3"],
+            "choices": [
+              "3 lần: 1, 2, 3",
+              "3 lần: 0, 1, 2",
+              "4 lần: 0, 1, 2, 3"
+            ],
             "answer": 1,
             "explain": "range(3) đếm từ 0 và dừng trước 3: 0, 1, 2."
           }
@@ -45,7 +49,11 @@
           "id": "l07-quiz-x",
           "quiz": {
             "question": "Con chim có i = 7 nằm ở x bao nhiêu?",
-            "choices": ["7", "57", "350"],
+            "choices": [
+              "7",
+              "57",
+              "350"
+            ],
             "answer": 2,
             "explain": "7 * 50 = 350."
           }
@@ -73,54 +81,60 @@
       ]
     }
   ],
-  "code": {
-    "starter": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndraw_bird(0, 300)\n"
-    },
-    "main": "main.py",
-    "toolbox": [
-      "pq_import",
-      "pq_for",
-      "pq_for_range",
-      "pq_var_get",
-      "pq_number",
-      "pq_arith",
-      "pq_clear",
-      "pq_print",
-      "pq_text"
-    ],
-    "mode": "script",
-    "goals": [
-      {
-        "id": "l07-g-run",
-        "label": "Chạy không lỗi",
-        "kind": "noError"
+  "exercises": [
+    {
+      "id": "l07-e1",
+      "title": "Vẽ 8 con chim bằng một vòng lặp",
+      "task": "Dùng for i in range(8): và bên trong vẽ draw_bird(i * 50, 300). Chỉ cần 2 dòng thay vì 8.",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndraw_bird(0, 300)\n"
       },
-      {
-        "id": "l07-g-eight",
-        "label": "Vẽ 8 con chim",
-        "kind": "drewCount",
-        "sprite": "bird",
-        "min": 8
-      }
-    ],
-    "walkthrough": [
-      "Xóa dòng draw_bird(0, 300) cũ (kéo khối đó vào thùng rác).",
-      "Kéo khối \"lặp … lần, đếm bằng i\", đổi số lần thành 8.",
-      "Kéo khối \"vẽ chim\" thả VÀO TRONG khối lặp (khe ở giữa khối).",
-      "Ô x: dùng khối phép tính i × 50. Ô y: 300.",
-      "Trong khung Python: for i in range(8): và dòng thụt vào draw_bird(i * 50, 300).",
-      "Bấm ▶ Chạy: 8 chim thành một hàng ngang."
-    ],
-    "solution": {
-      "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\nfor i in range(8):\n    draw_bird(i * 50, 300)\n"
-    },
-    "hints": [
-      "Kéo khối \"lặp … lần\" ra, đặt khối vẽ chim vào bên trong.",
-      "x của chim là i * 50 (khối phép tính ×).",
-      "for i in range(8):\n    draw_bird(i * 50, 300)"
-    ]
-  },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_for",
+        "pq_for_range",
+        "pq_var_get",
+        "pq_number",
+        "pq_arith",
+        "pq_clear",
+        "pq_print",
+        "pq_text"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "l07-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l07-g-eight",
+          "label": "Vẽ 8 con chim",
+          "kind": "drewCount",
+          "sprite": "bird",
+          "min": 8
+        }
+      ],
+      "walkthrough": [
+        "Xóa dòng draw_bird(0, 300) cũ (kéo khối đó vào thùng rác).",
+        "Kéo khối \"lặp … lần, đếm bằng i\", đổi số lần thành 8.",
+        "Kéo khối \"vẽ chim\" thả VÀO TRONG khối lặp (khe ở giữa khối).",
+        "Ô x: dùng khối phép tính i × 50. Ô y: 300.",
+        "Trong khung Python: for i in range(8): và dòng thụt vào draw_bird(i * 50, 300).",
+        "Bấm ▶ Chạy: 8 chim thành một hàng ngang."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\nfor i in range(8):\n    draw_bird(i * 50, 300)\n"
+      },
+      "hints": [
+        "Kéo khối \"lặp … lần\" ra, đặt khối vẽ chim vào bên trong.",
+        "x của chim là i * 50 (khối phép tính ×).",
+        "for i in range(8):\n    draw_bird(i * 50, 300)"
+      ]
+    }
+  ],
   "unlocksRoadmap": [],
   "docsUnlocked": []
 }
