@@ -4,9 +4,9 @@ export const TOBLOCKS_SOURCE = String.raw`
 import ast, io, json, re, tokenize
 
 _OPS = {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/"}
-_CALLS = {"draw_bird": ("pq_draw_bird", ["X", "Y"]), "print": ("pq_print", ["VALUE"]),
-          "clear": ("pq_clear", ["COLOR"]), "draw_rect": ("pq_draw_rect", ["X", "Y", "W", "H", "COLOR"]),
-          "draw_sprite": ("pq_draw_sprite", ["NAME", "X", "Y"]), "use_sprite": ("pq_use_sprite", ["NAME", "PATH"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"])}
+_CALLS = {"print": ("pq_print", ["VALUE"]), "clear": ("pq_clear", ["COLOR"]),
+          "draw_rect": ("pq_draw_rect", ["X", "Y", "W", "H", "COLOR"]),
+          "draw_image": ("pq_draw_image", ["PATH", "X", "Y"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"])}
 _CMP = {ast.Eq: "==", ast.NotEq: "!=", ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", ast.GtE: ">="}
 _AUG = {ast.Add: "+=", ast.Sub: "-="}
 
@@ -65,9 +65,20 @@ def _expr(src, node, nested=False):
     return _raw_expr(src, node, nested)
 
 
+def _simple_params(node):
+    """The parameter names of "def f(a, b):", or None when it has defaults, *args, types…"""
+    a = node.args
+    if (node.decorator_list or node.returns is not None or a.posonlyargs or a.kwonlyargs or a.vararg
+            or a.kwarg or a.defaults or any(p.annotation is not None for p in a.args)):
+        return None
+    return [p.arg for p in a.args]
+
+
 class _Ctx:
-    def __init__(self, src, lines, comments):
+    def __init__(self, src, lines, comments, defs):
         self.src, self.lines, self.comments = src, lines, comments
+        # Functions the child defined in this file: name -> parameters. Their calls become call blocks.
+        self.defs = defs
 
     def has_comment(self, first, last):
         return any(n in self.comments for n in range(first, last + 1))
@@ -124,10 +135,9 @@ def _stmt(ctx, node):
             return {"type": "pq_if_else", "inputs": {"COND": cond},
                     "statements": {"DO": _body(ctx, node.body, node.lineno),
                                    "ELSE": _body(ctx, node.orelse, else_at)}}
-        if (isinstance(node, ast.FunctionDef) and not node.decorator_list and node.returns is None
-                and not node.args.args and not node.args.posonlyargs and not node.args.kwonlyargs
-                and node.args.vararg is None and node.args.kwarg is None):
-            return {"type": "pq_def", "fields": {"NAME": node.name}, "statements": {"BODY": _body(ctx, node.body, node.lineno)}}
+        if isinstance(node, ast.FunctionDef) and _simple_params(node) is not None:
+            return {"type": "pq_def", "fields": {"NAME": node.name, "PARAMS": ", ".join(_simple_params(node))},
+                    "statements": {"BODY": _body(ctx, node.body, node.lineno)}}
         return None
 
     if ctx.has_comment(node.lineno, node.end_lineno):
@@ -135,8 +145,19 @@ def _stmt(ctx, node):
     if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name):
         call = node.value
         spec = _CALLS.get(call.func.id)
-        if spec and not call.keywords and len(call.args) == len(spec[1]):
-            return {"type": spec[0], "inputs": {name: _expr(src, a) for name, a in zip(spec[1], call.args)}}
+        flip = (call.func.id == "draw_image" and len(call.keywords) == 1 and call.keywords[0].arg == "flip"
+                and isinstance(call.keywords[0].value, ast.Constant) and call.keywords[0].value.value is True)
+        if spec and (not call.keywords or flip) and len(call.args) == len(spec[1]):
+            block = {"type": spec[0], "inputs": {name: _expr(src, a) for name, a in zip(spec[1], call.args)}}
+            if spec[0] == "pq_draw_image":
+                block["fields"] = {"FLIP": "TRUE" if flip else "FALSE"}
+            return block
+        params = ctx.defs.get(call.func.id)
+        if params is not None and not call.keywords and len(call.args) == len(params):
+            return {"type": "pq_call", "extraState": {"name": call.func.id, "params": params},
+                    "inputs": {"ARG" + str(i): _expr(src, a) for i, a in enumerate(call.args)}}
+    if isinstance(node, ast.Return) and node.value is not None:
+        return {"type": "pq_return", "inputs": {"VALUE": _expr(src, node.value)}}
     if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
         return {"type": "pq_assign", "fields": {"NAME": node.targets[0].id},
                 "inputs": {"VALUE": _expr(src, node.value)}}
@@ -206,7 +227,11 @@ def to_blocks(src):
                 comment_lines.add(tok.start[0])
     except (tokenize.TokenError, SyntaxError):
         pass
-    ctx = _Ctx(src, lines, comment_lines)
+    defs = {}
+    for n in ast.walk(tree):
+        if isinstance(n, ast.FunctionDef) and _simple_params(n) is not None:
+            defs[n.name] = _simple_params(n)
+    ctx = _Ctx(src, lines, comment_lines, defs)
     if not tree.body:
         out = [_raw(l.strip()) for l in lines if l.strip() == "" or l.lstrip().startswith("#")]
         return json.dumps({"ok": True, "statements": out})

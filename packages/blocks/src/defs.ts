@@ -21,20 +21,8 @@ const JSON_DEFS = [
     previousStatement: null,
     nextStatement: null,
     colour: LIBRARY,
-    tooltip: 'from pyquest import *: mở hộp lệnh làm sẵn (draw_bird, clear, key_pressed…). Luôn đặt ở dòng đầu.',
-  },
-  {
-    type: 'pq_draw_bird',
-    message0: 'vẽ chim tại x %1 y %2',
-    args0: [
-      { type: 'input_value', name: 'X' },
-      { type: 'input_value', name: 'Y' },
-    ],
-    inputsInline: true,
-    previousStatement: null,
-    nextStatement: null,
-    colour: DRAW,
-    tooltip: 'draw_bird(x, y): vẽ chim, góc trên bên trái ở (x, y).',
+    tooltip:
+      'from pyquest import *: mở hộp mảnh gốc (draw_rect, draw_image, key_pressed…). Luôn đặt ở dòng đầu.',
   },
   {
     type: 'pq_print',
@@ -127,32 +115,20 @@ const JSON_DEFS = [
     colour: VALUE,
   },
   {
-    type: 'pq_draw_sprite',
-    message0: 'vẽ hình %1 tại x %2 y %3',
+    type: 'pq_draw_image',
+    message0: 'vẽ ảnh %1 tại x %2 y %3 lật ngược %4',
     args0: [
-      { type: 'input_value', name: 'NAME' },
+      { type: 'input_value', name: 'PATH' },
       { type: 'input_value', name: 'X' },
       { type: 'input_value', name: 'Y' },
-    ],
-    inputsInline: true,
-    previousStatement: null,
-    nextStatement: null,
-    colour: DRAW,
-    tooltip: 'draw_sprite(tên, x, y): vẽ một hình trong kho hình.',
-  },
-  {
-    type: 'pq_use_sprite',
-    message0: 'dùng ảnh %2 cho %1',
-    args0: [
-      { type: 'input_value', name: 'NAME' },
-      { type: 'input_value', name: 'PATH' },
+      { type: 'field_checkbox', name: 'FLIP', checked: false },
     ],
     inputsInline: true,
     previousStatement: null,
     nextStatement: null,
     colour: DRAW,
     tooltip:
-      'use_sprite("bird", "images/bird-cu.png"): đổi hình của chim bằng một file trong thư mục images.',
+      'draw_image("images/bird.png", x, y): dán cả một file ảnh, góc trên bên trái ở (x, y).',
   },
   {
     type: 'pq_draw_text',
@@ -318,9 +294,10 @@ const JSON_DEFS = [
   },
   {
     type: 'pq_def',
-    message0: 'tự đặt lệnh %1 %2 %3',
+    message0: 'tự đặt lệnh %1 ( %2 ) %3 %4',
     args0: [
-      { type: 'field_input', name: 'NAME', text: 'update' },
+      { type: 'field_input', name: 'NAME', text: 'draw_bird' },
+      { type: 'field_input', name: 'PARAMS', text: '' },
       { type: 'input_dummy' },
       { type: 'input_statement', name: 'BODY' },
     ],
@@ -329,7 +306,15 @@ const JSON_DEFS = [
     nextStatement: null,
     colour: FUNCTION,
     tooltip:
-      'def tên(): gom các lệnh lại dưới một cái tên. update() và draw() được gọi mỗi khung hình.',
+      'def tên(tham số): gom các lệnh lại dưới một cái tên. Tham số (ví dụ x, y) là chỗ nhận số khi gọi.',
+  },
+  {
+    type: 'pq_return',
+    message0: 'trả về %1',
+    args0: [{ type: 'input_value', name: 'VALUE' }],
+    previousStatement: null,
+    colour: FUNCTION,
+    tooltip: 'return: lệnh tự đặt gửi một kết quả về chỗ đã gọi nó.',
   },
   {
     type: 'pq_raw_expr',
@@ -378,7 +363,43 @@ const RAW_BLOCK = {
   },
 };
 
-export const BLOCK_TYPES = [...JSON_DEFS.map((d) => d.type), 'pq_raw'] as const;
+type CallBlock = Block & { fnName: string; params: string[]; renderInputs(): void };
+
+/**
+ * Calls one of the child's own functions (def): the label is its name, one input per parameter. The toolbox
+ * offers one for every def in the code, like Scratch's "My Blocks".
+ */
+const CALL_BLOCK = {
+  init(this: CallBlock) {
+    this.fnName = 'draw_bird';
+    this.params = [];
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setInputsInline(true);
+    this.setColour(FUNCTION);
+    this.setTooltip('Gọi một lệnh em tự đặt. Các ô là số gửi vào tham số.');
+    this.renderInputs();
+  },
+  renderInputs(this: CallBlock) {
+    for (const input of [...this.inputList]) this.removeInput(input.name);
+    this.appendDummyInput('HEAD').appendField(
+      new Blockly.FieldLabelSerializable(`📞 ${this.fnName}`),
+    );
+    this.params.forEach((p, i) => {
+      this.appendValueInput(`ARG${String(i)}`).appendField(p);
+    });
+  },
+  saveExtraState(this: CallBlock) {
+    return { name: this.fnName, params: this.params };
+  },
+  loadExtraState(this: CallBlock, state: { name?: string; params?: string[] }) {
+    this.fnName = state.name ?? '';
+    this.params = state.params ?? [];
+    this.renderInputs();
+  },
+};
+
+export const BLOCK_TYPES = [...JSON_DEFS.map((d) => d.type), 'pq_raw', 'pq_call'] as const;
 
 let registered = false;
 
@@ -387,7 +408,14 @@ export function registerBlocks(): void {
   if (registered) return;
   Blockly.common.defineBlocksWithJsonArray(JSON_DEFS);
   Blockly.Blocks['pq_raw'] = RAW_BLOCK;
+  Blockly.Blocks['pq_call'] = CALL_BLOCK;
   registered = true;
+}
+
+/** A call block's function name and parameters, for the generator. */
+export function callOf(block: Block): { name: string; params: string[] } {
+  const b = block as CallBlock;
+  return { name: b.fnName, params: b.params };
 }
 
 /** The raw block's code, for the generator. */

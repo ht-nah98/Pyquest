@@ -7,6 +7,7 @@ test('variables are shown the Python way: True/False, text in quotes', () => {
     <VarWatch
       result={{
         events: [],
+        calls: [],
         vars: { over: true, ok: false, name: 'Lửa', x: 3 },
         stoppedByLimit: false,
       }}

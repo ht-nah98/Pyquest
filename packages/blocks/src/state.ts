@@ -4,7 +4,7 @@ type StateBlock = {
   type: string;
   fields?: Record<string, string | number>;
   inputs?: Record<string, { block: StateBlock }>;
-  extraState?: { code: string };
+  extraState?: BlockNode['extraState'];
   next?: { block: StateBlock };
   x?: number;
   y?: number;

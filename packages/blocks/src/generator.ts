@@ -1,6 +1,6 @@
 import { Blockly, type Block, type Workspace } from './blockly';
 import { Order, pythonGenerator } from './blockly';
-import { rawCode, registerBlocks } from './defs';
+import { callOf, rawCode, registerBlocks } from './defs';
 
 const PRECEDENCE: Record<string, number> = { '+': 1, '-': 1, '*': 2, '/': 2 };
 const ATOMIC = 3;
@@ -40,7 +40,6 @@ function installGenerators(): void {
     `${fn}(${names.map((n) => value(block, n)).join(', ')})\n`;
 
   g['pq_import'] = () => 'from pyquest import *\n';
-  g['pq_draw_bird'] = call('draw_bird', ['X', 'Y']);
   g['pq_print'] = call('print', ['VALUE']);
   g['pq_clear'] = (block) => {
     const color = value(block, 'COLOR');
@@ -63,9 +62,12 @@ function installGenerators(): void {
     return [code, p === 1 ? Order.ADDITIVE : Order.MULTIPLICATIVE];
   };
   g['pq_raw_expr'] = (block) => [String(block.getFieldValue('CODE')), Order.ATOMIC];
-  g['pq_draw_sprite'] = call('draw_sprite', ['NAME', 'X', 'Y']);
+  g['pq_draw_image'] = (block) => {
+    const args = ['PATH', 'X', 'Y'].map((n) => value(block, n));
+    if (block.getFieldValue('FLIP') === 'TRUE') args.push('flip=True');
+    return `draw_image(${args.join(', ')})\n`;
+  };
   g['pq_draw_text'] = call('draw_text', ['TEXT', 'X', 'Y']);
-  g['pq_use_sprite'] = call('use_sprite', ['NAME', 'PATH']);
   g['pq_aug'] = (block) =>
     `${String(block.getFieldValue('NAME'))} ${String(block.getFieldValue('OP'))} ${value(block, 'VALUE') || '0'}\n`;
   g['pq_global'] = (block) => `global ${String(block.getFieldValue('NAMES'))}\n`;
@@ -76,7 +78,13 @@ function installGenerators(): void {
   g['pq_if'] = (block) => `if ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}`;
   g['pq_if_else'] = (block) =>
     `if ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}else:\n${body(block, 'ELSE')}`;
-  g['pq_def'] = (block) => `def ${String(block.getFieldValue('NAME'))}():\n${body(block, 'BODY')}`;
+  g['pq_def'] = (block) =>
+    `def ${String(block.getFieldValue('NAME'))}(${String(block.getFieldValue('PARAMS')).trim()}):\n${body(block, 'BODY')}`;
+  g['pq_return'] = (block) => `return ${value(block, 'VALUE') || 'None'}\n`;
+  g['pq_call'] = (block) => {
+    const { name, params } = callOf(block);
+    return `${name}(${params.map((_, i) => value(block, `ARG${String(i)}`) || '0').join(', ')})\n`;
+  };
   g['pq_compare'] = (block) => [
     `${value(block, 'A')} ${String(block.getFieldValue('OP'))} ${value(block, 'B')}`,
     Order.RELATIONAL,

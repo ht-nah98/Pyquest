@@ -59,7 +59,8 @@ export type BlockNode = {
   inputs?: Record<string, BlockNode>;
   /** Nested statement lists: DO / ELSE / BODY. */
   statements?: Record<string, BlockNode[]>;
-  extraState?: { code: string };
+  /** pq_raw: { code }; pq_call: { name, params }. */
+  extraState?: { code: string } | { name: string; params: string[] };
 };
 
 export type BlockTree =
