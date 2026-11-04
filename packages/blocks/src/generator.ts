@@ -1,8 +1,8 @@
 import { Blockly, type Block, type Workspace } from './blockly';
 import { Order, pythonGenerator } from './blockly';
-import { callOf, rawCode, registerBlocks } from './defs';
+import { callOf, chainOf, rawCode, registerBlocks } from './defs';
 
-const PRECEDENCE: Record<string, number> = { '+': 1, '-': 1, '*': 2, '/': 2 };
+const PRECEDENCE: Record<string, number> = { '+': 1, '-': 1, '*': 2, '/': 2, '%': 2 };
 const ATOMIC = 3;
 
 const value = (block: Block, name: string): string =>
@@ -57,7 +57,7 @@ function installGenerators(): void {
   g['pq_arith'] = (block) => {
     const op = String(block.getFieldValue('OP'));
     const p = PRECEDENCE[op] ?? 1;
-    const strictRight = op === '-' || op === '/' ? p + 1 : p;
+    const strictRight = op === '-' || op === '/' || op === '%' ? p + 1 : p;
     const code = `${operand(block, 'A', p)} ${op} ${operand(block, 'B', strictRight)}`;
     return [code, p === 1 ? Order.ADDITIVE : Order.MULTIPLICATIVE];
   };
@@ -102,6 +102,26 @@ function installGenerators(): void {
     Order.FUNCTION_CALL,
   ];
   g['pq_raw'] = (block) => `${rawCode(block)}\n`;
+  g['pq_while'] = (block) => `while ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}`;
+  g['pq_not'] = (block) => [
+    `not ${pythonGenerator.valueToCode(block, 'A', Order.LOGICAL_NOT) || 'False'}`,
+    Order.LOGICAL_NOT,
+  ];
+  g['pq_bool'] = (block) => [String(block.getFieldValue('BOOL')), Order.ATOMIC];
+  g['pq_if_chain'] = (block) => {
+    const { elifs, hasElse } = chainOf(block);
+    let code = '';
+    for (let i = 0; i <= elifs; i++) {
+      const head = i === 0 ? 'if' : 'elif';
+      code += `${head} ${value(block, `COND${String(i)}`) || 'False'}:\n${body(block, `DO${String(i)}`)}`;
+    }
+    return hasElse ? `${code}else:\n${body(block, 'ELSE')}` : code;
+  };
+  g['pq_call_expr'] = (block) => {
+    const { name, params } = callOf(block);
+    const args = params.map((_, i) => value(block, `ARG${String(i)}`) || '0').join(', ');
+    return [`${name}(${args})`, Order.FUNCTION_CALL];
+  };
   installed = true;
 }
 
@@ -140,7 +160,8 @@ export function lineMap(ws: Workspace): Map<string, number> {
       let inner = line + 1;
       for (const input of b.inputList) {
         if (input.type !== Blockly.inputs.inputTypes.STATEMENT) continue;
-        if (input.name === 'ELSE') inner += 1; // the `else:` line
+        // the `else:` line, and each `elif …:` line of a chain (DO1, DO2…)
+        if (input.name === 'ELSE' || /^DO[1-9]/.test(input.name)) inner += 1;
         const child = b.getInputTargetBlock(input.name);
         inner = child === null ? inner + 1 : place(child, inner);
       }

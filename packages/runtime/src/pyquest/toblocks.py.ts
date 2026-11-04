@@ -3,7 +3,9 @@
 export const TOBLOCKS_SOURCE = String.raw`
 import ast, io, json, re, tokenize
 
-_OPS = {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/"}
+_OPS = {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/", ast.Mod: "%"}
+# Functions defined in the file being converted: name -> parameters (set by to_blocks).
+_DEFS = {}
 _CALLS = {"print": ("pq_print", ["VALUE"]), "clear": ("pq_clear", ["COLOR"]),
           "draw_rect": ("pq_draw_rect", ["X", "Y", "W", "H", "COLOR"]),
           "draw_image": ("pq_draw_image", ["PATH", "X", "Y"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"])}
@@ -40,6 +42,10 @@ def _plain_string(src, node):
 
 def _expr(src, node, nested=False):
     seg = ast.get_source_segment(src, node) or ""
+    if isinstance(node, ast.Constant) and isinstance(node.value, bool) and seg in ("True", "False"):
+        return {"type": "pq_bool", "fields": {"BOOL": seg}}
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
+        return {"type": "pq_not", "inputs": {"A": _expr(src, node.operand, "logic")}}
     # Number blocks only for plain whole numbers; 1.0, 0x10, 1e3 stay as typed (review I1).
     if _INT.fullmatch(seg) and len(seg.lstrip("-")) <= 15:
         return {"type": "pq_number", "fields": {"NUM": int(seg)}}
@@ -59,6 +65,10 @@ def _expr(src, node, nested=False):
             return {"type": "pq_key_pressed"}
         if node.func.id == "random_int" and len(node.args) == 2:
             return {"type": "pq_random", "inputs": {"A": _expr(src, node.args[0]), "B": _expr(src, node.args[1])}}
+        params = _DEFS.get(node.func.id)
+        if params is not None and len(node.args) == len(params):
+            return {"type": "pq_call_expr", "extraState": {"name": node.func.id, "params": params},
+                    "inputs": {"ARG" + str(i): _expr(src, a) for i, a in enumerate(node.args)}}
     if isinstance(node, ast.BinOp) and type(node.op) in _OPS:
         return {"type": "pq_arith", "fields": {"OP": _OPS[type(node.op)]},
                 "inputs": {"A": _expr(src, node.left, True), "B": _expr(src, node.right, True)}}
@@ -108,6 +118,29 @@ def _else_line(ctx, node):
     return None
 
 
+def _elif_chain(ctx, node):
+    """if / elif … / else as ([(test, body, header line)], else body, else line), or None if not a chain."""
+    branches = [(node.test, node.body, node.lineno)]
+    cur = node
+    while len(cur.orelse) == 1 and isinstance(cur.orelse[0], ast.If):
+        nxt = cur.orelse[0]
+        if not ctx.lines[nxt.lineno - 1].lstrip().startswith("elif"):
+            break
+        if (ctx.has_comment(cur.body[-1].end_lineno + 1, nxt.lineno)
+                or not ctx.only_blank_or_comment(nxt.lineno + 1, nxt.body[0].lineno - 1)):
+            return None
+        branches.append((nxt.test, nxt.body, nxt.lineno))
+        cur = nxt
+    if len(branches) == 1:
+        return None
+    if not cur.orelse:
+        return branches, None, None
+    else_at = _else_line(ctx, cur)
+    if else_at is None or ctx.has_comment(cur.body[-1].end_lineno + 1, else_at):
+        return None
+    return branches, cur.orelse, else_at
+
+
 def _stmt(ctx, node):
     src = ctx.src
     header_end = node.body[0].lineno - 1 if hasattr(node, "body") and isinstance(node.body, list) else None
@@ -125,6 +158,19 @@ def _stmt(ctx, node):
                         "inputs": {"COUNT": _expr(src, args[0])}, "statements": {"DO": do}}
             return {"type": "pq_for_range", "fields": {"VAR": node.target.id},
                     "inputs": {"FROM": _expr(src, args[0]), "TO": _expr(src, args[1])}, "statements": {"DO": do}}
+        if isinstance(node, ast.If) and _elif_chain(ctx, node) is not None:
+            branches, else_body, else_at = _elif_chain(ctx, node)
+            block = {"type": "pq_if_chain", "extraState": {"elifs": len(branches) - 1, "else": else_body is not None},
+                     "inputs": {}, "statements": {}}
+            for i, (test, body, line) in enumerate(branches):
+                block["inputs"]["COND" + str(i)] = _expr(src, test)
+                block["statements"]["DO" + str(i)] = _body(ctx, body, line)
+            if else_body is not None:
+                block["statements"]["ELSE"] = _body(ctx, else_body, else_at)
+            return block
+        if isinstance(node, ast.While) and not node.orelse:
+            return {"type": "pq_while", "inputs": {"COND": _expr(src, node.test)},
+                    "statements": {"DO": _body(ctx, node.body, node.lineno)}}
         if isinstance(node, ast.If):
             cond = _expr(src, node.test)
             if not node.orelse:
@@ -231,6 +277,8 @@ def to_blocks(src):
     for n in ast.walk(tree):
         if isinstance(n, ast.FunctionDef) and _simple_params(n) is not None:
             defs[n.name] = _simple_params(n)
+    _DEFS.clear()
+    _DEFS.update(defs)
     ctx = _Ctx(src, lines, comment_lines, defs)
     if not tree.body:
         out = [_raw(l.strip()) for l in lines if l.strip() == "" or l.lstrip().startswith("#")]

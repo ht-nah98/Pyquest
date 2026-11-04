@@ -20,11 +20,16 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
   pq_random: { A: num(1), B: num(10) },
 };
 
+/** Blocks whose shape is set by extraState in the toolbox. */
+const DEFAULT_EXTRA: Record<string, ToolboxEntry['extraState']> = {
+  pq_if_chain: { elifs: 1, else: true },
+};
+
 export type ToolboxEntry = {
   kind: 'block';
   type: string;
   inputs?: Record<string, object>;
-  extraState?: { name: string; params: string[] };
+  extraState?: { name: string; params: string[] } | { elifs: number; else: boolean };
 };
 export type ToolboxCategory = {
   kind: 'category';
@@ -45,11 +50,20 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
     types: ['pq_clear', 'pq_draw_rect', 'pq_draw_image', 'pq_draw_text', 'pq_print'],
   },
   { name: 'Biến', colour: '330', types: ['pq_assign', 'pq_aug', 'pq_var_get', 'pq_global'] },
-  { name: 'Lặp', colour: '30', types: ['pq_for', 'pq_for_range'] },
+  { name: 'Lặp', colour: '30', types: ['pq_for', 'pq_for_range', 'pq_while'] },
   {
     name: 'Điều kiện',
     colour: '260',
-    types: ['pq_if', 'pq_if_else', 'pq_compare', 'pq_logic', 'pq_key_pressed'],
+    types: [
+      'pq_if',
+      'pq_if_else',
+      'pq_if_chain',
+      'pq_compare',
+      'pq_logic',
+      'pq_not',
+      'pq_bool',
+      'pq_key_pressed',
+    ],
   },
   { name: 'Lệnh tự đặt', colour: '290', types: ['pq_def', 'pq_return'] },
   { name: 'Số và chữ', colour: '160', types: ['pq_number', 'pq_text', 'pq_arith', 'pq_random'] },
@@ -58,8 +72,19 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
 function entry(type: string): ToolboxEntry {
   const known: readonly string[] = BLOCK_TYPES;
   if (!known.includes(type)) throw new Error(`unknown block "${type}" in toolbox`);
+  const out: ToolboxEntry = { kind: 'block', type };
   const inputs = DEFAULT_INPUTS[type];
-  return inputs === undefined ? { kind: 'block', type } : { kind: 'block', type, inputs };
+  if (inputs !== undefined) out.inputs = inputs;
+  const extra = DEFAULT_EXTRA[type];
+  if (extra !== undefined) out.extraState = extra;
+  return out;
+}
+
+/** True when a def's body has a return somewhere inside. */
+function gives(def: BlockNode): boolean {
+  const walk = (nodes: readonly BlockNode[]): boolean =>
+    nodes.some((n) => n.type === 'pq_return' || Object.values(n.statements ?? {}).some(walk));
+  return walk(def.statements?.['BODY'] ?? []);
 }
 
 /** One call block for every def in the code (top level and nested), so the child can use what they made. */
@@ -74,14 +99,15 @@ export function callBlocksFor(statements: readonly BlockNode[]): ToolboxEntry[] 
         const raw = n.fields?.['PARAMS'];
         const params =
           typeof raw === 'string' && raw.trim() !== '' ? raw.split(',').map((p) => p.trim()) : [];
-        const entry: ToolboxEntry = {
-          kind: 'block',
-          type: 'pq_call',
-          extraState: { name, params },
+        const make = (type: string): ToolboxEntry => {
+          const entry: ToolboxEntry = { kind: 'block', type, extraState: { name, params } };
+          if (params.length > 0)
+            entry.inputs = Object.fromEntries(params.map((_, i) => [`ARG${String(i)}`, num(0)]));
+          return entry;
         };
-        if (params.length > 0)
-          entry.inputs = Object.fromEntries(params.map((_, i) => [`ARG${String(i)}`, num(0)]));
-        out.push(entry);
+        out.push(make('pq_call'));
+        // A def with return also gives a value block, to use inside if, =, …
+        if (gives(n)) out.push(make('pq_call_expr'));
       }
       for (const list of Object.values(n.statements ?? {})) walk(list);
     }

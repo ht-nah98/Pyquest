@@ -106,6 +106,7 @@ const JSON_DEFS = [
           ['−', '-'],
           ['×', '*'],
           ['÷', '/'],
+          ['% (dư)', '%'],
         ],
       },
       { type: 'input_value', name: 'B' },
@@ -275,6 +276,44 @@ const JSON_DEFS = [
     colour: CONDITION,
   },
   {
+    type: 'pq_not',
+    message0: 'không phải %1',
+    args0: [{ type: 'input_value', name: 'A' }],
+    output: 'Boolean',
+    colour: CONDITION,
+    tooltip: 'not: đổi đúng thành sai, sai thành đúng.',
+  },
+  {
+    type: 'pq_bool',
+    message0: '%1',
+    args0: [
+      {
+        type: 'field_dropdown',
+        name: 'BOOL',
+        options: [
+          ['True (đúng)', 'True'],
+          ['False (sai)', 'False'],
+        ],
+      },
+    ],
+    output: 'Boolean',
+    colour: CONDITION,
+  },
+  {
+    type: 'pq_while',
+    message0: 'lặp khi %1 %2 %3',
+    args0: [
+      { type: 'input_value', name: 'COND' },
+      { type: 'input_dummy' },
+      { type: 'input_statement', name: 'DO' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: LOOP,
+    tooltip: 'while điều_kiện: lặp lại các lệnh bên trong chừng nào điều kiện còn đúng.',
+  },
+  {
     type: 'pq_key_pressed',
     message0: 'đang bấm Space / chạm?',
     output: 'Boolean',
@@ -364,6 +403,40 @@ const RAW_BLOCK = {
 };
 
 type CallBlock = Block & { fnName: string; params: string[]; renderInputs(): void };
+type ChainBlock = Block & { elifs: number; hasElse: boolean; renderInputs(): void };
+
+/** if … elif … elif … else: one block for the whole chain (extraState { elifs, else }). */
+const IF_CHAIN_BLOCK = {
+  init(this: ChainBlock) {
+    this.elifs = 1;
+    this.hasElse = true;
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setInputsInline(true);
+    this.setColour(CONDITION);
+    this.setTooltip(
+      'if … elif … else: thử từng điều kiện từ trên xuống, gặp cái đúng đầu tiên thì làm.',
+    );
+    this.renderInputs();
+  },
+  renderInputs(this: ChainBlock) {
+    for (const input of [...this.inputList]) this.removeInput(input.name);
+    for (let i = 0; i <= this.elifs; i++) {
+      this.appendValueInput(`COND${String(i)}`).appendField(i === 0 ? 'nếu' : 'không thì nếu');
+      this.appendDummyInput(`THEN${String(i)}`).appendField('thì');
+      this.appendStatementInput(`DO${String(i)}`);
+    }
+    if (this.hasElse) this.appendStatementInput('ELSE').appendField('không thì');
+  },
+  saveExtraState(this: ChainBlock) {
+    return { elifs: this.elifs, else: this.hasElse };
+  },
+  loadExtraState(this: ChainBlock, state: { elifs?: number; else?: boolean }) {
+    this.elifs = state.elifs ?? 1;
+    this.hasElse = state.else ?? true;
+    this.renderInputs();
+  },
+};
 
 /**
  * Calls one of the child's own functions (def): the label is its name, one input per parameter. The toolbox
@@ -399,7 +472,27 @@ const CALL_BLOCK = {
   },
 };
 
-export const BLOCK_TYPES = [...JSON_DEFS.map((d) => d.type), 'pq_raw', 'pq_call'] as const;
+/** A call of the child's own function that gives back a value (it has return): usable inside if, =, … */
+const CALL_EXPR_BLOCK = {
+  ...CALL_BLOCK,
+  init(this: CallBlock) {
+    this.fnName = 'inside';
+    this.params = [];
+    this.setOutput(true);
+    this.setInputsInline(true);
+    this.setColour(FUNCTION);
+    this.setTooltip('Gọi một lệnh em tự đặt có return: nó tính ra một giá trị.');
+    this.renderInputs();
+  },
+};
+
+export const BLOCK_TYPES = [
+  ...JSON_DEFS.map((d) => d.type),
+  'pq_raw',
+  'pq_call',
+  'pq_call_expr',
+  'pq_if_chain',
+] as const;
 
 let registered = false;
 
@@ -409,6 +502,8 @@ export function registerBlocks(): void {
   Blockly.common.defineBlocksWithJsonArray(JSON_DEFS);
   Blockly.Blocks['pq_raw'] = RAW_BLOCK;
   Blockly.Blocks['pq_call'] = CALL_BLOCK;
+  Blockly.Blocks['pq_call_expr'] = CALL_EXPR_BLOCK;
+  Blockly.Blocks['pq_if_chain'] = IF_CHAIN_BLOCK;
   registered = true;
 }
 
@@ -416,6 +511,12 @@ export function registerBlocks(): void {
 export function callOf(block: Block): { name: string; params: string[] } {
   const b = block as CallBlock;
   return { name: b.fnName, params: b.params };
+}
+
+/** An if/elif/else block's shape, for the generator. */
+export function chainOf(block: Block): { elifs: number; hasElse: boolean } {
+  const b = block as ChainBlock;
+  return { elifs: b.elifs, hasElse: b.hasElse };
 }
 
 /** The raw block's code, for the generator. */

@@ -59,6 +59,16 @@ describe('Python → blocks → Python', () => {
     'if x < 3 or (a if b else c):\n    pass',
     'for i in range(2):\n    for j in range(2):\n        draw_rect(i * 50, j * 50, 10, 10, "red")',
     'for i in range(3):\n    # mỗi vòng một chim\n    draw_rect(i, 0, 10, 10, "red")',
+    'x = 7 % 2',
+    'if i % 2 == 0:\n    c = "red"',
+    'while x < 400:\n    x = x + 50',
+    'ok = True\nnight = False',
+    'if not done:\n    pass',
+    'if a and not b:\n    pass',
+    'x = not (a or b)',
+    'if y < 200:\n    c = "blue"\nelif y < 400:\n    c = "green"\nelse:\n    c = "brown"',
+    'if a:\n    pass\nelif b:\n    pass\nelif c:\n    pass',
+    'def inside(px, x):\n    return px > x\n\n\nif inside(3, 1):\n    print("trong")',
   ])('%j survives the round trip', (source) => {
     expect(roundTrip(source).trimEnd()).toBe(source);
   });
@@ -109,6 +119,44 @@ describe('Python → blocks → Python', () => {
       type: 'pq_draw_image',
       fields: { FLIP: 'TRUE' },
     });
+  });
+
+  test('new blocks: while, not, True/False, if/elif/else chains and calls that give a value', () => {
+    const types = (src: string) => {
+      const tree = py.parseBlocks(src);
+      if (!tree.ok) throw new Error(tree.messageVi);
+      return tree.statements;
+    };
+    expect(types('while x < 3:\n    x = x + 1')[0]?.type).toBe('pq_while');
+    const chain = types(
+      'if a:\n    pass\nelif b:\n    pass\nelif c:\n    pass\nelse:\n    pass',
+    )[0];
+    expect(chain?.type).toBe('pq_if_chain');
+    expect(chain?.extraState).toEqual({ elifs: 2, else: true });
+    expect(types('ok = not True')[0]?.inputs?.['VALUE']).toEqual({
+      type: 'pq_not',
+      inputs: { A: { type: 'pq_bool', fields: { BOOL: 'True' } } },
+    });
+    const call = types('def inside(px, x):\n    return px > x\nok = inside(3, 1)')[1]?.inputs?.[
+      'VALUE'
+    ];
+    expect(call?.type).toBe('pq_call_expr');
+    expect(call?.extraState).toEqual({ name: 'inside', params: ['px', 'x'] });
+  });
+
+  test('a def that returns a value also gives a value block in the toolbox', () => {
+    const tree = py.parseBlocks('def inside(px, x):\n    return px > x');
+    if (!tree.ok) throw new Error('parse');
+    expect(callBlocksFor(tree.statements).map((b) => b.type)).toEqual(['pq_call', 'pq_call_expr']);
+  });
+
+  test('if/elif/else blocks sit on the right lines (each elif and else is a line)', () => {
+    const tree = py.parseBlocks('if a:\n    x = 1\nelif b:\n    x = 2\nelse:\n    x = 3\ny = 4');
+    if (!tree.ok) throw new Error('parse');
+    const ws = new Blockly.Workspace();
+    Blockly.serialization.workspaces.load(treeToState(tree.statements), ws);
+    expect([...lineMap(ws).values()].sort((a, b) => a - b)).toEqual([1, 2, 4, 6, 7]);
+    ws.dispose();
   });
 
   test('a syntax error comes back with its line and blocks are not produced', () => {

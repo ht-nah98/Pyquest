@@ -19,6 +19,12 @@ function defsOn(w: Blockly.Workspace): BlockNode[] {
   return w.getBlocksByType('pq_def', true).map((b) => ({
     type: 'pq_def',
     fields: { NAME: String(b.getFieldValue('NAME')), PARAMS: String(b.getFieldValue('PARAMS')) },
+    // Only whether it returns matters here (a value block is offered for it).
+    statements: {
+      BODY: b.getDescendants(false).some((d) => d.type === 'pq_return')
+        ? [{ type: 'pq_return' }]
+        : [],
+    },
   }));
 }
 
