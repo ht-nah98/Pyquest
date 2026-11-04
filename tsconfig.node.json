@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["node"],
+    "tsBuildInfoFile": "${configDir}/.tsbuild/tsconfig.node.tsbuildinfo",
+    "declarationDir": "${configDir}/.tsbuild/types-node"
+  },
+  "include": ["vitest.config.ts"]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "pyquest",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "dev": "npm -w apps/web run dev",
+    "build": "npm run typecheck && npm -w apps/web run build",
+    "typecheck": "tsc -b",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "content:check": "tsx tools/content-check/src/main.ts",
+    "e2e": "npm -w apps/web run e2e --",
+    "assets:clean": "python3 tools/assets/clean.py",
+    "assets:placeholders": "python3 tools/assets/placeholders.py"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.4",
+    "eslint": "^10.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
+  }
+}
