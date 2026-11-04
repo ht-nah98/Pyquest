@@ -2,7 +2,16 @@ import { loadPyodide, type PyodideAPI } from 'pyodide';
 import { translateError } from './errors';
 import { HOST_SOURCE } from './pyquest/host.py.ts';
 import { PYQUEST_SOURCE } from './pyquest/pyquest.py.ts';
-import type { DrawEvent, Files, GameInput, RunOptions, RunResult } from './types';
+import { TOBLOCKS_SOURCE } from './pyquest/toblocks.py.ts';
+import type {
+  BlockNode,
+  BlockTree,
+  DrawEvent,
+  Files,
+  GameInput,
+  RunOptions,
+  RunResult,
+} from './types';
 
 const DEFAULT_MAX_LINES = 1_000_000;
 const SITE = '/home/pyodide/pqlib';
@@ -22,6 +31,7 @@ export class PyRunner {
     private readonly runScriptFn: HostFn,
     private readonly startGameFn: HostFn,
     private readonly stepFn: HostFn,
+    private readonly toBlocksFn: HostFn,
   ) {}
 
   /** indexURL: where pyodide.asm.wasm lives. Omit on Node; the page serves it from /pyodide/ (no CDN). */
@@ -37,14 +47,19 @@ export class PyRunner {
     fs.mkdirTree(SITE);
     fs.writeFile(`${SITE}/pyquest.py`, PYQUEST_SOURCE);
     fs.writeFile(`${SITE}/pq_host.py`, HOST_SOURCE);
-    py.runPython(`import sys\nsys.path.insert(0, ${JSON.stringify(SITE)})\nimport pq_host`);
+    fs.writeFile(`${SITE}/pq_toblocks.py`, TOBLOCKS_SOURCE);
+    py.runPython(
+      `import sys\nsys.path.insert(0, ${JSON.stringify(SITE)})\nimport pq_host, pq_toblocks`,
+    );
     const host = py.pyimport('pq_host') as unknown as Record<string, HostFn>;
     const pick = (name: string): HostFn => {
       const fn = host[name];
       if (fn === undefined) throw new Error(`pq_host.${name} missing`);
       return fn;
     };
-    return new PyRunner(pick('run_script'), pick('start_game'), pick('step'));
+    const toBlocks = (py.pyimport('pq_toblocks') as unknown as Record<string, HostFn>)['to_blocks'];
+    if (toBlocks === undefined) throw new Error('pq_toblocks.to_blocks missing');
+    return new PyRunner(pick('run_script'), pick('start_game'), pick('step'), toBlocks);
   }
 
   /** Runs the program once and returns every draw event it made (script mode). */
@@ -72,6 +87,15 @@ export class PyRunner {
       opts.maxLines ?? DEFAULT_MAX_LINES,
     );
     return Promise.resolve(toResult(raw));
+  }
+
+  /** Parses Python into a block tree (ADR 0003). Syntax errors come back in Vietnamese, not thrown. */
+  parseBlocks(source: string): BlockTree {
+    const raw = JSON.parse(this.toBlocksFn(source)) as
+      | { ok: true; statements: BlockNode[] }
+      | { ok: false; type: string; msg: string; line: number | null };
+    if (raw.ok) return raw;
+    return { ok: false, line: raw.line, messageVi: translateError(raw.type, raw.msg, raw.line) };
   }
 
   /** One frame: update() then draw(); returns that frame's draw events. */

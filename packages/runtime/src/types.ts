@@ -25,3 +25,14 @@ export type GameInput = { keys: string[]; tapped: boolean };
 
 export const STAGE_WIDTH = 400;
 export const STAGE_HEIGHT = 600;
+
+/** A block as Python's ast saw it; packages/blocks turns it into Blockly JSON. */
+export type BlockNode = {
+  type: string;
+  fields?: Record<string, string | number>;
+  inputs?: Record<string, BlockNode>;
+  extraState?: { code: string };
+};
+
+export type BlockTree =
+  { ok: true; statements: BlockNode[] } | { ok: false; line: number | null; messageVi: string };
