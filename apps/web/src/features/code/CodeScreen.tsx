@@ -1,4 +1,4 @@
-import { checkGoals, type GoalResult } from '@pyquest/checker';
+import { checkGoals, runGameTest, type GoalResult } from '@pyquest/checker';
 import type { RunResult } from '@pyquest/runtime';
 import type * as Blockly from 'blockly/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -71,8 +71,10 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   );
 
   const loop = useGameLoop(stage, (r) => {
-    setResult(r);
-    grade(r);
+    if (r.error !== undefined) {
+      setResult(r);
+      pyPane.current?.highlight(r.error.line, 'error');
+    }
     if (r.error !== undefined || r.stoppedByLimit) setRunning(false);
   });
   useGameKeys(running && code?.mode === 'game', loop.press);
@@ -173,6 +175,21 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
     setRunning(true);
     try {
       if (code.mode === 'game') {
+        // Grade with the scripted test run first (same as content:check), then let the child play.
+        const test = await runGameTest(
+          {
+            start: () => python.startGame(filesRef.current, main, 1),
+            step: (input) => python.step(input),
+          },
+          code.test ?? { frames: 90, taps: [] },
+        );
+        grade(test);
+        setResult(test);
+        pyPane.current?.highlight(test.error?.line ?? null, 'error');
+        if (test.error !== undefined) {
+          setRunning(false);
+          return;
+        }
         await loop.start(filesRef.current, main);
         return;
       }

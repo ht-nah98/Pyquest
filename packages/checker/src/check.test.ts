@@ -1,7 +1,7 @@
 import type { Goal } from '@pyquest/content-schema';
 import type { RunResult } from '@pyquest/runtime';
 import { describe, expect, test } from 'vitest';
-import { checkGoals } from './index';
+import { checkGoals, runGameTest } from './index';
 
 const ok: RunResult = {
   events: [
@@ -63,5 +63,106 @@ describe('checkGoals', () => {
       { id: 'a', ok: true },
       { id: 'b', ok: false },
     ]);
+  });
+});
+
+describe('game-mode goals over frames', () => {
+  const frame = (y: number, extra: RunResult['events'] = []): RunResult['events'] => [
+    { t: 'sprite', sprite: 'bird', x: 80, y, frame: 0 },
+    ...extra,
+    { t: 'frame' },
+  ];
+  const run = (ys: number[]): RunResult => ({
+    events: ys.flatMap((y) => frame(y)),
+    vars: {},
+    stoppedByLimit: false,
+  });
+
+  test('moves: the sprite ends lower (down) than it started', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'moves', sprite: 'bird', axis: 'y', dir: 1 };
+    expect(one(g, run([100, 110, 130]))).toBe(true);
+    expect(one(g, run([100, 100, 100]))).toBe(false);
+    expect(one(g, run([100, 90, 80]))).toBe(false);
+  });
+
+  test('staysWithin: never below the ground line', () => {
+    const g: Goal = {
+      id: 'g',
+      label: 'l',
+      kind: 'staysWithin',
+      sprite: 'bird',
+      axis: 'y',
+      max: 480,
+    };
+    expect(one(g, run([400, 470, 480, 480]))).toBe(true);
+    expect(one(g, run([400, 470, 490]))).toBe(false);
+    expect(one(g, run([]))).toBe(false);
+  });
+
+  test('risesAfterTap: after a tap frame the sprite goes up', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'risesAfterTap', sprite: 'bird', taps: [2] };
+    expect(one(g, run([100, 110, 120, 110, 100]))).toBe(true);
+    expect(one(g, run([100, 110, 120, 130, 140]))).toBe(false);
+  });
+
+  test('speedsUp: steps get bigger (falling faster and faster)', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'speedsUp', sprite: 'bird', axis: 'y' };
+    expect(one(g, run([100, 101, 103, 106, 110, 115]))).toBe(true);
+    expect(one(g, run([100, 102, 104, 106, 108, 110]))).toBe(false);
+    expect(one(g, run([100]))).toBe(false);
+  });
+
+  test('drewCount: enough copies of a sprite in one frame', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'drewCount', sprite: 'bird', min: 3 };
+    const three: RunResult = {
+      events: [80, 130, 180].map(
+        (x) => ({ t: 'sprite', sprite: 'bird', x, y: 0, frame: 0 }) as const,
+      ),
+      vars: {},
+      stoppedByLimit: false,
+    };
+    expect(one(g, three)).toBe(true);
+    expect(one({ ...g, min: 4 }, three)).toBe(false);
+  });
+});
+
+describe('runGameTest', () => {
+  test('starts, steps the scheduled frames with taps, and joins the events', async () => {
+    const inputs: boolean[] = [];
+    let y = 0;
+    const r = await runGameTest(
+      {
+        start: () => Promise.resolve({ events: [], vars: {}, stoppedByLimit: false }),
+        step: (input) => {
+          inputs.push(input.tapped);
+          y += input.tapped ? -5 : 2;
+          return {
+            events: [{ t: 'sprite', sprite: 'bird', x: 0, y, frame: 0 }, { t: 'frame' }],
+            vars: { y },
+            stoppedByLimit: false,
+          };
+        },
+      },
+      { frames: 4, taps: [2] },
+    );
+    expect(inputs).toEqual([false, false, true, false]);
+    expect(r.events.filter((e) => e.t === 'frame')).toHaveLength(4);
+    expect(r.vars['y']).toBe(1);
+  });
+
+  test('stops at the first error', async () => {
+    const r = await runGameTest(
+      {
+        start: () => Promise.resolve({ events: [], vars: {}, stoppedByLimit: false }),
+        step: () => ({
+          events: [],
+          vars: {},
+          stoppedByLimit: false,
+          error: { line: 3, messageVi: 'x', raw: 'E' },
+        }),
+      },
+      { frames: 10, taps: [] },
+    );
+    expect(r.error?.line).toBe(3);
   });
 });

@@ -64,8 +64,9 @@ export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent): void {
       ctx.fillText(e.text, e.x, e.y);
       return;
     case 'sprite': {
-      const asset = catalog.asset(e.sprite);
-      const img = images.get(e.sprite);
+      const id = e.asset ?? e.sprite;
+      const asset = catalog.asset(id);
+      const img = images.get(id);
       if (asset === undefined || img === undefined || !img.complete) {
         ctx.fillStyle = '#d9534f';
         ctx.fillRect(e.x, e.y, 24, 24);

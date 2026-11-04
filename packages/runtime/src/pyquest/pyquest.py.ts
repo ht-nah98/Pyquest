@@ -9,15 +9,20 @@ HEIGHT = 600
 
 __all__ = [
     "WIDTH", "HEIGHT", "clear", "draw_bird", "draw_sprite", "draw_rect", "draw_text",
-    "key_pressed", "random_int", "print",
+    "key_pressed", "random_int", "print", "use_sprite",
 ]
+
+
+class PyQuestError(Exception):
+    """An error whose message is already Vietnamese and meant for the child."""
 
 
 class _EventLimit(Exception):
     pass
 
 
-_state = {"events": [], "max": 5000, "keys": set(), "tapped": False, "rng": _random.Random(1)}
+_state = {"events": [], "max": 5000, "keys": set(), "tapped": False, "rng": _random.Random(1),
+          "assets": set(), "alias": {}}
 
 
 def _reset(seed, max_events):
@@ -26,6 +31,7 @@ def _reset(seed, max_events):
     _state["keys"] = set()
     _state["tapped"] = False
     _state["rng"] = _random.Random(seed)
+    _state["alias"] = {}
 
 
 def _emit(event):
@@ -52,7 +58,10 @@ def draw_bird(x, y, frame=0):
 
 def draw_sprite(name, x, y, frame=0, flip=False):
     """Draw a picture from the asset library. flip=True draws it upside down."""
-    event = {"t": "sprite", "sprite": str(name), "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)}
+    name = str(name)
+    event = {"t": "sprite", "sprite": name, "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)}
+    if name in _state["alias"]:
+        event["asset"] = _state["alias"][name]
     if flip:
         event["flip"] = True
     _emit(event)
@@ -66,6 +75,17 @@ def draw_rect(x, y, w, h, color="green"):
 def draw_text(text, x, y, size=24, color="white"):
     _emit({"t": "text", "text": str(text), "x": _num(x, "x"), "y": _num(y, "y"), "size": _num(size, "size"),
            "color": str(color)})
+
+
+def use_sprite(name, path):
+    """Draw the sprite called name with a picture file from the library, e.g. "images/bird-cu.png"."""
+    path = str(path)
+    if not (path.startswith("images/") and path.endswith(".png")):
+        raise PyQuestError("Ảnh phải nằm trong thư mục images/ và có đuôi .png")
+    asset = path[len("images/"):-len(".png")]
+    if asset not in _state["assets"]:
+        raise PyQuestError("Không tìm thấy file " + path)
+    _state["alias"][str(name)] = asset
 
 
 def key_pressed(key="space"):

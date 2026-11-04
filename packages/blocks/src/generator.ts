@@ -64,6 +64,7 @@ function installGenerators(): void {
   g['pq_raw_expr'] = (block) => [String(block.getFieldValue('CODE')), Order.ATOMIC];
   g['pq_draw_sprite'] = call('draw_sprite', ['NAME', 'X', 'Y']);
   g['pq_draw_text'] = call('draw_text', ['TEXT', 'X', 'Y']);
+  g['pq_use_sprite'] = call('use_sprite', ['NAME', 'PATH']);
   g['pq_aug'] = (block) =>
     `${String(block.getFieldValue('NAME'))} ${String(block.getFieldValue('OP'))} ${value(block, 'VALUE') || '0'}\n`;
   g['pq_global'] = (block) => `global ${String(block.getFieldValue('NAMES'))}\n`;

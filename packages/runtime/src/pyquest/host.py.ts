@@ -128,6 +128,10 @@ def start_game(files_json, main, seed, max_lines):
     return _result(g, err, stopped)
 
 
+def set_assets(ids_json):
+    pyquest._state["assets"] = set(json.loads(ids_json))
+
+
 def step(keys_json, tapped):
     g = _game["globals"]
     if g is None:

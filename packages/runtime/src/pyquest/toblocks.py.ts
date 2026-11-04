@@ -6,7 +6,7 @@ import ast, io, json, re, tokenize
 _OPS = {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/"}
 _CALLS = {"draw_bird": ("pq_draw_bird", ["X", "Y"]), "print": ("pq_print", ["VALUE"]),
           "clear": ("pq_clear", ["COLOR"]), "draw_rect": ("pq_draw_rect", ["X", "Y", "W", "H", "COLOR"]),
-          "draw_sprite": ("pq_draw_sprite", ["NAME", "X", "Y"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"])}
+          "draw_sprite": ("pq_draw_sprite", ["NAME", "X", "Y"]), "use_sprite": ("pq_use_sprite", ["NAME", "PATH"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"])}
 _CMP = {ast.Eq: "==", ast.NotEq: "!=", ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", ast.GtE: ">="}
 _AUG = {ast.Add: "+=", ast.Sub: "-="}
 

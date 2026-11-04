@@ -6,6 +6,7 @@ export function translateError(type: string, msg: string, line: number | null): 
   if (type === 'PyQuestError' && msg === 'missing update') {
     return 'Game cần hàm update() để chạy mỗi khung hình.';
   }
+  if (type === 'PyQuestError') return `${at}${msg}.`;
   if (type === 'IndentationError' || type === 'TabError') return `${at}thụt lề chưa đúng.`;
   if (type === 'SyntaxError') {
     if (/never closed|unexpected EOF|unmatched|does not match/.test(msg))

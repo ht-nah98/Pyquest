@@ -1,1 +1,1 @@
-export { checkGoals, type GoalResult } from './check';
+export { checkGoals, framesOf, runGameTest, type GameApi, type GoalResult } from './check';

@@ -13,6 +13,7 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
   pq_arith: { A: num(1), B: num(1) },
   pq_draw_sprite: { NAME: text('pipe'), X: num(200), Y: num(300) },
   pq_draw_text: { TEXT: text('0'), X: num(200), Y: num(60) },
+  pq_use_sprite: { NAME: text('bird'), PATH: text('images/bird-cu.png') },
   pq_aug: { VALUE: num(1) },
   pq_for: { COUNT: num(3) },
   pq_for_range: { FROM: num(0), TO: num(5) },

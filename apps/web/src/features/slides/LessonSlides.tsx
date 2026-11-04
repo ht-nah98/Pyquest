@@ -118,7 +118,12 @@ export function LessonSlides() {
       >
         <StepBar lesson={lesson} current={current.stepIndex} done={state.doneSteps} big={present} />
         {isCoach && (
-          <Button onClick={() => { setMenuOpen((o) => !o); }} data-testid="slide-menu-toggle">
+          <Button
+            onClick={() => {
+              setMenuOpen((o) => !o);
+            }}
+            data-testid="slide-menu-toggle"
+          >
             ☰ Các màn
           </Button>
         )}
@@ -154,7 +159,13 @@ export function LessonSlides() {
       </main>
 
       <footer className="flex items-center justify-center gap-4 border-t-2 border-ink/15 bg-paper px-6 py-3">
-        <Button onClick={() => { go(index - 1); }} disabled={index === 0} data-testid="slide-prev">
+        <Button
+          onClick={() => {
+            go(index - 1);
+          }}
+          disabled={index === 0}
+          data-testid="slide-prev"
+        >
           ← Trước
         </Button>
         <div className="flex flex-col items-center gap-1">
@@ -188,7 +199,9 @@ export function LessonSlides() {
         ) : (
           <Button
             tone="brand"
-            onClick={() => { go(index + 1); }}
+            onClick={() => {
+              go(index + 1);
+            }}
             disabled={!canNext}
             data-testid="slide-next"
             className="min-w-40 text-xl"

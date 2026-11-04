@@ -1,5 +1,5 @@
 import { BLOCK_TYPES } from '@pyquest/blocks';
-import { checkGoals } from '@pyquest/checker';
+import { checkGoals, runGameTest } from '@pyquest/checker';
 import {
   AssetManifestSchema,
   CourseSchema,
@@ -35,6 +35,7 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
   for (const stray of input.strayFiles) err(stray, 'stray file in content/ (rule 8)');
 
   const manifest = AssetManifestSchema.safeParse(input.manifest);
+  if (manifest.success) py.setAssets(manifest.data.assets.map((a) => a.id));
   const assetIds = new Set<string>();
   if (!manifest.success) err('assets/library/manifest.json', manifest.error.message);
   else {
@@ -133,13 +134,13 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
     }
   }
 
-  const solution = await runLesson(ctx.py, code.mode, code.solution, code.main);
+  const solution = await runLesson(ctx.py, code.mode, code.solution, code.main, code.test);
   const failed = checkGoals(code.goals, solution).filter((g) => !g.ok);
   if (failed.length > 0) {
     const why = solution.error === undefined ? '' : ` (${solution.error.raw})`;
     ctx.err(where, `solution misses goals ${failed.map((g) => g.id).join(', ')}${why}`);
   }
-  const starter = await runLesson(ctx.py, code.mode, code.starter, code.main);
+  const starter = await runLesson(ctx.py, code.mode, code.starter, code.main, code.test);
   if (checkGoals(code.goals, starter).every((g) => g.ok)) {
     ctx.err(where, 'starter already passes every goal; the lesson would finish itself');
   }
@@ -150,18 +151,13 @@ async function runLesson(
   mode: 'script' | 'game',
   files: Record<string, string>,
   main: string,
+  test: { frames: number; taps: number[] } = { frames: 90, taps: [] },
 ): Promise<RunResult> {
   if (mode === 'script') return py.runScript(files, main, { seed: SEED, maxEvents: 5000 });
-  const start = await py.startGame(files, main, { seed: SEED });
-  if (start.error !== undefined) return start;
-  const all: RunResult = { ...start, events: [...start.events] };
-  for (let f = 0; f < 60; f++) {
-    const r = py.step({ keys: [], tapped: f % 20 === 0 });
-    all.events.push(...r.events);
-    all.vars = r.vars;
-    if (r.error !== undefined) return { ...all, error: r.error };
-  }
-  return all;
+  return runGameTest(
+    { start: () => py.startGame(files, main, { seed: SEED }), step: (input) => py.step(input) },
+    test,
+  );
 }
 
 /** Plays 300 frames, tapping now and then, so ready → play → over → ready all run. */

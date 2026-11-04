@@ -18,6 +18,40 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     name: z.string().min(1),
     value: z.union([z.number(), z.string()]),
   }),
+  // Judged over the frames of a run (game mode: the scripted test run in LessonCode.test).
+  z.object({
+    ...base,
+    kind: z.literal('moves'),
+    sprite: z.string().min(1),
+    axis: z.enum(['x', 'y']),
+    dir: z.union([z.literal(1), z.literal(-1)]),
+  }),
+  z.object({
+    ...base,
+    kind: z.literal('staysWithin'),
+    sprite: z.string().min(1),
+    axis: z.enum(['x', 'y']),
+    min: z.number().optional(),
+    max: z.number().optional(),
+  }),
+  z.object({
+    ...base,
+    kind: z.literal('risesAfterTap'),
+    sprite: z.string().min(1),
+    taps: z.array(z.int().nonnegative()).min(1),
+  }),
+  z.object({
+    ...base,
+    kind: z.literal('speedsUp'),
+    sprite: z.string().min(1),
+    axis: z.enum(['x', 'y']),
+  }),
+  z.object({
+    ...base,
+    kind: z.literal('drewCount'),
+    sprite: z.string().min(1),
+    min: z.int().positive(),
+  }),
 ]);
 
 export type Goal = z.infer<typeof GoalSchema>;

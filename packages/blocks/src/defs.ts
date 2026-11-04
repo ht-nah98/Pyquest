@@ -130,6 +130,20 @@ const JSON_DEFS = [
     tooltip: 'draw_sprite(tên, x, y): vẽ một hình trong kho hình.',
   },
   {
+    type: 'pq_use_sprite',
+    message0: 'dùng ảnh %2 cho %1',
+    args0: [
+      { type: 'input_value', name: 'NAME' },
+      { type: 'input_value', name: 'PATH' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DRAW,
+    tooltip:
+      'use_sprite("bird", "images/bird-cu.png"): đổi hình của chim bằng một file trong thư mục images.',
+  },
+  {
     type: 'pq_draw_text',
     message0: 'viết chữ %1 tại x %2 y %3',
     args0: [

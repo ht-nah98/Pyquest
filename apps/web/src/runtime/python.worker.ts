@@ -2,12 +2,23 @@
 import { PyRunner } from '@pyquest/runtime';
 import type { WorkerReply, WorkerRequest } from './protocol';
 
+// The library's picture names, so use_sprite("bird", "images/x.png") can check the path.
+const manifests = import.meta.glob<{ assets: { id: string }[] }>(
+  '@content/assets/library/manifest.json',
+  {
+    eager: true,
+    import: 'default',
+  },
+);
+const assetIds = Object.values(manifests).flatMap((m) => m.assets.map((a) => a.id));
+
 const post = (reply: WorkerReply) => {
   self.postMessage(reply);
 };
 
 const ready = PyRunner.create({ indexURL: `${self.location.origin}/pyodide/` }).then(
   (py) => {
+    py.setAssets(assetIds);
     post({ kind: 'ready' });
     return py;
   },

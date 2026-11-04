@@ -32,7 +32,13 @@ export class PyRunner {
     private readonly startGameFn: HostFn,
     private readonly stepFn: HostFn,
     private readonly toBlocksFn: HostFn,
+    private readonly setAssetsFn: HostFn,
   ) {}
+
+  /** The picture names in the library, so use_sprite can check a path. */
+  setAssets(ids: readonly string[]): void {
+    this.setAssetsFn(JSON.stringify(ids));
+  }
 
   /** indexURL: where pyodide.asm.wasm lives. Omit on Node; the page serves it from /pyodide/ (no CDN). */
   static async create(opts: { indexURL?: string } = {}): Promise<PyRunner> {
@@ -59,7 +65,13 @@ export class PyRunner {
     };
     const toBlocks = (py.pyimport('pq_toblocks') as unknown as Record<string, HostFn>)['to_blocks'];
     if (toBlocks === undefined) throw new Error('pq_toblocks.to_blocks missing');
-    return new PyRunner(pick('run_script'), pick('start_game'), pick('step'), toBlocks);
+    return new PyRunner(
+      pick('run_script'),
+      pick('start_game'),
+      pick('step'),
+      toBlocks,
+      pick('set_assets'),
+    );
   }
 
   /** Runs the program once and returns every draw event it made (script mode). */

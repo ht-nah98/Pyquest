@@ -19,6 +19,10 @@ export const LessonCodeSchema = z
     mode: z.enum(['script', 'game']),
     goals: z.array(GoalSchema).min(1),
     solution: FilesSchema,
+    /** Game mode: how the automatic test plays it (frames, and frames where the screen is tapped). */
+    test: z
+      .object({ frames: z.int().positive().max(600), taps: z.array(z.int().nonnegative()) })
+      .optional(),
     /** Revealed one at a time by 💡 Gợi ý; the last one may nearly give the answer. */
     hints: z.array(z.string().min(1).max(160)).max(5).optional(),
   })

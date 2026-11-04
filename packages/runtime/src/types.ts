@@ -1,7 +1,15 @@
 /** One drawing instruction recorded while the child's program runs. This is what replaces a log. */
 export type DrawEvent =
   | { t: 'clear'; color: string }
-  | { t: 'sprite'; sprite: string; x: number; y: number; frame: number; flip?: true }
+  | {
+      t: 'sprite';
+      sprite: string;
+      asset?: string;
+      x: number;
+      y: number;
+      frame: number;
+      flip?: true;
+    }
   | { t: 'rect'; x: number; y: number; w: number; h: number; color: string }
   | { t: 'text'; text: string; x: number; y: number; size: number; color: string }
   | { t: 'say'; text: string }

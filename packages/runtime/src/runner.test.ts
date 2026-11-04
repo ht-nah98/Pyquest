@@ -105,6 +105,35 @@ describe('script mode', () => {
   });
 });
 
+describe('pictures from the library by path', () => {
+  test('use_sprite swaps the bird for a library picture by its path', async () => {
+    py.setAssets(['bird', 'bird-cu', 'pipe']);
+    const r = await run('use_sprite("bird", "images/bird-cu.png")\ndraw_bird(10, 20)');
+    expect(r.error).toBeUndefined();
+    expect(r.events).toContainEqual({
+      t: 'sprite',
+      sprite: 'bird',
+      asset: 'bird-cu',
+      x: 10,
+      y: 20,
+      frame: 0,
+    });
+  });
+
+  test('a wrong path is a Vietnamese error naming the file', async () => {
+    py.setAssets(['bird', 'bird-cu']);
+    const r = await run('use_sprite("bird", "images/bird-meo.png")');
+    expect(r.error?.line).toBe(1);
+    expect(r.error?.messageVi).toContain('images/bird-meo.png');
+  });
+
+  test('a path outside images/ is refused', async () => {
+    py.setAssets(['bird-cu']);
+    const r = await run('use_sprite("bird", "bird-cu.png")');
+    expect(r.error?.messageVi).toContain('images/');
+  });
+});
+
 describe('game mode', () => {
   test('step calls update then draw each frame', async () => {
     const code =
