@@ -19,13 +19,19 @@ describe('script mode', () => {
   });
 
   test('without the import, draw_bird is unknown and the message says what to add', async () => {
-    const r = await py.runScript({ 'main.py': 'draw_bird(1, 2)' }, 'main.py', { seed: 1, maxEvents: 100 });
+    const r = await py.runScript({ 'main.py': 'draw_bird(1, 2)' }, 'main.py', {
+      seed: 1,
+      maxEvents: 100,
+    });
     expect(r.error?.line).toBe(1);
     expect(r.error?.messageVi).toContain('from pyquest import *');
   });
 
   test('plain print works without the import and still becomes a bubble', async () => {
-    const r = await py.runScript({ 'main.py': 'print("chào", 3)' }, 'main.py', { seed: 1, maxEvents: 100 });
+    const r = await py.runScript({ 'main.py': 'print("chào", 3)' }, 'main.py', {
+      seed: 1,
+      maxEvents: 100,
+    });
     expect(r.error).toBeUndefined();
     expect(r.events).toContainEqual({ t: 'say', text: 'chào 3' });
   });
@@ -134,6 +140,14 @@ describe('pictures from the library by path', () => {
     const r = await run('use_sprite("bird", "images/bird-meo.png")');
     expect(r.error?.line).toBe(2);
     expect(r.error?.messageVi).toContain('images/bird-meo.png');
+  });
+
+  test('a near-miss path suggests the real file', async () => {
+    py.setAssets(['bird', 'bird-cu', 'bird-rong']);
+    const r = await run('use_sprite("bird", "images/rong.png")');
+    expect(r.error?.messageVi).toContain('images/bird-rong.png');
+    const typo = await run('use_sprite("bird", "images/Bird-Rong.png")');
+    expect(typo.error?.messageVi).toContain('images/bird-rong.png');
   });
 
   test('a path outside images/ is refused', async () => {

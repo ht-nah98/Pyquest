@@ -77,6 +77,20 @@ def draw_text(text, x, y, size=24, color="white"):
            "color": str(color)})
 
 
+def _closest_asset(asset):
+    """The library picture a mistyped name most likely meant, or None."""
+    import difflib
+    names = sorted(_state["assets"])
+    low = asset.lower().replace("_", "-").replace(" ", "-")
+    if low in names:
+        return low
+    inside = [n for n in names if low and low in n]
+    if len(inside) == 1:
+        return inside[0]
+    close = difflib.get_close_matches(low, names, n=1, cutoff=0.6)
+    return close[0] if close else None
+
+
 def use_sprite(name, path):
     """Draw the sprite called name with a picture file from the library, e.g. "images/bird-cu.png"."""
     path = str(path)
@@ -84,7 +98,9 @@ def use_sprite(name, path):
         raise PyQuestError("Ảnh phải nằm trong thư mục images/ và có đuôi .png")
     asset = path[len("images/"):-len(".png")]
     if asset not in _state["assets"]:
-        raise PyQuestError("Không tìm thấy file " + path)
+        guess = _closest_asset(asset)
+        hint = "" if guess is None else ". Có phải em muốn images/" + guess + ".png?"
+        raise PyQuestError("Không tìm thấy file " + path + hint)
     _state["alias"][str(name)] = asset
 
 

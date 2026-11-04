@@ -50,6 +50,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   const [split, setSplit] = useState(50);
   const [running, setRunning] = useState(false);
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [runs, setRuns] = useState(0);
   const { profile } = useSession();
 
   const main = code?.main ?? 'main.py';
@@ -192,6 +193,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
   };
 
   const run = async () => {
+    setRuns((n) => n + 1);
     if (code === undefined) return;
     flush();
     setRunning(true);
@@ -333,6 +335,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             results={goals}
             hints={code.hints ?? []}
             walkthrough={code.walkthrough ?? []}
+            runs={runs}
           />
           <div className="flex gap-2 max-[1279px]:w-44 max-[1279px]:flex-col">
             {running ? (
@@ -373,7 +376,7 @@ function CodeEditor({ lessonId }: { lessonId: string }) {
             </Button>
           </div>
           <div
-            className="relative min-h-0 flex-1 touch-none"
+            className="relative min-h-[45%] flex-1 touch-none max-[1279px]:min-h-0"
             onPointerDown={() => {
               loop.press('space', true);
             }}
