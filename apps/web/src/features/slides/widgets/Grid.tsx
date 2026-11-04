@@ -36,7 +36,7 @@ export function Grid() {
   return (
     <div className="flex h-full min-h-60 items-start gap-4">
       <svg
-        viewBox={`-30 -24 ${String(W + 40)} ${String(H + 34)}`}
+        viewBox={`-52 -28 ${String(W + 64)} ${String(H + 40)}`}
         className="h-full max-h-[440px] touch-none rounded-[10px] border-2 border-ink bg-white"
         data-testid="grid"
         onPointerDown={(e) => {
@@ -59,7 +59,7 @@ export function Grid() {
             key={`tx${String(x)}`}
             x={x}
             y={-8}
-            fontSize={16}
+            fontSize={20}
             textAnchor="middle"
             fill="#1b2233"
           >
@@ -71,17 +71,17 @@ export function Grid() {
             key={`ty${String(y)}`}
             x={-6}
             y={y + 5}
-            fontSize={16}
+            fontSize={20}
             textAnchor="end"
             fill="#1b2233"
           >
             {y}
           </text>
         ))}
-        <text x={W - 4} y={-8} fontSize={16} textAnchor="end" fill="#3776ab">
+        <text x={W - 4} y={-8} fontSize={20} textAnchor="end" fill="#3776ab">
           x →
         </text>
-        <text x={-6} y={H + 4} fontSize={16} textAnchor="end" fill="#3776ab">
+        <text x={-6} y={H + 4} fontSize={20} textAnchor="end" fill="#3776ab">
           y ↓
         </text>
         {pt !== null && (

@@ -19,7 +19,8 @@
     "content:check": "tsx tools/content-check/src/main.ts",
     "e2e": "npm -w apps/web run e2e --",
     "assets:clean": "python3 tools/assets/clean.py",
-    "assets:placeholders": "python3 tools/assets/placeholders.py"
+    "assets:placeholders": "python3 tools/assets/placeholders.py",
+    "assets:test": "python3 -m unittest discover -s tools/assets"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

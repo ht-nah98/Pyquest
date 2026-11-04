@@ -52,7 +52,7 @@ export function RoadmapBuilder({
   return (
     <ol
       ref={list}
-      className="grid max-w-xl grid-cols-1 gap-2 sm:grid-cols-2"
+      className="grid max-w-4xl grid-cols-1 gap-2 sm:grid-cols-2"
       data-testid="roadmap-builder"
     >
       {ids.map((id, i) => {

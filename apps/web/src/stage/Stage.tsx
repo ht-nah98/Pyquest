@@ -80,8 +80,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
           height={STAGE_HEIGHT}
           data-testid={testId}
           data-frames="0"
-          className="max-h-full max-w-full rounded-[10px] border-2 border-ink [image-rendering:pixelated]"
-          style={{ aspectRatio: `${String(STAGE_WIDTH)} / ${String(STAGE_HEIGHT)}` }}
+          className="h-full w-full object-contain [image-rendering:pixelated]"
         />
         {bubbles.length > 0 && (
           <div
