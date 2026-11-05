@@ -24,6 +24,8 @@ describe('Python → blocks → Python', () => {
     'y = (y + 2) * 3',
     'speed = -8',
     'print("chào")',
+    'play_sound("flap")',
+    'play_music("happy")\nstop_music()',
     'clear("skyblue")\ndraw_rect(0, 550, 400, 50, "green")',
     'import math',
     '[i for i in range(3)]',
@@ -324,5 +326,23 @@ describe('lineMap and toolbox', () => {
 
   test('toolboxFor rejects an unknown block id', () => {
     expect(() => toolboxFor(['pq_nope'])).toThrow(/pq_nope/);
+  });
+});
+
+describe('sound blocks', () => {
+  test('play_sound / play_music / stop_music are real blocks with a list of names', () => {
+    const tree = py.parseBlocks('play_music("calm")\nplay_sound("hit")\nstop_music()');
+    if (!tree.ok) throw new Error(tree.messageVi);
+    expect(tree.statements.map((b) => [b.type, b.fields])).toEqual([
+      ['pq_play_music', { MUSIC: 'calm' }],
+      ['pq_play_sound', { SOUND: 'hit' }],
+      ['pq_stop_music', undefined],
+    ]);
+  });
+
+  test('a name that is not on the list stays as typed (raw code), so Python can explain the mistake', () => {
+    const tree = py.parseBlocks('play_sound("meo")');
+    if (!tree.ok) throw new Error(tree.messageVi);
+    expect(tree.statements[0]?.type).toBe('pq_raw');
   });
 });

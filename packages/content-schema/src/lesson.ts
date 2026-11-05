@@ -33,6 +33,8 @@ export const ExerciseSchema = z
       .optional(),
     /** Numbered "Các bước" shown in the task card: the detailed how-to of this code step. */
     walkthrough: z.array(z.string().min(1).max(200)).max(8).optional(),
+    /** Written but not yet approved by the coach: only the coach sees it (AGENTS.md §6). */
+    draft: z.boolean().optional(),
     /** Revealed one at a time by 💡 Gợi ý; the last one may nearly give the answer. */
     hints: z.array(z.string().min(1).max(160)).max(5).optional(),
   })

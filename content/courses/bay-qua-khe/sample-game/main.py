@@ -72,6 +72,8 @@ def update():
         if tap:
             state = "play"
             speed = FLAP
+            play_sound("flap")
+            play_music("happy")
         return
 
     if state == "over":
@@ -81,6 +83,7 @@ def update():
 
     if tap:
         speed = FLAP
+        play_sound("flap")
     speed = speed + GRAVITY
     bird_y = bird_y + speed
 
@@ -89,6 +92,7 @@ def update():
         if not pipe[2] and pipe[0] + PIPE_W < BIRD_X:
             pipe[2] = True
             score = score + 1
+            play_sound("point")
     if pipes[0][0] < -PIPE_W:
         pipes.pop(0)
         pipes.append(new_pipe(pipes[-1][0] + SPACING))
@@ -98,6 +102,8 @@ def update():
         if hits(pipe):
             crashed = True
     if crashed:
+        play_sound("hit")
+        stop_music()
         state = "over"
         over_at = frame_no
         best = max(best, score)

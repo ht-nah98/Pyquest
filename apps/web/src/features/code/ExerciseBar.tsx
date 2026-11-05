@@ -42,6 +42,14 @@ export function ExerciseBar({
           >
             {label}
             {e.input === 'typing' && ' ✍️'}
+            {e.draft === true && (
+              <span
+                className="ml-1 rounded-full bg-sun px-1.5 text-xs"
+                title="Chưa duyệt: chỉ HLV thấy"
+              >
+                nháp
+              </span>
+            )}
           </Link>
         ) : (
           <span

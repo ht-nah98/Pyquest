@@ -72,6 +72,7 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
     ],
   },
   { name: 'Lệnh tự đặt', colour: '290', types: ['pq_def', 'pq_return'] },
+  { name: 'Âm thanh', colour: '345', types: ['pq_play_sound', 'pq_play_music', 'pq_stop_music'] },
   { name: 'Số và chữ', colour: '160', types: ['pq_number', 'pq_text', 'pq_arith', 'pq_random'] },
 ];
 

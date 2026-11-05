@@ -1,3 +1,4 @@
+import { MUSIC, SOUNDS } from '@pyquest/runtime';
 import { Blockly, type Block } from './blockly';
 
 /** Block colours by family, so a child links a colour with a kind of command. */
@@ -13,6 +14,22 @@ const CONDITION = 260;
 const FUNCTION = 290;
 const EVENT = 45;
 const LIST = 200;
+const SOUND = 345;
+
+/** Dropdown labels: what the child hears, then the name the code uses (ADR 0007). */
+const SOUND_LABEL: Record<(typeof SOUNDS)[number], string> = {
+  flap: 'vỗ cánh',
+  point: 'ghi điểm',
+  hit: 'va chạm',
+  fall: 'rơi',
+  win: 'thắng',
+  click: 'tách',
+};
+const MUSIC_LABEL: Record<(typeof MUSIC)[number], string> = {
+  happy: 'vui',
+  adventure: 'phiêu lưu',
+  calm: 'êm',
+};
 
 /** Labels are Vietnamese; the code they make is English Python (spec §5). */
 const JSON_DEFS = [
@@ -368,6 +385,44 @@ const JSON_DEFS = [
     output: 'Boolean',
     colour: EVENT,
     tooltip: 'key_pressed(): đúng (True) khi bấm Space hoặc chạm màn hình.',
+  },
+  {
+    type: 'pq_play_sound',
+    message0: 'phát tiếng %1',
+    args0: [
+      {
+        type: 'field_dropdown',
+        name: 'SOUND',
+        options: SOUNDS.map((s) => [`${SOUND_LABEL[s]} (${s})`, s]),
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: SOUND,
+    tooltip: 'play_sound("flap"): phát một tiếng ngắn, một lần.',
+  },
+  {
+    type: 'pq_play_music',
+    message0: 'bật nhạc %1',
+    args0: [
+      {
+        type: 'field_dropdown',
+        name: 'MUSIC',
+        options: MUSIC.map((m) => [`${MUSIC_LABEL[m]} (${m})`, m]),
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: SOUND,
+    tooltip: 'play_music("happy"): bật nhạc nền, phát lặp lại tới khi tắt nhạc hoặc bấm Dừng.',
+  },
+  {
+    type: 'pq_stop_music',
+    message0: 'tắt nhạc',
+    previousStatement: null,
+    nextStatement: null,
+    colour: SOUND,
+    tooltip: 'stop_music(): tắt nhạc nền.',
   },
   {
     type: 'pq_random',

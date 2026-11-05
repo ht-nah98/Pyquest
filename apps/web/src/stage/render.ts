@@ -90,6 +90,8 @@ export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent): void {
     }
     case 'say':
     case 'frame':
+    case 'sound': // heard, not drawn: Stage hands these to stage/sound.ts
+    case 'music':
       return;
   }
 }

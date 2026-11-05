@@ -2,6 +2,7 @@ import type { Files, RunResult } from '@pyquest/runtime';
 import { useCallback, useEffect, useRef } from 'react';
 import { python } from '../runtime/client';
 import type { StageHandle } from './Stage';
+import { hear, stopMusic } from './sound';
 
 /**
  * Runs a game-mode program: startGame, then one step per animation frame with the keys held and
@@ -25,6 +26,7 @@ export function useGameLoop(
   const stop = useCallback(() => {
     token.current++;
     running.current = false;
+    stopMusic(); // ■ Dừng, an error, leaving: the child's tune ends with the game
     cancelAnimationFrame(raf.current);
   }, []);
 
@@ -36,6 +38,7 @@ export function useGameLoop(
       // Stopped, unmounted (stop runs on unmount) or restarted while Python was loading: do nothing.
       if (mine !== token.current) return;
       onResultRef.current(first);
+      hear(first.events); // play_music("…") at the top of the file runs here, before the first frame
       if (first.error !== undefined) return;
       running.current = true;
       let busy = false;

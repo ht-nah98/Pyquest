@@ -1,5 +1,7 @@
 // Python → block tree, using Python's own ast. Anything outside the supported subset becomes a raw-code
 // block holding the exact source, so a child's code is never lost (ADR 0003).
+import { MUSIC, SOUNDS } from '../sounds';
+
 export const TOBLOCKS_SOURCE = String.raw`
 import ast, io, json, re, tokenize
 
@@ -9,6 +11,8 @@ _DEFS = {}
 _CALLS = {"print": ("pq_print", ["VALUE"]), "clear": ("pq_clear", ["COLOR"]),
           "draw_rect": ("pq_draw_rect", ["X", "Y", "W", "H", "COLOR"]),
           "draw_image": ("pq_draw_image", ["PATH", "X", "Y"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"])}
+_SOUNDS = ${JSON.stringify(SOUNDS)}
+_MUSIC = ${JSON.stringify(MUSIC)}
 _CMP = {ast.Eq: "==", ast.NotEq: "!=", ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", ast.GtE: ">="}
 _AUG = {ast.Add: "+=", ast.Sub: "-="}
 
@@ -214,6 +218,15 @@ def _stmt(ctx, node):
             if spec[0] == "pq_draw_image":
                 block["fields"] = {"FLIP": "TRUE" if flip else "FALSE"}
             return block
+        # Sounds: a block only for a name on the list; a typo stays raw so Python can say which name was meant.
+        named = (len(call.args) == 1 and not call.keywords and isinstance(call.args[0], ast.Constant)
+                 and isinstance(call.args[0].value, str))
+        if call.func.id == "play_sound" and named and call.args[0].value in _SOUNDS:
+            return {"type": "pq_play_sound", "fields": {"SOUND": call.args[0].value}}
+        if call.func.id == "play_music" and named and call.args[0].value in _MUSIC:
+            return {"type": "pq_play_music", "fields": {"MUSIC": call.args[0].value}}
+        if call.func.id == "stop_music" and not call.args and not call.keywords:
+            return {"type": "pq_stop_music"}
         params = ctx.defs.get(call.func.id)
         if params is not None and not call.keywords and len(call.args) == len(params):
             return {"type": "pq_call", "extraState": {"name": call.func.id, "params": params},

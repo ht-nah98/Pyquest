@@ -16,6 +16,10 @@ export type DrawEvent =
   | ({ t: 'rect'; x: number; y: number; w: number; h: number; color: string } & By)
   | ({ t: 'text'; text: string; x: number; y: number; size: number; color: string } & By)
   | ({ t: 'say'; text: string } & By)
+  /** play_sound: a short 8-bit sound, once. */
+  | ({ t: 'sound'; name: string } & By)
+  /** play_music: a looping tune; name null is stop_music(). */
+  | ({ t: 'music'; name: string | null } & By)
   | { t: 'frame' };
 
 /** One call of a function the child wrote (def), for the 📞 calls panel. */

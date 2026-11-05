@@ -71,6 +71,9 @@ function installGenerators(): void {
     return `draw_image(${args.join(', ')})\n`;
   };
   g['pq_draw_text'] = call('draw_text', ['TEXT', 'X', 'Y']);
+  g['pq_play_sound'] = (block) => `play_sound("${String(block.getFieldValue('SOUND'))}")\n`;
+  g['pq_play_music'] = (block) => `play_music("${String(block.getFieldValue('MUSIC'))}")\n`;
+  g['pq_stop_music'] = () => 'stop_music()\n';
   g['pq_aug'] = (block) =>
     `${String(block.getFieldValue('NAME'))} ${String(block.getFieldValue('OP'))} ${value(block, 'VALUE') || '0'}\n`;
   g['pq_global'] = (block) => `global ${String(block.getFieldValue('NAMES'))}\n`;

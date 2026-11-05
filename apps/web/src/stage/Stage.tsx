@@ -3,6 +3,7 @@ import { STAGE_HEIGHT, STAGE_WIDTH } from '@pyquest/runtime';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { drawEvent, preloadSprites, resetStage } from './render';
 import { replayDelay } from './replayDelay';
+import { currentMusic, hear, soundsPlayed, stopMusic } from './sound';
 
 export type StageHandle = {
   /** Draw a whole frame (game mode): reset, then every event. */
@@ -96,12 +97,17 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
       void preloadSprites();
       return () => {
         ro.disconnect();
+        stopMusic(); // leaving the screen ends the child's tune
       };
     }, []);
 
     const bump = () => {
       frames.current += 1;
-      canvas.current?.setAttribute('data-frames', String(frames.current));
+      const el = canvas.current;
+      el?.setAttribute('data-frames', String(frames.current));
+      // What the child's code made you hear, for e2e (headless browsers have no speakers).
+      el?.setAttribute('data-music', currentMusic() ?? '');
+      el?.setAttribute('data-sounds', String(soundsPlayed()));
     };
 
     useImperativeHandle(ref, () => ({
@@ -110,6 +116,7 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
         if (c === null) return;
         shown.current = [...events];
         repaint(c);
+        hear(events); // play_sound / play_music are heard, not drawn
         const says = events.flatMap((e) => (e.t === 'say' ? [e.text] : []));
         if (says.length > 0) setBubbles(says.slice(-3));
         bump();
@@ -128,6 +135,8 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
           if (e.t === 'say') {
             says.push(e.text);
             setBubbles(says.slice(-3));
+          } else if (e.t === 'sound' || e.t === 'music') {
+            hear([e]);
           } else {
             paintEvent(c, e, picked.current);
             shown.current.push(e);
@@ -156,6 +165,8 @@ export const Stage = forwardRef<StageHandle, { className?: string; testId?: stri
       },
       clear() {
         replayToken.current++;
+        stopMusic();
+        canvas.current?.setAttribute('data-music', '');
         shown.current = [];
         const c = ctx();
         // repaint, not resetStage: the 👀 picture stays while its button is on (review M5).

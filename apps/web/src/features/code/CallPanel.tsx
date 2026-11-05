@@ -17,6 +17,10 @@ export function eventAsCall(e: DrawEvent): string | null {
       return `clear("${e.color}")`;
     case 'say':
       return `print("${e.text}")`;
+    case 'sound':
+      return `play_sound("${e.name}")`;
+    case 'music':
+      return e.name === null ? 'stop_music()' : `play_music("${e.name}")`;
     case 'frame':
       return null;
   }

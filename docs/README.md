@@ -11,6 +11,7 @@ Mỗi chủ đề có **một** tài liệu là nguồn chuẩn. Hai tài liệu
 | Kiến trúc, ranh giới package | `architecture/overview.md` | |
 | Chạy cho lớp (LAN), Pyodide | `architecture/deployment-ops.md` | |
 | GitHub, CI, deploy | `architecture/deployment-ops.md` mục "GitHub và CI" | `.github/workflows/ci.yml` |
+| Âm thanh (play_sound, nhạc, 🔇) | `adr/0007-sound-made-by-the-page.md` | |
 | Tài khoản, đồng bộ, màn HLV | `adr/0006-supabase-accounts-and-sync.md` | spec `superpowers/specs/2026-11-05-supabase-accounts-design.md` |
 | Thuật ngữ Việt ↔ code | `glossary.md` | |
 | Quy ước code | `conventions/coding-standards.md` | |

@@ -46,6 +46,19 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     min: z.int().positive(),
   }),
   z.object({ ...base, kind: z.literal('drewText'), text: z.string() }),
+  /** play_sound(sound) ran at least min times (default 1), or play_music(music) ran; music "*": any tune (ADR 0007). */
+  z
+    .object({
+      ...base,
+      kind: z.literal('played'),
+      sound: z.string().min(1).optional(),
+      music: z.string().min(1).optional(),
+      min: z.int().positive().optional(),
+    })
+    .refine(
+      (g) => (g.sound === undefined) !== (g.music === undefined),
+      'played: give sound or music',
+    ),
   z.object({
     ...base,
     kind: z.literal('risesAfterTap'),

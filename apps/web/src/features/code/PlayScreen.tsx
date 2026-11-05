@@ -3,10 +3,12 @@ import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
 import { python } from '../../runtime/client';
 import { Stage, type StageHandle } from '../../stage/Stage';
+import { MuteButton } from '../../ui/MuteButton';
 import { useGameKeys } from '../../stage/useGameKeys';
 import { useGameLoop } from '../../stage/useGameLoop';
 import { useLessonState } from '../lesson/useLessonState';
-import { workOf } from './exercises';
+import { visibleExercises, workOf } from './exercises';
+import { useSession } from '../../app/session';
 
 /** ⛶ Fullscreen play of the child's own program. Esc or "Về code" goes back with the code untouched. */
 export function PlayScreen() {
@@ -14,7 +16,11 @@ export function PlayScreen() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const exId = params.get('ex');
-  const all = catalog.openLesson(lessonId)?.exercises ?? [];
+  const { profile } = useSession();
+  const all = visibleExercises(
+    catalog.openLesson(lessonId)?.exercises ?? [],
+    profile?.role === 'coach',
+  );
   const code = all.find((e) => e.id === exId) ?? all[0];
   const { state } = useLessonState(lessonId);
   const stage = useRef<StageHandle>(null);
@@ -82,6 +88,7 @@ export function PlayScreen() {
           e.stopPropagation();
         }}
       >
+        <MuteButton className="min-h-11 bg-black/50" />
         <button
           type="button"
           className="min-h-11 rounded-[10px] bg-black/50 px-4 text-white"

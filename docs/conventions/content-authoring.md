@@ -54,6 +54,8 @@ Mỗi bài theo `docs/pedagogy/lesson-rhythm.md`: Hiểu → Thiết kế → Ch
 1. **Ẩn:** `{ "id", "courseId", "order", "title", "hidden": true }`. Bé thấy tên bài ("Đang soạn"), không vào được.
 2. **Bản nháp:** bài viết đủ nhưng có `"draft": true`. Chỉ HLV thấy và mở được (nhãn "Bản nháp"); bé không thấy.
 3. **Mở:** HLV đọc lại và dạy thử xong thì xóa `"draft"`. AI không tự xóa cờ này (AGENTS.md §9.7).
+   Một **bài tập** cũng có thể mang `"draft": true` (nhãn "nháp" trên thanh bài tập): chỉ HLV thấy, bé không thấy và không
+   cần làm nó để xong bài.
 
 ## 5. `npm run content:check` kiểm gì
 1. Mọi JSON qua schema. 2. `lessonIds` khớp các tệp, `order` đúng vị trí. 3. Lời giải qua hết mục tiêu (seed 1).

@@ -483,3 +483,51 @@ describe('review fixes', () => {
     expect(shiftSource('x = 100  # vàng\n', 'x', 50)).toBe('x = 150  # vàng\n');
   });
 });
+
+describe('played: the game made this sound or started this tune', () => {
+  const r: RunResult = {
+    ...ok,
+    events: [
+      { t: 'music', name: 'happy' },
+      { t: 'sound', name: 'flap' },
+      { t: 'sound', name: 'flap' },
+    ],
+  };
+  test('a sound, at least min times', () => {
+    expect(one({ id: 'g', label: 'l', kind: 'played', sound: 'flap' }, r)).toBe(true);
+    expect(one({ id: 'g', label: 'l', kind: 'played', sound: 'flap', min: 3 }, r)).toBe(false);
+    expect(one({ id: 'g', label: 'l', kind: 'played', sound: 'hit' }, r)).toBe(false);
+  });
+  test('a tune', () => {
+    expect(one({ id: 'g', label: 'l', kind: 'played', music: 'happy' }, r)).toBe(true);
+    expect(one({ id: 'g', label: 'l', kind: 'played', music: 'calm' }, r)).toBe(false);
+  });
+  test('sounds are not part of the picture: matches ignores them', () => {
+    const pic: RunResult = { ...ok, events: [{ t: 'rect', x: 1, y: 2, w: 3, h: 4, color: 'red' }] };
+    const loud: RunResult = { ...pic, events: [...pic.events, { t: 'sound', name: 'win' }] };
+    expect(
+      checkGoals([{ id: 'g', label: 'l', kind: 'matches' }], loud, { expected: pic })[0]?.ok,
+    ).toBe(true);
+  });
+});
+
+describe('runGameTest keeps the sounds of loading the module', () => {
+  test('play_music at the top of the file counts; drawing there does not', async () => {
+    const r = await runGameTest(
+      {
+        start: () =>
+          Promise.resolve({
+            ...ok,
+            events: [
+              { t: 'music', name: 'happy' },
+              { t: 'rect', x: 0, y: 0, w: 1, h: 1, color: 'red' },
+            ],
+          }),
+        step: () => Promise.resolve({ ...ok, events: [{ t: 'frame' }] }),
+      },
+      { frames: 1, taps: [] },
+    );
+    expect(r.events).toEqual([{ t: 'music', name: 'happy' }, { t: 'frame' }]);
+    expect(one({ id: 'g', label: 'l', kind: 'played', music: '*' }, r)).toBe(true);
+  });
+});

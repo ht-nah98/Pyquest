@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
 import { python, usePyStatus } from '../../runtime/client';
+import { uiSound, unlock } from '../../stage/sound';
 import { Stage, type StageHandle } from '../../stage/Stage';
 import { useGameKeys } from '../../stage/useGameKeys';
 import { useGameLoop } from '../../stage/useGameLoop';
@@ -22,7 +23,7 @@ import { TopBar } from '../../ui/TopBar';
 import type { LessonState } from '../../storage/store';
 import { useLessonState } from '../lesson/useLessonState';
 import { ExerciseBar } from './ExerciseBar';
-import { doneSteps, pickExercise, workOf } from './exercises';
+import { doneSteps, pickExercise, visibleExercises, workOf } from './exercises';
 import { BlockCodeSync, type SyncError } from './blockCodeSync';
 import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
 import { PythonPane, type PythonPaneHandle } from './PythonPane';
@@ -52,9 +53,10 @@ function CodeLesson({ lessonId }: { lessonId: string }) {
   const { state, update, flush } = useLessonState(lessonId);
   const [params] = useSearchParams();
   const { profile } = useSession();
-  const all = lesson?.exercises;
-  if (all === undefined || state === null) return null;
   const isCoach = profile?.role === 'coach';
+  const all =
+    lesson?.exercises === undefined ? undefined : visibleExercises(lesson.exercises, isCoach);
+  if (all === undefined || state === null) return null;
   const ex = pickExercise(all, state, params.get('ex') ?? undefined, isCoach);
   return (
     <CodeEditor
@@ -89,7 +91,10 @@ function CodeEditor({
   const navigate = useNavigate();
   const lesson = catalog.openLesson(lessonId);
   const code = exercise;
-  const all = useMemo(() => catalog.openLesson(lessonId)?.exercises ?? [code], [lessonId, code]);
+  const all = useMemo(
+    () => visibleExercises(catalog.openLesson(lessonId)?.exercises ?? [code], isCoach),
+    [lessonId, code, isCoach],
+  );
   const status = usePyStatus();
   const blocks = useRef<BlocksPaneHandle>(null);
   const pyPane = useRef<PythonPaneHandle>(null);
@@ -128,6 +133,8 @@ function CodeEditor({
       if (lesson === undefined) return;
       const res = checkGoals(code.goals, r, extra);
       setGoals(res);
+      if (r.error !== undefined) uiSound('oops');
+      else if (res.every((g) => g.ok)) uiSound('ok');
       if (res.every((g) => g.ok)) {
         update((s) => {
           const done = [...new Set([...(s.exercisesDone ?? []), code.id])];
@@ -307,6 +314,7 @@ function CodeEditor({
   };
 
   const run = async () => {
+    unlock(); // browsers let sound start only from a click
     setRuns((n) => n + 1);
     flush();
     setRunning(true);

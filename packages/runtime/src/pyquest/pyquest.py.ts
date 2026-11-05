@@ -1,5 +1,7 @@
 // The `pyquest` module children import. Kept as a TS string so Vite, Vitest and tsx all load it the same way.
-// Names are English (spec §5); every call appends one draw event the page turns into pictures.
+// Names are English (spec §5); every call appends one draw event the page turns into pictures (or sound).
+import { MUSIC, SOUNDS } from '../sounds';
+
 export const PYQUEST_SOURCE = String.raw`
 """PyQuest drawing library. Coordinates: origin top-left, y grows downward."""
 import random as _random
@@ -11,7 +13,12 @@ HEIGHT = 600
 # load a picture file). Everything a game needs on top, like draw_bird, the child writes with def.
 __all__ = [
     "WIDTH", "HEIGHT", "clear", "draw_rect", "draw_image", "draw_text", "key_pressed", "random_int", "print",
+    "play_sound", "play_music", "stop_music",
 ]
+
+# Made by the page itself (8-bit synth): the names are the whole list, there are no sound files.
+_SOUNDS = ${JSON.stringify(SOUNDS)}
+_MUSIC = ${JSON.stringify(MUSIC)}
 
 
 class PyQuestError(Exception):
@@ -119,4 +126,30 @@ def random_int(a, b):
 def print(*values, sep=" ", end=""):
     """print() shows a speech bubble on the stage instead of a log line."""
     _emit({"t": "say", "text": sep.join(str(v) for v in values)})
+
+
+def _known(name, names, what, call):
+    """The sound or tune name, or a Vietnamese error that lists the right ones."""
+    import difflib
+    name = str(name)
+    if name in names:
+        return name
+    close = difflib.get_close_matches(name.lower(), names, n=1, cutoff=0.5)
+    hint = ". Có phải em muốn " + call + '("' + close[0] + '")?' if close else ""
+    raise PyQuestError("Không có " + what + ' "' + name + '"' + hint + " Có: " + ", ".join(names))
+
+
+def play_sound(name):
+    """Play a short sound once: "flap", "point", "hit", "fall", "win", "click"."""
+    _emit({"t": "sound", "name": _known(name, _SOUNDS, "tiếng", "play_sound")})
+
+
+def play_music(name):
+    """Start a tune that loops until stop_music() or ■ Dừng: "happy", "adventure", "calm"."""
+    _emit({"t": "music", "name": _known(name, _MUSIC, "bản nhạc", "play_music")})
+
+
+def stop_music():
+    """Stop the tune."""
+    _emit({"t": "music", "name": None})
 `;

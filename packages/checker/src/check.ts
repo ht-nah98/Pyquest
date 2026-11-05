@@ -231,6 +231,13 @@ function meets(goal: Goal, r: RunResult, extra: CheckExtra): boolean {
         if (e.t === 'sprite' && inGroup(e.sprite, goal.sprite)) values.add(e[goal.axis]);
       return values.size >= goal.min;
     }
+    case 'played':
+      return goal.sound !== undefined
+        ? r.events.filter((e) => e.t === 'sound' && e.name === goal.sound).length >= (goal.min ?? 1)
+        : r.events.some(
+            (e) =>
+              e.t === 'music' && e.name !== null && (goal.music === '*' || e.name === goal.music),
+          );
     case 'drewText':
       return r.events.some((e) => e.t === 'text' && e.text === goal.text);
     case 'drewCount':
@@ -277,9 +284,10 @@ export async function runGameTest(
 ): Promise<GameTestResult> {
   const start = await api.start();
   if (start.error !== undefined || start.stoppedByLimit) return { ...start, lastFrameFrom: 0 };
-  // Drawing done while the module loads belongs to no frame: frame 0 is the first update().
+  // Drawing done while the module loads belongs to no frame: frame 0 is the first update(). Its sounds count:
+  // play_music("…") at the top of the file is how a game starts its tune.
   const all: GameTestResult = {
-    events: [],
+    events: start.events.filter((e) => e.t === 'sound' || e.t === 'music'),
     vars: start.vars,
     stoppedByLimit: false,
     calls: [],

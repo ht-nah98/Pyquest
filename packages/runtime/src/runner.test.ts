@@ -249,3 +249,28 @@ describe('game mode', () => {
     expect(r.error?.messageVi).toContain('update()');
   });
 });
+
+describe('sounds and music (play_sound, play_music, stop_music)', () => {
+  test('play_sound records a sound event; play_music and stop_music record music events', async () => {
+    const r = await run('play_music("happy")\nplay_sound("flap")\nstop_music()');
+    expect(r.error).toBeUndefined();
+    expect(r.events).toEqual([
+      { t: 'music', name: 'happy' },
+      { t: 'sound', name: 'flap' },
+      { t: 'music', name: null },
+    ]);
+  });
+
+  test('a mistyped sound name says which one was meant', async () => {
+    const r = await run('play_sound("flapp")');
+    expect(r.error?.messageVi).toContain('"flap"');
+    const m = await run('play_music("vui")');
+    expect(m.error?.messageVi).toContain('happy');
+  });
+
+  test('the sound names in Python are the ones the page can play', async () => {
+    const { SOUNDS, MUSIC } = await import('./index');
+    for (const s of SOUNDS) expect((await run(`play_sound("${s}")`)).error).toBeUndefined();
+    for (const m of MUSIC) expect((await run(`play_music("${m}")`)).error).toBeUndefined();
+  });
+});

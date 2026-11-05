@@ -102,6 +102,32 @@
       "why": "Python không cho ghép chữ với số. str() đổi số thành chữ để ghép hoặc vẽ ra.",
       "example": "draw_text(\"Điểm: \" + str(score), 200, 60)",
       "lesson": "l16"
+    },
+    {
+      "name": "play_sound",
+      "signature": "play_sound(\"tên tiếng\")",
+      "vi": "Phát một tiếng ngắn một lần. Có: \"flap\" (vỗ cánh), \"point\" (ghi điểm), \"hit\" (va chạm), \"fall\" (rơi), \"win\" (thắng), \"click\" (tách).",
+      "why": "Python thường không phát ra tiếng được: phải nhờ loa của máy. Lệnh này nhờ trình duyệt kêu giúp em.",
+      "inside": "_emit gửi tên tiếng cho trang web; trang web tự tạo tiếng kiểu máy chơi game cũ bằng loa của máy.",
+      "example": "if key_pressed():\n    play_sound(\"flap\")",
+      "lesson": "l22"
+    },
+    {
+      "name": "play_music",
+      "signature": "play_music(\"tên nhạc\")",
+      "vi": "Bật nhạc nền, phát lặp lại tới khi tắt hoặc bấm Dừng. Có: \"happy\" (vui), \"adventure\" (phiêu lưu), \"calm\" (êm). Gọi lại cùng tên thì nhạc chạy tiếp, không bắt đầu lại.",
+      "why": "Nhạc làm game có không khí. Em chọn bản hợp với game của mình, như đạo diễn chọn nhạc phim.",
+      "inside": "_emit gửi tên bản nhạc; trang web chơi lặp một giai điệu và một dòng bè trầm.",
+      "example": "play_music(\"happy\")",
+      "lesson": "l22"
+    },
+    {
+      "name": "stop_music",
+      "signature": "stop_music()",
+      "vi": "Tắt nhạc nền, ví dụ khi chim thua.",
+      "why": "Lúc thua mà nhạc vui vẫn chạy thì lạ. Tắt nhạc là một cách báo cho người chơi biết.",
+      "example": "if game_over:\n    stop_music()",
+      "lesson": "l22"
     }
   ]
 }

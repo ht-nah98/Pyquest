@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useSession } from '../app/session';
 import type { SyncStatus } from '../storage/syncStore';
+import { MuteButton } from './MuteButton';
 
 const SYNC: Record<SyncStatus, [string, string]> = {
   synced: ['☁️', 'Đã lưu lên mạng'],
@@ -31,6 +32,7 @@ export function TopBar({
       )}
       <h1 className="min-w-0 flex-1 truncate text-xl">{title}</h1>
       {right}
+      <MuteButton className="bg-white/15" />
       {sync !== null && (
         <span
           className="flex min-h-9 items-center gap-1 rounded-full bg-white/15 px-3 text-sm"

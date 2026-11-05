@@ -172,6 +172,94 @@
           186
         ]
       }
+    },
+    {
+      "id": "l22-e2",
+      "title": "Thêm tiếng cho game",
+      "draft": true,
+      "task": "Game im lặng quá! Thêm play_music(\"happy\") ngay dưới dòng import. Khi bấm bay: play_sound(\"flap\"). Khi được điểm: play_sound(\"point\"). Khi đụng cột: play_sound(\"hit\") và stop_music().",
+      "input": "typing",
+      "starter": {
+        "main.py": "from pyquest import *\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over, score, scored\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n    if hits():\n        game_over = True\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_global",
+        "pq_assign",
+        "pq_aug",
+        "pq_arith",
+        "pq_var_get",
+        "pq_number",
+        "pq_draw_image",
+        "pq_clear",
+        "pq_text",
+        "pq_if",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_key_pressed",
+        "pq_for",
+        "pq_draw_text",
+        "pq_random",
+        "pq_play_sound",
+        "pq_play_music",
+        "pq_stop_music"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "id": "l22-e2-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "l22-e2-music",
+          "label": "Có nhạc nền",
+          "kind": "played",
+          "music": "*"
+        },
+        {
+          "id": "l22-e2-flap",
+          "label": "Bấm bay thì có tiếng vỗ cánh",
+          "kind": "played",
+          "sound": "flap"
+        },
+        {
+          "id": "l22-e2-point",
+          "label": "Được điểm thì có tiếng ghi điểm",
+          "kind": "played",
+          "sound": "point"
+        }
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nplay_music(\"happy\")\n\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n\n\ndef draw_pipe(x, gap_y):\n    draw_image(\"images/pipe.png\", x, gap_y - 440, flip=True)\n    draw_image(\"images/pipe.png\", x, gap_y + GAP)\n\n\nGAP = 150\ny = 300\nspeed = 0\npipe_x = 400\npipe_gap = 220\ngame_over = False\nscore = 0\nscored = False\n\n\ndef hits():\n    if 100 + 44 - 8 < pipe_x or 100 + 8 > pipe_x + 52:\n        return False\n    return y + 8 < pipe_gap or y + 40 - 8 > pipe_gap + GAP\n\n\ndef update():\n    global y, speed, pipe_x, game_over, score, scored\n    if game_over:\n        return\n    if key_pressed():\n        speed = -8\n        play_sound(\"flap\")\n    speed = speed + 0.5\n    y = y + speed\n    if y > 480:\n        y = 480\n        speed = 0\n    pipe_x = pipe_x - 2\n    if pipe_x + 52 < 100 and not scored:\n        score = score + 1\n        scored = True\n        play_sound(\"point\")\n    if hits():\n        game_over = True\n        play_sound(\"hit\")\n        stop_music()\n\n\ndef draw():\n    clear(\"skyblue\")\n    draw_pipe(pipe_x - 12, pipe_gap)\n    draw_bird(100, y)\n    draw_text(str(score), 200, 60, 56)\n    if game_over:\n        draw_text(\"Thua rồi!\", 200, 250, 48)\n"
+      },
+      "test": {
+        "frames": 200,
+        "taps": [
+          0,
+          31,
+          62,
+          93,
+          124,
+          155,
+          186
+        ]
+      },
+      "walkthrough": [
+        "Dòng 2 (ngay dưới import): play_music(\"happy\"). Thử cả \"adventure\" hay \"calm\" xem bản nào hợp.",
+        "Trong update(), dưới speed = -8: play_sound(\"flap\").",
+        "Dưới scored = True: play_sound(\"point\").",
+        "Dưới game_over = True: play_sound(\"hit\") rồi stop_music().",
+        "Bấm ▶ Chạy rồi ⛶ để chơi thử. Bấm 🔊 trên thanh trên cùng nếu không nghe thấy gì."
+      ],
+      "hints": [
+        "Tiếng phải nằm trong đúng nhánh if: thụt vào ngang với dòng ngay trên nó.",
+        "Tên tiếng viết trong ngoặc kép, chữ thường: \"flap\", \"point\", \"hit\".",
+        "Mở 📘 Thư viện, mục play_sound, để xem đủ các tiếng."
+      ]
     }
   ],
   "unlocksRoadmap": [

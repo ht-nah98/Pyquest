@@ -1,6 +1,11 @@
 import type { Exercise, StepKind } from '@pyquest/content-schema';
 import type { ExerciseWork, LessonState } from '../../storage/store';
 
+/** The exercises a person sees: a draft exercise (not yet approved by the coach) only for the coach. */
+export function visibleExercises(all: readonly Exercise[], isCoach: boolean): Exercise[] {
+  return all.filter((e) => isCoach || e.draft !== true);
+}
+
 /** The first exercise is always open; each next one opens when the one before it is done. */
 export function isUnlocked(
   all: readonly Exercise[],
