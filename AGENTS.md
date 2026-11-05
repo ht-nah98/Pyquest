@@ -17,8 +17,10 @@ code phần nào, bé phải hiểu phần đó hoạt động ra sao.
 - **Khối ⇄ code song song**, đồng bộ hai chiều. Bấm Chạy thì kết quả **thành hình**, không có log.
 - Thiết bị: **laptop ≥1280×720** (chuột + bàn phím). **iPad nằm ngang ≥1080×730** để kéo khối, chơi thử, xem slide.
 - Giao diện **tiếng Việt**, giọng học sinh cấp 2. Python và tên hàm thư viện **tiếng Anh**.
-- Hiện **chạy local** trên laptop HLV, các bé vào qua LAN (`tools/coach-dev.sh`). Code ở GitHub
-  `ht-nah98/Pyquest` (**public**: không commit khóa bí mật, mật khẩu, tên thật của bé). Supabase đang làm (đợt 2).
+- **Trên mạng:** https://ht-nah98.github.io/Pyquest/ (GitHub Pages, tự deploy khi CI xanh). Tài khoản và tiến độ ở
+  Supabase project `pyquest` (ADR 0006); bé đăng nhập bằng tên + PIN 6 số do HLV tạo ở `/coach`. Code ở GitHub
+  `ht-nah98/Pyquest` (**public**: không commit khóa bí mật, mật khẩu, tên thật của bé). Vẫn chạy được trên LAN
+  (`tools/coach-dev.sh`).
 - Repo anh em: **CodeQuest** (`~/Desktop/CodeQuest`), game Blockly cho học sinh tiểu học. PyQuest chép **khuôn** của
   CodeQuest (docs, quy trình, các bài học ở §9), **không** chép code nghiệp vụ, **không** nối tài khoản.
 
@@ -62,6 +64,7 @@ packages/content-schema/  schema zod: khóa / bài / slide / bước / mục ti�
 packages/runtime/         chạy Python (Pyodide), thư viện pyquest, nhật ký lệnh vẽ, dịch lỗi
 packages/blocks/          khối Blockly, khối → Python, Python → khối (qua ast)
 packages/checker/         chấm mục tiêu bài (hàm thuần)
+supabase/                 migration SQL + Edge Function `students` (tạo bé, đặt PIN); config.toml của CLI
 content/courses/          nội dung các khóa (JSON) + game mẫu
 content/assets/library/   kho hình đã làm sạch + manifest.json
 assets/prompts/           prompt sinh ảnh (AI viết, HLV sinh)
@@ -103,7 +106,7 @@ Báo cáo kết quả **thật**: lệnh nào đỏ thì nói đỏ, kèm output
 |---|---|
 | Viết / sửa một bài | `docs/conventions/content-authoring.md` |
 | Thêm hình vào kho | `docs/playbooks/add-asset.md` |
-| Cho lớp dùng qua LAN | `docs/architecture/deployment-ops.md` |
+| Cho lớp dùng qua LAN, deploy, Supabase | `docs/architecture/deployment-ops.md` |
 | Ghi một quyết định kiến trúc | `docs/adr/README.md` |
 
 ## 8. Khi không chắc chắn

@@ -20,6 +20,8 @@ export default defineConfig({
           environment: 'jsdom',
           include: ['src/**/*.test.{ts,tsx}'],
           setupFiles: ['./src/test/setup.ts'],
+          // Tests never reach the real Supabase project, whatever .env.local says.
+          env: { VITE_SUPABASE_URL: '', VITE_SUPABASE_PUBLISHABLE_KEY: '' },
           testTimeout: 60_000,
         },
       },

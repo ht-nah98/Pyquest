@@ -6,6 +6,8 @@ import { defineConfig } from 'vite';
 const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
 
 export default defineConfig({
+  // GitHub Pages serves the app under /Pyquest/ (deploy job in .github/workflows/ci.yml); everything else under /.
+  base: process.env['PQ_BASE'] ?? '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: { '@content': `${repoRoot}content` },

@@ -10,7 +10,8 @@ Mỗi chủ đề có **một** tài liệu là nguồn chuẩn. Hai tài liệu
 | Đề cương khóa Bay Qua Khe | spec §9 | nội dung thật ở `content/courses/bay-qua-khe/` |
 | Kiến trúc, ranh giới package | `architecture/overview.md` | |
 | Chạy cho lớp (LAN), Pyodide | `architecture/deployment-ops.md` | |
-| GitHub, CI | `architecture/deployment-ops.md` mục "GitHub và CI" | `.github/workflows/ci.yml` |
+| GitHub, CI, deploy | `architecture/deployment-ops.md` mục "GitHub và CI" | `.github/workflows/ci.yml` |
+| Tài khoản, đồng bộ, màn HLV | `adr/0006-supabase-accounts-and-sync.md` | spec `superpowers/specs/2026-11-05-supabase-accounts-design.md` |
 | Thuật ngữ Việt ↔ code | `glossary.md` | |
 | Quy ước code | `conventions/coding-standards.md` | |
 | Cách viết bài | `conventions/content-authoring.md` | |

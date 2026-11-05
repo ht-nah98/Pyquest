@@ -62,6 +62,8 @@ export default defineConfig(
     'apps/web/public/',
     '**/.omc/',
     '**/.superpowers/',
+    // Edge Functions run on Deno inside Supabase (npm: imports, Deno globals); checked by deploying them.
+    'supabase/',
   ]),
 
   js.configs.recommended,
@@ -89,7 +91,11 @@ export default defineConfig(
     files: [`packages/**/*.${SRC}`],
     rules: {
       'no-restricted-globals': ['error', ...HEADLESS_GLOBALS],
-      'no-restricted-properties': ['error', ...NONDETERMINISTIC_PROPERTIES, ...HEADLESS_GLOBAL_THIS],
+      'no-restricted-properties': [
+        'error',
+        ...NONDETERMINISTIC_PROPERTIES,
+        ...HEADLESS_GLOBAL_THIS,
+      ],
       'no-restricted-imports': [
         'error',
         {

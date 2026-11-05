@@ -22,8 +22,10 @@ PQ_HOST=1 tools/coach-dev.sh      # phục vụ bản HEAD ở cổng 5174, in r
 
 ## Hồ sơ và tiến độ
 
-- Hồ sơ (biệt danh + emoji) và tiến độ lưu trong **IndexedDB của từng trình duyệt**. Máy ở nhà không thấy tiến độ ở lớp:
-  chờ Supabase (đợt 2).
+- **Có Supabase** (`VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY` trong `.env.local`, hoặc biến của repo trên
+  GitHub): bé đăng nhập bằng tên + PIN, tiến độ đồng bộ mọi máy (ADR 0006). Server LAN cũng dùng chế độ này, nên máy bé
+  cần Internet để đăng nhập. Lớp không có Internet: chạy `VITE_SUPABASE_URL= PQ_HOST=1 tools/coach-dev.sh`.
+- **Không có Supabase:** hồ sơ (biệt danh + emoji) và tiến độ lưu trong IndexedDB của từng trình duyệt.
 - Hồ sơ HLV: mở mục "HLV" ở trang đầu, nhập `VITE_COACH_PIN` trong `apps/web/.env.local` (mẫu: `.env.example`). HLV mở
   được mọi bài chưa ẩn và có chế độ Trình chiếu.
 
@@ -40,3 +42,17 @@ laptop, còn màn chiếu chỉ hiện slide).
   khác số này, vì ai cũng đọc được repo.
 - `.github/workflows/ci.yml` chạy lint, typecheck, unit, `content:check`, build và e2e mỗi lần đẩy `main` hay mở PR.
   Đẩy xong thì xem CI xanh thật (`gh run list`), đừng giả định. E2E đỏ thì tải artifact `playwright-report`.
+
+## Trên mạng: GitHub Pages + Supabase
+
+- Địa chỉ cho bé: **https://ht-nah98.github.io/Pyquest/**. Job `deploy` trong `ci.yml` build với `PQ_BASE=/Pyquest/`
+  và hai biến repo `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (`gh variable list`), rồi đẩy lên Pages. Chỉ deploy khi job
+  `check` xanh.
+- Supabase project `pyquest` (ref `zawqbiyipqqqtnhjsiwd`). Đổi schema: thêm tệp vào `supabase/migrations/`, rồi
+  `npx supabase db push --remote` (cần `npx supabase login` một lần, HLV tự gõ trong terminal riêng). Đổi Edge Function:
+  `npx supabase functions deploy students --use-api`. Sau mỗi lần đổi schema: `npx supabase db advisors --remote` phải rỗng.
+- **Tài khoản HLV:** tạo trong Dashboard (Authentication → Users → Add user → Create new user, tích Auto Confirm). Tài
+  khoản đầu tiên không phải của bé thành HLV (trigger `on_new_user`); các tài khoản sau không có quyền gì.
+- **Tự đăng ký phải tắt:** Authentication → Sign In / Providers → "Allow new users to sign up" = off.
+- Gói Free tạm dừng project sau 7 ngày không ai dùng: vào Dashboard bấm Restore. App vẫn chạy trên máy (offline) trong lúc đó.
+- Bé quên PIN: HLV vào `/coach` → bấm tên bé → "Đặt PIN mới".

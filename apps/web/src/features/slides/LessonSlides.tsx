@@ -71,7 +71,11 @@ export function LessonSlides() {
         go(index + 1);
       } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(index - 1);
       else if (e.key === 'n' || e.key === 'N')
-        window.open(`/l/${lessonId}/notes`, 'pq-notes', 'width=720,height=640');
+        window.open(
+          `${import.meta.env.BASE_URL}l/${lessonId}/notes`,
+          'pq-notes',
+          'width=720,height=640',
+        );
     };
     window.addEventListener('keydown', key);
     return () => {

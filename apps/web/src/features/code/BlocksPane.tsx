@@ -61,7 +61,7 @@ export const BlocksPane = forwardRef<
     }
     const w = Blockly.inject(host.current, {
       ...(readOnly ? { readOnly: true } : { toolbox: toolboxFor(toolbox) }),
-      media: '/blockly-media/',
+      media: `${import.meta.env.BASE_URL}blockly-media/`,
       renderer: 'zelos',
       trashcan: true,
       zoom: { controls: true, wheel: false, startScale: 0.9 },

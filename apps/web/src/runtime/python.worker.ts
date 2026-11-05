@@ -16,7 +16,9 @@ const post = (reply: WorkerReply) => {
   self.postMessage(reply);
 };
 
-const ready = PyRunner.create({ indexURL: `${self.location.origin}/pyodide/` }).then(
+const ready = PyRunner.create({
+  indexURL: new URL(`${import.meta.env.BASE_URL}pyodide/`, self.location.origin).href,
+}).then(
   (py) => {
     py.setAssets(assetIds);
     post({ kind: 'ready' });
