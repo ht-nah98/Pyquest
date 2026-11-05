@@ -10,6 +10,7 @@ Mỗi chủ đề có **một** tài liệu là nguồn chuẩn. Hai tài liệu
 | Đề cương khóa Bay Qua Khe | spec §9 | nội dung thật ở `content/courses/bay-qua-khe/` |
 | Kiến trúc, ranh giới package | `architecture/overview.md` | |
 | Chạy cho lớp (LAN), Pyodide | `architecture/deployment-ops.md` | |
+| GitHub, CI | `architecture/deployment-ops.md` mục "GitHub và CI" | `.github/workflows/ci.yml` |
 | Thuật ngữ Việt ↔ code | `glossary.md` | |
 | Quy ước code | `conventions/coding-standards.md` | |
 | Cách viết bài | `conventions/content-authoring.md` | |

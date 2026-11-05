@@ -31,3 +31,12 @@ PQ_HOST=1 tools/coach-dev.sh      # phục vụ bản HEAD ở cổng 5174, in r
 
 Hồ sơ HLV → mở bài → chế độ Trình chiếu. ←/→/Space chuyển slide; phím **N** mở cửa sổ ghi chú giảng (kéo sang màn hình
 laptop, còn màn chiếu chỉ hiện slide).
+
+## GitHub và CI
+
+- Repo: https://github.com/ht-nah98/Pyquest, **public**. Mọi thứ commit lên đều ai cũng đọc được: không commit
+  `.env.local`, khóa `service_role` của Supabase, mật khẩu database, tên thật hay ảnh của bé.
+- PIN `2468` trong `e2e/helpers.ts` và `playwright.config.ts` chỉ dùng cho test. PIN HLV thật (trong `.env.local`) phải
+  khác số này, vì ai cũng đọc được repo.
+- `.github/workflows/ci.yml` chạy lint, typecheck, unit, `content:check`, build và e2e mỗi lần đẩy `main` hay mở PR.
+  Đẩy xong thì xem CI xanh thật (`gh run list`), đừng giả định. E2E đỏ thì tải artifact `playwright-report`.

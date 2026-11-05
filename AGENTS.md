@@ -17,8 +17,8 @@ code phần nào, bé phải hiểu phần đó hoạt động ra sao.
 - **Khối ⇄ code song song**, đồng bộ hai chiều. Bấm Chạy thì kết quả **thành hình**, không có log.
 - Thiết bị: **laptop ≥1280×720** (chuột + bàn phím). **iPad nằm ngang ≥1080×730** để kéo khối, chơi thử, xem slide.
 - Giao diện **tiếng Việt**, giọng học sinh cấp 2. Python và tên hàm thư viện **tiếng Anh**.
-- Hiện **chạy local** trên laptop HLV, các bé vào qua LAN (`tools/coach-dev.sh`). Chưa có Supabase và chưa deploy:
-  HLV duyệt xong mới làm.
+- Hiện **chạy local** trên laptop HLV, các bé vào qua LAN (`tools/coach-dev.sh`). Code ở GitHub
+  `ht-nah98/Pyquest` (**public**: không commit khóa bí mật, mật khẩu, tên thật của bé). Supabase đang làm (đợt 2).
 - Repo anh em: **CodeQuest** (`~/Desktop/CodeQuest`), game Blockly cho học sinh tiểu học. PyQuest chép **khuôn** của
   CodeQuest (docs, quy trình, các bài học ở §9), **không** chép code nghiệp vụ, **không** nối tài khoản.
 
