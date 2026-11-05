@@ -375,8 +375,9 @@ function CodeEditor({
       {all.length > 1 && (
         <ExerciseBar lessonId={lessonId} all={all} current={code} done={done} isCoach={isCoach} />
       )}
-      <div className="flex min-h-0 flex-1 gap-2 p-2 max-[1279px]:flex-col">
-        <div className="flex min-h-0 min-w-0 flex-1 gap-0">
+      <div className="flex min-h-0 flex-1 gap-2 p-2">
+        {/* Below 1280 px (iPad landscape) blocks sit above the code, so the stage keeps a tall column. */}
+        <div className="flex min-h-0 min-w-0 flex-1 gap-0 max-[1279px]:flex-col">
           <section
             className="flex min-h-0 min-w-0 flex-col rounded-[10px] border-2 border-ink bg-white"
             style={{ flexBasis: `${String(split)}%` }}
@@ -419,14 +420,19 @@ function CodeEditor({
           <div
             role="separator"
             aria-orientation="vertical"
-            className="w-2 shrink-0 cursor-col-resize touch-none"
+            className="w-2 shrink-0 cursor-col-resize touch-none max-[1279px]:h-2 max-[1279px]:w-auto max-[1279px]:cursor-row-resize"
             onPointerDown={(e) => {
               (e.target as Element).setPointerCapture(e.pointerId);
             }}
             onPointerMove={(e) => {
               if (e.buttons !== 1) return;
-              const row = (e.currentTarget.parentElement as HTMLElement).getBoundingClientRect();
-              setSplit(Math.min(75, Math.max(25, ((e.clientX - row.left) / row.width) * 100)));
+              const parent = e.currentTarget.parentElement as HTMLElement;
+              const row = parent.getBoundingClientRect();
+              const stacked = getComputedStyle(parent).flexDirection === 'column';
+              const at = stacked
+                ? (e.clientY - row.top) / row.height
+                : (e.clientX - row.left) / row.width;
+              setSplit(Math.min(75, Math.max(25, at * 100)));
             }}
           />
           <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[10px] border-2 border-ink bg-code-bg">
@@ -436,7 +442,7 @@ function CodeEditor({
               <span className="flex-1" />
               <button
                 type="button"
-                className="rounded-full border-2 border-ink bg-white px-3 py-0.5 text-sm font-bold"
+                className="min-h-9 rounded-full border-2 border-ink bg-white px-3 py-0.5 text-sm font-bold"
                 onClick={() => {
                   setLibraryOpen((o) => !o);
                 }}
@@ -473,7 +479,7 @@ function CodeEditor({
           </section>
         </div>
 
-        <aside className="flex min-h-0 w-[28%] min-w-[340px] shrink-0 flex-col gap-2 max-[1279px]:h-[250px] max-[1279px]:w-full max-[1279px]:min-w-0 max-[1279px]:flex-row">
+        <aside className="flex min-h-0 w-[28%] min-w-[340px] shrink-0 flex-col gap-2 max-[1279px]:w-[300px] max-[1279px]:min-w-0">
           {showCalls && (
             <div className="flex gap-1" role="tablist" data-testid="side-tabs">
               {(
@@ -490,7 +496,7 @@ function CodeEditor({
                   type="button"
                   role="tab"
                   aria-selected={panel === id}
-                  className={`rounded-t-[10px] border-2 border-b-0 border-ink px-3 py-0.5 text-sm font-bold ${panel === id ? 'bg-paper' : 'bg-white/60'}`}
+                  className={`min-h-9 rounded-t-[10px] border-2 border-b-0 border-ink px-3 py-0.5 text-sm font-bold ${panel === id ? 'bg-paper' : 'bg-white/60'}`}
                   onClick={() => {
                     setPanel(id);
                   }}
@@ -503,7 +509,7 @@ function CodeEditor({
           )}
           {panel === 'calls' && showCalls ? (
             <section
-              className="flex max-h-[38%] min-h-0 flex-col overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
+              className="flex max-h-[38%] min-h-0 flex-col overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3"
               data-testid="calls-card"
             >
               <CallPanel result={result} from={callFrom} picked={picked} onPick={pick} />
@@ -519,7 +525,7 @@ function CodeEditor({
               runs={runs}
             />
           )}
-          <div className="flex gap-2 max-[1279px]:w-44 max-[1279px]:flex-col">
+          <div className="flex gap-2">
             {running ? (
               <Button tone="oops" onClick={stop} data-testid="stop" className="flex-1 text-xl">
                 ■ Dừng
@@ -554,7 +560,7 @@ function CodeEditor({
               }}
               data-testid="fullscreen"
             >
-              ⛶<span className="max-[1279px]:inline hidden"> Toàn màn hình</span>
+              ⛶
             </Button>
             {needsExpected(code.goals) && (
               <Button
@@ -569,7 +575,7 @@ function CodeEditor({
             )}
           </div>
           <div
-            className="relative min-h-[48%] flex-1 touch-none max-[1279px]:min-h-0"
+            className="relative min-h-[48%] flex-1 touch-none"
             onPointerDown={() => {
               loop.press('space', true);
             }}
@@ -579,7 +585,7 @@ function CodeEditor({
           >
             <Stage ref={stage} className="h-full" />
           </div>
-          <div className="flex min-w-0 flex-col gap-2 max-[1279px]:w-64">
+          <div className="flex min-w-0 flex-col gap-2">
             <ErrorBubble result={result} />
             <VarWatch result={result} />
             {(allOk || exDone) &&

@@ -18,7 +18,7 @@ export function FileTabs({
           key={f}
           type="button"
           data-testid={`file-tab-${f}`}
-          className={`rounded-t-[8px] px-3 py-0.5 font-code text-sm ${f === active ? 'bg-code-bg text-code-fg' : 'text-ink-soft hover:bg-brand-soft'}`}
+          className={`min-h-9 rounded-t-[8px] px-3 py-0.5 font-code text-sm ${f === active ? 'bg-code-bg text-code-fg' : 'text-ink-soft hover:bg-brand-soft'}`}
           onClick={() => {
             onOpen(f);
           }}

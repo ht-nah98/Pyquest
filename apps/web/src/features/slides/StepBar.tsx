@@ -55,7 +55,7 @@ export function SlideProgress({
   onJump: (i: number) => void;
 }) {
   return (
-    <ol className="flex items-center gap-1" aria-label="Tiến độ bài">
+    <ol className="flex items-center" aria-label="Tiến độ bài">
       {flat.map((f) => {
         const here = f.index === index;
         const ok = reachable(f.index);
@@ -68,8 +68,13 @@ export function SlideProgress({
               onClick={() => {
                 onJump(f.index);
               }}
-              className={`block h-3 rounded-full border border-ink/40 transition-all ${here ? 'w-8 border-ink' : 'w-3'} ${f.index <= index || here ? STEP_COLOR[f.kind] : 'bg-white'} ${ok ? 'cursor-pointer' : 'cursor-default opacity-60'}`}
-            />
+              // The dot is small, the button around it is a finger's size (iPad).
+              className={`block px-0.5 py-3 ${ok ? 'cursor-pointer' : 'cursor-default opacity-60'}`}
+            >
+              <span
+                className={`block h-3 rounded-full border border-ink/40 transition-all ${here ? 'w-8 border-ink' : 'w-3'} ${f.index <= index || here ? STEP_COLOR[f.kind] : 'bg-white'}`}
+              />
+            </button>
           </li>
         );
       })}

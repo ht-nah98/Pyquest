@@ -26,7 +26,7 @@ export function TopBar({
       {profile !== null && (
         <button
           type="button"
-          className="rounded-full bg-white/15 px-3 py-1"
+          className="min-h-9 rounded-full bg-white/15 px-3 py-1"
           onClick={() => {
             setProfile(null);
             void navigate('/');

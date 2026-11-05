@@ -206,6 +206,11 @@
       "walkthrough": [
         "Vòng lặp ở dưới def, sát lề trái.",
         "Bên trong: draw_bird(30 + i * 90, 300)"
+      ],
+      "hints": [
+        "Giống Bài 5: for i in range(4): rồi một dòng thụt vào.",
+        "i = 0, 1, 2, 3 nên x = 30, 120, 210, 300.",
+        "Dòng thụt vào: draw_bird(30 + i * 90, 300)"
       ]
     }
   ],

@@ -24,4 +24,11 @@ test('iPad landscape: slides and the code screen work by touch without page scro
   await expect(page.getByTestId('goal-l01-g-box')).toHaveAttribute('data-ok', 'true');
   const run = await page.getByTestId('run').boundingBox();
   expect(run?.height ?? 0).toBeGreaterThanOrEqual(44);
+  // Blocks above code, so the stage keeps a tall column, and the task card stays inside the window.
+  const stage = await page.locator('[data-testid="code-screen"] canvas').first().boundingBox();
+  expect(stage?.height ?? 0).toBeGreaterThanOrEqual(280);
+  const card = await page.getByTestId('task-card').boundingBox();
+  expect((card?.x ?? 0) + (card?.width ?? 0)).toBeLessThanOrEqual(1080);
+  const lib = await page.getByTestId('library-toggle').boundingBox();
+  expect(lib?.height ?? 0).toBeGreaterThanOrEqual(36);
 });

@@ -31,7 +31,7 @@ export function TaskCard({
   }
   return (
     <section
-      className="flex max-h-[38%] min-h-0 flex-col gap-2 overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3 max-[1279px]:max-h-full max-[1279px]:w-80"
+      className="flex max-h-[38%] min-h-0 flex-col gap-2 overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3"
       data-testid="task-card"
     >
       <h2 className="font-display text-lg text-brand-deep">🎯 {title ?? 'Nhiệm vụ'}</h2>
@@ -64,13 +64,13 @@ export function TaskCard({
       {shown < hints.length && (
         <button
           type="button"
-          className="self-start rounded-full border-2 border-ink bg-white px-3 py-1 text-sm font-bold"
+          className="min-h-9 self-start rounded-full border-2 border-ink bg-white px-3 py-1 text-sm font-bold"
           onClick={() => {
             setShown((n) => n + 1);
           }}
           data-testid="hint-more"
         >
-          💡 Gợi ý {shown === 0 ? '' : 'tiếp'} ({shown}/{hints.length})
+          💡 Gợi ý{shown === 0 ? '' : ' tiếp'} ({shown}/{hints.length})
         </button>
       )}
     </section>
