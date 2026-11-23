@@ -52,7 +52,7 @@
           "id": "h06-problem",
           "title": "Chạm một cái là thua?",
           "text": "Quái dính vào em thì khung nào cũng chạm, mà mỗi giây có khoảng 60 khung. Với 5 máu, chỉ một con quái cũng lấy sạch trong 5 khung hình!",
-          "coachNotes": "5 khung chưa tới một phần mười giây. Bài tập 1 cố ý để như vậy cho bé thấy vấn đề, bài tập 2 sửa."
+          "coachNotes": "5 khung chưa tới một phần mười giây. Bài tập 1 cố ý để như vậy và chỉ thả 1 con cho dễ nhìn máu tụt; bài tập 2 sửa, cả bầy trở lại."
         },
         {
           "id": "h06-safe",
@@ -99,14 +99,14 @@
         {
           "id": "h06-code1",
           "title": "Bài tập 1: đo và trừ máu",
-          "text": "Viết distance: đo ngang, đo dọc, trả về tổng. Rồi trong check_hits() hỏi từng con quái bằng near. Chạy thấy máu tụt vèo là đúng rồi đó, bài tập 2 sẽ sửa.",
-          "coachNotes": "Lỗi hay gặp: chỉ đo một trục (quái cùng cột, xa tít vẫn làm em đau); để dòng trừ máu ngoài if."
+          "text": "Viết distance: đo ngang, đo dọc, trả về tổng. Rồi trong check_hits() hỏi từng con quái bằng near. Hầm chỉ có 1 con cho dễ nhìn; máu tụt vèo là đúng rồi đó, bài tập 2 sẽ sửa.",
+          "coachNotes": "Lúc máy chạy thử: máu 5 còn 4 thì máy né được, khoảng 83 khung sau quái bắt kịp, rồi 4 khung liền mất sạch. Lỗi hay gặp: chỉ đo một trục (quái cùng cột, xa tít vẫn làm em đau); để dòng trừ máu ngoài if."
         },
         {
           "id": "h06-code2",
           "title": "Bài tập 2: một giây bất tử",
           "text": "(1) Đầu hàm: đang bất tử thì bớt safe rồi thôi. (2) Lúc bị chạm: lên dây đồng hồ rồi return, để hai con chạm cùng lúc cũng chỉ mất 1 máu.",
-          "coachNotes": "Hỏi: safe là một biến thường nên cần global, còn hero[\"hp\"] thì không. Vì sao? (Bài 3: chỉ đổi một ngăn)."
+          "coachNotes": "Cả bầy đã trở lại: 6 con, thêm dần tới 14. Hỏi: safe là một biến thường nên cần global, còn hero[\"hp\"] thì không. Vì sao? (Bài 3: chỉ đổi một ngăn)."
         }
       ]
     },

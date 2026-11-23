@@ -58,7 +58,7 @@
           "id": "h11-map",
           "title": "Vẽ bản đồ các màn",
           "text": "Vẽ 4 ô: title, play, cards, over. Nối bằng mũi tên, trên mũi tên ghi việc làm đổi màn: bấm Space, lên cấp, hết máu. Màn nào cũng phải có đường đi tiếp.",
-          "coachNotes": "7 phút. Đáp án: title → play (Space); play → cards (lên cấp); cards → play (Space); play → over (hết máu); over → play (Space, ván mới). Treo bản đồ lên để lát nữa chơi thử theo."
+          "coachNotes": "7 phút. Đáp án: title → play (Space); play → cards (lên cấp); cards → play (thả Space rồi bấm lại); play → over (hết máu); over → play (Space, ván mới). Treo bản đồ lên để lát nữa chơi thử theo."
         },
         {
           "id": "h11-quiz-map",
@@ -118,8 +118,8 @@
         {
           "id": "h11-code2",
           "title": "Bài tập 2: Lên cấp thì dừng",
-          "text": "Lúc lên cấp, em chỉ đổi screen sang màn chọn thẻ. Quái tự đứng im, vì sao nhỉ? Rồi ở màn đó, Space đưa em về màn chơi. Máu đã đổi lại 5.",
-          "coachNotes": "Hỏi: ở màn cards, nếu gọi start_game() thay vì đổi screen thì sao? (thành ván mới, mất cấp). Màn thẻ còn trống, Bài 12 và 13 mới có thẻ."
+          "text": "Lúc lên cấp, em chỉ đổi screen sang màn chọn thẻ. Quái tự đứng im, vì sao nhỉ? Để giữ Space không lướt mất bảng, code có sẵn cờ let_go (đã thả): phải thả Space ra rồi bấm lại mới về màn chơi.",
+          "coachNotes": "Dò cờ trên bảng: lên cấp thì let_go = False; khung nào không bấm Space thì thành True; em hỏi cả hai: cờ đúng và đang bấm. Hỏi: nếu gọi start_game() thay vì đổi screen thì sao? (thành ván mới, mất cấp). START_HP đã về 5. Màn thẻ còn trống, Bài 12 và 13 mới có thẻ."
         }
       ]
     },
@@ -130,7 +130,7 @@
           "id": "h11-try",
           "title": "Đi hết bản đồ",
           "text": "Chơi qua đủ 4 màn theo bản đồ giấy. Lúc lên cấp, nhìn kỹ xem có con quái nào nhúc nhích không? Sau đó đổi START_HP hoặc chữ ở màn chờ thành câu của em.",
-          "coachNotes": "8 phút. Nếu bé giữ Space lúc lên cấp thì màn cards trôi qua ngay: key_pressed đúng suốt lúc giữ. Ghi lại, Bài 13 có cách xử lý. Bài tập đạt rồi hãy đổi chữ ở màn chờ."
+          "coachNotes": "8 phút. Cho bé giữ Space lúc lên cấp: bảng vẫn đứng đó chờ, nhờ let_go. Lúc thua thì chưa có cờ này, giữ Space là vào ván mới ngay. Bài 13 gặp lại chuyện giữ phím."
         }
       ]
     }

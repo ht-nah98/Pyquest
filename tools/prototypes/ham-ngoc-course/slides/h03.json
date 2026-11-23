@@ -100,13 +100,13 @@
           "id": "h03-code1",
           "title": "Bài tập 1: mỗi người một hộp",
           "text": "Đọc kỹ hộp knight rồi làm hộp mage giống vậy. Pháp sư uống thuốc trước, vẽ sau. Nghĩ thử: nếu vẽ xong mới uống thì chữ Máu trên sân là mấy?",
-          "coachNotes": "Trả lời: Máu: 3, vì lúc vẽ chưa uống. Ở bài này ngăn image ghi cả đường dẫn images/hero-mage.png."
+          "coachNotes": "Trả lời: Máu: 3, vì lúc vẽ chưa uống. Ngăn image chỉ ghi tên hình (hero-mage); draw_person tự nối images/ ở trước và .png ở sau. Lỗi hay gặp: quên ngoặc kép quanh tên ngăn."
         },
         {
           "id": "h03-code2",
           "title": "Bài tập 2: hộp hero",
           "text": "Code được dọn lại: x, y, speed nằm trong hero; phần đi ở move_hero(). draw_thing tự lùi nửa ảnh: 8 × size, với size 3 là 24. Em viết phần lên xuống.",
-          "coachNotes": "Chỉ cho lớp: x, y đưa vào draw_thing là điểm giữa, nên đuốc giờ ghi 124, 84 (góc 100, 60 cộng 24). Ngăn image giờ chỉ ghi hero-knight, draw_thing tự nối images/ và .png. Lỗi hay gặp: chép cả images/ vào đây."
+          "coachNotes": "Chỉ cho lớp: x, y đưa vào draw_thing là điểm giữa, nên đuốc giờ ghi 124, 84 (góc 100, 60 cộng 24). Ngăn image vẫn chỉ ghi tên hình như bài tập 1, draw_thing tự nối images/ và .png. Lỗi hay gặp: chép phần lên xuống mà quên đổi \"x\" thành \"y\"."
         }
       ]
     },

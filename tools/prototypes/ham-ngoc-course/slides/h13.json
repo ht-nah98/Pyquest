@@ -42,7 +42,7 @@
           "id": "h13-bell",
           "title": "Chuông cửa chỉ reo một tiếng",
           "text": "Giữ nút chuông cửa thì chuông chỉ reo lúc vừa bấm. Muốn biết vừa bấm, ta so khung này với khung trước. Biến held (đang giữ) nhớ số của khung trước.",
-          "coachNotes": "Dò trên bảng: giữ phím 2 trong 3 khung rồi thả. number: 2, 2, 2, 0. held trước khi so: 0, 2, 2, 2. fresh: 2, 0, 0, 0. Hoạt động: bé giơ số, bé bên cạnh nhớ số lần trước rồi nói mới hay cũ."
+          "coachNotes": "Dò trên bảng: giữ phím 2 trong 3 khung rồi thả. number: 2, 2, 2, 0. held trước khi so: 0, 2, 2, 2. fresh: 2, 0, 0, 0. So với let_go ở Bài 11: cờ đó chỉ lo cho Space, held lo cả ba phím. Hoạt động: bé giơ số, bé bên cạnh nhớ số lần trước rồi nói mới hay cũ."
         },
         {
           "id": "h13-quiz-held",
@@ -91,7 +91,7 @@
           "id": "h13-prep",
           "title": "Mấy tên mới trong code",
           "text": "picks là còn được chọn mấy thẻ. owned (đang có) là danh sách thẻ đã lấy. take_card() cất thẻ vào owned rồi bớt một lượt. START_PICKS = 3: vào hầm chọn ba thẻ để thử.",
-          "coachNotes": "Chỉ trong code: check_cards và clashes đã bỏ, game lại mở ở màn chờ. Nói trước: thẻ lấy rồi hiện hình nhỏ ở góc dưới, nhưng chưa có tác dụng. Bài 14 mới có."
+          "coachNotes": "Chỉ trong code: check_cards, clashes và let_go đã bỏ, game lại mở ở màn chờ. Nói trước: thẻ lấy rồi hiện hình nhỏ ở góc dưới, nhưng chưa có tác dụng. Bài 14 mới có."
         }
       ]
     },

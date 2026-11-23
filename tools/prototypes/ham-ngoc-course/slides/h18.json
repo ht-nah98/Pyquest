@@ -102,8 +102,8 @@
         {
           "id": "h18-code2",
           "title": "Bài tập 2 và 3: Kỷ lục, ký tên",
-          "text": "Bài tập 2: giữ kỷ lục trong finish(result), hàm chạy khi hết ván, dù thắng hay thua. Bài tập 3: tháo đồ thử và ký tên dưới màn chọn nhân vật. Nhớ str() khi nối số với chữ.",
-          "coachNotes": "finish gom việc chung của thắng và thua: đổi màn, xét kỷ lục, tắt nhạc. Máy chấm đọc đúng câu Em làm game này!, bé đạt rồi hãy đổi thành biệt danh của mình (không ghi tên thật)."
+          "text": "Bài tập 2: giữ kỷ lục trong finish(result), hàm chạy khi hết ván, dù thắng hay thua. Bài tập 3: tháo đồ thử, rồi vẽ trái tim và ký biệt danh dưới màn chọn nhân vật. Nhớ str() khi nối số với chữ.",
+          "coachNotes": "finish gom việc chung của thắng và thua: đổi màn, xét kỷ lục, tắt nhạc. Máy chấm chỉ tìm trái tim (item-heart), câu chữ ký bé tự nghĩ. Chỉ ghi biệt danh, không ghi tên thật."
         }
       ]
     },

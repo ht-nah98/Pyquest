@@ -67,7 +67,7 @@
           "id": "h08-divide",
           "title": "Vì sao phải chia?",
           "text": "Quái cách 300 bước thì phép trừ ra 300: bay một phát hết nửa sân! Chia cho cả đường đi, chỉ còn phần của một bước. Nhân 8: mỗi khung đi gần 8 bước, xa hay gần cũng vậy.",
-          "coachNotes": "Đếm bước kiểu bàn cờ (ngang + dọc) như Bài 6. Ví dụ đời thường: biết cả quãng đường, muốn mỗi lần chỉ đi một đoạn bằng nhau."
+          "coachNotes": "Đếm bước kiểu bàn cờ (ngang + dọc) như Bài 6. Quái dính sát em thì đạn chậm hơn chút, vì số 1 cộng vào far lúc đó mới đáng kể. Ví dụ đời thường: biết cả quãng đường, muốn mỗi lần chỉ đi một đoạn bằng nhau."
         },
         {
           "id": "h08-trace",
@@ -99,7 +99,7 @@
           "id": "h08-plus1",
           "title": "Vì sao cộng 1?",
           "text": "Quái đứng đúng chỗ em thì đường đi là 0. Chia cho 0 thì Python báo lỗi và game dừng. Cộng 1 thì far không bao giờ bằng 0. Quái ở xa thì thêm 1 gần như không ảnh hưởng gì.",
-          "coachNotes": "Hỏi: cho 8 cái kẹo chia 0 bạn thì mỗi bạn mấy cái? Câu hỏi không có nghĩa, máy cũng chịu."
+          "coachNotes": "Hỏi: cho 8 cái kẹo chia 0 bạn thì mỗi bạn mấy cái? Câu hỏi không có nghĩa, máy cũng chịu. Lúc đó vx, vy ra 0 cả hai, đạn sẽ đứng im: hai dòng if có sẵn trong make_shot cho viên ấy bay thẳng lên (vy = -8)."
         }
       ]
     },
@@ -110,13 +110,13 @@
           "id": "h08-code1",
           "title": "Bài tập 1: bắn theo nhịp",
           "text": "shoot() chạy mỗi khung. Ghi ra giấy ba việc phải làm khi tới lượt: thêm đạn vào shots, đếm fired, lên dây đồng hồ. Đạn tạm bay thẳng lên.",
-          "coachNotes": "Xem số fired ở ô biến dưới sân sau khi chạy: khoảng 7 sau 200 khung. wait, fired cần global vì bị gán lại."
+          "coachNotes": "Chữ \"Đã bắn\" trên sân hiện số fired: 7 sau 200 khung chạy thử. wait, fired cần global vì bị gán lại."
         },
         {
           "id": "h08-code2",
           "title": "Bài tập 2: bắn đúng hướng",
           "text": "Thay hai số cố định bằng phép tính hướng. Phép trừ phải có ngoặc tròn bao quanh, để máy trừ xong rồi mới chia và nhân.",
-          "coachNotes": "Hỏi: không có ngoặc thì máy làm phép nào trước? (chia, nhân trước, trừ sau). Quái trúng đạn chưa mất máu, chỉ đếm hits ở ô biến; Bài 9 mới làm."
+          "coachNotes": "Hỏi: không có ngoặc thì máy làm phép nào trước? (chia, nhân trước, trừ sau). Để nguyên hai dòng if có sẵn. Quái trúng đạn chưa mất máu, chữ \"Đạn chạm\" chỉ đếm, và một viên chạm nhiều khung thì đếm nhiều lần; Bài 9 mới trừ máu."
         }
       ]
     },
@@ -127,7 +127,7 @@
           "id": "h08-try",
           "title": "Xạ thủ tập sự",
           "text": "Vừa chạy vừa xem đạn tìm con gần nhất. Viên đã bắn bay thẳng, nên quái dời chỗ thì có thể trượt. Chỉnh 30 (nhịp bắn), rồi chỉnh 8 (tốc độ đạn), mỗi lần một số thôi.",
-          "coachNotes": "Vì sao mỗi lần chỉ đổi một số? Để biết số nào làm game khác đi. Đứng im lâu, quái chồng ngay lên em: phép trừ ra 0 nên đạn nằm im tại chỗ. Hỏi lớp vì sao. Đạn nào cũng xuyên qua và bay mãi: bài sau xử lý."
+          "coachNotes": "Vì sao mỗi lần chỉ đổi một số? Để biết số nào làm game khác đi. Đứng im lâu, quái chồng đúng chỗ em thì đạn bay thẳng lên: hỏi lớp vì sao (phép trừ ra 0, luật có sẵn lo). Đạn nào cũng xuyên qua và bay mãi: bài sau xử lý."
         }
       ]
     }

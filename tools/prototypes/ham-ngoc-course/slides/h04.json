@@ -61,7 +61,7 @@
         {
           "id": "h04-factory",
           "title": "Máy đúc quái",
-          "text": "make_mob(x, y) trả về một hộp mới: con nhớt đứng ở (x, y) em đưa, hp 2, speed 1. Giống khuôn bánh: một cái khuôn, mỗi lần ép ra một cái bánh riêng.",
+          "text": "make_mob(x, y) trả về một hộp mới: con nhớt đứng ở (x, y) em đưa, có ba ngăn image, x, y. Giống khuôn bánh: một cái khuôn, mỗi lần ép ra một cái bánh riêng.",
           "coachNotes": "Nhắc return ở Bay Qua Khe (Bài 10): hàm tính ra rồi trả lời. Lần này câu trả lời là cả một hộp."
         },
         {
@@ -120,7 +120,7 @@
           "id": "h04-try",
           "title": "Đông hơn nữa",
           "text": "Đổi range(6) thành range(20): bầy đông lên mà code vẽ vẫn vậy. Đổi \"mob-slime\" trong make_mob thành \"mob-bat\" hoặc \"mob-mushroom\". Em thích bầy nào?",
-          "coachNotes": "Thử thách: đổi hp trong make_mob có thấy gì khác chưa? (chưa, vì chưa code nào đọc hp của quái; tới Bài 9). Bài sau: bầy quái biết đuổi theo em."
+          "coachNotes": "Hỏi: hộp quái mới có ba ngăn, sau này cần thêm gì? (cần tới đâu thêm tới đó: speed ở Bài 5, hp ở Bài 9). Bài sau: bầy quái biết đuổi theo em."
         }
       ]
     }

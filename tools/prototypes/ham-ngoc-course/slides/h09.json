@@ -100,7 +100,7 @@
           "id": "h09-code1",
           "title": "Bài tập 1: remove_dead()",
           "text": "hit_mobs() đã trừ máu quái giúp em. Em viết remove_dead() theo khuôn. Có thêm một nhánh else: con không được giữ thì đếm vào kills, hiện ở chữ Hạ.",
-          "coachNotes": "Lỗi hay gặp: mobs = alive thụt trong for (mất quái lung tung); giữ nhầm con hết máu. mobs và kills cần global vì cả biến được gán lại."
+          "coachNotes": "Lỗi hay gặp: mobs = alive thụt trong for (mất quái lung tung); giữ nhầm con hết máu. mobs và kills cần global vì cả biến được gán lại. Hộp quái giờ thêm ngăn hp: 2. Chữ Quái đếm sau remove_dead() nên giảm cùng lúc chữ Hạ tăng."
         },
         {
           "id": "h09-code2",

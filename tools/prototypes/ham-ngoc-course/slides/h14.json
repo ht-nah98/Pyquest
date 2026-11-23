@@ -55,8 +55,8 @@
         {
           "id": "h14-combos",
           "title": "Ba nhánh, ba phối hợp",
-          "text": "Có từ 2 skill cùng nhánh là mở phối hợp. Lò Than (Lửa): đạn trúng thì nổ lan. Thấu Xương (Băng): quái đang chậm thì đau hơn. Bão Sét: cứ 90 khung, sét đánh gần như cả sân.",
-          "coachNotes": "Buổi 2 bắt đầu ở đây. Game mẫu có nhiều phối hợp hơn; bản của em có 3, mỗi nhánh một cái. Hai thẻ giống hệt nhau cũng tính là 2. Hỏi: phối hợp nào hợp lúc quái đông? Lúc gặp một con to?"
+          "text": "Có từ 2 skill cùng nhánh là mở phối hợp. Lò Than (Lửa): đạn trúng thì nổ lan. Thấu Xương (Băng): quái đang chậm thì đau hơn. Bão Sét: cứ 90 khung, sét đánh cả sân.",
+          "coachNotes": "Buổi 2 bắt đầu ở đây. Game mẫu có nhiều phối hợp hơn; bản của em có 3, mỗi nhánh một cái. Hai thẻ giống hệt nhau cũng tính là 2. Bão Sét nổ xa 1200: hai góc đối diện cách khoảng 1100 (dx + dy) nên góc nào cũng tới. Hỏi: phối hợp nào hợp lúc quái đông? Lúc gặp một con to?"
         },
         {
           "id": "h14-count",
@@ -105,14 +105,14 @@
         {
           "id": "h14-blast",
           "title": "Dọn code 2: nổ và skill tự ra đòn",
-          "text": "blast (nổ) gọi hurt với mọi con ở gần một chỗ. use_skills() chạy mỗi khung, dành cho skill tự ra đòn. take_card gọi add_skill, hàm cất thẻ và ghi sổ. Quái có thêm ngăn slow (bị chậm).",
-          "coachNotes": "Chỉ trong code: blast(center, size, amount) là quanh ai, rộng bao nhiêu, đau bao nhiêu. Quái bị chậm có vòng xanh phía sau và đi nửa tốc độ. update_play gọi use_skills sau hit_mobs."
+          "text": "blast (nổ) gọi hurt với mọi con ở gần một chỗ. strike (sét đánh) gọi hurt với một con, kèm tia sét. use_skills() chạy mỗi khung, dành cho skill tự ra đòn. Quái có thêm ngăn slow (bị chậm).",
+          "coachNotes": "Chỉ trong code: blast(center, size, amount) là quanh ai, rộng bao nhiêu, đau bao nhiêu; strike(mob, amount) là con nào, đau bao nhiêu. take_card gọi add_skill, hàm cất thẻ và ghi sổ. draw_play vẽ vòng cam của Vòng Lửa và tia vàng của sét. Quái bị chậm có vòng xanh phía sau và đi nửa tốc độ. update_play gọi use_skills sau hit_mobs."
         },
         {
           "id": "h14-hunt",
           "title": "Đi tìm 5 chỗ đọc bonus",
-          "text": "5 hàm đã đọc bonus sẵn: shoot, hit_mobs, remove_dead, check_hits, move_mobs. Em tìm từng hàm, ghi ra giấy: hàm đó đọc ngăn nào, để làm gì?",
-          "coachNotes": "10 phút, theo cặp. Đáp án: shoot đọc extra và fast; hit_mobs đọc power và slow; remove_dead đọc boom; check_hits đọc armor; move_mobs đọc frost. Còn ring và cloud là phần em viết trong use_skills."
+          "text": "5 hàm luật chơi đã đọc bonus sẵn: shoot, hit_mobs, remove_dead, check_hits, move_mobs. Em tìm từng hàm, ghi ra giấy: hàm đó đọc ngăn nào, để làm gì?",
+          "coachNotes": "10 phút, theo cặp. Đáp án: shoot đọc extra và fast; hit_mobs đọc power và slow; remove_dead đọc boom; check_hits đọc armor; move_mobs đọc frost. Còn ring và cloud là phần em viết trong use_skills (draw_play cũng đọc ring, chỉ để vẽ vòng cam)."
         }
       ]
     },
@@ -122,14 +122,14 @@
         {
           "id": "h14-code1",
           "title": "Buổi 1: Bài tập 1",
-          "text": "Ghi vào đúng ngăn của bonus, rồi viết use_skills() cho Vòng Lửa và Mây Giông. Ngăn lớn hơn 0 mới ra đòn. tick % 60 == 0 là khoảng mỗi giây một lần, Mây Giông thì lệch nửa giây.",
-          "coachNotes": "START_SKILLS = [1, 8] là đồ thử: cho sẵn skill số 1 và số 8 (đếm từ 0: Vòng Lửa, Mây Giông). Lỗi hay gặp: ghi luôn \"power\" nên mọi skill cộng nhầm ngăn. Quái mất máu không hiện số, hãy nhìn số Hạ."
+          "text": "Ghi vào đúng ngăn của bonus. Trong use_skills(), Vòng Lửa gọi blast, Mây Giông gọi strike; ngăn lớn hơn 0 mới ra đòn. Em sẽ thấy vòng cam và tia vàng. tick % 60 == 0 là khoảng mỗi giây một lần, sét lệch nửa giây.",
+          "coachNotes": "START_SKILLS = [1, 8] là đồ thử: cho sẵn skill số 1 và số 8 (đếm từ 0: Vòng Lửa, Mây Giông). Lỗi hay gặp: ghi luôn \"power\" nên mọi skill cộng nhầm ngăn. Để ý: xong chỗ (1) là vòng cam đã hiện, nhưng chưa có blast thì quái trong vòng không sao cả. Nhớt 2 máu, Vòng Lửa đốt 2, nên đốt thật thì quái gần em biến mất."
         },
         {
           "id": "h14-code2",
           "title": "Buổi 2: Bài tập 2 và 3",
-          "text": "Bài tập 2 viết count_branch. Bài tập 3 viết has_combo (có phối hợp không), trả về True hoặc False. Mỗi phối hợp hỏi has_combo trước khi ra đòn. Quái có 8 máu để em thấy rõ khác biệt.",
-          "coachNotes": "Lỗi hay gặp: so với chữ \"branch\" thay vì biến branch; return thụt trong vòng for. Bài tập 3 có 4 chỗ: làm chỗ (1) xong chạy thử xem tên phối hợp hiện dưới sân rồi mới làm tiếp. START_SKILLS cho sẵn 2 skill mỗi nhánh."
+          "text": "Bài tập 2 viết count_branch. Bài tập 3 viết has_combo (có phối hợp không), trả về True hoặc False. Mỗi phối hợp hỏi nó trước khi ra đòn; storm() và splash(shot) đã viết sẵn. Nhớt có 8 máu, số hiện trên đầu.",
+          "coachNotes": "Lỗi hay gặp: so với chữ \"branch\" thay vì biến branch; return thụt trong vòng for. Bài tập 3 có 4 chỗ: làm chỗ (1) xong chạy thử xem tên phối hợp hiện dưới sân rồi mới làm tiếp. storm là bão, splash là văng ra: cả hai gọi blast, mỗi lần 2 máu. START_SKILLS cho sẵn 2 skill mỗi nhánh. Số máu trên đầu là đồ thử: nhìn quái có vòng xanh để thấy Thấu Xương trừ nhiều hơn."
         }
       ]
     },

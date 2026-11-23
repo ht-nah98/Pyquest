@@ -21,17 +21,17 @@
         {
           "id": "h17-flip",
           "title": "Hiệu ứng là sách lật",
-          "text": "Một hiệu ứng là một dãy hình nhỏ. Hiện từng hình thật nhanh thì mắt thấy chuyển động, giống sách lật. Game của em chiếu 8 hình, đánh số từ 0 tới 7.",
+          "text": "Một hiệu ứng là một dãy hình nhỏ. Hiện từng hình thật nhanh thì mắt thấy chuyển động, giống sách lật. Hiệu ứng trong game của em có 9 hình, đánh số từ 0 tới 8.",
           "widget": {
             "kind": "flipbook"
           },
-          "coachNotes": "Cho bé chỉnh tốc độ sách lật: 2 khung/giây rồi nhanh dần. Trên sách các hình ghi 1 tới 8, trong code đếm từ 0."
+          "coachNotes": "Cho bé chỉnh tốc độ sách lật: 2 khung/giây rồi nhanh dần. Quyển sách trên slide có 8 trang, ghi 1 tới 8; hiệu ứng có 9 hình và code đếm từ 0."
         },
         {
           "id": "h17-frame",
           "title": "frame chạy dần",
-          "text": "frame là số hình đang chiếu. Mỗi khung nó cộng 0.5: 0, 0.5, 1, 1.5, 2… Máy bỏ phần lẻ để lấy số hình, nên mỗi hình hiện 2 khung. 8 hình thì sống 16 khung.",
-          "coachNotes": "Kẻ bảng: khung 0 tới 7, frame 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, hình 0, 0, 1, 1, 2, 2, 3, 3. Hỏi: nếu cộng 1 thì sao? (nhanh gấp đôi, frame chạy tới 15 nên hình quay vòng lại từ đầu)."
+          "text": "frame là số hình đang chiếu. Mỗi khung nó cộng 0.5: 0, 0.5, 1, 1.5, 2… Máy bỏ phần lẻ để lấy số hình, nên mỗi hình hiện 2 khung. 9 hình thì sống 18 khung.",
+          "coachNotes": "Kẻ bảng: khung 0 tới 7, frame 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, hình 0, 0, 1, 1, 2, 2, 3, 3. Hỏi: nếu cộng 1 thì sao? (nhanh gấp đôi, frame chạy tới 17 nên dãy hình chiếu hai lượt)."
         },
         {
           "id": "h17-quiz-frame",
@@ -49,8 +49,8 @@
         {
           "id": "h17-life",
           "title": "hp của hiệu ứng là giờ sống",
-          "text": "Hiệu ứng không đánh nhau nhưng cũng có ngăn hp: nó đếm ngược số khung còn sống. Bắt đầu 16, mỗi khung bớt 1, hết thì dọn đi. Quên bớt là hiệu ứng kẹt mãi trên sân.",
-          "coachNotes": "Chỉ add_effect: nhiều nhất 20 hiệu ứng một lúc. Hỏi: quên bớt hp thì sau 20 hiệu ứng sẽ ra sao? (không thêm được cái mới nữa)."
+          "text": "Hiệu ứng không đánh nhau nhưng cũng có ngăn hp: nó đếm ngược số khung còn sống. Bắt đầu 18, mỗi khung bớt 1, hết thì dọn đi. Quên bớt là hiệu ứng kẹt mãi trên sân.",
+          "coachNotes": "Chỉ add_effect(image, half, thing): half là nửa bề rộng ảnh (24 hoặc 28) để hình nằm giữa; nhiều nhất 20 hiệu ứng một lúc. Hỏi: quên bớt hp thì sau 20 hiệu ứng sẽ ra sao? (không thêm được cái mới nữa)."
         },
         {
           "id": "h17-living",
@@ -80,7 +80,7 @@
           "id": "h17-sounds",
           "title": "Tiếng nào, lúc nào?",
           "text": "Kẻ bảng hai cột: việc xảy ra và tiếng. Chọn thẻ, nhặt ngọc, bị chạm, lên cấp, vào hầm. Với mỗi việc, tìm hàm nào trong code biết việc đó vừa xảy ra.",
-          "coachNotes": "6 phút. take_card: click. take_gems: point. check_hits: hit. check_level: win. start_game: nhạc adventure. Để bé tự tìm hàm trước rồi mới chữa."
+          "coachNotes": "6 phút. take_card: click. take_gems: point. check_hits: hit. check_level: win. Vào hầm: nhạc adventure, đặt trong update ở màn title, đúng lúc người chơi chọn nhân vật; hết ván thì tắt. Để bé tự tìm hàm trước rồi mới chữa."
         },
         {
           "id": "h17-quiz-sound",
@@ -115,13 +115,13 @@
           "id": "h17-code1",
           "title": "Bài tập 1: Hiệu ứng",
           "text": "Viết living(things) theo khuôn giữ lại. Rồi move_effects(): mỗi hiệu ứng lật sang hình kế và bớt giờ sống, xong thì chỉ giữ những cái còn sống.",
-          "coachNotes": "Các lời gọi add_effect đã có sẵn: cho bé tìm xem hiệu ứng nào nổ ở đâu. fx là viết tắt của hiệu ứng."
+          "coachNotes": "Các lời gọi add_effect đã có sẵn: cho bé tìm xem hiệu ứng nào nổ ở đâu. fx là viết tắt của hiệu ứng. Tia vàng của sét ở Bài 14 giờ thành hiệu ứng fx-spark."
         },
         {
           "id": "h17-code2",
           "title": "Bài tập 2: Tiếng động",
           "text": "Đặt 5 tiếng theo bảng giấy, đúng chỗ việc vừa xảy ra. play_sound kêu một lần, play_music chơi nhạc lặp lại. Dòng mới thụt lề ngang với dòng ngay trên nó.",
-          "coachNotes": "Không nghe gì thì bấm 🔊 và xem loa máy. START_WAVE = 2 là đồ thử cho đông quái, Bài 18 tháo. Nhạc cũng vang ở màn chọn vì cuối file có gọi start_game một lần: không phải lỗi của bé."
+          "coachNotes": "Không nghe gì thì bấm 🔊 và xem loa máy. START_WAVE = 2 là đồ thử cho đông quái, Bài 18 tháo. Nhạc bật khi chọn nhân vật, màn chọn luôn im. Thua hay thắng thì stop_music() tắt nhạc, có sẵn; thua còn có tiếng fall."
         }
       ]
     },
@@ -132,7 +132,7 @@
           "id": "h17-try",
           "title": "Chơi thử có loa",
           "text": "Chơi hai ván: một ván có tiếng, một ván tắt 🔊. Ván nào vui hơn? Thử đổi \"adventure\" thành \"calm\", hoặc đổi 0.5 thành 0.25. Hiệu ứng khác đi thế nào?",
-          "coachNotes": "8 phút, nếu cả lớp cùng mở loa thì nên dùng tai nghe. 0.25 * 16 = 4: hiệu ứng chậm lại và chỉ kịp chiếu hình 0 tới 3. Muốn chiếu đủ thì hp phải là 32."
+          "coachNotes": "8 phút, nếu cả lớp cùng mở loa thì nên dùng tai nghe. 0.25 * 18 = 4.5: hiệu ứng chậm lại và chỉ kịp chiếu hình 0 tới 4. Muốn chiếu đủ 9 hình thì hp phải là 36."
         }
       ]
     }

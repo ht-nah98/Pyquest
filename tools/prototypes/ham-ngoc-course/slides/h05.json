@@ -108,7 +108,7 @@
           "id": "h05-code1",
           "title": "Bài tập 1: dạy quái đuổi",
           "text": "Một if cho \"đích ở bên phải\" đã có sẵn. Ghi dấu cộng hay trừ cho ba phía còn lại ra giấy, rồi mới viết. Quái chạy trốn nghĩa là có một dấu bị ngược.",
-          "coachNotes": "Bốn if riêng, không elif giữa x và y. move_mobs() có sẵn lắc lư để quái không chồng khít lên nhau."
+          "coachNotes": "Bốn if riêng, không elif giữa x và y. make_mob giờ thêm ngăn speed: 1, move_mobs() đưa số đó cho step_to. move_mobs() có sẵn lắc lư để quái không chồng khít lên nhau."
         },
         {
           "id": "h05-code2",

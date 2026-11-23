@@ -89,8 +89,8 @@
         {
           "id": "h16-real",
           "title": "Từ bản thử sang bản thật",
-          "text": "Đồ thử đã về 0. Trùm giờ có 400 máu, đụng một cái mất 3 máu. Quái đông và trâu hơn. Em sẽ phải chọn skill khéo hơn mới qua được.",
-          "coachNotes": "Chỉ trong code: START_WAVE = 0, START_SKILLS = []; bảng MOBS, WAVES có số mới; chỉ bắn khi quái ở trong tầm hero[\"reach\"]; đạn mạnh theo hero[\"power\"]. Kiếm sĩ tầm 200 nên phải lại gần mới bắn."
+          "text": "Đồ thử đã về 0. Nhớt giờ 4 máu, dơi 3, golem 18. Trùm có 400 máu, đụng một cái mất 3 máu. Quái cũng đông hơn, nên em sẽ phải chọn skill khéo hơn mới qua được.",
+          "coachNotes": "Chỉ trong code: START_WAVE = 0, START_SKILLS = []; bảng WAVES có số mới; chỉ bắn khi quái ở trong tầm hero[\"reach\"]; đạn mạnh theo hero[\"power\"]. Kiếm sĩ tầm 200 nên phải lại gần mới bắn."
         }
       ]
     },
@@ -118,7 +118,7 @@
           "id": "h16-try",
           "title": "Chơi đủ ba người",
           "text": "Chơi mỗi người một ván, ghi lại tới đợt mấy. Với em, ai khó nhất? Đổi một số trong HEROES cho cân hơn rồi chơi lại, và hỏi bạn có thấy công bằng không.",
-          "coachNotes": "12 phút. Làm sau khi bài tập đạt (máy chấm đọc chữ Máu 8, tầm 200). Nhắc: thua ở đợt 2, 3 là bình thường, đây là bản thật. Ghi kết quả cả lớp lên bảng để so."
+          "coachNotes": "12 phút. Đổi số của ai cũng được, Bài tập 2 không chấm các số này; chỉ giữ tên Cung thủ tới khi bài đạt. Nhắc: thua ở đợt 2, 3 là bình thường, đây là bản thật. Ghi kết quả cả lớp lên bảng để so."
         }
       ]
     }

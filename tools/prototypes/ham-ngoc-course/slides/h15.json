@@ -101,7 +101,7 @@
           "id": "h15-moved",
           "title": "Code vừa được dọn",
           "text": "make_mob và spawn_mob giờ nhận tên quái. Va chạm tính theo size: con to dễ trúng và dễ đụng hơn. Ngọc mang xp của con quái. for axis in [\"x\", \"y\"] gom code hai trục làm một.",
-          "coachNotes": "5 phút. axis là trục. Cho bé so move_hero cũ và mới: 8 dòng chặn mép còn 5 dòng. Hỏi: con size 3 thì chạm em ở khoảng cách nào? (16 + 10 * 3 = 46)."
+          "coachNotes": "5 phút. axis là trục. Cho bé so move_hero cũ và mới: 8 dòng chặn mép còn 5 dòng. Hỏi: con size 3 thì chạm em khi khoảng cách dưới bao nhiêu? (16 + 10 * 3 = 46). step_to: còn cách chưa tới nửa bước thì thôi không bước trên trục đó, để con nhanh không nhảy qua nhảy lại quanh em. Nhớt từ 8 về 3 máu."
         }
       ]
     },
@@ -112,7 +112,7 @@
           "id": "h15-code1",
           "title": "Bài tập 1: Bảng quái",
           "text": "Thêm dơi và golem vào MOBS. Rồi trong make_mob, chép nốt các ngăn từ row. Quên ngăn nào thì con quái dùng số tạm của nhớt, ví dụ golem chỉ có 3 máu.",
-          "coachNotes": "Lỗi hay gặp: quên xp nên golem vẫn chỉ cho 1 ngọc. START_SKILLS = [0, 6] là đồ thử."
+          "coachNotes": "Số trên đầu quái là máu, số trên ngọc là xp: đồ thử để bé dò với bảng (golem 8 máu, ngọc +3), Bài tập 3 bỏ đi. Lỗi hay gặp: quên xp nên ngọc golem vẫn ghi +1. START_SKILLS = [0, 0, 0] cũng là đồ thử: ba Đốm Lửa nên đạn mạnh và có luôn Lò Than."
         },
         {
           "id": "h15-code2",

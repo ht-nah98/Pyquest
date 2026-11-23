@@ -91,7 +91,7 @@
           "id": "h12-moved",
           "title": "Hai chỗ tạm để thử",
           "text": "Bài tập 1: màn chờ tạm thành sổ skill cho em xem bảng. Bài tập 2: game mở thẳng ở màn chọn thẻ, bấm Space là bốc lại. Chưa lấy thẻ được đâu, Bài 13 mới làm.",
-          "coachNotes": "Ở Bài tập 2, trước khi bấm Space lần đầu thì bảng thẻ trống, và chưa vào hầm chơi được. Nói trước để bé không tưởng là mình làm sai. check_cards() chỉ để máy đếm lần trùng."
+          "coachNotes": "Ở Bài tập 2, lúc mở ra bảng chưa có thẻ, chỉ có chữ Bấm Space để bốc thẻ, và chưa vào hầm chơi được. Nhờ let_go, giữ Space chỉ bốc một lần. Nói trước để bé không tưởng là mình làm sai. check_cards() chỉ để máy đếm lần trùng."
         }
       ]
     },
@@ -102,7 +102,7 @@
           "id": "h12-code1",
           "title": "Bài tập 1: Bảng skill",
           "text": "Viết 3 dòng nhánh Sét ngay dưới các dòng có sẵn, theo bảng giấy của em. Chép một dòng rồi đổi từng ngăn là nhanh nhất. Không sửa phần vẽ.",
-          "coachNotes": "Lỗi hay gặp: thiếu dấu phẩy, thiếu ngoặc nhọn đóng, gõ sai dấu tiếng Việt trong tên. Số thì không có ngoặc kép."
+          "coachNotes": "Cột bên phải sổ skill hiện what và add, ví dụ fast +5: bé tự dò với đề. Máy chấm nhìn hình, what và add; tên thì bé đặt sao cũng được. Lỗi hay gặp: thiếu dấu phẩy, thiếu ngoặc nhọn đóng, ngoặc kép quanh số."
         },
         {
           "id": "h12-code2",
@@ -119,7 +119,7 @@
           "id": "h12-try",
           "title": "Bấm Space 20 lần",
           "text": "Có lần nào hai thẻ trùng nhau không? Mây Giông ở cuối bảng có ra không? Rồi đổi tên một skill trong bảng thành tên em thích và bốc lại.",
-          "coachNotes": "5 phút. Làm sau khi bài tập đã đạt. Đổi tên Áo Băng là an toàn nhất (máy chấm tìm chữ Mây Giông và Đòn Buốt). Đừng đổi ngăn what."
+          "coachNotes": "5 phút. Đổi tên skill nào cũng được, máy chấm không đọc tên. Đừng đổi ngăn what, vì Bài 14 dùng tới."
         }
       ]
     }
