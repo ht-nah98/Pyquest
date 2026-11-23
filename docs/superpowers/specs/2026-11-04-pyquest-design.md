@@ -107,6 +107,9 @@ Bản phác: `docs/design/mockups/layout-v2.html`.
 
 ## 9. Khóa đầu: game luồn ống — đề cương bản 2 **[AI đề xuất, HLV duyệt 04/11]**
 
+> **Đã thay thế (04/11/2026).** Đề cương đang dùng là **26 bài, nền tảng trước, game sau**:
+> `2026-11-04-foundations-first-design.md` §3. Bảng dưới giữ lại để biết lịch sử.
+
 Bản 1 (14 bài, HLV đã duyệt thứ tự) được viết lại theo yêu cầu dạy tư duy sản phẩm: thêm Bài 0, thêm bài chuẩn bị tài
 nguyên / file / đường dẫn, bài thiết kế giao diện, và bài ra mắt. Thứ tự các khái niệm Python giữ như bản 1.
 

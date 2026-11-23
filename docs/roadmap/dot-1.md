@@ -21,4 +21,7 @@ Kế hoạch chi tiết: `../superpowers/plans/2026-11-04-pyquest-dot1-plan.md`.
 - [x] Khối: lặp, điều kiện, def, global, +=, so sánh, and/or, phím, ngẫu nhiên, hình, chữ; khay chia nhóm
 - [x] Chế độ game: chấm bằng lần chạy thử tự động; tab nhiều file
 - [x] Nội dung Bài 2–17 ở dạng **bản nháp**
-- [ ] **HLV duyệt từng bài (Bài 2–17) rồi bỏ cờ draft** — AI không tự tích
+- [x] 04/11: khóa dựng lại thành **26 bài** (Bài 0–25, nền tảng trước, game sau:
+  `../superpowers/specs/2026-11-04-foundations-first-design.md` §3).
+- [x] 04/11: HLV duyệt Bài 1–25, bỏ cờ `draft` ở cấp bài (commit `24dbabd`). Còn bài tập `l22-e2` (thêm tiếng,
+  05/11) để `draft` chờ HLV duyệt.
