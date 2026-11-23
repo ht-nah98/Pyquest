@@ -1,8 +1,9 @@
 import type { LibraryEntry } from '@pyquest/content-schema';
+import { librarySource } from '@pyquest/runtime';
 import { describe, expect, test } from 'vitest';
 import { opensLesson, seesCourse } from './access';
 import { catalog } from './catalog';
-import { inCourseOrder, libraryFor, type CourseLinks } from './courses';
+import { inCourseOrder, libraryFor, readCourses, studioLibrary, type CourseLinks } from './courses';
 
 const course = (id: string, lessonIds: string[], after?: string): CourseLinks => ({
   id,
@@ -65,12 +66,114 @@ describe('libraryFor', () => {
     expect(names('m00')).toEqual(['print', 'clear', 'str', 'dict']);
   });
 
+  test('what only a draft course teaches reaches no child: not in a course after it, nor in the studio', () => {
+    const draft = courses.map((c) => (c.id === 'game' ? { ...c, draft: true } : c));
+    const inLesson = (id: string) => libraryFor(entries, draft, id).map((e) => e.name);
+    expect(inLesson('m00')).toEqual(['print', 'clear', 'str']);
+    expect(inLesson('h01')).toEqual(['print', 'clear', 'str', 'dict']); // the coach, in the draft itself
+    const studio = (cs: readonly CourseLinks[]) =>
+      studioLibrary([...entries, { ...entry('mouse_x'), gameOnly: true }], cs).map((e) => e.name);
+    expect(studio(courses)).toEqual(['print', 'clear', 'str', 'dict', 'turtle', 'later']);
+    expect(studio(draft)).toEqual(['print', 'clear', 'str', 'turtle', 'later']);
+    // Its course is not there at all (a broken draft is skipped).
+    expect(studio(draft.filter((c) => c.id !== 'game'))).toEqual(studio(draft));
+  });
+
   test('an unknown lesson lists nothing', () => {
     expect(names('x99')).toEqual([]);
   });
 });
 
+describe('readCourses', () => {
+  const file = (dir: string, more: object = {}) => ({
+    [`/content/courses/${dir}/course.json`]: {
+      id: dir,
+      title: dir,
+      summary: dir,
+      lessonIds: [`${dir}00`],
+      roadmap: [],
+      ...more,
+    },
+  });
+  const lesson = (dir: string, more: object = {}) => ({
+    [`/content/courses/${dir}/lessons/${dir}00.json`]: {
+      id: `${dir}00`,
+      courseId: dir,
+      order: 0,
+      title: 'Bài',
+      hidden: true,
+      ...more,
+    },
+  });
+  const ok = [file('a'), lesson('a')] as const;
+  const read = (courses: object, lessons: object) => [
+    ...readCourses(
+      courses as Record<string, unknown>,
+      lessons as Record<string, unknown>,
+      {},
+    ).values(),
+  ];
+
+  test('a whole course is read', () => {
+    expect(read(...ok).map((c) => [c.id, c.lessons.length])).toEqual([['a', 1]]);
+  });
+
+  test('a broken draft course, or one with a broken lesson, is left out; the others are there', () => {
+    const badCourse = file('b', { draft: true, title: '' });
+    expect(read({ ...ok[0], ...badCourse }, { ...ok[1], ...lesson('b') })).toEqual(read(...ok));
+    const draft = file('b', { draft: true });
+    const badLesson = lesson('b', { title: 5 });
+    expect(read({ ...ok[0], ...draft }, { ...ok[1], ...badLesson })).toEqual(read(...ok));
+  });
+
+  test('a broken draft lesson of an open course is left out alone', () => {
+    const bad = {
+      '/content/courses/a/lessons/a01.json': { id: 'a01', title: 5, draft: true },
+    };
+    expect(read(ok[0], { ...ok[1], ...bad })).toEqual(read(...ok));
+  });
+
+  test('broken content that is no draft still fails loudly', () => {
+    expect(() => read(file('a', { title: '' }), ok[1])).toThrow();
+    expect(() => read(ok[0], lesson('a', { title: 5 }))).toThrow();
+    expect(() => read(file('a', { title: '', draft: false }), ok[1])).toThrow();
+  });
+});
+
+describe('📘 Thư viện tells the truth', () => {
+  test('every command shows all its parameters, or … where some are left out', () => {
+    for (const e of catalog.library()) {
+      const code = librarySource(e.name)?.split('\n')[0] ?? '';
+      const real = /^def \w+\((.*)\):$/.exec(code)?.[1];
+      const shown = /\((.*)\)$/.exec(e.signature)?.[1];
+      if (real === undefined || shown === undefined || shown.includes('…')) continue;
+      const count = (list: string) => (list === '' ? 0 : list.split(',').length);
+      expect([e.name, count(shown)]).toEqual([e.name, count(real)]);
+    }
+  });
+
+  test('key_pressed takes a key and Space is only its default; draw_image can be made bigger', () => {
+    const of = (name: string) => catalog.library().find((e) => e.name === name);
+    expect(of('key_pressed')?.signature).toContain('"space"');
+    expect(of('draw_image')?.vi).toContain('scale');
+    expect(of('draw_image')?.vi).toContain('mirror');
+  });
+});
+
 describe('the real courses', () => {
+  test('the studio lists exactly the commands a child may know', () => {
+    expect(catalog.library('studio').map((e) => e.name)).toEqual(
+      catalog
+        .library()
+        .filter(
+          (e) =>
+            e.gameOnly !== true &&
+            (e.lesson === undefined || catalog.courseOf(e.lesson)?.id === 'bay-qua-khe'),
+        )
+        .map((e) => e.name),
+    );
+  });
+
   test('Bay Qua Khe comes first, Hầm Ngọc (a draft, 600 × 600) after it', () => {
     expect(catalog.courses().map((c) => c.id)).toEqual(['bay-qua-khe', 'ham-ngoc']);
     expect(catalog.course('ham-ngoc')).toMatchObject({ draft: true, after: 'bay-qua-khe' });

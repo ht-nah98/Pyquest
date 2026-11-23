@@ -31,31 +31,49 @@ def _write_files(files):
     return {os.path.join(PROJECT, p) for p in files}
 
 
+def _plain(value):
+    """A number, word or True/False the page can read. JSON has no inf or nan and no endless whole numbers:
+    those become a word. None for anything else."""
+    if isinstance(value, float) and not abs(value) < float("inf"):
+        return str(float(value))
+    if isinstance(value, int) and value.bit_length() > 100:
+        return "số rất dài"
+    return value if isinstance(value, (bool, int, float, str)) else None
+
+
 def _vars(g):
     out = {}
     for k, v in g.items():
+        v = _plain(v)
         # Only the library's own constants: a child may call a variable "clicked" without losing it.
-        if k.startswith("_") or k in ("WIDTH", "HEIGHT"):
+        if v is None or not isinstance(k, str) or k.startswith("_") or k in ("WIDTH", "HEIGHT"):
             continue
-        if isinstance(v, (bool, int, float, str)):
-            out[k] = v
+        out[k] = v
     return out
 
 
 def _error(exc, user_files):
-    line = None
+    line, names = None, {}
     if isinstance(exc, SyntaxError) and exc.filename in user_files:
         line = exc.lineno
     else:
         tb = exc.__traceback__
         while tb is not None:
             if tb.tb_frame.f_code.co_filename in user_files:
-                line = tb.tb_lineno
+                line, names = tb.tb_lineno, tb.tb_frame.f_globals
             tb = tb.tb_next
-    msg = exc.msg if isinstance(exc, SyntaxError) else str(exc)
     kind = type(exc).__name__
+    try:
+        msg = exc.msg if isinstance(exc, SyntaxError) else str(exc)
+    except Exception:  # the child's own __str__ fails
+        msg = kind
+    if isinstance(exc, UnboundLocalError):
+        # "global" only helps when the file has that variable; else it is simply not there yet.
+        found = [n for n in msg.split("'")[1:2] if n not in names]
+        if found:
+            kind, msg = "NameError", "name '" + found[0] + "' is not defined"
     # A pyquest command used without "from pyquest import *": say what to add.
-    if isinstance(exc, NameError) and getattr(exc, "name", None) in pyquest.__all__:
+    elif isinstance(exc, NameError) and getattr(exc, "name", None) in pyquest.__all__:
         kind = "MissingImport"
     return {"type": kind, "msg": msg, "line": line}
 
@@ -67,10 +85,13 @@ def _arg(value):
     """An argument as the 📞 calls panel shows it: numbers, words and True/False as they are."""
     if isinstance(value, str) and len(value) > 30:
         return value[:29] + "…"
-    if isinstance(value, (bool, int, str)) or (isinstance(value, float) and value == value
-                                               and abs(value) != float("inf")):
-        return value
-    text = repr(value)
+    plain = _plain(value)
+    if plain is not None:
+        return plain
+    try:
+        text = repr(value)
+    except Exception:  # a list with an endless number inside, the child's own __repr__
+        text = type(value).__name__
     return text if len(text) <= 30 else text[:29] + "…"
 
 
@@ -208,8 +229,8 @@ def set_assets(ids_json):
 def step(keys_json, tapped, mouse_x=0, mouse_y=0, clicked=False):
     g = _game["globals"]
     if g is None:
-        return json.dumps({"events": [], "vars": {}, "stoppedByLimit": False,
-                           "error": {"type": "PyQuestError", "msg": "not started", "line": None}})
+        return json.dumps({"events": [], "vars": {}, "stoppedByLimit": False, "calls": [],
+                           "error": {"type": "PyQuestError", "msg": "Game chưa chạy", "line": None}})
     pyquest._state["events"] = []
     pyquest._state["calls"] = []
     pyquest._state["calls_truncated"] = False

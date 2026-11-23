@@ -17,6 +17,8 @@ type Body<K> = K extends WorkerRequest ? Omit<K, 'id'> : never;
  */
 export class PyClient {
   private worker: Worker | null = null;
+  /** The worker the running game was started in. */
+  private gameWorker: Worker | null = null;
   private nextId = 1;
   private pending = new Map<number, Pending>();
   private statusValue: PyStatus = 'idle';
@@ -54,17 +56,20 @@ export class PyClient {
     const worker = this.makeWorker();
     this.worker = worker;
     this.readyPromise = new Promise((resolve, reject) => {
+      let ready = false;
       // A failed load forgets this worker, so the next warmUp() (the retry button) starts clean (review I2).
       const fail = (message: string) => {
+        if (this.worker !== worker) return; // stopped or replaced meanwhile
         worker.terminate();
-        if (this.worker === worker) {
-          this.worker = null;
-          this.readyPromise = null;
-        }
+        this.worker = null;
+        this.readyPromise = null;
         for (const p of this.pending.values()) p.reject(new Error(message));
         this.pending.clear();
         this.setStatus('failed');
         reject(new Error(message));
+        // It had worked, so it crashed (out of memory…): a fresh one brings ▶ back. One that cannot even load
+        // waits for the retry button instead.
+        if (ready) void this.warmUp().catch(() => undefined);
       };
       worker.onerror = () => {
         fail('python worker could not load');
@@ -73,16 +78,21 @@ export class PyClient {
         const msg = e.data;
         if ('kind' in msg) {
           if (msg.kind === 'ready') {
+            ready = true;
             this.setStatus('ready');
             resolve();
           } else fail(msg.message);
           return;
         }
+        if (!msg.ok) {
+          // The child's own errors come back as results: this is Python itself broken, not to be used again.
+          fail(msg.message);
+          return;
+        }
         const p = this.pending.get(msg.id);
         this.pending.delete(msg.id);
         if (this.pending.size === 0 && this.statusValue === 'running') this.setStatus('ready');
-        if (msg.ok) p?.resolve(msg.result);
-        else p?.reject(new Error(msg.message));
+        p?.resolve(msg.result);
       };
     });
     return this.readyPromise;
@@ -92,6 +102,7 @@ export class PyClient {
     await this.warmUp();
     const worker = this.worker;
     if (worker === null) throw new Error('stopped');
+    if (body.kind === 'start') this.gameWorker = worker;
     const id = this.nextId++;
     if (body.kind !== 'parse') this.setStatus('running');
     return new Promise((resolve, reject) => {
@@ -118,6 +129,8 @@ export class PyClient {
   }
 
   step(input: GameInput): Promise<RunResult> {
+    if (this.worker !== this.gameWorker)
+      return Promise.reject(new Error('the worker of this game is gone'));
     return this.call({ kind: 'step', input }) as Promise<RunResult>;
   }
 

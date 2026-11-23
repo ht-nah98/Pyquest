@@ -790,3 +790,59 @@ describe('named boxes (dict), abs, remove and scaled pictures (ADR 0011)', () =>
     expect(r.vars['v']).toBe(6);
   });
 });
+
+describe('text the blocks must not touch', () => {
+  const blocks = (src: string) => JSON.stringify(py.parseBlocks(src));
+
+  test.each([
+    'x = key_pressed( "left" )',
+    'x = key_pressed("left" )',
+    'x = mouse_x( )',
+    'if clicked( ):\n    x = mouse_y( )',
+    'mob["hp"] -= 1;',
+    'mob["x"] = 1 ;',
+    'xs.remove(1);',
+    'x = abs(a);',
+    'x = {"x": 1};',
+    'draw_image("images/a.png", 1, 2, scale=3);',
+    'if clicked():\n    x = mouse_x();\n    y = 2',
+    'if a: mob["x"] = 1;',
+  ])('%j: spaces inside the brackets and a ; at the end stay', (source) => {
+    expect(blocks(source)).toContain('pq_raw');
+    const back = roundTrip(source).trimEnd();
+    if (source.startsWith('if a:')) expect(back).toBe('if a:\n    mob["x"] = 1;');
+    else expect(back).toBe(source);
+  });
+
+  test('a ; after a block from before ADR 0011 is still tidied away', () => {
+    expect(roundTrip('x = 1;').trimEnd()).toBe('x = 1');
+  });
+
+  test.each([
+    'def f():\n    s = """a\nb"""\n    return s',
+    'def f():\n    """Nói về f.\n\n  hai dòng\n    """\n    print("a")',
+    'def f(n):\n    if n:\n        s = f"""a\n{n}\n  b"""\n    return s',
+    "if a:\n    s = 'a\\\nb'",
+    'while a:\n    s = 1; t = """a\nb"""',
+    'for i in range(3):\n    print("""a\n      b""")',
+    'def f():\n    x = foo(1,\n            2)\n    return x',
+    'def f():\n    x = [foo(1,\n      2)]\n    return x',
+    's = """a\n  b"""\n\n\ndef f():\n    print(s)',
+  ])('%j: text over several lines keeps its spaces, however often it goes round', (source) => {
+    const once = roundTrip(source);
+    expect(once.trimEnd()).toBe(source);
+    expect(roundTrip(once)).toBe(once);
+  });
+
+  test('two words on two lines are no reason to hide a def as code text', () => {
+    const source = 'def f():\n    x = 1\n    print(\n        "a",\n        "b",\n    )';
+    const tree = py.parseBlocks(source);
+    expect(tree.ok && tree.statements[0]?.type).toBe('pq_def');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('a body on the line of its header is not written twice', () => {
+    expect(roundTrip('def f(): import math').trimEnd()).toBe('def f():\n    import math');
+    expect(roundTrip('if a: import math').trimEnd()).toBe('if a:\n    import math');
+  });
+});

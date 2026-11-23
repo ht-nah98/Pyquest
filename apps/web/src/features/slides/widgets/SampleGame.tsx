@@ -1,5 +1,6 @@
 import { DEFAULT_STAGE, type StageSize } from '@pyquest/runtime';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { problemOf } from '../../../runtime/broken';
 import { usePyStatus } from '../../../runtime/client';
 import { Stage, type StageHandle } from '../../../stage/Stage';
 import { useGameKeys } from '../../../stage/useGameKeys';
@@ -24,11 +25,15 @@ export function SampleGame({
   const stage = useRef<StageHandle>(null);
   const box = useRef<HTMLDivElement>(null);
   const status = usePyStatus();
-  const loop = useGameLoop(stage, () => undefined);
+  const [error, setError] = useState<string | null>(null);
+  const loop = useGameLoop(stage, (r) => {
+    const problem = problemOf(r);
+    if (problem !== null) setError(problem);
+  });
   useGameKeys(true, loop.press);
 
   const start = () => {
-    void loop.start({ 'main.py': source }, 'main.py', size).catch(() => undefined);
+    void loop.start({ 'main.py': source }, 'main.py', size);
   };
 
   useEffect(() => {
@@ -53,9 +58,24 @@ export function SampleGame({
             Đang chuẩn bị Python…
           </p>
         )}
+        {error !== null && (
+          <p
+            className="absolute inset-x-4 bottom-4 rounded-[10px] border-2 border-oops bg-oops-soft px-4 py-2 text-center"
+            data-testid="sample-error"
+          >
+            ⚠️ {error}
+          </p>
+        )}
       </div>
       <div className="flex w-48 shrink-0 flex-col gap-3">
-        <Button tone="go" onClick={start} data-testid="sample-play">
+        <Button
+          tone="go"
+          onClick={() => {
+            setError(null);
+            start();
+          }}
+          data-testid="sample-play"
+        >
           {status === 'failed' ? '⚠️ Thử tải lại' : '↻ Chơi lại'}
         </Button>
         <Button

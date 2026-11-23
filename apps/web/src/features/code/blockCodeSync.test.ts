@@ -101,3 +101,43 @@ test('I2: blocks that cannot be built are reported, not silently dropped', async
   expect(await sync.fromCode('anything')).toBe(false);
   expect(errors.at(-1)).toContain('khối');
 });
+
+describe('N3: a load that fails leaves Blockly as it was', () => {
+  const tick = () => new Promise((r) => setTimeout(r, 80));
+  const broken: [string, (s: BlockCodeSync) => Promise<unknown>][] = [
+    [
+      'loadState',
+      (s) => {
+        s.loadState({ blocks: { languageVersion: 0, blocks: [{ type: 'pq_nope', x: 0, y: 0 }] } });
+        return Promise.resolve();
+      },
+    ],
+    ['fromCode', (s) => s.fromCode('anything')],
+  ];
+
+  test.each(broken)('%s: events on, no group open, undo works', async (_, load) => {
+    const ws = new Blockly.Workspace();
+    const sync = new BlockCodeSync(
+      ws,
+      () => Promise.resolve({ ok: true as const, statements: [{ type: 'pq_nope' }] }),
+      { onCode: () => undefined, onError: () => undefined },
+    );
+    await load(sync);
+    expect(Blockly.Events.isEnabled()).toBe(true);
+    expect(Blockly.Events.getGroup()).toBe('');
+    expect(Blockly.Events.getRecordUndo()).toBe(true);
+
+    ws.newBlock('pq_stop_music');
+    await tick();
+    ws.newBlock('pq_import');
+    await tick();
+    expect(ws.getAllBlocks(false)).toHaveLength(2);
+    ws.undo(false);
+    expect(ws.getAllBlocks(false).map((b) => b.type)).toEqual(['pq_stop_music']);
+    ws.undo(false);
+    expect(ws.getAllBlocks(false)).toEqual([]);
+    ws.dispose();
+    Blockly.Events.setGroup(false);
+    Blockly.Events.setRecordUndo(true);
+  });
+});

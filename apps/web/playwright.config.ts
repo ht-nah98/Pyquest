@@ -1,6 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = Number(process.env['PQ_E2E_PORT'] ?? 5199); // never 5173: that is the coach's server (AGENTS.md §9.9)
+const PORT = Number(process.env['PQ_E2E_PORT'] ?? 5199);
+// 5173 is the coach's server (AGENTS.md §9.9); 5174 would put the cloud project's server on it.
+if (PORT === 5173 || PORT === 5174)
+  throw new Error(`PQ_E2E_PORT=${String(PORT)} is the coach's server; pick another port.`);
 /** The cloud project's server; its Supabase is faked by e2e/fakeSupabase.ts, never the real one. */
 const CLOUD_PORT = PORT - 1;
 const FAKE_SUPABASE = 'https://pq-fake.supabase.co';

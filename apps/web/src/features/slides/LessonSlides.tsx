@@ -67,7 +67,11 @@ export function LessonSlides() {
     const key = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement) return;
       // The coach clicked on the sample game: arrows and Space play it until something else is clicked.
-      if (document.activeElement?.closest('[data-game-keys]') != null) return;
+      if (
+        (e.key === ' ' || e.key.startsWith('Arrow')) &&
+        document.activeElement?.closest('[data-game-keys]') != null
+      )
+        return;
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
         e.preventDefault();
         go(index + 1);

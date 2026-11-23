@@ -11,8 +11,11 @@ dict chỉ là code chữ.
 - **Khóa nháp:** `course.json` có `draft: true`. Bé không thấy thẻ khóa; mọi địa chỉ `/c/:id`, `/l/:id`, `/l/:id/code`,
   `/l/:id/play`, `/l/:id/notes` đi qua **một** cổng (`NeedApproved` trong `app/routes.tsx`, luật ở `content/access.ts`), bé gõ
   địa chỉ thì về trang chọn khóa. Cổng này chặn luôn **bài** nháp của khóa đã mở. HLV mở được hết, có nhãn "Bản nháp".
+- **Bản nháp hỏng không làm trắng trang:** `course.json` hay bài của khóa nháp sai schema thì trang bỏ qua cả khóa đó (bài nháp
+  của khóa đã mở thì bỏ riêng bài đó). Nội dung không nháp vẫn báo lỗi ngay; `content:check` báo cả hai.
 - **Thứ tự khóa:** `after: "<id khóa>"`: khóa nằm sau khóa đó trên danh sách, và 📘 Thư viện coi **mọi** lệnh của khóa trước (và
-  khóa trước nữa) là đã học, cộng lệnh của khóa mình tới bài đang học. Số `order` chỉ so trong một khóa.
+  khóa trước nữa) là đã học, cộng lệnh của khóa mình tới bài đang học. Số `order` chỉ so trong một khóa. Lệnh chỉ
+  khóa nháp dạy thì bé không thấy ở đâu cả: không ở khóa sau nó, không ở 🎨 Xưởng vẽ.
 - **Mã bài** là một chữ thường + hai số (`h05`), **duy nhất toàn nền tảng**: tiến độ và địa chỉ chỉ biết mã bài.
   `content:check` luật 13.
 - **`howToPlay`** (≤ 160 ký tự, tùy chọn) trong `course.json`: câu "Cách chơi" cạnh game mẫu và dưới màn chơi toàn màn hình.
@@ -29,7 +32,9 @@ dict chỉ là code chữ.
   khối danh sách cũ; `mobs[0]["x"]` là code chữ.
 - **Không đổi một ký tự:** đoạn code trước đây là code chữ chỉ thành khối mới khi viết **đúng kiểu khối viết ra** (một dòng,
   dấu cách chuẩn, không ngoặc thừa; so với `ast.unparse`). `{"x":1}`, `abs(a-b)` vẫn là code chữ. Câu lệnh nhiều dòng có dict
-  (bảng skill, bảng đợt quái) là **một khối code chữ**, giữ từng dòng, kể cả trong `def`.
+  (bảng skill, bảng đợt quái) là **một khối code chữ**, giữ từng dòng, kể cả trong `def`. Câu lệnh có khối mới mà kết thúc bằng
+  `;` cũng là code chữ. `def` / `if` / vòng lặp có chữ nhiều dòng (`"""`) bên trong thì cả khối đó là code chữ.
+- **Ngoặc:** vế phải của `+ - * / %` giữ ngoặc như bé gõ (`a + (b + c)`); biểu thức code chữ (`-a`, `a ** 2`) giữ đúng ngoặc đã gõ.
 - **Mục tiêu theo hình:** `sprite` khớp theo **đầu mã hình** (`mob` khớp `mob-bat`), không theo `group` trong manifest: `boss-1`
   có `group: "mob"` nhưng phải viết `sprite: "boss"`. Phóng to, lật không ảnh hưởng: `(x, y)` là góc trên bên trái của hình đã
   phóng. `content:check` (luật 6) nay kiểm `sprite` của mọi loại mục tiêu, nhận cả đầu mã.

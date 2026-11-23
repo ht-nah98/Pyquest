@@ -1,5 +1,6 @@
 import type { Files, RunResult, StageSize } from '@pyquest/runtime';
 import { useCallback, useEffect, useMemo, useRef, type PointerEvent } from 'react';
+import { brokenRun } from '../runtime/broken';
 import { python } from '../runtime/client';
 import { GameInputs } from './gameInput';
 import type { StageHandle } from './Stage';
@@ -9,6 +10,7 @@ import { hear, stopMusic } from './sound';
  * Runs a game-mode program: startGame, then one step per animation frame with what the player did
  * since the last frame (GameInputs). Spread `pointer` on the element around the stage: it makes a press flap
  * (key_pressed()) and fills mouse_x(), mouse_y(), clicked(). Only one step is in flight; a slow frame skips, it never queues up.
+ * When Python itself breaks, the game ends with a brokenRun() result; after stop() nothing is reported.
  */
 export function useGameLoop(
   stage: React.RefObject<StageHandle | null>,
@@ -36,31 +38,39 @@ export function useGameLoop(
       stop();
       inputs.current.reset();
       const mine = token.current;
-      const first = await python.startGame(files, main, { stage: size });
+      const broke = (e: unknown) => {
+        if (mine !== token.current) return;
+        stop();
+        onResultRef.current(brokenRun(e));
+      };
+      let first: RunResult;
+      try {
+        first = await python.startGame(files, main, { stage: size });
+      } catch (e) {
+        broke(e);
+        return;
+      }
       // Stopped, unmounted (stop runs on unmount) or restarted while Python was loading: do nothing.
       if (mine !== token.current) return;
       onResultRef.current(first);
       hear(first.events); // play_music("…") at the top of the file runs here, before the first frame
-      if (first.error !== undefined) return;
+      if (first.error !== undefined || first.stoppedByLimit) return;
       running.current = true;
       let busy = false;
       const tick = () => {
         if (!running.current) return;
         if (!busy) {
           busy = true;
-          python.step(inputs.current.take()).then(
-            (r) => {
+          python
+            .step(inputs.current.take())
+            .then((r) => {
               busy = false;
-              if (!running.current) return;
+              if (mine !== token.current) return;
               stage.current?.showFrame(r.events);
               onResultRef.current(r);
               if (r.error !== undefined || r.stoppedByLimit) stop();
-            },
-            () => {
-              busy = false;
-              stop();
-            },
-          );
+            })
+            .catch(broke);
         }
         raf.current = requestAnimationFrame(tick);
       };
@@ -69,8 +79,8 @@ export function useGameLoop(
     [stage, stop],
   );
 
-  const press = useCallback((key: string, down: boolean) => {
-    inputs.current.key(key, down);
+  const press = useCallback((key: string, down: boolean, by: string, repeat: boolean) => {
+    inputs.current.key(key, down, by, repeat);
   }, []);
 
   const pointer = useMemo(() => {

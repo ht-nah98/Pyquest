@@ -58,20 +58,13 @@ export class BlockCodeSync {
       this.on.onError({ line: tree.line, messageVi: tree.messageVi });
       return false;
     }
-    this.applying = true;
-    try {
-      Blockly.Events.disable();
-      Blockly.serialization.workspaces.load(treeToState(tree.statements), this.ws);
-    } catch {
+    if (!this.load(treeToState(tree.statements))) {
       // Never fail silently (review I2): the blocks stay locked and the child is told why.
       this.on.onError({
         line: null,
         messageVi: 'Đoạn code này chưa vẽ thành khối được. Em vẫn chạy code bình thường.',
       });
       return false;
-    } finally {
-      Blockly.Events.enable();
-      this.applying = false;
     }
     this.stale = false;
     this.on.onError(null);
@@ -80,13 +73,29 @@ export class BlockCodeSync {
 
   /** Loads saved blocks without touching the code (first paint before Python is ready). */
   loadState(state: object): void {
-    this.applying = true;
-    try {
-      Blockly.Events.disable();
-      Blockly.serialization.workspaces.load(state, this.ws);
-    } catch {
+    this.load(state, () => {
       // Saved by a newer or broken build (an unknown block): start empty, the parse of the code fills it.
       this.ws.clear();
+    });
+  }
+
+  /** Replaces the blocks without events; false when they cannot be built. Blockly then leaves its event group
+   *  open, undo off and resizing stopped: put them back. */
+  private load(state: object, onFail: () => void = () => undefined): boolean {
+    const group = Blockly.Events.getGroup();
+    const recordUndo = Blockly.Events.getRecordUndo();
+    this.applying = true;
+    Blockly.Events.disable();
+    try {
+      Blockly.serialization.workspaces.load(state, this.ws);
+      return true;
+    } catch {
+      onFail();
+      Blockly.Events.setGroup(group);
+      Blockly.Events.setRecordUndo(recordUndo);
+      Blockly.utils.dom.stopTextWidthCache();
+      if (this.ws instanceof Blockly.WorkspaceSvg) this.ws.setResizesEnabled(true);
+      return false;
     } finally {
       Blockly.Events.enable();
       this.applying = false;

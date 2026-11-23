@@ -12,6 +12,7 @@ import type { Call, DrawEvent, RunResult } from '@pyquest/runtime';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
+import { brokenRun } from '../../runtime/broken';
 import { python } from '../../runtime/client';
 import { uiSound, unlock } from '../../stage/sound';
 import { Stage, type StageHandle } from '../../stage/Stage';
@@ -155,12 +156,22 @@ function CodeEditor({
     [all, code, update],
   );
 
+  /** Python starts again (■ Dừng, a crash): a parse it was working on is lost, so read the code once more. */
+  const rewarm = () => {
+    void python
+      .warmUp()
+      .then(() => {
+        panes.current?.reparse();
+      })
+      .catch(() => undefined);
+  };
+
   const loop = useGameLoop(stage, (r) => {
-    if (r.error !== undefined) {
-      setResult(r);
-      panes.current?.highlight(r.error.line, 'error');
-    }
-    if (r.error !== undefined || r.stoppedByLimit) setRunning(false);
+    if (r.error === undefined && !r.stoppedByLimit) return;
+    if (python.status === 'loading') rewarm();
+    setResult(r);
+    panes.current?.highlight(r.error?.line ?? null, 'error');
+    setRunning(false);
   });
   useGameKeys(running && code.mode === 'game', loop.press);
 
@@ -200,12 +211,7 @@ function CodeEditor({
     // Only kill the worker when Python is really busy; a replaying animation needs no reload (review I3).
     if (python.hasPending) {
       python.stop();
-      void python
-        .warmUp()
-        .then(() => {
-          panes.current?.reparse();
-        })
-        .catch(() => undefined);
+      rewarm();
     }
   };
 
@@ -233,8 +239,14 @@ function CodeEditor({
   const toggleGhost = async () => {
     const on = !ghostOn;
     setGhostOn(on);
-    const events: DrawEvent[] | null = on ? (await solutionRun()).events : null;
-    stage.current?.ghost(events);
+    const mine = runToken.current;
+    try {
+      const events: DrawEvent[] | null = on ? (await solutionRun()).events : null;
+      stage.current?.ghost(events);
+    } catch (e) {
+      setGhostOn(false);
+      if (mine === runToken.current) setResult(brokenRun(e));
+    }
   };
 
   const run = async () => {
@@ -290,10 +302,14 @@ function CodeEditor({
         ...(shifted === undefined ? {} : { shifted }),
         ...(solution === undefined ? {} : { expected: solution }),
       });
-    } catch {
-      /* stopped */
+    } catch (e) {
+      // ■ Dừng, leaving and a newer run bump the token; anything else is Python breaking.
+      if (mine !== runToken.current) return;
+      setResult(brokenRun(e));
+      setRunning(false);
+      rewarm();
     } finally {
-      if (code.mode === 'script') setRunning(false);
+      if (code.mode === 'script' && mine === runToken.current) setRunning(false);
     }
   };
 

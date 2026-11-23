@@ -7,7 +7,8 @@ export type StagePoint = { x: number; y: number };
  * No DOM here: useGameKeys and useGameLoop feed it, and each step takes one GameInput from it.
  */
 export class GameInputs {
-  private held = new Set<string>();
+  /** The keys down now: the physical key → its name (→ and D are two keys for "right"). */
+  private held = new Map<string, string>();
   /** Fingers or mouse buttons on the stage now; any of them counts as Space held. */
   private pressing = new Set<number>();
   /** Pressed since the last step: a press shorter than a frame still counts for one frame. */
@@ -15,11 +16,12 @@ export class GameInputs {
   private pointer: StagePoint | null = null;
   private clicked = false;
 
-  key(name: string, down: boolean): void {
+  /** by: the physical key. repeat: it was down before (a new game, the window back): held, but not pressed now. */
+  key(name: string, down: boolean, by = name, repeat = false): void {
     if (down) {
-      this.held.add(name);
-      this.fresh.add(name);
-    } else this.held.delete(name);
+      this.held.set(by, name);
+      if (!repeat) this.fresh.add(name);
+    } else this.held.delete(by);
   }
 
   /** point: null in the bars beside the picture, where the last known place stays. */
@@ -54,7 +56,7 @@ export class GameInputs {
 
   /** The input of one step; presses are used up. */
   take(): GameInput {
-    const keys = new Set([...this.held, ...this.fresh]);
+    const keys = new Set([...this.held.values(), ...this.fresh]);
     if (this.pressing.size > 0) keys.add('space');
     const input: GameInput = {
       keys: [...keys],

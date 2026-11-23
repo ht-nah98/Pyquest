@@ -6,29 +6,38 @@ import { useGameKeys } from './useGameKeys';
 import type { StageHandle } from './Stage';
 import { useGameLoop } from './useGameLoop';
 
-const { inputs, done } = vi.hoisted(() => ({
+const { inputs, python, done } = vi.hoisted(() => ({
   inputs: [] as GameInput[],
+  /** Set to make that call fail, as a crashed worker does. */
+  python: { startFails: false, stepFails: false },
   done: { events: [], vars: {}, stoppedByLimit: false, calls: [] } satisfies RunResult,
 }));
 vi.mock('../runtime/client', () => ({
   python: {
-    startGame: () => Promise.resolve(done),
+    startGame: () =>
+      python.startFails ? Promise.reject(new Error('crash')) : Promise.resolve(done),
     step: (input: GameInput) => {
       inputs.push(input);
-      return Promise.resolve(done);
+      return python.stepFails ? Promise.reject(new Error('crash')) : Promise.resolve(done);
     },
   },
 }));
 
 beforeEach(() => {
   inputs.length = 0;
+  python.startFails = false;
+  python.stepFails = false;
 });
 
 /** A running game with the keyboard connected, the way every play screen does it. */
-async function playing(pointAt: StageHandle['pointAt'] = () => null) {
-  const stage = { current: { pointAt, showFrame: () => undefined } as unknown as StageHandle };
+async function playing(
+  pointAt: StageHandle['pointAt'] = () => null,
+  onResult: (r: RunResult) => void = () => undefined,
+  showFrame: StageHandle['showFrame'] = () => undefined,
+) {
+  const stage = { current: { pointAt, showFrame } as unknown as StageHandle };
   const hook = renderHook(() => {
-    const loop = useGameLoop(stage, () => undefined);
+    const loop = useGameLoop(stage, onResult);
     useGameKeys(true, loop.press);
     return loop;
   });
@@ -129,6 +138,112 @@ test('keys do not stick: the window loses focus, the key is let go in the editor
   await act(() => result.current.start({}, 'main.py', { width: 400, height: 600 }));
   expect((await nextInput()).keys).toEqual([]);
   unmount();
+});
+
+describe('Python breaks', () => {
+  const failures = (seen: RunResult[]) => seen.flatMap((r) => r.error?.messageVi ?? []);
+
+  test('in a step: the game ends and says so in Vietnamese, once', async () => {
+    const seen: RunResult[] = [];
+    const { unmount, result } = await playing(undefined, (r) => seen.push(r));
+    await nextInput();
+    python.stepFails = true;
+    await vi.waitFor(() => {
+      expect(failures(seen)).toEqual(['Có trục trặc khi chạy. Em thử chạy lại nhé.']);
+    });
+    expect(result.current.isRunning()).toBe(false);
+    const steps = inputs.length;
+    await new Promise((r) => setTimeout(r, 60));
+    expect(inputs).toHaveLength(steps);
+    // ▶ again works.
+    python.stepFails = false;
+    await act(() => result.current.start({}, 'main.py', { width: 400, height: 600 }));
+    await nextInput();
+    expect(failures(seen)).toHaveLength(1);
+    unmount();
+  });
+
+  test('in the start, and while drawing a frame: the same', async () => {
+    const seen: RunResult[] = [];
+    python.startFails = true;
+    const first = await playing(undefined, (r) => seen.push(r));
+    expect(failures(seen)).toHaveLength(1);
+    expect(first.result.current.isRunning()).toBe(false);
+    first.unmount();
+
+    python.startFails = false;
+    const second = await playing(
+      undefined,
+      (r) => seen.push(r),
+      () => {
+        throw new Error('canvas');
+      },
+    );
+    await vi.waitFor(() => {
+      expect(failures(seen)).toHaveLength(2);
+    });
+    expect(second.result.current.isRunning()).toBe(false);
+    second.unmount();
+  });
+
+  test('a stop by the user is no failure', async () => {
+    const seen: RunResult[] = [];
+    const { unmount, result } = await playing(undefined, (r) => seen.push(r));
+    await nextInput();
+    python.stepFails = true;
+    result.current.stop(); // ■ Dừng: the step in flight is then rejected by the killed worker
+    await new Promise((r) => setTimeout(r, 60));
+    expect(failures(seen)).toEqual([]);
+    unmount();
+  });
+});
+
+describe('held keys', () => {
+  test('a key already held when the game starts, or held across a blur, moves again without a new press', async () => {
+    const { unmount, result } = await playing();
+    key('keydown', 'ArrowRight');
+    expect((await nextInput()).keys).toEqual(['right']);
+    await act(() => result.current.start({}, 'main.py', { width: 400, height: 600 }));
+    expect((await nextInput()).keys).toEqual([]);
+    key('keydown', 'ArrowRight', 'ArrowRight', { repeat: true });
+    expect((await nextInput()).keys).toEqual(['right']);
+    window.dispatchEvent(new Event('blur'));
+    expect((await nextInput()).keys).toEqual([]);
+    key('keydown', 'ArrowRight', 'ArrowRight', { repeat: true });
+    expect((await nextInput()).keys).toEqual(['right']);
+    key('keyup', 'ArrowRight');
+    expect((await nextInput()).keys).toEqual([]);
+    unmount();
+  });
+
+  test('Space held from before is held, but it is not a tap', async () => {
+    const { unmount } = await playing();
+    key('keydown', ' ', 'Space', { repeat: true });
+    expect((await nextInput()).keys).toEqual(['space']);
+    expect(inputs.some((i) => i.tapped)).toBe(false);
+    unmount();
+  });
+
+  test('→ and D are two keys for "right": letting one go keeps the other', async () => {
+    const { unmount } = await playing();
+    key('keydown', 'ArrowRight');
+    key('keydown', 'd', 'KeyD');
+    expect((await nextInput()).keys).toEqual(['right']);
+    key('keyup', 'd', 'KeyD');
+    expect((await nextInput()).keys).toEqual(['right']);
+    key('keyup', 'ArrowRight');
+    expect((await nextInput()).keys).toEqual([]);
+    unmount();
+  });
+
+  test('a digit let go after Shift changed its sign is let go', async () => {
+    const { unmount } = await playing();
+    key('keydown', '2', 'Numpad2');
+    expect((await nextInput()).keys).toEqual(['2']);
+    key('keyup', 'ArrowDown', 'Numpad2');
+    expect((await nextInput()).keys).toEqual([]);
+    unmount();
+  });
 });
 
 describe('the pointer', () => {

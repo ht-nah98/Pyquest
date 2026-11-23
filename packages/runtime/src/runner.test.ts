@@ -390,8 +390,8 @@ describe('pictures, scaled and mirrored (ADR 0010)', () => {
   test.each([
     ['scale=0', 'scale phải lớn hơn 0'],
     ['scale=-1', 'scale phải lớn hơn 0'],
-    ['scale=float("inf")', 'scale phải lớn hơn 0'],
-    ['scale=float("nan")', 'scale phải lớn hơn 0'],
+    ['scale=float("inf")', 'scale không được là inf'],
+    ['scale=float("nan")', 'scale không được là nan'],
     ['scale="to"', 'scale phải là một số'],
     ['scale=True', 'scale phải là một số'],
     ['mirror="left"', 'mirror phải là True hoặc False'],
@@ -439,7 +439,7 @@ def update():
   });
 
   test('a key that does not exist says which ones do', async () => {
-    const near = await run('key_pressed("Left")');
+    const near = await run('key_pressed("lef")');
     expect(near.error?.messageVi).toContain('key_pressed("left")');
     const far = await run('key_pressed("meo")');
     expect(far.error?.messageVi).toBe(
@@ -447,9 +447,191 @@ def update():
     );
   });
 
+  test.each([
+    ['w', 'up'],
+    ['A', 'left'],
+    ['s', 'down'],
+    ['D', 'right'],
+    [' ', 'space'],
+    ['Space', 'space'],
+    ['Left', 'left'],
+    ['UP', 'up'],
+  ])('key_pressed(%j) is another way to write %j', async (name, key) => {
+    const code = `${IMPORT}on = False\ndef update():\n    global on\n    on = key_pressed("${name}")\n`;
+    const r = await py.startGame({ 'main.py': code }, 'main.py', { seed: 1 });
+    expect(r.error).toBeUndefined();
+    expect(py.step({ keys: [key], tapped: false }).vars['on']).toBe(true);
+    expect(py.step({ keys: [], tapped: false }).vars['on']).toBe(false);
+    expect(py.step({ keys: [], tapped: true }).vars['on']).toBe(key === 'space');
+  });
+
+  test.each(['None', 'True', '[]', '5'])(
+    'key_pressed(%s) lists the keys and suggests none of them',
+    async (value) => {
+      const r = await run(`key_pressed(${value})`);
+      expect(r.error?.line).toBe(2);
+      expect(r.error?.messageVi).toContain('Có: left, right');
+      expect(r.error?.messageVi).not.toContain('Có phải em muốn');
+    },
+  );
+
   test('a child’s own variable or function with one of the new names still works and is reported', async () => {
     const r = await run('clicked = 3\nmouse_x = 7\ndef mouse_y():\n    return 9\ny = mouse_y()');
     expect(r.error).toBeUndefined();
     expect(r.vars).toEqual({ clicked: 3, mouse_x: 7, y: 9 });
+  });
+});
+
+describe('numbers that JSON cannot carry never break a run', () => {
+  test('inf, nan and very long whole numbers are shown as a word; the code works as in Python', async () => {
+    const r = await run(
+      'nearest = float("inf")\nfar = -float("inf")\nodd = float("nan")\nbig = 10 ** 5000\nbig2 = 10 ** 400\n' +
+        'low = -(10 ** 5000)\nbest = nearest\nfor d in [40, 7, 90]:\n    if d < best:\n        best = d\n' +
+        'n = 10 ** 15\nx = 1.5\nok = big > 10 ** 4999 and nearest > big',
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.vars).toEqual({
+      nearest: 'inf',
+      far: '-inf',
+      odd: 'nan',
+      big: 'số rất dài',
+      big2: 'số rất dài',
+      low: 'số rất dài',
+      best: 7,
+      d: 90,
+      n: 10 ** 15,
+      x: 1.5,
+      ok: true,
+    });
+  });
+
+  test('a game may keep nearest = float("inf") on every frame', async () => {
+    const code = `${IMPORT}nearest = 0\ndef update():\n    global nearest\n    nearest = float("inf")\n`;
+    await py.startGame({ 'main.py': code }, 'main.py', { seed: 1 });
+    for (let i = 0; i < 2; i++) {
+      const r = py.step({ keys: [], tapped: false });
+      expect(r.error).toBeUndefined();
+      expect(r.vars['nearest']).toBe('inf');
+    }
+  });
+
+  test('the same in the arguments of the child’s own calls', async () => {
+    const r = await run(
+      'def f(a, b, c, d):\n    pass\nf(float("inf"), float("nan"), 10 ** 5000, [10 ** 5000])',
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.calls[0]?.args).toEqual({ a: 'inf', b: 'nan', c: 'số rất dài', d: 'list' });
+  });
+
+  test.each([
+    ['draw_rect(float("inf"), 0, 1, 1)', 'x không được là inf'],
+    ['draw_rect(0, 0, -float("inf"), 1)', 'w không được là -inf'],
+    ['draw_text("a", 0, float("nan"))', 'y không được là nan'],
+    ['draw_text("a", 0, 0, float("inf"))', 'size không được là inf'],
+    ['draw_circle(0, 0, float("nan"))', 'r không được là nan'],
+    ['draw_line(0, 0, 10 ** 5000, 1)', 'x2 không được là số quá lớn'],
+    ['draw_line(0, 0, 1, 1, "red", float("inf"))', 'width không được là inf'],
+    ['draw_triangle(0, 0, 1, 1, 1e300, 5)', 'x3 không được là số quá lớn'],
+    ['draw_polygon([(0, 0), (1, float("nan")), (2, 2)])', 'y không được là nan'],
+    ['draw_image("images/bird.png", -(10 ** 400), 0)', 'x không được là số quá lớn'],
+    ['draw_image("images/bird.png", 0, 0, 10 ** 5000)', 'frame không được là số quá lớn'],
+    ['draw_image("images/bird.png", 0, 0, float("inf"))', 'frame không được là inf'],
+    ['draw_image("images/bird.png", 0, 0, scale=10 ** 400)', 'scale không được là số quá lớn'],
+  ])('%s is a Vietnamese error with its line, and draws nothing', async (code, words) => {
+    const r = await run(code);
+    expect(r.error?.line).toBe(2);
+    expect(r.error?.messageVi).toBe(`Dòng 2: ${words}.`);
+    expect(r.events).toEqual([]);
+  });
+
+  test('frame= still takes what it took: a float, True, "2"', async () => {
+    const r = await run(
+      ['2.7', 'True', '"2"'].map((f) => `draw_image("images/bird.png", 0, 0, ${f})`).join('\n'),
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.events.map((e) => e.t === 'sprite' && e.frame)).toEqual([2, 1, 2]);
+  });
+
+  test('odd globals and an error that cannot say its name still give a result', async () => {
+    const odd = await run('globals()[1] = 2\nx = 5');
+    expect(odd.error).toBeUndefined();
+    expect(odd.vars).toEqual({ x: 5 });
+    const shy = await run(
+      'class Shy(Exception):\n    def __str__(self):\n        raise ValueError()\nraise Shy()',
+    );
+    expect(shy.error?.messageVi).toContain('dòng 5');
+    const bad = await run(
+      'class Bad:\n    def __repr__(self):\n        return 1\ndef f(a):\n    pass\nf(Bad())\nx = 3',
+    );
+    expect(bad.error).toBeUndefined();
+    expect(bad.calls[0]?.args).toEqual({ a: 'Bad' });
+    expect(bad.vars).toEqual({ x: 3 });
+  });
+
+  test('a step without a game still carries a whole result', () => {
+    return PyRunner.create().then((fresh) => {
+      expect(fresh.step({ keys: [], tapped: false })).toMatchObject({ events: [], calls: [] });
+    });
+  });
+});
+
+describe('everyday mistakes are explained in Vietnamese', () => {
+  test.each([
+    ['hero = {"speed": 2}\nx = hero["sped"]', 3, 'hộp không có ngăn "sped".'],
+    ['hero = {"tốc độ": 2}\nx = hero["it\'s"]', 3, 'hộp không có ngăn "it\'s".'],
+    ['waves = {1: "a"}\nx = waves[2]', 3, 'hộp không có ngăn 2.'],
+    ['raise KeyError()', 2, 'hộp không có ngăn đó.'],
+    ['xs = [1]\nx = xs[3]', 3, 'danh sách không có ngăn số đó.'],
+    ['xs = [1]\nxs[1] = 2', 3, 'danh sách không có ngăn số đó.'],
+    ['x = "ab"[5]', 2, 'chữ không có vị trí đó.'],
+    ['xs = []\nxs.pop()', 3, 'danh sách đang trống.'],
+    ['score = 0\ndef update():\n    score += 1\nupdate()', 4, 'thiếu global cho biến score.'],
+    [
+      'def f(a):\n    if a:\n        n = 1\n    return n\nf(False)',
+      5,
+      'chưa có lệnh hay biến tên n.',
+    ],
+    ['def f():\n    WIDTH += 1\nf()', 3, 'thiếu global cho biến WIDTH.'],
+    ['x = "ab".add(1)', 2, 'chữ không có lệnh add.'],
+    ['xs = []\nxs.add(1)', 3, 'danh sách không có lệnh add.'],
+    ['hero = {}\nx = hero.hp', 3, 'hộp không có lệnh hp.'],
+    ['x = 5\nx.append(1)', 3, 'số không có lệnh append.'],
+    ['x = None\nx.go()', 3, 'giá trị này không có lệnh go.'],
+    ['x = "Điểm: " + 5', 2, 'không cộng được chữ với số, dùng str(...).'],
+    ['x = 5 + " điểm"', 2, 'không cộng được chữ với số, dùng str(...).'],
+    ['x = 1.5\nx += "a"', 3, 'không cộng được chữ với số, dùng str(...).'],
+    ['x = [1] + 2', 2, 'hai giá trị này không tính với nhau được.'],
+    ['x = None + 1', 2, 'hai giá trị này không tính với nhau được.'],
+    ['x = "a" - 1', 2, 'hai giá trị này không tính với nhau được.'],
+    ['x = 1 / 0', 2, 'không chia cho 0 được.'],
+    ['x = 1 % 0', 2, 'không chia cho 0 được.'],
+    ['mobs = [{"x": 1}]\nmobs.remove({"x": 2})', 3, 'danh sách không có thứ cần bỏ.'],
+    ['def f(n):\n    return f(n + 1)\nf(0)', 2, 'lệnh tự gọi chính nó mãi không dừng.'],
+  ])('%j', async (code, line, words) => {
+    const r = await run(code);
+    expect(r.error?.line).toBe(line);
+    expect(r.error?.messageVi).toBe(`Dòng ${String(line)}: ${words}`);
+    expect(words.split(' ').length).toBeLessThanOrEqual(12);
+  });
+
+  test('the line is the one inside the function that failed, also in a game', async () => {
+    const code = `${IMPORT}hero = {"speed": 2}
+
+
+def move(h):
+    h["x"] = h["sped"]
+
+
+def update():
+    move(hero)
+`;
+    await py.startGame({ 'main.py': code }, 'main.py', { seed: 1 });
+    const r = py.step({ keys: [], tapped: false });
+    expect(r.error?.messageVi).toBe('Dòng 6: hộp không có ngăn "sped".');
+  });
+
+  test('a very long key is cut short', async () => {
+    const r = await run(`d = {}\nd["${'a'.repeat(100)}"]`);
+    expect(r.error?.messageVi).toBe(`Dòng 3: hộp không có ngăn "${'a'.repeat(19)}…".`);
   });
 });

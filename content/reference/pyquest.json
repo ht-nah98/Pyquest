@@ -45,10 +45,10 @@
     },
     {
       "name": "draw_image",
-      "signature": "draw_image(đường_dẫn, x, y, flip=False)",
-      "vi": "Dán cả một file ảnh trong thư mục images, góc trên bên trái ở (x, y). flip=True vẽ lộn ngược. Sai đường dẫn thì máy gợi ý tên đúng.",
+      "signature": "draw_image(đường_dẫn, x, y, flip=False, …)",
+      "vi": "Dán cả một file ảnh trong thư mục images, góc trên bên trái ở (x, y). flip=True vẽ lộn ngược. Sai đường dẫn thì máy gợi ý tên đúng. Còn có frame, scale (phóng to) và mirror (lật trái phải).",
       "why": "Một con chim đẹp có khoảng 1760 điểm màu. Vẽ bằng draw_rect thì cần 1760 dòng, nên hình được lưu thành file và có lệnh dán cả file.",
-      "inside": "_picture đổi đường dẫn thành tên ảnh và kiểm tra file có thật. _emit gửi lệnh vẽ ảnh cho trang web.",
+      "inside": "_picture đổi đường dẫn thành tên ảnh và kiểm tra file có thật. event gom chỗ đặt, khung hình, flip, scale, mirror; _emit gửi nó cho trang web.",
       "example": "draw_image(\"images/bird.png\", 100, 300)",
       "lesson": "l05"
     },
@@ -70,10 +70,10 @@
     },
     {
       "name": "key_pressed",
-      "signature": "key_pressed()",
-      "vi": "True khi đang bấm Space hoặc chạm màn hình, False khi không bấm.",
+      "signature": "key_pressed(phím=\"space\")",
+      "vi": "True khi đang bấm phím, False khi không bấm. Để trống là Space hoặc chạm màn hình. Phím khác: \"left\", \"right\", \"up\", \"down\", \"1\", \"2\", \"3\".",
       "why": "Python thường chỉ đọc chữ gõ vào cửa sổ dòng lệnh, không biết phím Space trên trang web. Thư viện làm cầu nối đó.",
-      "inside": "_state[\"keys\"] là các phím trang web báo đang được bấm; một lần chạm màn hình cũng tính là Space.",
+      "inside": "_key_name tìm đúng tên phím. _state[\"keys\"] là các phím trang web báo đang được bấm; một lần chạm màn hình cũng tính là Space.",
       "example": "if key_pressed():\n    speed = -8",
       "lesson": "l11"
     },

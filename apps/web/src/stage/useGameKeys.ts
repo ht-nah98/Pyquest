@@ -20,13 +20,19 @@ const KEYS: Record<string, KeyName> = {
   Digit3: '3',
 };
 
+/** Which key of the keyboard it is: the same for its down and its up, whatever Shift or Num Lock did meanwhile. */
+const physical = (e: KeyboardEvent, name = '') => (e.code === '' ? name : e.code);
+
 const TYPING = 'input, textarea, select, .cm-editor';
 
 /**
  * While active, forwards Space, the arrows (and W A S D) and 1–3 to key_pressed() and stops the page from
  * scrolling. Keys typed into a field or the code editor, and shortcuts (Ctrl+A…), are not the game's.
  */
-export function useGameKeys(active: boolean, press: (key: string, down: boolean) => void): void {
+export function useGameKeys(
+  active: boolean,
+  press: (key: string, down: boolean, by: string, repeat: boolean) => void,
+): void {
   useEffect(() => {
     if (!active) return;
     const keyOf = (e: KeyboardEvent) => KEYS[e.key] ?? KEYS[e.code];
@@ -35,14 +41,14 @@ export function useGameKeys(active: boolean, press: (key: string, down: boolean)
       if (key === undefined || e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.target instanceof Element && e.target.closest(TYPING) !== null) return;
       e.preventDefault();
-      if (!e.repeat) press(key, true);
+      press(key, true, physical(e, key), e.repeat);
     };
     // Wherever the focus went meanwhile, a key let go is let go: else it would stay held.
     const onUp = (e: KeyboardEvent) => {
       const key = keyOf(e);
+      press(key ?? '', false, physical(e, key), false);
       if (key === undefined) return;
       if (!(e.target instanceof Element && e.target.closest(TYPING) !== null)) e.preventDefault();
-      press(key, false);
     };
     window.addEventListener('keydown', onDown);
     window.addEventListener('keyup', onUp);

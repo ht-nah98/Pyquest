@@ -1,6 +1,7 @@
 import type { StageSize } from '@pyquest/runtime';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { problemOf } from '../../runtime/broken';
 import type { StageHandle } from '../../stage/Stage';
 import { useGameKeys } from '../../stage/useGameKeys';
 import { useGameLoop } from '../../stage/useGameLoop';
@@ -24,13 +25,14 @@ export function PrototypePlay() {
     SOURCE === undefined ? 'Chưa có game thử (tools/prototypes/ham-ngoc/main.py).' : null,
   );
   const loop = useGameLoop(stage, (r) => {
-    if (r.error !== undefined) setError(r.error.messageVi);
+    const problem = problemOf(r);
+    if (problem !== null) setError(problem);
   });
   useGameKeys(true, loop.press);
   const { start } = loop;
 
   useEffect(() => {
-    if (SOURCE !== undefined) void start({ [MAIN]: SOURCE }, MAIN, SIZE).catch(() => undefined);
+    if (SOURCE !== undefined) void start({ [MAIN]: SOURCE }, MAIN, SIZE);
   }, [start]);
 
   return (
@@ -43,7 +45,7 @@ export function PrototypePlay() {
       onAgain={() => {
         if (SOURCE === undefined) return;
         setError(null);
-        void start({ [MAIN]: SOURCE }, MAIN, SIZE).catch(() => undefined);
+        void start({ [MAIN]: SOURCE }, MAIN, SIZE);
       }}
       onBack={() => {
         loop.stop();

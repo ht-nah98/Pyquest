@@ -23,20 +23,28 @@ _CMP = {ast.Eq: "==", ast.NotEq: "!=", ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", 
 _AUG = {ast.Add: "+=", ast.Sub: "-="}
 
 
-_ATOMIC = (ast.Call, ast.Attribute, ast.Subscript, ast.Name, ast.Constant, ast.List, ast.Tuple, ast.Dict,
-           ast.Set, ast.ListComp, ast.DictComp, ast.SetComp, ast.GeneratorExp, ast.JoinedStr)
+def _between(src, start, end):
+    """The text from one (line, column) to another."""
+    return ast.get_source_segment(src, ast.Pass(lineno=start[0], col_offset=start[1],
+                                                end_lineno=end[0], end_col_offset=end[1])) or ""
 
 
-_BINDS_LOOSER_THAN_AND = (ast.BoolOp, ast.IfExp, ast.Lambda, ast.NamedExpr)
-
-
-def _raw_expr(src, node, nested=False):
+def _raw_expr(src, node, parent=None):
+    """Code text with exactly the brackets typed around it inside its parent: -a + b, (a ** 2) + 1."""
     code = ast.get_source_segment(src, node)
-    # Keep the brackets an expression needs where it sits, or its meaning would change:
-    # inside + - * / anything non-atomic; inside and/or only what binds looser than "and".
-    if (nested == "logic" and isinstance(node, _BINDS_LOOSER_THAN_AND)) or (
-            nested is True and not isinstance(node, _ATOMIC)):
-        code = "(" + code + ")"
+    typed = False
+    if parent is not None:
+        before = _between(src, (parent.lineno, parent.col_offset), (node.lineno, node.col_offset)).rstrip()
+        after = _between(src, (node.end_lineno, node.end_col_offset),
+                         (parent.end_lineno, parent.end_col_offset)).lstrip()
+        while before.endswith("(") and after.startswith(")"):
+            code, typed = "(" + code + ")", True
+            before, after = before[:-1].rstrip(), after[1:].lstrip()
+    if not typed and not isinstance(node, ast.Starred):
+        try:
+            ast.parse(code, mode="eval")
+        except SyntaxError:  # only valid inside its brackets: y := 1, code that goes on on the next line
+            code = "(" + code + ")"
     return {"type": "pq_raw_expr", "fields": {"CODE": code}}
 
 
@@ -69,12 +77,12 @@ def _named_slot(src, node):
     return (name, key) if ast.get_source_segment(src, node) == name + '["' + key + '"]' else None
 
 
-def _expr(src, node, nested=False):
+def _expr(src, node, parent=None):
     seg = ast.get_source_segment(src, node) or ""
     if isinstance(node, ast.Constant) and isinstance(node.value, bool) and seg in ("True", "False"):
         return {"type": "pq_bool", "fields": {"BOOL": seg}}
     if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.Not):
-        return {"type": "pq_not", "inputs": {"A": _expr(src, node.operand, "logic")}}
+        return {"type": "pq_not", "inputs": {"A": _expr(src, node.operand, node)}}
     # Number blocks only for plain whole numbers; 1.0, 0x10, 1e3 stay as typed (review I1).
     if _INT.fullmatch(seg) and len(seg.lstrip("-")) <= 15:
         return {"type": "pq_number", "fields": {"NUM": int(seg)}}
@@ -86,13 +94,13 @@ def _expr(src, node, nested=False):
         return {"type": "pq_var_get", "fields": {"NAME": node.id}}
     if isinstance(node, ast.Compare) and len(node.ops) == 1 and type(node.ops[0]) in _CMP:
         return {"type": "pq_compare", "fields": {"OP": _CMP[type(node.ops[0])]},
-                "inputs": {"A": _expr(src, node.left, True), "B": _expr(src, node.comparators[0], True)}}
+                "inputs": {"A": _expr(src, node.left, node), "B": _expr(src, node.comparators[0], node)}}
     if isinstance(node, ast.BoolOp) and not any(isinstance(v, ast.BoolOp) for v in node.values):
         # a and b and c → (a and b) and c: the generator writes a same-op left side without brackets.
         op = "and" if isinstance(node.op, ast.And) else "or"
-        block = _expr(src, node.values[0], "logic")
+        block = _expr(src, node.values[0], node)
         for v in node.values[1:]:
-            block = {"type": "pq_logic", "fields": {"OP": op}, "inputs": {"A": block, "B": _expr(src, v, "logic")}}
+            block = {"type": "pq_logic", "fields": {"OP": op}, "inputs": {"A": block, "B": _expr(src, v, node)}}
         return block
     if isinstance(node, ast.List):
         return {"type": "pq_list", "extraState": {"items": len(node.elts)},
@@ -117,9 +125,9 @@ def _expr(src, node, nested=False):
         # A name the child gave to a def of their own stays a call of that def (below).
         if (node.func.id == "key_pressed" and "key_pressed" not in _DEFS and len(node.args) == 1
                 and isinstance(node.args[0], ast.Constant) and node.args[0].value in _KEYS
-                and _plain_string(src, node.args[0])):
+                and seg == 'key_pressed("' + node.args[0].value + '")'):
             return {"type": "pq_key_held", "fields": {"KEY": node.args[0].value}}
-        if node.func.id in _POINTER and node.func.id not in _DEFS and not node.args:
+        if node.func.id in _POINTER and node.func.id not in _DEFS and seg == node.func.id + "()":
             return {"type": _POINTER[node.func.id]}
         if node.func.id == "str" and len(node.args) == 1:
             return {"type": "pq_str", "inputs": {"A": _expr(src, node.args[0])}}
@@ -133,8 +141,8 @@ def _expr(src, node, nested=False):
                     "inputs": {"ARG" + str(i): _expr(src, a) for i, a in enumerate(node.args)}}
     if isinstance(node, ast.BinOp) and type(node.op) in _OPS:
         return {"type": "pq_arith", "fields": {"OP": _OPS[type(node.op)]},
-                "inputs": {"A": _expr(src, node.left, True), "B": _expr(src, node.right, True)}}
-    return _raw_expr(src, node, nested)
+                "inputs": {"A": _expr(src, node.left, node), "B": _expr(src, node.right, node)}}
+    return _raw_expr(src, node, parent)
 
 
 def _simple_params(node):
@@ -147,8 +155,10 @@ def _simple_params(node):
 
 
 class _Ctx:
-    def __init__(self, src, lines, comments, defs):
+    def __init__(self, src, lines, comments, texts, defs):
         self.src, self.lines, self.comments = src, lines, comments
+        # Lines where a word of several lines (""" """) starts: its own spaces must never be indented.
+        self.texts = texts
         # Functions the child defined in this file: name -> parameters. Their calls become call blocks.
         self.defs = defs
 
@@ -208,6 +218,8 @@ def _stmt(ctx, node):
     header_end = node.body[0].lineno - 1 if hasattr(node, "body") and isinstance(node.body, list) else None
     if header_end is not None:
         # Compound statement: one-line header, no comment on it; bodies are converted recursively.
+        if any(node.lineno <= n <= node.end_lineno for n in ctx.texts):
+            return None
         if ctx.has_comment(node.lineno, node.lineno) or not ctx.only_blank_or_comment(node.lineno + 1, header_end):
             return None
         if isinstance(node, ast.For) and not node.orelse and isinstance(node.target, ast.Name):
@@ -339,6 +351,29 @@ def _raw(code):
     return {"type": "pq_raw", "extraState": {"code": code}}
 
 
+# Blocks since ADR 0010: their statement is code text unless it is typed the way the blocks write it.
+_EXACT = {"pq_key_held", "pq_mouse_x", "pq_mouse_y", "pq_clicked", "pq_dict", "pq_key_get", "pq_key_set",
+          "pq_key_aug", "pq_abs", "pq_remove", "pq_draw_image_scale"}
+
+
+def _with_inputs(block):
+    yield block
+    for child in block.get("inputs", {}).values():
+        yield from _with_inputs(child)
+
+
+def _keeps_text(ctx, node, block):
+    """False when the block would lose a ; at the end, or indent the next lines of some code text again and again."""
+    if "statements" in block:
+        return True
+    parts = list(_with_inputs(block))
+    after = ctx.lines[node.end_lineno - 1].encode()[node.end_col_offset:].decode()
+    if after.strip().startswith(";") and any(b["type"] in _EXACT for b in parts):
+        return False
+    return node.col_offset == 0 or not any(
+        b["type"] == "pq_raw_expr" and "\n" in b["fields"]["CODE"] for b in parts)
+
+
 def _start_of(node):
     decorators = getattr(node, "decorator_list", [])
     return min([node.lineno] + [d.lineno for d in decorators])
@@ -370,7 +405,12 @@ def _body(ctx, body, covered, trailing=False):
         first, last = _start_of(group[0]), group[-1].end_lineno
         gap(first)
         block = _stmt(ctx, group[0]) if len(group) == 1 and first == group[0].lineno else None
-        out.append(block if block else _raw(dedent("\n".join(ctx.lines[first - 1:last]))))
+        if block and not _keeps_text(ctx, group[0], block):
+            block = None
+        text = ctx.lines[first - 1:last]
+        if first <= covered:  # on the line of the header: if a: import math
+            text[0] = text[0].encode()[group[0].col_offset:].decode()
+        out.append(block if block else _raw(dedent("\n".join(text))))
         covered = last
     if trailing:
         gap(len(ctx.lines) + 1)
@@ -383,11 +423,14 @@ def to_blocks(src):
     except SyntaxError as exc:
         return json.dumps({"ok": False, "type": type(exc).__name__, "msg": exc.msg, "line": exc.lineno})
     lines = src.splitlines()
-    comment_lines = set()
+    comment_lines, text_lines = set(), set()
+    texts = (tokenize.STRING, tokenize.FSTRING_MIDDLE)
     try:
         for tok in tokenize.generate_tokens(io.StringIO(src).readline):
             if tok.type == tokenize.COMMENT:
                 comment_lines.add(tok.start[0])
+            elif tok.type in texts and tok.start[0] != tok.end[0]:
+                text_lines.add(tok.start[0])
     except (tokenize.TokenError, SyntaxError):
         pass
     defs = {}
@@ -396,7 +439,7 @@ def to_blocks(src):
             defs[n.name] = _simple_params(n)
     _DEFS.clear()
     _DEFS.update(defs)
-    ctx = _Ctx(src, lines, comment_lines, defs)
+    ctx = _Ctx(src, lines, comment_lines, text_lines, defs)
     if not tree.body:
         out = [_raw(l.strip()) for l in lines if l.strip() == "" or l.lstrip().startswith("#")]
         return json.dumps({"ok": True, "statements": out})

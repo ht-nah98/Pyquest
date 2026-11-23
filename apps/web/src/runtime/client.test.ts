@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { PyClient } from './client';
 
 type Listener = ((e: MessageEvent) => void) | null;
@@ -50,6 +50,89 @@ describe('PyClient', () => {
     made[0]!.onerror?.(new Event('error'));
     await expect(p).rejects.toThrow();
     expect(c.status).toBe('failed');
+  });
+
+  test('a worker that dies while running is replaced: its calls fail, the next run works', async () => {
+    const { c, made } = client();
+    const ready = c.warmUp();
+    made[0]!.reply({ kind: 'ready' });
+    await ready;
+    const run = c.run({ 'main.py': '' }, 'main.py');
+    await vi.waitFor(() => {
+      expect(made[0]!.sent).toHaveLength(1);
+    });
+    made[0]!.onerror?.(new Event('error')); // out of memory
+    await expect(run).rejects.toThrow();
+    expect(made[0]!.terminated).toBe(true);
+    expect(c.hasPending).toBe(false);
+    // A fresh one is already loading, so ▶ comes back by itself.
+    expect(made).toHaveLength(2);
+    expect(c.status).toBe('loading');
+    made[1]!.reply({ kind: 'ready' });
+    const again = c.run({ 'main.py': '' }, 'main.py');
+    await vi.waitFor(() => {
+      expect(made[1]!.sent).toHaveLength(1);
+    });
+    const id = (made[1]!.sent[0] as { id: number }).id;
+    made[1]!.reply({ id, ok: true, result: { events: [], vars: {}, stoppedByLimit: false } });
+    await again;
+    expect(c.status).toBe('ready');
+  });
+
+  test('Python that failed by itself (a wasm crash) is not used again', async () => {
+    const { c, made } = client();
+    const ready = c.warmUp();
+    made[0]!.reply({ kind: 'ready' });
+    await ready;
+    const run = c.run({ 'main.py': '' }, 'main.py');
+    await vi.waitFor(() => {
+      expect(made[0]!.sent).toHaveLength(1);
+    });
+    const id = (made[0]!.sent[0] as { id: number }).id;
+    made[0]!.reply({ id, ok: false, message: 'Maximum call stack size exceeded' });
+    await expect(run).rejects.toThrow();
+    expect(made[0]!.terminated).toBe(true);
+    expect(made).toHaveLength(2);
+    made[1]!.reply({ kind: 'ready' });
+    expect(c.status).toBe('ready');
+  });
+
+  test('a game does not go on in the fresh worker, which never started it', async () => {
+    const { c, made } = client();
+    const ready = c.warmUp();
+    made[0]!.reply({ kind: 'ready' });
+    await ready;
+    const answer = async (w: FakeWorker) => {
+      await vi.waitFor(() => {
+        expect(w.sent.length).toBeGreaterThan(0);
+      });
+      const { id } = w.sent.shift() as { id: number };
+      w.reply({ id, ok: true, result: { events: [], vars: {}, stoppedByLimit: false } });
+    };
+    const start = c.startGame({ 'main.py': '' }, 'main.py');
+    await answer(made[0]!);
+    await start;
+    const step = c.step({ keys: [], tapped: false });
+    await answer(made[0]!);
+    await step;
+    made[0]!.onerror?.(new Event('error')); // between two steps: nothing was in flight
+    made[1]!.reply({ kind: 'ready' });
+    await expect(c.step({ keys: [], tapped: false })).rejects.toThrow();
+    expect(made[1]!.sent).toEqual([]);
+    const again = c.startGame({ 'main.py': '' }, 'main.py');
+    await answer(made[1]!);
+    await again;
+  });
+
+  test('a fresh worker that cannot load is not tried for ever', async () => {
+    const { c, made } = client();
+    const ready = c.warmUp();
+    made[0]!.reply({ kind: 'ready' });
+    await ready;
+    made[0]!.onerror?.(new Event('error'));
+    made[1]!.onerror?.(new Event('error'));
+    expect(made).toHaveLength(2);
+    expect(c.status).toBe('failed'); // the "Thử lại" button
   });
 
   test('hasPending is true only while a call is in flight', async () => {

@@ -62,14 +62,8 @@ function installGenerators(): void {
   g['pq_arith'] = (block) => {
     const op = String(block.getFieldValue('OP'));
     const p = PRECEDENCE[op] ?? 1;
-    const right = block.getInputTargetBlock('B');
-    const rightOp = right?.type === 'pq_arith' ? String(right.getFieldValue('OP')) : '';
-    // a * (b % c) is not a * b % c, so a division or remainder on the right of × keeps its brackets too.
-    const strictRight =
-      op === '-' || op === '/' || op === '%' || (op === '*' && (rightOp === '%' || rightOp === '/'))
-        ? p + 1
-        : p;
-    const code = `${operand(block, 'A', p)} ${op} ${operand(block, 'B', strictRight)}`;
+    // The right side keeps its brackets even when the result is the same: a + (b + c) stays as typed.
+    const code = `${operand(block, 'A', p)} ${op} ${operand(block, 'B', p + 1)}`;
     return [code, p === 1 ? Order.ADDITIVE : Order.MULTIPLICATIVE];
   };
   g['pq_raw_expr'] = (block) => [String(block.getFieldValue('CODE')), Order.ATOMIC];

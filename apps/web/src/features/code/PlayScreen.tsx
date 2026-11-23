@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
+import { brokenRun, problemOf } from '../../runtime/broken';
 import { python } from '../../runtime/client';
 import type { StageHandle } from '../../stage/Stage';
 import { useGameKeys } from '../../stage/useGameKeys';
@@ -30,7 +31,8 @@ export function PlayScreen() {
   const [round, setRound] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const loop = useGameLoop(stage, (r) => {
-    if (r.error !== undefined) setError(r.error.messageVi);
+    const problem = problemOf(r);
+    if (problem !== null) setError(problem);
   });
   useGameKeys(code?.mode === 'game', loop.press);
 
@@ -39,10 +41,13 @@ export function PlayScreen() {
     const files = workOf(state, all, code).files;
     if (code.mode === 'game') void loop.start(files, code.main, size);
     else
-      void python.run(files, code.main, { stage: size }).then((r) => {
-        if (r.error !== undefined) setError(r.error.messageVi);
-        return stage.current?.replay(r.events);
-      });
+      void python
+        .run(files, code.main, { stage: size })
+        .catch(brokenRun)
+        .then((r) => {
+          setError(problemOf(r));
+          return stage.current?.replay(r.events);
+        });
     // Restart only on load and on ↻.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state === null, round]);

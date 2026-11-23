@@ -23,6 +23,7 @@ _SOUNDS = ${JSON.stringify(SOUNDS)}
 _MUSIC = ${JSON.stringify(MUSIC)}
 # The keys the page reports (it turns W A S D into the arrows).
 _KEYS = ${JSON.stringify(KEYS)}
+_OTHER_KEYS = {"w": "up", "a": "left", "s": "down", "d": "right", " ": "space"}
 
 
 class PyQuestError(Exception):
@@ -65,7 +66,15 @@ def _emit(event):
 def _num(value, name):
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise TypeError(name + " phải là một số")
+    if not -1e15 <= value <= 1e15:
+        too_big = isinstance(value, int) or abs(value) < float("inf")
+        raise PyQuestError(name + " không được là " + ("số quá lớn" if too_big else str(value)))
     return value
+
+
+def _frame(value):
+    """frame= as a whole number."""
+    return int(_num(value if isinstance(value, float) else int(value), "frame"))
 
 
 def clear(color="skyblue"):
@@ -154,10 +163,10 @@ def _picture(path):
 def draw_image(path, x, y, frame=0, flip=False, scale=1, mirror=False):
     """Paste a whole picture file with its top-left corner at (x, y). flip=True draws it upside down,
     mirror=True swaps left and right, scale=2 draws it twice as big."""
-    event = {"t": "sprite", "sprite": _picture(path), "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)}
+    event = {"t": "sprite", "sprite": _picture(path), "x": _num(x, "x"), "y": _num(y, "y"), "frame": _frame(frame)}
     if flip:
         event["flip"] = True
-    if not 0 < _num(scale, "scale") < float("inf"):
+    if _num(scale, "scale") <= 0:
         raise PyQuestError("scale phải lớn hơn 0")
     if scale != 1:
         event["scale"] = scale
@@ -170,10 +179,17 @@ def draw_image(path, x, y, frame=0, flip=False, scale=1, mirror=False):
 
 def key_pressed(key="space"):
     """True while the key is held. A tap on the screen counts as space."""
-    key = _known(key, _KEYS, "phím", "key_pressed")
+    key = _key_name(key)
     if key == "space" and _state["tapped"]:
         return True
     return key in _state["keys"]
+
+
+def _key_name(key):
+    """The key's name on the list: "Left", "w" and " " are other ways to write one."""
+    low = str(key).lower()
+    low = _OTHER_KEYS.get(low, low)
+    return low if low in _KEYS else _known(key, _KEYS, "phím", "key_pressed")
 
 
 def mouse_x():
@@ -204,10 +220,11 @@ def print(*values, sep=" ", end=""):
 def _known(name, names, what, call):
     """The sound, tune or key name, or a Vietnamese error that lists the right ones."""
     import difflib
+    word = isinstance(name, str)
     name = str(name)
     if name in names:
         return name
-    close = difflib.get_close_matches(name.lower(), names, n=1, cutoff=0.5)
+    close = difflib.get_close_matches(name.lower(), names, n=1, cutoff=0.5) if word else []
     hint = ". Có phải em muốn " + call + '("' + close[0] + '")?' if close else "."
     raise PyQuestError("Không có " + what + ' "' + name + '"' + hint + " Có: " + ", ".join(names))
 

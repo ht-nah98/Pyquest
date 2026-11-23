@@ -3,6 +3,7 @@ import type { RunResult } from '@pyquest/runtime';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { catalog } from '../../content/catalog';
+import { brokenRun } from '../../runtime/broken';
 import { python } from '../../runtime/client';
 import { uiSound, unlock } from '../../stage/sound';
 import { Stage, type StageHandle } from '../../stage/Stage';
@@ -97,7 +98,27 @@ function DrawingEditor({
     update((s) => touched(s, { title: cleanTitle(text, s.studio?.title) }));
   };
 
+  /** Bumped by every run, stop and unmount: the answer of an older run must not end the newer one. */
+  const runToken = useRef(0);
+  useEffect(
+    () => () => {
+      runToken.current++;
+    },
+    [],
+  );
+
+  /** Python starts again (■ Dừng, a crash): a parse it was working on is lost, so read the code once more. */
+  const rewarm = () => {
+    void python
+      .warmUp()
+      .then(() => {
+        panes.current?.reparse();
+      })
+      .catch(() => undefined);
+  };
+
   const run = async () => {
+    const mine = ++runToken.current;
     unlock(); // browsers let sound start only from a click
     flush();
     setRunning(true);
@@ -110,25 +131,25 @@ function DrawingEditor({
       panes.current?.highlight(r.error?.line ?? null, 'error');
       await stage.current?.replay(r.events);
       if (r.error !== undefined) uiSound('oops');
-    } catch {
-      /* stopped */
+    } catch (e) {
+      // Not ■ Dừng (that bumps the token): Python broke.
+      if (mine === runToken.current) {
+        setResult(brokenRun(e));
+        rewarm();
+      }
     } finally {
-      setRunning(false);
+      if (mine === runToken.current) setRunning(false);
     }
   };
 
   const stop = () => {
+    runToken.current++;
     stage.current?.clear();
     setRunning(false);
     // Only kill the worker when Python is really busy.
     if (python.hasPending) {
       python.stop();
-      void python
-        .warmUp()
-        .then(() => {
-          panes.current?.reparse();
-        })
-        .catch(() => undefined);
+      rewarm();
     }
   };
 

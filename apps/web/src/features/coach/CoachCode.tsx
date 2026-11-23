@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
+import { brokenRun, problemOf } from '../../runtime/broken';
 import { python } from '../../runtime/client';
 import { Stage, type StageHandle } from '../../stage/Stage';
 import { useGameKeys } from '../../stage/useGameKeys';
@@ -33,7 +34,8 @@ export function CoachCode() {
     ? (catalog.studio()?.stage ?? catalog.lessonStage(lessonId))
     : catalog.lessonStage(lessonId);
   const loop = useGameLoop(stage, (r) => {
-    if (r.error !== undefined) setError(r.error.messageVi);
+    const problem = problemOf(r);
+    if (problem !== null) setError(problem);
   });
   useGameKeys(mode === 'game', loop.press);
 
@@ -71,10 +73,13 @@ export function CoachCode() {
     loop.stop();
     if (mode === 'game') void loop.start(files, main, size);
     else
-      void python.run(files, main, { stage: size }).then((r) => {
-        if (r.error !== undefined) setError(r.error.messageVi);
-        return stage.current?.replay(r.events);
-      });
+      void python
+        .run(files, main, { stage: size })
+        .catch(brokenRun)
+        .then((r) => {
+          setError(problemOf(r));
+          return stage.current?.replay(r.events);
+        });
   };
 
   return (

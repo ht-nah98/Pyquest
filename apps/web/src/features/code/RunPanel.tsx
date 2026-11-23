@@ -1,6 +1,7 @@
 import type { Goal } from '@pyquest/content-schema';
 import type { RunResult } from '@pyquest/runtime';
 import type { GoalResult } from '@pyquest/checker';
+import { problemOf } from '../../runtime/broken';
 
 /** How Python itself would print the value: True/False, text in quotes. */
 export function pythonRepr(v: number | string | boolean): string {
@@ -45,25 +46,14 @@ export function GoalList({
 }
 
 export function ErrorBubble({ result }: { result: RunResult | null }) {
-  if (result?.error === undefined) {
-    if (result?.stoppedByLimit === true) {
-      return (
-        <p
-          className="rounded-[8px] border-2 border-oops bg-oops-soft px-3 py-2"
-          data-testid="run-error"
-        >
-          ⏹ Chương trình chạy mãi không dừng, mình đã dừng giúp em.
-        </p>
-      );
-    }
-    return null;
-  }
+  const problem = result === null ? null : problemOf(result);
+  if (result === null || problem === null) return null;
   return (
     <p
       className="rounded-[8px] border-2 border-oops bg-oops-soft px-3 py-2"
       data-testid="run-error"
     >
-      ⚠️ {result.error.messageVi}
+      {result.error === undefined ? '⏹' : '⚠️'} {problem}
     </p>
   );
 }

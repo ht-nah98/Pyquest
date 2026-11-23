@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { SessionProvider } from '../../app/session';
 import { DexieStore } from '../../storage/dexieStore';
 import type { Profile } from '../../storage/store';
@@ -72,5 +72,50 @@ describe('self-study mode', () => {
     await screen.findByTestId('slide-l01-library');
     expect(screen.getByTestId('to-code')).toBeTruthy();
     expect(next().disabled).toBe(true);
+  });
+});
+
+describe('present mode: N8, the keys while the sample game has the focus', () => {
+  test('arrows and Space play the game; PageDown, PageUp and N still work', async () => {
+    const store = new DexieStore(`pq-slides-${String(++n)}`);
+    const coach = await store.createProfile('HLV', '🦉', 'coach');
+    localStorage.setItem('pq-profile', coach.id);
+    const opened = vi.spyOn(window, 'open').mockReturnValue(null);
+    render(
+      <SessionProvider store={store}>
+        <MemoryRouter initialEntries={['/l/l01?mode=present']}>
+          <Routes>
+            <Route path="/l/:lessonId" element={<LessonSlides />} />
+          </Routes>
+        </MemoryRouter>
+        <div tabIndex={-1} data-game-keys data-testid="game" />
+      </SessionProvider>,
+    );
+    await screen.findByTestId('slide-l01-grid');
+    const count = () => screen.getByTestId('slide-count').textContent.split('/')[0];
+    const game = screen.getByTestId('game');
+    game.focus();
+    const press = (key: string) => {
+      fireEvent.keyDown(game, { key });
+    };
+    for (const key of ['ArrowRight', ' ', 'ArrowLeft']) press(key);
+    expect(count()).toBe('1');
+    press('PageDown');
+    await waitFor(() => {
+      expect(count()).toBe('2');
+    });
+    press('PageUp');
+    await waitFor(() => {
+      expect(count()).toBe('1');
+    });
+    press('n');
+    expect(opened).toHaveBeenCalledOnce();
+    opened.mockRestore();
+    // Focus back on the page: the arrows turn the slides again.
+    game.blur();
+    press('ArrowRight');
+    await waitFor(() => {
+      expect(count()).toBe('2');
+    });
   });
 });

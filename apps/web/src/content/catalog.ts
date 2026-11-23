@@ -1,19 +1,21 @@
 import {
   AssetManifestSchema,
-  CourseSchema,
   LibraryRefSchema,
   StudioSchema,
   type LibraryEntry,
   type Studio,
   isOpenLesson,
-  parseLesson,
   type Asset,
-  type Course,
-  type Lesson,
   type OpenLesson,
 } from '@pyquest/content-schema';
 import { DEFAULT_STAGE, type StageSize } from '@pyquest/runtime';
-import { inCourseOrder, libraryFor } from './courses';
+import {
+  inCourseOrder,
+  libraryFor,
+  readCourses,
+  studioLibrary,
+  type CatalogCourse,
+} from './courses';
 
 // Vite fixes this list at start-up: a new file in content/ needs `npm run dev` restarted (AGENTS.md §9.3).
 const courseFiles = import.meta.glob<unknown>('@content/courses/*/course.json', {
@@ -47,28 +49,10 @@ const assetUrls = import.meta.glob<string>('@content/assets/library/*.png', {
   import: 'default',
 });
 
-export type CatalogCourse = Course & { lessons: Lesson[]; sampleGame?: string };
-
-const dirOf = (path: string) => /courses\/([^/]+)\//.exec(path)?.[1] ?? '';
+export type { CatalogCourse };
 
 function build() {
-  const lessonsByDir = new Map<string, Lesson[]>();
-  for (const [path, json] of Object.entries(lessonFiles)) {
-    const list = lessonsByDir.get(dirOf(path)) ?? [];
-    list.push(parseLesson(json));
-    lessonsByDir.set(dirOf(path), list);
-  }
-  const courses = new Map<string, CatalogCourse>();
-  for (const [path, json] of Object.entries(courseFiles)) {
-    const course = CourseSchema.parse(json);
-    const lessons = (lessonsByDir.get(dirOf(path)) ?? []).sort((a, b) => a.order - b.order);
-    const sample = Object.entries(sampleGames).find(([p]) => dirOf(p) === dirOf(path))?.[1];
-    courses.set(course.id, {
-      ...course,
-      lessons,
-      ...(sample === undefined ? {} : { sampleGame: sample }),
-    });
-  }
+  const courses = readCourses(courseFiles, lessonFiles, sampleGames);
   const manifest = AssetManifestSchema.parse(Object.values(manifestFile)[0] ?? { assets: [] });
   const urls = new Map<string, string>();
   for (const [path, url] of Object.entries(assetUrls)) urls.set(path.split('/').pop() ?? '', url);
@@ -134,7 +118,7 @@ export const catalog = {
   /** pyquest commands met by this lesson (libraryFor); all of them when upto is undefined. */
   library(upto?: string): LibraryEntry[] {
     if (upto === undefined) return data.library;
-    if (upto === 'studio') return data.library.filter((e) => e.gameOnly !== true);
+    if (upto === 'studio') return studioLibrary(data.library, [...data.courses.values()]);
     return libraryFor(data.library, [...data.courses.values()], upto);
   },
   /** A slide image by file name. */
