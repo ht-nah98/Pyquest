@@ -1,0 +1,108 @@
+{
+  "id": "h14-e2",
+  "title": "Đếm skill theo nhánh",
+  "task": "count_branch(branch) đếm trong owned có mấy skill thuộc nhánh đó. Tạo total = 0; đi qua từng skill, skill nào có skill[\"branch\"] == branch thì total cộng 1; cuối cùng return total.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Trong count_branch, thay dòng return 0: total = 0",
+    "for skill in owned: rồi thụt vào if skill[\"branch\"] == branch:",
+    "Thụt thêm: total += 1",
+    "Ngoài vòng for: return total",
+    "Bấm ▶ Chạy: dưới sân hiện Lửa 2, Băng 0, Sét 1 ngay lúc vào ván."
+  ],
+  "hints": [
+    "branch là tham số: gọi count_branch(\"fire\") thì branch là \"fire\".",
+    "if skill[\"branch\"] == branch:\n    total += 1",
+    "return total nằm ngang với chữ for."
+  ],
+  "test": {
+    "frames": 60,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 40,
+        "to": 40
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h14-e2-run"
+    },
+    {
+      "label": "Đếm đúng nhánh Lửa",
+      "kind": "drewText",
+      "text": "Lửa 2",
+      "id": "h14-e2-fire"
+    },
+    {
+      "label": "Đếm đúng nhánh Băng",
+      "kind": "drewText",
+      "text": "Băng 0",
+      "id": "h14-e2-ice"
+    },
+    {
+      "label": "Đếm đúng nhánh Sét",
+      "kind": "drewText",
+      "text": "Sét 1",
+      "id": "h14-e2-spark"
+    }
+  ],
+  "new_idea": "đếm có điều kiện trong danh sách dict",
+  "reorganised": "Thêm bảng BRANCHES và dòng đếm ba nhánh dưới sân.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "đếm hết mọi skill",
+    "return trong vòng lặp",
+    "so với chữ branch"
+  ]
+}

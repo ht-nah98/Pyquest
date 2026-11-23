@@ -1,0 +1,94 @@
+{
+  "id": "h10-e2",
+  "title": "Nam châm và thanh kinh nghiệm",
+  "task": "(1) Đầu vòng for trong take_gems(): nếu near(gem, hero, 150) thì gem bước về phía hero, mỗi bước 6. Dùng lại step_to nhé. (2) Trong draw(): vẽ thanh xanh ở (0, 590), rộng 600 * xp / need(), cao 10, màu \"#2fc9a8\".",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1), trong vòng for gem: if near(gem, hero, 150): rồi thụt vào step_to(gem, hero, 6)",
+    "step_to viết cho quái mà ngọc cũng dùng được, vì ngọc cũng có x, y.",
+    "Chỗ (2): draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")",
+    "need() trả về số ngọc cần để lên cấp. Nhặt một nửa thì thanh dài một nửa.",
+    "Bấm ▶ Chạy, rồi ⛶: ngọc tự bay về em."
+  ],
+  "hints": [
+    "Chỗ (1) chỉ 2 dòng.",
+    "step_to(gem, hero, 6)",
+    "draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")"
+  ],
+  "test": {
+    "frames": 300,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h10-e2-run"
+    },
+    {
+      "label": "Ngọc tự bay về em",
+      "kind": "varCompare",
+      "name": "xp",
+      "op": ">=",
+      "value": 3,
+      "id": "h10-e2-fly"
+    },
+    {
+      "label": "Có thanh kinh nghiệm",
+      "kind": "drewRects",
+      "min": 2,
+      "at": [
+        0,
+        590
+      ],
+      "id": "h10-e2-bar"
+    }
+  ],
+  "new_idea": "dùng lại hàm cho thứ khác; thanh = bề rộng × phần đã có",
+  "reorganised": "Thêm need() và nền tối của thanh.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "ngọc không bay",
+    "quên vẽ thanh",
+    "ngọc chạy ngược"
+  ]
+}

@@ -1,0 +1,179 @@
+{
+  "id": "h17-e2",
+  "title": "Tiếng động",
+  "task": "Thêm 5 tiếng: (1) vào hầm: play_music(\"adventure\"). (2) Chọn thẻ: play_sound(\"click\"). (3) Lên cấp: play_sound(\"win\"). (4) Nhặt ngọc: play_sound(\"point\"). (5) Bị chạm: play_sound(\"hit\"). Đừng đặt tiếng ở chỗ chạy mỗi khung nhé.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1), trong start_game: play_music(\"adventure\"). Thử cả \"happy\" và \"calm\".",
+    "Chỗ (2), trong take_card: play_sound(\"click\")",
+    "Chỗ (3), trong check_level, dưới level += 1: play_sound(\"win\")",
+    "Chỗ (4), trong take_gems, dưới gem[\"hp\"] = 0: play_sound(\"point\")",
+    "Chỗ (5), trong check_hits, dưới hero[\"hp\"] -= 1: play_sound(\"hit\")",
+    "Bấm 🔊 nếu không nghe thấy gì. Rồi ⛶ và chơi thử với loa."
+  ],
+  "hints": [
+    "Thụt lề ngang với dòng ngay trên nó.",
+    "Tên tiếng trong ngoặc kép, chữ thường.",
+    "play_sound(\"point\")"
+  ],
+  "test": {
+    "frames": 600,
+    "taps": [],
+    "keys": [
+      {
+        "key": "2",
+        "from": 5,
+        "to": 5
+      },
+      {
+        "key": "1",
+        "from": 15,
+        "to": 15
+      },
+      {
+        "key": "1",
+        "from": 100,
+        "to": 100
+      },
+      {
+        "key": "1",
+        "from": 150,
+        "to": 150
+      },
+      {
+        "key": "1",
+        "from": 200,
+        "to": 200
+      },
+      {
+        "key": "1",
+        "from": 250,
+        "to": 250
+      },
+      {
+        "key": "1",
+        "from": 300,
+        "to": 300
+      },
+      {
+        "key": "1",
+        "from": 350,
+        "to": 350
+      },
+      {
+        "key": "1",
+        "from": 400,
+        "to": 400
+      },
+      {
+        "key": "1",
+        "from": 450,
+        "to": 450
+      },
+      {
+        "key": "1",
+        "from": 500,
+        "to": 500
+      },
+      {
+        "key": "1",
+        "from": 550,
+        "to": 550
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h17-e2-run"
+    },
+    {
+      "label": "Có nhạc nền",
+      "kind": "played",
+      "music": "*",
+      "id": "h17-e2-music"
+    },
+    {
+      "label": "Nhặt ngọc có tiếng",
+      "kind": "played",
+      "sound": "point",
+      "min": 2,
+      "id": "h17-e2-point"
+    },
+    {
+      "label": "Bị chạm có tiếng",
+      "kind": "played",
+      "sound": "hit",
+      "id": "h17-e2-hit"
+    },
+    {
+      "label": "Chọn thẻ có tiếng",
+      "kind": "played",
+      "sound": "click",
+      "id": "h17-e2-click"
+    },
+    {
+      "label": "Lên cấp có tiếng",
+      "kind": "played",
+      "sound": "win",
+      "id": "h17-e2-win"
+    }
+  ],
+  "new_idea": "tiếng đặt ở đúng lúc việc xảy ra, không đặt ở chỗ chạy mỗi khung",
+  "reorganised": "Sắp xếp lại lần 4: đạn và ngọc cũng có hp và dùng living(); bỏ remove_shots, live, busy. START_WAVE = 2 để thử đợt đông quái (Bài 18 trả về 0).",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_not",
+    "pq_number",
+    "pq_play_music",
+    "pq_play_sound",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": [
+      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+    ]
+  },
+  "wrong": [
+    "quên tiếng bị chạm",
+    "nhầm tiếng lên cấp"
+  ]
+}

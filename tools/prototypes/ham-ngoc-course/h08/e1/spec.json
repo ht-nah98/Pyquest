@@ -1,0 +1,97 @@
+{
+  "id": "h08-e1",
+  "title": "Cứ một lúc lại bắn",
+  "task": "wait đếm ngược tới lượt bắn. Trong shoot(): wait bớt 1; nếu wait <= 0 thì thêm vào shots một viên make_shot(nearest()), cộng 1 vào fired, rồi đặt wait = 30. Đạn tạm thời bay thẳng lên.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Trong shoot(), xóa pass. Dòng đầu: wait -= 1",
+    "if wait <= 0: là đã tới lượt bắn.",
+    "Thụt vào: shots.append(make_shot(nearest()))",
+    "Thụt vào tiếp: fired += 1 rồi wait = 30 (30 khung nữa mới bắn tiếp).",
+    "Bấm ▶ Chạy: máy đếm số viên đạn. Bấm ⛶ xem đạn bay lên đều đặn."
+  ],
+  "hints": [
+    "Ba việc khi bắn: thêm đạn, đếm, đặt lại đồng hồ.",
+    "Quên wait = 30 thì khung nào cũng bắn.",
+    "wait -= 1\nif wait <= 0:\n    shots.append(make_shot(nearest()))\n    fired += 1\n    wait = 30"
+  ],
+  "test": {
+    "frames": 200,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h08-e1-run"
+    },
+    {
+      "label": "Bắn được nhiều lần",
+      "kind": "varCompare",
+      "name": "fired",
+      "op": ">=",
+      "value": 5,
+      "id": "h08-e1-many"
+    },
+    {
+      "label": "Có nghỉ giữa hai lần bắn",
+      "kind": "varCompare",
+      "name": "fired",
+      "op": "<=",
+      "value": 8,
+      "id": "h08-e1-rest"
+    },
+    {
+      "label": "Có đạn bay trên sân",
+      "kind": "drewCount",
+      "sprite": "shot",
+      "min": 2,
+      "id": "h08-e1-shots"
+    }
+  ],
+  "new_idea": "đếm ngược rồi làm, làm xong đặt lại; danh sách đạn",
+  "reorganised": "Bỏ target_far và vạch trắng (nearest() giờ dùng để bắn); thêm shots, wait, fired, make_shot, move_shots.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên đặt lại wait",
+    "quên thêm đạn vào danh sách",
+    "quên trừ wait"
+  ]
+}

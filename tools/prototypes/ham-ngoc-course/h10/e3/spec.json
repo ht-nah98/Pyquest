@@ -1,0 +1,106 @@
+{
+  "id": "h10-e3",
+  "title": "Lên cấp",
+  "task": "Viết check_level(): nếu xp >= need() thì xp bớt need() và level cộng 1. Nhớ đổi need() thành return 2 + level * 2: cấp càng cao càng cần nhiều ngọc.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Trong check_level(), xóa pass: if xp >= need():",
+    "Thụt vào: xp -= need() trước, rồi level += 1",
+    "Phải trừ trước: cộng level trước thì need() đổi mất rồi.",
+    "Trong need(): đổi return 10 thành return 2 + level * 2",
+    "Bấm ▶ Chạy: chữ Cấp 2 hiện ra khi nhặt đủ 4 viên."
+  ],
+  "hints": [
+    "Dư ngọc thì giữ lại, đừng đặt xp = 0.",
+    "if xp >= need():\n    xp -= need()\n    level += 1",
+    "return 2 + level * 2"
+  ],
+  "test": {
+    "frames": 420,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h10-e3-run"
+    },
+    {
+      "label": "Lên được cấp 2",
+      "kind": "varCompare",
+      "name": "level",
+      "op": ">=",
+      "value": 2,
+      "id": "h10-e3-level"
+    },
+    {
+      "label": "Không lên cấp quá nhanh",
+      "kind": "varCompare",
+      "name": "level",
+      "op": "<=",
+      "value": 3,
+      "id": "h10-e3-slow"
+    },
+    {
+      "label": "Lên cấp thì dùng hết ngọc của cấp đó",
+      "kind": "varCompare",
+      "name": "xp",
+      "op": "<=",
+      "value": 7,
+      "id": "h10-e3-spend"
+    },
+    {
+      "label": "Cấp 2 hiện trên màn hình",
+      "kind": "drewText",
+      "text": "Cấp 2",
+      "id": "h10-e3-text"
+    }
+  ],
+  "new_idea": "ngưỡng tăng dần; trừ phần đã dùng, giữ phần dư",
+  "reorganised": "Thêm level, check_level(); chữ Ngọc đổi thành Cấp.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên trừ xp",
+    "quên cộng level",
+    "cấp nào cũng cần 1 viên"
+  ]
+}

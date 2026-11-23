@@ -1,0 +1,113 @@
+{
+  "id": "h02-e1",
+  "title": "Đi bốn hướng",
+  "task": "Phím → đã chạy. Em viết tiếp trong update() cho 3 phím còn lại: \"left\" thì x bớt speed, \"up\" thì y bớt speed, \"down\" thì y thêm speed. Nhớ: y tăng là đi xuống.",
+  "mode": "game",
+  "input": "blocks",
+  "walkthrough": [
+    "Trong update(), nhìn 2 dòng if của phím \"right\": em làm giống vậy cho 3 phím kia.",
+    "if key_pressed(\"left\"): rồi thụt vào x -= speed",
+    "if key_pressed(\"up\"): rồi thụt vào y -= speed",
+    "if key_pressed(\"down\"): rồi thụt vào y += speed",
+    "Dùng 4 chữ if riêng (không dùng elif) để giữ hai phím là đi chéo được.",
+    "Bấm ▶ Chạy: máy tự giữ phím. Rồi bấm ⛶ và đi bằng phím mũi tên."
+  ],
+  "hints": [
+    "Đi lên là y nhỏ đi.",
+    "if key_pressed(\"left\"):\n    x -= speed",
+    "Cả bốn chữ if thẳng hàng nhau."
+  ],
+  "test": {
+    "frames": 160,
+    "taps": [],
+    "keys": [
+      {
+        "key": "right",
+        "from": 0,
+        "to": 29
+      },
+      {
+        "key": "down",
+        "from": 30,
+        "to": 49
+      },
+      {
+        "key": "left",
+        "from": 50,
+        "to": 99
+      },
+      {
+        "key": "up",
+        "from": 100,
+        "to": 159
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h02-e1-run"
+    },
+    {
+      "label": "Đi sang phải được",
+      "kind": "varCompare",
+      "name": "x",
+      "op": ">=",
+      "value": 330,
+      "when": "ever",
+      "id": "h02-e1-right"
+    },
+    {
+      "label": "Đi xuống được",
+      "kind": "varCompare",
+      "name": "y",
+      "op": ">=",
+      "value": 330,
+      "when": "ever",
+      "id": "h02-e1-down"
+    },
+    {
+      "label": "Đi sang trái được",
+      "kind": "varCompare",
+      "name": "x",
+      "op": "<=",
+      "value": 290,
+      "id": "h02-e1-left"
+    },
+    {
+      "label": "Đi lên được",
+      "kind": "varCompare",
+      "name": "y",
+      "op": "<=",
+      "value": 290,
+      "id": "h02-e1-up"
+    }
+  ],
+  "new_idea": "key_pressed(\"left\"), \"up\", \"down\": giữ phím nào thì làm việc đó",
+  "reorganised": "Thêm speed = 3 và global x, y.",
+  "toolbox": [
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_clear",
+    "pq_def",
+    "pq_draw_image_scale",
+    "pq_draw_text_size",
+    "pq_global",
+    "pq_if",
+    "pq_import",
+    "pq_key_held",
+    "pq_number",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "lên xuống bị ngược",
+    "quên phím lên",
+    "mới viết một phím"
+  ]
+}

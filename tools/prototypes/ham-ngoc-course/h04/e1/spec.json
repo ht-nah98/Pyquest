@@ -1,0 +1,64 @@
+{
+  "id": "h04-e1",
+  "title": "Danh sách các hộp",
+  "task": "mobs là danh sách, mỗi phần tử là một hộp dict. Em thêm 2 con nữa: mob-ghost ở (200, 400) và mob-golem ở (400, 400). Rồi dùng for mob in mobs để vẽ cả bầy bằng draw_thing, to gấp 4.",
+  "mode": "script",
+  "input": "blocks",
+  "walkthrough": [
+    "Nhìn 3 dòng mobs.append(...) có sẵn: em viết thêm 2 dòng y như vậy.",
+    "mobs.append({\"image\": \"mob-ghost\", \"x\": 200, \"y\": 400}) rồi một dòng cho mob-golem ở 400, 400.",
+    "for mob in mobs: lấy lần lượt từng hộp, cất vào mob.",
+    "Thụt vào: draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 4)",
+    "Bấm ▶ Chạy, bấm 👀 để so với hình mẫu."
+  ],
+  "hints": [
+    "append thêm một hộp vào cuối danh sách.",
+    "Trong vòng for, mob là một hộp: mob[\"x\"] là x của con đó.",
+    "for mob in mobs:\n    draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 4)"
+  ],
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h04-e1-run"
+    },
+    {
+      "label": "draw_thing chạy cho 5 con khác nhau",
+      "kind": "called",
+      "name": "draw_thing",
+      "min": 5,
+      "distinct": true,
+      "id": "h04-e1-five"
+    },
+    {
+      "label": "Giống hình mẫu",
+      "kind": "matches",
+      "id": "h04-e1-same"
+    }
+  ],
+  "new_idea": "danh sách các dict, for mob in mobs",
+  "reorganised": "",
+  "toolbox": [
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_clear",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_for_each",
+    "pq_import",
+    "pq_key_get",
+    "pq_list",
+    "pq_number",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "append sau khi vẽ",
+    "chỉ vẽ con đầu"
+  ]
+}

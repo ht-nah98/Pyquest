@@ -1,0 +1,114 @@
+{
+  "id": "h12-e1",
+  "title": "Bảng skill",
+  "task": "Mỗi skill là một dòng trong bảng SKILLS. Em viết 3 dòng nhánh \"spark\": \"Tay Chớp: bắn nhanh\" (số 1, fast, 5), \"Tia Đôi: thêm 1 viên\" (số 2, extra, 1), \"Mây Giông: sét đánh\" (số 3, cloud, 3). Không sửa phần vẽ.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Nhìn dòng SKILLS.append(...) của Áo Băng: em viết 3 dòng giống vậy, ngay dưới nó.",
+    "name là tên, branch là nhánh, icon là số của hình, what là tên tác dụng, add là cộng bao nhiêu.",
+    "Dòng 1: {\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5}",
+    "Làm tiếp Tia Đôi và Mây Giông.",
+    "Bấm ▶ Chạy: sổ skill tự dài ra 9 dòng dù em không sửa code vẽ."
+  ],
+  "hints": [
+    "Chép một dòng rồi đổi từng giá trị là nhanh nhất.",
+    "Cả 3 dòng đều có \"branch\": \"spark\".",
+    "Tia Đôi: \"icon\": 2, \"what\": \"extra\", \"add\": 1"
+  ],
+  "test": {
+    "frames": 5,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h12-e1-run"
+    },
+    {
+      "label": "Có Tay Chớp",
+      "kind": "drewText",
+      "text": "Tay Chớp: bắn nhanh",
+      "id": "h12-e1-fast"
+    },
+    {
+      "label": "Có Tia Đôi",
+      "kind": "drewText",
+      "text": "Tia Đôi: thêm 1 viên",
+      "id": "h12-e1-extra"
+    },
+    {
+      "label": "Có Mây Giông",
+      "kind": "drewText",
+      "text": "Mây Giông: sét đánh",
+      "id": "h12-e1-cloud"
+    },
+    {
+      "label": "Đủ 3 hình nhánh sét",
+      "kind": "drewCount",
+      "sprite": "skill-spark",
+      "min": 3,
+      "id": "h12-e1-icons"
+    },
+    {
+      "label": "Mây Giông dùng đúng hình số 3",
+      "kind": "drew",
+      "sprite": "skill-spark-3",
+      "id": "h12-e1-row"
+    },
+    {
+      "label": "Tay Chớp dùng đúng hình số 1",
+      "kind": "drew",
+      "sprite": "skill-spark-1",
+      "id": "h12-e1-bolt"
+    }
+  ],
+  "new_idea": "dữ liệu tách khỏi code: thêm một dòng trong bảng là game có thêm một skill",
+  "reorganised": "Thêm bảng SKILLS ở đầu file và draw_skill(); bỏ games. Màn chờ tạm thời vẽ sổ skill để xem bảng.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "gõ nhầm tên",
+    "thiếu dòng Mây Giông",
+    "nhầm hình"
+  ]
+}

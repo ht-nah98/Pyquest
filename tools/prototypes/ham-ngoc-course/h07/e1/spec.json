@@ -1,0 +1,99 @@
+{
+  "id": "h07-e1",
+  "title": "Con nào gần nhất?",
+  "task": "nearest() phải trả về con quái gần em nhất. Cách làm: coi mobs[0] là gần nhất, đi qua từng con, con nào gần hơn best thì best = con đó. Cuối cùng return best. Vạch trắng sẽ nối em với con gần nhất.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Tìm def nearest(): giờ nó luôn trả về mobs[0]. Xóa dòng return đó.",
+    "best = mobs[0]: tạm coi con đầu tiên là gần nhất.",
+    "for mob in mobs: rồi thụt vào if distance(mob, hero) < distance(best, hero):",
+    "Thụt thêm: best = mob (tìm được con gần hơn thì nhớ con mới).",
+    "Hết vòng for, thụt lề ngang chữ for: return best",
+    "Bấm ▶ Chạy, rồi ⛶: em đi đâu, vạch trắng cũng chỉ con gần nhất."
+  ],
+  "hints": [
+    "Giống tìm bạn thấp nhất lớp: so từng bạn với bạn đang giữ kỷ lục.",
+    "Dấu < nghĩa là gần hơn.",
+    "return best nằm ngoài vòng for, đừng thụt vào trong.",
+    "if distance(mob, hero) < distance(best, hero):\n    best = mob"
+  ],
+  "test": {
+    "frames": 150,
+    "taps": [],
+    "keys": [
+      {
+        "key": "right",
+        "from": 0,
+        "to": 80
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h07-e1-run"
+    },
+    {
+      "label": "Vạch chỉ đúng con gần nhất",
+      "kind": "varCompare",
+      "name": "target_far",
+      "op": "<=",
+      "value": 105,
+      "id": "h07-e1-near"
+    },
+    {
+      "label": "Có gọi distance để so sánh",
+      "kind": "called",
+      "name": "distance",
+      "min": 20,
+      "id": "h07-e1-called"
+    }
+  ],
+  "new_idea": "tìm nhỏ nhất trong danh sách: giữ kỷ lục, gặp con tốt hơn thì thay",
+  "reorganised": "Thêm target_far (đường tới con gần nhất) và vạch trắng trong draw().",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_line_width",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "nhầm con xa nhất",
+    "return trong vòng for",
+    "luôn trả về con cuối"
+  ]
+}

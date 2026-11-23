@@ -1,0 +1,136 @@
+{
+  "id": "h05-e1",
+  "title": "Quái đuổi theo em",
+  "task": "step_to(thing, target, speed) cho thing bước một bước về phía target. Đã có: ở bên trái thì sang phải. Em viết 3 chữ if còn lại: ở bên phải thì sang trái, ở trên thì đi xuống, ở dưới thì đi lên.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Tìm def step_to(thing, target, speed): thing là con đang đi, target là chỗ muốn tới.",
+    "if thing[\"x\"] > target[\"x\"]: rồi thụt vào thing[\"x\"] -= speed",
+    "Với y: nhỏ hơn thì cộng speed, lớn hơn thì trừ speed.",
+    "move_mobs() có sẵn: nó gọi step_to cho từng con, thêm một chút lắc lư để quái không chồng khít lên nhau.",
+    "Bấm ▶ Chạy rồi ⛶: em chạy đâu, quái theo đó."
+  ],
+  "hints": [
+    "Mỗi trục 2 chữ if: nhỏ hơn thì cộng, lớn hơn thì trừ.",
+    "Nhớ dùng thing và target, đừng viết mob hay hero trong step_to.",
+    "if thing[\"y\"] < target[\"y\"]:\n    thing[\"y\"] += speed"
+  ],
+  "test": {
+    "frames": 600,
+    "taps": [],
+    "keys": [
+      {
+        "key": "left",
+        "from": 0,
+        "to": 60
+      },
+      {
+        "key": "right",
+        "from": 300,
+        "to": 370
+      },
+      {
+        "key": "up",
+        "from": 300,
+        "to": 369
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h05-e1-run"
+    },
+    {
+      "label": "Quái sang trái tới chỗ em",
+      "kind": "staysWithin",
+      "sprite": "mob",
+      "axis": "x",
+      "min": 80,
+      "max": 122,
+      "frames": [
+        280,
+        290
+      ],
+      "id": "h05-e1-x"
+    },
+    {
+      "label": "Quái đi xuống tới chỗ em",
+      "kind": "staysWithin",
+      "sprite": "mob",
+      "axis": "y",
+      "min": 264,
+      "max": 304,
+      "frames": [
+        280,
+        290
+      ],
+      "id": "h05-e1-y"
+    },
+    {
+      "label": "Em chạy sang phải, quái theo",
+      "kind": "staysWithin",
+      "sprite": "mob",
+      "axis": "x",
+      "min": 290,
+      "max": 340,
+      "frames": [
+        585,
+        599
+      ],
+      "id": "h05-e1-right"
+    },
+    {
+      "label": "Em chạy lên, quái theo",
+      "kind": "staysWithin",
+      "sprite": "mob",
+      "axis": "y",
+      "min": 50,
+      "max": 96,
+      "frames": [
+        585,
+        599
+      ],
+      "id": "h05-e1-up"
+    }
+  ],
+  "new_idea": "so sánh từng trục; hàm nhận vào cả một dict",
+  "reorganised": "Thêm move_mobs() gọi step_to cho từng con, kèm lắc lư ngẫu nhiên (-1 tới 1).",
+  "toolbox": [
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_if",
+    "pq_import",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_list",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quái chạy trốn theo chiều dọc",
+    "quên đi lên",
+    "quên sang trái"
+  ]
+}

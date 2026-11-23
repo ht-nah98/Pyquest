@@ -1,0 +1,142 @@
+{
+  "id": "h15-e1",
+  "title": "Bảng quái",
+  "task": "Quái cũng thành bảng: MOBS[\"slime\"] là một hộp. (1) Thêm MOBS[\"bat\"]: hình mob-bat, hp 2, speed 2, size 2, xp 1 và MOBS[\"golem\"]: hình mob-golem, hp 8, speed 1, size 3, xp 3. (2) Trong make_mob, chép hp, speed, size, xp từ row sang mob.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): MOBS[\"bat\"] = {\"image\": \"mob-bat\", \"hp\": 2, \"speed\": 2, \"size\": 2, \"xp\": 1}",
+    "Golem: hp 8, speed 1, size 3, xp 3. Trâu hơn nhưng cho nhiều ngọc hơn.",
+    "Chỗ (2): row là dòng của con đó trong bảng. Viết mob[\"hp\"] = row[\"hp\"]",
+    "Làm y hệt cho \"speed\", \"size\" và \"xp\".",
+    "Vì sao phải chép? Mỗi con cần hp riêng, nếu dùng chung hộp thì một con đau là cả bầy đau.",
+    "Bấm ▶ Chạy, rồi ⛶: dơi nhanh, golem to và trâu."
+  ],
+  "hints": [
+    "Bảng này dùng tên làm chìa: MOBS[name] lấy đúng dòng.",
+    "mob[\"hp\"] = row[\"hp\"]\nmob[\"speed\"] = row[\"speed\"]",
+    "size là cỡ vẽ, cũng là cỡ va chạm."
+  ],
+  "test": {
+    "frames": 360,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 10,
+        "to": 10
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h15-e1-run"
+    },
+    {
+      "label": "Có dơi",
+      "kind": "drewCount",
+      "sprite": "mob-bat",
+      "min": 1,
+      "id": "h15-e1-bat"
+    },
+    {
+      "label": "Có golem",
+      "kind": "drewCount",
+      "sprite": "mob-golem",
+      "min": 1,
+      "id": "h15-e1-golem"
+    },
+    {
+      "label": "Vẫn có nhớt",
+      "kind": "drewCount",
+      "sprite": "mob-slime",
+      "min": 2,
+      "id": "h15-e1-slime"
+    },
+    {
+      "label": "Dơi bay nhanh gấp đôi nhớt",
+      "kind": "staysWithin",
+      "sprite": "mob-bat",
+      "axis": "x",
+      "min": 85,
+      "frames": [
+        60,
+        66
+      ],
+      "id": "h15-e1-fast"
+    },
+    {
+      "label": "Mỗi loại quái có máu riêng",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 5,
+      "id": "h15-e1-kill"
+    },
+    {
+      "label": "Golem cho nhiều ngọc nên lên cấp",
+      "kind": "varCompare",
+      "name": "level",
+      "op": ">=",
+      "value": 2,
+      "id": "h15-e1-level"
+    }
+  ],
+  "new_idea": "bảng tra theo tên: MOBS[name]; chép số từ bảng sang từng con",
+  "reorganised": "Sắp xếp lại lần 3: make_mob và spawn_mob nhận tên quái, quái ra cả bốn mép; va chạm theo size; ngọc mang xp của con quái; step_to và move_hero gom hai trục bằng for axis in [\"x\", \"y\"].",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên golem",
+    "quên chép xp",
+    "quên chép hp",
+    "quên chép speed"
+  ]
+}

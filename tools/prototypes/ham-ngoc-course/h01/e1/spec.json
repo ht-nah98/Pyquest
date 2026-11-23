@@ -1,0 +1,48 @@
+{
+  "id": "h01-e1",
+  "title": "Nhân vật to gấp ba",
+  "task": "Ảnh nhân vật chỉ 16 × 16 nên nhỏ xíu. Em thêm scale=3 và đổi chỗ vẽ thành 276, 276: nhân vật to gấp 3 và đứng giữa sân. Rồi vẽ 2 ngọn đuốc deco-torch cũng to gấp 3, ở (100, 60) và (452, 60).",
+  "mode": "script",
+  "input": "blocks",
+  "walkthrough": [
+    "Sửa dòng hero-knight: đổi 292, 292 thành 276, 276, rồi thêm , scale=3 trước dấu ngoặc cuối.",
+    "Vì sao 276? Ảnh 16 × 3 = 48 điểm, nửa ảnh là 24. Giữa sân là 300, nên góc ảnh ở 300 - 24 = 276.",
+    "Xóa dòng # Em viết tiếp ở đây, vẽ đuốc trái: draw_image(\"images/deco-torch.png\", 100, 60, scale=3)",
+    "Chép dòng đó xuống dưới, đổi 100 thành 452 để có đuốc phải.",
+    "Bấm ▶ Chạy, rồi bấm 👀 để so với hình mẫu."
+  ],
+  "hints": [
+    "scale=3 đứng cuối, sau số y, ngăn bằng dấu phẩy.",
+    "draw_image(\"images/hero-knight.png\", 276, 276, scale=3)",
+    "draw_image(\"images/deco-torch.png\", 452, 60, scale=3)"
+  ],
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h01-e1-run"
+    },
+    {
+      "label": "Giống hình mẫu",
+      "kind": "matches",
+      "id": "h01-e1-same"
+    }
+  ],
+  "new_idea": "scale=3 trong draw_image; sân 600 × 600, giữa sân là (300, 300)",
+  "reorganised": "",
+  "toolbox": [
+    "pq_clear",
+    "pq_draw_image",
+    "pq_draw_image_scale",
+    "pq_import",
+    "pq_number",
+    "pq_text"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên scale ở nhân vật",
+    "chỉ vẽ một đuốc"
+  ]
+}

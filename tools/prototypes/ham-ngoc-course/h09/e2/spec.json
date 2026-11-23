@@ -1,0 +1,109 @@
+{
+  "id": "h09-e2",
+  "title": "Đạn trúng là mất",
+  "task": "Giờ một viên đạn xuyên qua cả bầy. (1) Khi trúng: thêm dòng shot[\"live\"] = False. (2) Viết remove_shots(): giữ lại những viên còn live và near hero dưới hero[\"reach\"] (tầm bắn) bằng danh sách mới kept.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1), ngay dưới mob[\"hp\"] -= 1: shot[\"live\"] = False",
+    "Viên đã trúng thì không được trúng nữa: chữ if đã có sẵn and shot[\"live\"].",
+    "Chỗ (2): kept = [] rồi for shot in shots:",
+    "Thụt vào: if shot[\"live\"] and near(shot, hero, hero[\"reach\"]): rồi thụt thêm kept.append(shot)",
+    "Cuối cùng, ngang chữ for: shots = kept",
+    "Bấm ▶ Chạy: giờ phải trúng 2 viên mới hạ được một con."
+  ],
+  "hints": [
+    "Giống remove_dead ở bài tập 1, chỉ khác điều kiện giữ lại.",
+    "if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n    kept.append(shot)",
+    "shots = kept nằm ngoài vòng for."
+  ],
+  "test": {
+    "frames": 400,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h09-e2-run"
+    },
+    {
+      "label": "Vẫn hạ được quái",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 2,
+      "id": "h09-e2-kill"
+    },
+    {
+      "label": "Một viên chỉ trúng một lần",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": "<=",
+      "value": 9,
+      "id": "h09-e2-one"
+    },
+    {
+      "label": "Đạn trúng hay bay quá tầm thì mất",
+      "kind": "varCompare",
+      "name": "flying",
+      "op": "<=",
+      "value": 6,
+      "id": "h09-e2-few"
+    },
+    {
+      "label": "Đạn chưa trúng thì vẫn bay",
+      "kind": "varCompare",
+      "name": "flying",
+      "op": ">=",
+      "value": 1,
+      "when": "ever",
+      "id": "h09-e2-some"
+    }
+  ],
+  "new_idea": "cờ True/False trong dict (live) để đánh dấu, dọn sau",
+  "reorganised": "make_shot thêm ngăn live; thêm biến flying (số đạn đang bay).",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên shot live = False",
+    "giữ hết đạn",
+    "xóa hết đạn"
+  ]
+}

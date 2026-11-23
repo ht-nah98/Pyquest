@@ -1,0 +1,115 @@
+{
+  "id": "h02-e2",
+  "title": "Không đi ra ngoài sân",
+  "task": "Đi mãi thì nhân vật ra khỏi sân mất. Thêm 4 chữ if ở cuối update(): x nhỏ hơn 24 thì x = 24, x lớn hơn 576 thì x = 576. Với y cũng vậy.",
+  "mode": "game",
+  "input": "blocks",
+  "walkthrough": [
+    "Cuối update(), thẳng hàng với các chữ if: if x < 24: rồi thụt vào x = 24",
+    "Vì sao 24? Nửa nhân vật rộng 24, nên giữa nhân vật không được gần mép hơn 24.",
+    "if x > 576: rồi thụt vào x = 576 (600 - 24 = 576).",
+    "Làm y hệt cho y: mép trên 24, mép dưới 576.",
+    "Bấm ▶ Chạy: máy đẩy nhân vật vào hai góc. Bấm ⛶ thử cả bốn mép."
+  ],
+  "hints": [
+    "Mỗi mép là một chữ if.",
+    "if x > 576:\n    x = 576",
+    "Mép trên: y < 24. Mép dưới: y > 576."
+  ],
+  "test": {
+    "frames": 400,
+    "taps": [],
+    "keys": [
+      {
+        "key": "right",
+        "from": 0,
+        "to": 120
+      },
+      {
+        "key": "down",
+        "from": 0,
+        "to": 120
+      },
+      {
+        "key": "left",
+        "from": 121,
+        "to": 399
+      },
+      {
+        "key": "up",
+        "from": 121,
+        "to": 399
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h02-e2-run"
+    },
+    {
+      "label": "Không ra khỏi mép trái, phải",
+      "kind": "staysWithin",
+      "sprite": "hero",
+      "axis": "x",
+      "min": 0,
+      "max": 552,
+      "id": "h02-e2-x"
+    },
+    {
+      "label": "Không ra khỏi mép trên, dưới",
+      "kind": "staysWithin",
+      "sprite": "hero",
+      "axis": "y",
+      "min": 0,
+      "max": 552,
+      "id": "h02-e2-y"
+    },
+    {
+      "label": "Vẫn đi được tới sát mép",
+      "kind": "varCompare",
+      "name": "x",
+      "op": ">=",
+      "value": 570,
+      "when": "ever",
+      "id": "h02-e2-far"
+    },
+    {
+      "label": "Đi được về mép trên",
+      "kind": "varCompare",
+      "name": "y",
+      "op": "<=",
+      "value": 30,
+      "when": "ever",
+      "id": "h02-e2-near"
+    }
+  ],
+  "new_idea": "chặn mép: x vượt ranh giới thì đặt lại đúng ranh giới",
+  "reorganised": "",
+  "toolbox": [
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_draw_image_scale",
+    "pq_draw_text_size",
+    "pq_global",
+    "pq_if",
+    "pq_import",
+    "pq_key_held",
+    "pq_number",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "chỉ chặn mép phải và dưới",
+    "chặn ở 600",
+    "đứng yên luôn"
+  ]
+}

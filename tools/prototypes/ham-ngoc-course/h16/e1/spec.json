@@ -1,0 +1,134 @@
+{
+  "id": "h16-e1",
+  "title": "Bảng nhân vật",
+  "task": "(1) Thêm vào HEROES 2 dòng: Pháp sư (hero-mage, hp 5, speed 3, reach 320, power 3) và Cung thủ (hero-archer, hp 6, speed 4, reach 500, power 2). (2) Trong start_game, chép mọi ngăn của row sang hero. (3) START_HERO = 2.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): HEROES.append({\"name\": \"Pháp sư\", \"image\": \"hero-mage\", \"hp\": 5, \"speed\": 3, \"reach\": 320, \"power\": 3})",
+    "Làm tiếp dòng Cung thủ.",
+    "Chỗ (2): for key in row: đi qua từng tên ngăn: \"name\", \"image\", \"hp\"…",
+    "Thụt vào: hero[key] = row[key]. Hai dòng chép được mọi ngăn.",
+    "Chỗ (3), đầu file: START_HERO = 2 để thử cung thủ.",
+    "Bấm ▶ Chạy: nhân vật là cung thủ, chạy nhanh hơn."
+  ],
+  "hints": [
+    "for trên một dict cho em tên từng ngăn.",
+    "for key in row:\n    hero[key] = row[key]",
+    "Đếm từ 0: Kiếm sĩ 0, Pháp sư 1, Cung thủ 2."
+  ],
+  "test": {
+    "frames": 60,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 10,
+        "to": 10
+      },
+      {
+        "key": "right",
+        "from": 20,
+        "to": 45
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h16-e1-run"
+    },
+    {
+      "label": "Cung thủ vào hầm",
+      "kind": "drew",
+      "sprite": "hero-archer",
+      "id": "h16-e1-archer"
+    },
+    {
+      "label": "Có tên Cung thủ",
+      "kind": "drewText",
+      "text": "Cung thủ",
+      "id": "h16-e1-name"
+    },
+    {
+      "label": "Máu của cung thủ là 6",
+      "kind": "drewText",
+      "text": "Máu: 6",
+      "id": "h16-e1-hp"
+    },
+    {
+      "label": "Cung thủ đi được",
+      "kind": "distinctCount",
+      "sprite": "hero-archer",
+      "axis": "x",
+      "min": 10,
+      "id": "h16-e1-fast"
+    },
+    {
+      "label": "Chạy nhanh 4 bước mỗi khung",
+      "kind": "drew",
+      "sprite": "hero-archer",
+      "at": [
+        356,
+        276
+      ],
+      "tolerance": 1,
+      "id": "h16-e1-far"
+    }
+  ],
+  "new_idea": "for key in row: chép cả dict",
+  "reorganised": "Bỏ START_HP; mọi số của hero lấy từ HEROES; đạn mạnh theo hero[\"power\"]; chỉ bắn khi quái trong tầm. Đồ thử về 0, trùm thật 400 máu và đụng một cái mất 3 máu; các đợt đông hơn, quái trâu hơn để game vừa sức.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên chép ngăn",
+    "chọn nhầm người",
+    "chỉ chép hình"
+  ]
+}

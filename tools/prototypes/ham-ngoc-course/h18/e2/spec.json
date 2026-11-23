@@ -1,0 +1,324 @@
+{
+  "id": "h18-e2",
+  "title": "Kỷ lục",
+  "task": "(1) Trong finish(result): nếu kills > record thì record = kills. (2) Ở màn hết ván: viết \"Hạ 12 quái, cấp 4\" (số thật của em) ở (300, 370) và \"Kỷ lục: 12\" ở (300, 410). record không bị đặt lại khi chơi ván mới.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): if kills > record: rồi thụt vào record = kills",
+    "Vì sao record không nằm trong start_game? Vì kỷ lục phải nhớ qua nhiều ván.",
+    "Chỗ (2): draw_text(\"Hạ \" + str(kills) + \" quái, cấp \" + str(level), 300, 370)",
+    "draw_text(\"Kỷ lục: \" + str(record), 300, 410)",
+    "Bấm ▶ Chạy: máy thua một ván giữa đợt ma, rồi hiện kỷ lục."
+  ],
+  "hints": [
+    "Kỷ lục cũng là tìm lớn nhất.",
+    "if kills > record:\n    record = kills",
+    "Nhớ str() khi nối số với chữ."
+  ],
+  "test": {
+    "frames": 560,
+    "taps": [],
+    "keys": [
+      {
+        "key": "2",
+        "from": 5,
+        "to": 5
+      },
+      {
+        "key": "up",
+        "from": 67,
+        "to": 146
+      },
+      {
+        "key": "up",
+        "from": 188,
+        "to": 274
+      },
+      {
+        "key": "1",
+        "from": 17,
+        "to": 17
+      },
+      {
+        "key": "1",
+        "from": 29,
+        "to": 29
+      },
+      {
+        "key": "1",
+        "from": 41,
+        "to": 41
+      },
+      {
+        "key": "1",
+        "from": 53,
+        "to": 53
+      },
+      {
+        "key": "1",
+        "from": 65,
+        "to": 65
+      },
+      {
+        "key": "1",
+        "from": 77,
+        "to": 77
+      },
+      {
+        "key": "1",
+        "from": 89,
+        "to": 89
+      },
+      {
+        "key": "1",
+        "from": 101,
+        "to": 101
+      },
+      {
+        "key": "1",
+        "from": 113,
+        "to": 113
+      },
+      {
+        "key": "1",
+        "from": 125,
+        "to": 125
+      },
+      {
+        "key": "1",
+        "from": 137,
+        "to": 137
+      },
+      {
+        "key": "1",
+        "from": 149,
+        "to": 149
+      },
+      {
+        "key": "1",
+        "from": 161,
+        "to": 161
+      },
+      {
+        "key": "1",
+        "from": 173,
+        "to": 173
+      },
+      {
+        "key": "1",
+        "from": 185,
+        "to": 185
+      },
+      {
+        "key": "1",
+        "from": 197,
+        "to": 197
+      },
+      {
+        "key": "1",
+        "from": 209,
+        "to": 209
+      },
+      {
+        "key": "1",
+        "from": 221,
+        "to": 221
+      },
+      {
+        "key": "1",
+        "from": 233,
+        "to": 233
+      },
+      {
+        "key": "1",
+        "from": 245,
+        "to": 245
+      },
+      {
+        "key": "1",
+        "from": 257,
+        "to": 257
+      },
+      {
+        "key": "1",
+        "from": 269,
+        "to": 269
+      },
+      {
+        "key": "1",
+        "from": 281,
+        "to": 281
+      },
+      {
+        "key": "1",
+        "from": 293,
+        "to": 293
+      },
+      {
+        "key": "1",
+        "from": 305,
+        "to": 305
+      },
+      {
+        "key": "1",
+        "from": 317,
+        "to": 317
+      },
+      {
+        "key": "1",
+        "from": 329,
+        "to": 329
+      },
+      {
+        "key": "1",
+        "from": 341,
+        "to": 341
+      },
+      {
+        "key": "1",
+        "from": 353,
+        "to": 353
+      },
+      {
+        "key": "1",
+        "from": 365,
+        "to": 365
+      },
+      {
+        "key": "1",
+        "from": 377,
+        "to": 377
+      },
+      {
+        "key": "1",
+        "from": 389,
+        "to": 389
+      },
+      {
+        "key": "1",
+        "from": 401,
+        "to": 401
+      },
+      {
+        "key": "1",
+        "from": 413,
+        "to": 413
+      },
+      {
+        "key": "1",
+        "from": 425,
+        "to": 425
+      },
+      {
+        "key": "1",
+        "from": 437,
+        "to": 437
+      },
+      {
+        "key": "1",
+        "from": 449,
+        "to": 449
+      },
+      {
+        "key": "space",
+        "from": 470,
+        "to": 470
+      },
+      {
+        "key": "2",
+        "from": 482,
+        "to": 482
+      },
+      {
+        "key": "1",
+        "from": 494,
+        "to": 494
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h18-e2-run"
+    },
+    {
+      "label": "Sang ván hai vẫn nhớ kỷ lục ván một",
+      "kind": "varCompare",
+      "name": "record",
+      "op": ">=",
+      "value": 4,
+      "id": "h18-e2-keep"
+    },
+    {
+      "label": "Đã vào ván hai",
+      "kind": "varEquals",
+      "name": "screen",
+      "value": "play",
+      "id": "h18-e2-new"
+    },
+    {
+      "label": "Hiện kỷ lục",
+      "kind": "drewText",
+      "text": "Kỷ lục: 4",
+      "id": "h18-e2-record"
+    }
+  ],
+  "new_idea": "nhớ lớn nhất qua nhiều ván",
+  "reorganised": "Thêm record, finish(result); hết ván thì tắt nhạc.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_not",
+    "pq_number",
+    "pq_play_music",
+    "pq_play_sound",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_stop_music",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": [
+      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+    ]
+  },
+  "wrong": [
+    "quên gán",
+    "quên hiện kỷ lục"
+  ]
+}

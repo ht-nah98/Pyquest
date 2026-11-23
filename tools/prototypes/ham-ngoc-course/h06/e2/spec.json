@@ -1,0 +1,100 @@
+{
+  "id": "h06-e2",
+  "title": "Bất tử một chút",
+  "task": "Một lần chạm mà mất sạch máu thì chán quá. safe đếm số khung em còn bất tử. (1) Nếu safe > 0: safe bớt 1 rồi return. (2) Khi bị chạm: máu bớt 1 và safe = 60, rồi return để chỉ một con làm em đau.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1), đầu check_hits(): if safe > 0: rồi thụt vào safe -= 1 và return",
+    "return ở đây nghĩa là: đang bất tử thì thôi, không xét chạm nữa.",
+    "Chỗ (2), ngay dưới hero[\"hp\"] -= 1, cùng thụt lề: safe = 60 rồi return",
+    "60 khung là khoảng 1 giây. Phần nhấp nháy khi bất tử đã có sẵn trong draw().",
+    "Bấm ▶ Chạy, rồi ⛶: bị chạm thì em nhấp nháy và có 1 giây để chạy."
+  ],
+  "hints": [
+    "safe đếm ngược từ 60 về 0.",
+    "if safe > 0:\n    safe -= 1\n    return",
+    "hero[\"hp\"] -= 1\nsafe = 60\nreturn"
+  ],
+  "test": {
+    "frames": 400,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h06-e2-run"
+    },
+    {
+      "label": "Chạm lần đầu chỉ mất 1 máu",
+      "kind": "drewText",
+      "text": "Máu: 4",
+      "id": "h06-e2-one"
+    },
+    {
+      "label": "Hết bất tử lại mất máu",
+      "kind": "drewText",
+      "text": "Máu: 2",
+      "id": "h06-e2-two"
+    },
+    {
+      "label": "Không thua ngay lập tức",
+      "kind": "varEquals",
+      "name": "game_over",
+      "value": false,
+      "id": "h06-e2-alive"
+    },
+    {
+      "label": "Có lúc đang bất tử",
+      "kind": "varCompare",
+      "name": "safe",
+      "op": ">=",
+      "value": 30,
+      "when": "ever",
+      "id": "h06-e2-blink"
+    }
+  ],
+  "new_idea": "đếm ngược khung hình (cooldown)",
+  "reorganised": "Thêm safe; draw() nhấp nháy nhân vật khi safe > 0.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_import",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên trừ safe",
+    "quên đặt safe = 60"
+  ]
+}

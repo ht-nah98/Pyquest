@@ -1,0 +1,121 @@
+{
+  "id": "h14-e3",
+  "title": "Phối hợp",
+  "task": "Từ 2 skill cùng nhánh là có phối hợp. (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau thêm 3. (3) Sét: cứ 90 khung, blast cả sân 2 máu. (4) Lửa: đạn trúng thì blast quanh viên đạn 1 máu.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): return count_branch(branch) >= 2 (trả về True hoặc False).",
+    "Chỗ (2), đầu hurt(): if has_combo(\"ice\") and mob[\"slow\"] > 0: rồi amount += 3",
+    "Chỗ (3): if has_combo(\"spark\") and tick % 90 == 0: rồi blast(hero, 900, 2). 900 là trùm cả sân.",
+    "Chỗ (4), khi đạn trúng: if has_combo(\"fire\"): rồi blast(shot, 90, 1)",
+    "Bấm ▶ Chạy: tên 3 phối hợp hiện dưới sân.",
+    "Chơi thử: đi theo 1 nhánh hay trộn 3 nhánh thì mạnh hơn?"
+  ],
+  "hints": [
+    "return count_branch(branch) >= 2",
+    "if has_combo(\"ice\") and mob[\"slow\"] > 0:\n    amount += 3",
+    "if has_combo(\"spark\") and tick % 90 == 0:\n    blast(hero, 900, 2)",
+    "if has_combo(\"fire\"):\n    blast(shot, 90, 1)"
+  ],
+  "test": {
+    "frames": 112,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 10,
+        "to": 10
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h14-e3-run"
+    },
+    {
+      "label": "Mở được Lò Than",
+      "kind": "drewText",
+      "text": "Lò Than",
+      "id": "h14-e3-fire"
+    },
+    {
+      "label": "Mở được Thấu Xương",
+      "kind": "drewText",
+      "text": "Thấu Xương",
+      "id": "h14-e3-ice"
+    },
+    {
+      "label": "Mở được Bão Sét",
+      "kind": "drewText",
+      "text": "Bão Sét",
+      "id": "h14-e3-spark"
+    },
+    {
+      "label": "Phối hợp làm em mạnh hơn hẳn",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 4,
+      "id": "h14-e3-kills"
+    }
+  ],
+  "new_idea": "hàm trả về True/False mở thêm luật; bảng BRANCHES giữ tên",
+  "reorganised": "Bảng BRANCHES thêm ngăn combo; đủ 2 skill thì dưới sân hiện tên phối hợp.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên Băng",
+    "quên Sét",
+    "quên Lửa",
+    "chỉ hiện tên, không có tác dụng",
+    "lúc nào cũng có phối hợp mà quên tác dụng",
+    "cần tới 3 skill"
+  ]
+}

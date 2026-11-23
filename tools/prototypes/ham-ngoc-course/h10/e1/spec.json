@@ -1,0 +1,111 @@
+{
+  "id": "h10-e1",
+  "title": "Rơi ngọc, nhặt ngọc",
+  "task": "(1) Trong remove_dead(), quái hết máu thì thêm vào gems một hộp có x, y của con quái. (2) Viết take_gems(): viên nào near hero dưới 40 thì xp cộng 1, viên còn lại giữ trong kept.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1), ngay dưới kills += 1: gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})",
+    "Chỗ (2): kept = [] rồi for gem in gems:",
+    "Thụt vào: if near(gem, hero, 40): rồi xp += 1",
+    "else: rồi kept.append(gem): viên chưa nhặt thì giữ lại.",
+    "Cuối cùng, ngang chữ for: gems = kept",
+    "Bấm ▶ Chạy: máy tự đi nhặt. Rồi ⛶ để em nhặt."
+  ],
+  "hints": [
+    "Nhặt ngọc cũng là giữ lại bằng danh sách mới, giống Bài 9.",
+    "gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})",
+    "if near(gem, hero, 40):\n    xp += 1\nelse:\n    kept.append(gem)"
+  ],
+  "test": {
+    "frames": 420,
+    "taps": [],
+    "keys": [
+      {
+        "key": "up",
+        "from": 330,
+        "to": 360
+      },
+      {
+        "key": "left",
+        "from": 340,
+        "to": 380
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h10-e1-run"
+    },
+    {
+      "label": "Quái rơi ngọc",
+      "kind": "drewCount",
+      "sprite": "item-xp",
+      "min": 1,
+      "id": "h10-e1-drop"
+    },
+    {
+      "label": "Nhặt được ngọc",
+      "kind": "varCompare",
+      "name": "xp",
+      "op": ">=",
+      "value": 2,
+      "id": "h10-e1-take"
+    },
+    {
+      "label": "Mỗi viên chỉ tính một lần",
+      "kind": "varCompare",
+      "name": "xp",
+      "op": "<=",
+      "value": 12,
+      "id": "h10-e1-once"
+    }
+  ],
+  "new_idea": "dùng lại khuôn giữ lại; danh sách thứ ba của game",
+  "reorganised": "Thêm gems, xp, take_gems(); bỏ flying.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "nhặt rồi mà viên vẫn còn",
+    "quên rơi ngọc",
+    "ngọc rơi ngay chỗ nhân vật"
+  ]
+}

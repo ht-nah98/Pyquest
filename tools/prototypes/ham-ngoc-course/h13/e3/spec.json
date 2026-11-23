@@ -1,0 +1,126 @@
+{
+  "id": "h13-e3",
+  "title": "Chọn thẻ bằng chuột",
+  "task": "Thẻ số i nằm từ y = 180 + i * 120 tới 280 + i * 120. Nếu clicked(): lặp i từ 0 tới 2; nếu mouse_y() lớn hơn mép trên và nhỏ hơn mép dưới của thẻ i thì fresh = i + 1.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Dưới held = number, trên return fresh: if clicked():",
+    "clicked() chỉ đúng trong 1 khung nên không sợ giữ chuột.",
+    "Thụt vào: for i in range(3): ba thẻ, i là 0, 1, 2.",
+    "Thụt thêm: if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:",
+    "Trong cùng: fresh = i + 1. Bấm vào khe giữa hai thẻ thì không tính.",
+    "Bấm ▶ Chạy, rồi ⛶ và bấm thẻ bằng chuột hoặc ngón tay."
+  ],
+  "hints": [
+    "Giống inside ở Bài 10 Bay Qua Khe, nhưng chỉ cần xét y.",
+    "Mép trên thẻ 0 là 180, thẻ 1 là 300, thẻ 2 là 420.",
+    "if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:\n    fresh = i + 1"
+  ],
+  "test": {
+    "frames": 120,
+    "taps": [
+      5
+    ],
+    "clicks": [
+      {
+        "frame": 20,
+        "x": 300,
+        "y": 230
+      },
+      {
+        "frame": 40,
+        "x": 300,
+        "y": 60
+      },
+      {
+        "frame": 60,
+        "x": 300,
+        "y": 470
+      },
+      {
+        "frame": 80,
+        "x": 300,
+        "y": 290
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h13-e3-run"
+    },
+    {
+      "label": "Bấm vào 2 thẻ thì được 2 thẻ",
+      "kind": "varEquals",
+      "name": "picks",
+      "value": 1,
+      "id": "h13-e3-two"
+    },
+    {
+      "label": "Bấm ra ngoài thì không tính",
+      "kind": "varEquals",
+      "name": "screen",
+      "value": "cards",
+      "id": "h13-e3-cards"
+    },
+    {
+      "label": "Có lấy thẻ",
+      "kind": "called",
+      "name": "take_card",
+      "min": 2,
+      "id": "h13-e3-take"
+    }
+  ],
+  "new_idea": "clicked(), mouse_y(): bấm trúng khung nào",
+  "reorganised": "",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "bấm đâu cũng tính",
+    "chỉ xét mép trên",
+    "chỉ bấm được thẻ đầu"
+  ]
+}

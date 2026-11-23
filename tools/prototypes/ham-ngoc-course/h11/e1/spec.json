@@ -1,0 +1,109 @@
+{
+  "id": "h11-e1",
+  "title": "Chờ, chơi, thua, chơi lại",
+  "task": "screen là màn đang mở: \"title\", \"play\" hay \"over\". Viết update(): nếu đang \"play\" thì gọi update_play(). Không thì (màn chờ hoặc thua), bấm Space mới gọi start_game().",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Trong update(), thay dòng update_play() bằng if screen == \"play\":",
+    "Thụt vào: update_play()",
+    "elif key_pressed(\"space\"): rồi thụt vào start_game()",
+    "start_game() đặt lại máu, quái, đạn, ngọc, cấp… rồi đổi screen = \"play\".",
+    "START_HP = 1 để thua nhanh cho dễ thử. Bài sau mình đổi lại 5.",
+    "Bấm ▶ Chạy: máy bấm Space, chơi, thua, bấm Space chơi lại."
+  ],
+  "hints": [
+    "Mỗi lúc game ở đúng một màn.",
+    "Đang chơi mà bấm Space thì không được bắt đầu lại, nên dùng elif.",
+    "if screen == \"play\":\n    update_play()\nelif key_pressed(\"space\"):\n    start_game()"
+  ],
+  "test": {
+    "frames": 400,
+    "taps": [
+      30,
+      90,
+      320
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h11-e1-run"
+    },
+    {
+      "label": "Có màn chờ",
+      "kind": "drewText",
+      "text": "Bấm Space để vào hầm",
+      "id": "h11-e1-title"
+    },
+    {
+      "label": "Chưa bấm thì game chưa chạy",
+      "kind": "varCompare",
+      "name": "tick",
+      "op": "<=",
+      "value": 300,
+      "id": "h11-e1-wait"
+    },
+    {
+      "label": "Thua rồi chơi lại được",
+      "kind": "varEquals",
+      "name": "games",
+      "value": 2,
+      "id": "h11-e1-again"
+    },
+    {
+      "label": "Đang chơi ván hai",
+      "kind": "varEquals",
+      "name": "screen",
+      "value": "play",
+      "id": "h11-e1-play"
+    }
+  ],
+  "new_idea": "biến screen: mỗi lúc game ở đúng một màn",
+  "reorganised": "Sắp xếp lại lần 2: game_over thay bằng screen; start_game() đặt giá trị đầu cho mọi biến (không còn viết hai lần ở đầu file), cuối file gọi start_game() rồi đặt screen = \"title\"; bỏ crowd; update cũ thành update_play(), draw cũ thành draw_play(); thêm draw_title(), games, START_HP.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "lúc nào bấm Space cũng chơi lại",
+    "thua rồi không chơi lại được"
+  ]
+}

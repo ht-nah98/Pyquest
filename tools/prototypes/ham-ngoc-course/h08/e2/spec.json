@@ -1,0 +1,108 @@
+{
+  "id": "h08-e2",
+  "title": "Bắn về phía quái",
+  "task": "Giờ cho đạn bay tới target. Trong make_shot: far = distance(target, hero) + 1. vx là (x của target - x của hero) / far * 8. vy cũng vậy với y. hits đếm số lần đạn chạm quái.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Trong make_shot, thay vx = 0 và vy = -7.",
+    "far = distance(target, hero) + 1. Cộng 1 để không bao giờ chia cho 0.",
+    "vx = (target[\"x\"] - hero[\"x\"]) / far * 8. Nhớ dấu ngoặc tròn.",
+    "vy = (target[\"y\"] - hero[\"y\"]) / far * 8",
+    "Chia cho far để đạn bay đều: quái xa hay gần thì đạn cũng nhanh như nhau.",
+    "Bấm ▶ Chạy, rồi ⛶: đạn tự tìm con gần nhất."
+  ],
+  "hints": [
+    "target trừ hero, đừng viết ngược.",
+    "Không chia cho far thì đạn bay vèo một phát hết sân.",
+    "vx = (target[\"x\"] - hero[\"x\"]) / far * 8\nvy = (target[\"y\"] - hero[\"y\"]) / far * 8"
+  ],
+  "test": {
+    "frames": 200,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h08-e2-run"
+    },
+    {
+      "label": "Đạn bay cả sang ngang",
+      "kind": "distinctCount",
+      "sprite": "shot",
+      "axis": "x",
+      "min": 20,
+      "id": "h08-e2-side"
+    },
+    {
+      "label": "Đạn bay cả lên xuống",
+      "kind": "distinctCount",
+      "sprite": "shot",
+      "axis": "y",
+      "min": 20,
+      "id": "h08-e2-up"
+    },
+    {
+      "label": "Đạn bay đều, không nhảy vọt",
+      "kind": "staysWithin",
+      "sprite": "shot",
+      "axis": "y",
+      "min": -1500,
+      "max": 2000,
+      "id": "h08-e2-smooth"
+    },
+    {
+      "label": "Đạn chạm quái nhiều lần",
+      "kind": "varCompare",
+      "name": "hits",
+      "op": ">=",
+      "value": 8,
+      "id": "h08-e2-hit"
+    }
+  ],
+  "new_idea": "hướng = (đích - mình) / khoảng cách × tốc độ",
+  "reorganised": "Thay fired bằng hits; thêm hit_mobs() đếm lần đạn chạm quái.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "bay ngược",
+    "quên chia cho far",
+    "quên vy"
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "id": "h04-e2",
+  "title": "Cả bầy trong hầm",
+  "task": "make_mob(x, y) trả về một hộp quái. (1) Trong start_game(): lặp 6 lần, thêm vào mobs một con ở x ngẫu nhiên từ 40 tới 560, y = 40. (2) Trong draw(): vẽ từng con bằng draw_thing, to gấp 2.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): for i in range(6): rồi thụt vào mobs.append(make_mob(random_int(40, 560), 40))",
+    "make_mob(...) trả về một hộp mới, append cất hộp đó vào danh sách.",
+    "Chỗ (2): for mob in mobs: rồi thụt vào draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)",
+    "Bấm ▶ Chạy: 6 con nhớt xếp hàng trên đầu sân."
+  ],
+  "hints": [
+    "(1) thêm vào danh sách, (2) vẽ từ danh sách: hai việc khác nhau.",
+    "for i in range(6):\n    mobs.append(make_mob(random_int(40, 560), 40))",
+    "for mob in mobs:\n    draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)"
+  ],
+  "test": {
+    "frames": 5,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h04-e2-run"
+    },
+    {
+      "label": "Có 6 con quái",
+      "kind": "drewCount",
+      "sprite": "mob",
+      "min": 6,
+      "id": "h04-e2-count"
+    },
+    {
+      "label": "Mỗi con một chỗ",
+      "kind": "distinctCount",
+      "sprite": "mob",
+      "axis": "x",
+      "min": 4,
+      "id": "h04-e2-spread"
+    },
+    {
+      "label": "Quái ở trên đầu sân",
+      "kind": "staysWithin",
+      "sprite": "mob",
+      "axis": "y",
+      "min": 20,
+      "max": 28,
+      "id": "h04-e2-top"
+    }
+  ],
+  "new_idea": "hàm trả về dict mới; thêm vào danh sách rồi vẽ từ danh sách",
+  "reorganised": "Thêm mobs, make_mob(x, y) và start_game() (gọi ở dòng cuối file).",
+  "toolbox": [
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_if",
+    "pq_import",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_list",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "append một con ngoài vòng lặp",
+    "con nào cũng một chỗ"
+  ]
+}

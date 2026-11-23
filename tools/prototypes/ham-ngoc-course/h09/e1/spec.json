@@ -1,0 +1,107 @@
+{
+  "id": "h09-e1",
+  "title": "Hết máu thì biến mất",
+  "task": "Đạn chạm là quái mất máu. Em viết remove_dead(): tạo danh sách mới alive; con nào còn máu thì append vào alive, con nào hết máu thì cộng 1 vào kills. Cuối cùng mobs = alive.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Trong remove_dead(), xóa pass. Dòng đầu: alive = []",
+    "for mob in mobs: rồi thụt vào if mob[\"hp\"] > 0:",
+    "Thụt thêm: alive.append(mob): con này còn máu nên được giữ lại.",
+    "else: rồi thụt vào kills += 1",
+    "Hết vòng for, thụt lề ngang chữ for: mobs = alive",
+    "Bấm ▶ Chạy, rồi ⛶: chữ Hạ tăng lên, quái biến mất."
+  ],
+  "hints": [
+    "Không xóa khi đang đi qua danh sách: mình chép những con muốn giữ sang danh sách mới.",
+    "if mob[\"hp\"] > 0:\n    alive.append(mob)\nelse:\n    kills += 1",
+    "mobs = alive nằm ngoài vòng for."
+  ],
+  "test": {
+    "frames": 400,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h09-e1-run"
+    },
+    {
+      "label": "Hạ được quái",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 5,
+      "id": "h09-e1-kill"
+    },
+    {
+      "label": "Mỗi con chỉ đếm một lần",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": "<=",
+      "value": 16,
+      "id": "h09-e1-once"
+    },
+    {
+      "label": "Quái hạ rồi thì biến mất",
+      "kind": "varCompare",
+      "name": "crowd",
+      "op": "<=",
+      "value": 10,
+      "id": "h09-e1-gone"
+    },
+    {
+      "label": "Quái còn máu thì vẫn ở lại",
+      "kind": "drewCount",
+      "sprite": "mob",
+      "min": 6,
+      "id": "h09-e1-keep"
+    }
+  ],
+  "new_idea": "giữ lại bằng danh sách mới: duyệt, append con muốn giữ, rồi thay danh sách cũ",
+  "reorganised": "hit_mobs() giờ trừ máu quái thay vì đếm hits; shoot() chỉ bắn khi còn quái (danh sách có thể rỗng).",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên mobs = alive",
+    "giữ con hết máu",
+    "xóa khi hết máu mà không đếm"
+  ]
+}

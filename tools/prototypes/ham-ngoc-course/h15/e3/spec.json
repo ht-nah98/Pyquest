@@ -1,0 +1,144 @@
+{
+  "id": "h15-e3",
+  "title": "Trùm cuối",
+  "task": "(1) Thêm MOBS[\"boss\"]: hình boss-1, hp 12, speed 1, size 6, xp 9. (2) Thêm vào WAVES một dòng: mob \"bat\", lead \"boss\", every 3, count 3, gap 60. Trùm ra đầu tiên, dơi ra theo. (3) Đổi START_WAVE thành 3 để thử ngay trận trùm.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): MOBS[\"boss\"] = {\"image\": \"boss-1\", \"hp\": 12, \"speed\": 1, \"size\": 6, \"xp\": 9}",
+    "Chỗ (2): WAVES.append({\"mob\": \"bat\", \"lead\": \"boss\", \"every\": 3, \"count\": 3, \"gap\": 60})",
+    "left là 3, 2, 1. Chỉ 3 chia hết cho 3, nên trùm ra đúng một lần và ra trước.",
+    "Chỗ (3), gần đầu file: START_WAVE = 3 (đợt thứ tư, vì đếm từ 0).",
+    "Máu 12 là để thử cho nhanh. Bài sau mình đổi thành trùm thật.",
+    "Bấm ▶ Chạy: hạ trùm và dơi xong thì hiện Em thắng rồi!"
+  ],
+  "hints": [
+    "Trùm chỉ là một dòng trong bảng: to hơn, trâu hơn.",
+    "MOBS[\"boss\"] = {\"image\": \"boss-1\", \"hp\": 12, \"speed\": 1, \"size\": 6, \"xp\": 9}",
+    "START_WAVE = 3"
+  ],
+  "test": {
+    "frames": 600,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 10,
+        "to": 10
+      },
+      {
+        "key": "1",
+        "from": 200,
+        "to": 200
+      },
+      {
+        "key": "1",
+        "from": 300,
+        "to": 300
+      },
+      {
+        "key": "1",
+        "from": 400,
+        "to": 400
+      },
+      {
+        "key": "1",
+        "from": 450,
+        "to": 450
+      },
+      {
+        "key": "1",
+        "from": 500,
+        "to": 500
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h15-e3-run"
+    },
+    {
+      "label": "Trùm ra sân",
+      "kind": "drewCount",
+      "sprite": "boss",
+      "min": 1,
+      "id": "h15-e3-boss"
+    },
+    {
+      "label": "Hạ trùm thì thắng",
+      "kind": "varEquals",
+      "name": "screen",
+      "value": "win",
+      "id": "h15-e3-win"
+    },
+    {
+      "label": "Có chữ thắng",
+      "kind": "drewText",
+      "text": "Em thắng rồi!",
+      "id": "h15-e3-text"
+    },
+    {
+      "label": "Hạ cả trùm lẫn dơi",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 3,
+      "id": "h15-e3-kills"
+    }
+  ],
+  "new_idea": "trùm = một dòng trong bảng; biến START_WAVE để thử nhanh",
+  "reorganised": "Thêm thanh máu cho con to (size > 4) và ngăn max.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên dòng trong WAVES",
+    "đợt cuối không có trùm"
+  ]
+}

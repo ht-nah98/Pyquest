@@ -1,0 +1,109 @@
+{
+  "id": "h03-e2",
+  "title": "Nhân vật là một hộp",
+  "task": "x, y, speed đã dọn vào hộp hero. move_hero() mới đi ngang được. Em viết phần lên xuống: giống code Bài 2, nhưng dùng hero[\"y\"] và hero[\"speed\"]. Nhớ chặn cả mép trên và mép dưới.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Tìm def move_hero(): phần đi ngang và chặn mép trái, phải đã có sẵn.",
+    "if key_pressed(\"up\"): rồi thụt vào hero[\"y\"] -= hero[\"speed\"]",
+    "if key_pressed(\"down\"): rồi thụt vào hero[\"y\"] += hero[\"speed\"]",
+    "Chặn mép: if hero[\"y\"] < 24: rồi hero[\"y\"] = 24. Với 576 cũng vậy.",
+    "Không cần global: mình chỉ đổi một ngăn trong hộp, không thay cả cái hộp.",
+    "Bấm ▶ Chạy, rồi ⛶ để đi thử."
+  ],
+  "hints": [
+    "Nhìn 8 dòng đi ngang ở ngay trên, đổi \"x\" thành \"y\".",
+    "if key_pressed(\"up\"):\n    hero[\"y\"] -= hero[\"speed\"]",
+    "Chép mép: if hero[\"y\"] > 576:\n    hero[\"y\"] = 576"
+  ],
+  "test": {
+    "frames": 260,
+    "taps": [],
+    "keys": [
+      {
+        "key": "down",
+        "from": 0,
+        "to": 20
+      },
+      {
+        "key": "up",
+        "from": 21,
+        "to": 259
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h03-e2-run"
+    },
+    {
+      "label": "Đi xuống được",
+      "kind": "staysWithin",
+      "sprite": "hero",
+      "axis": "y",
+      "min": 320,
+      "max": 400,
+      "frames": [
+        19,
+        21
+      ],
+      "id": "h03-e2-down"
+    },
+    {
+      "label": "Đi lên được",
+      "kind": "moves",
+      "sprite": "hero",
+      "axis": "y",
+      "dir": -1,
+      "id": "h03-e2-up"
+    },
+    {
+      "label": "Không ra khỏi mép trên, dưới",
+      "kind": "staysWithin",
+      "sprite": "hero",
+      "axis": "y",
+      "min": 0,
+      "max": 552,
+      "id": "h03-e2-edge"
+    },
+    {
+      "label": "Máu hiện trên màn hình",
+      "kind": "drewText",
+      "text": "Máu: 5",
+      "id": "h03-e2-hp"
+    }
+  ],
+  "new_idea": "đọc và đổi một ngăn của dict, không cần global",
+  "reorganised": "Sắp xếp lại lần 1: x, y, speed gom vào hero; phần đi tách thành move_hero(); thêm draw_thing(image, x, y, size) vẽ ảnh theo điểm giữa, nên không còn phải trừ 24 ở từng chỗ.",
+  "toolbox": [
+    "pq_arith",
+    "pq_assign",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_if",
+    "pq_import",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_number",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên chặn mép",
+    "quên đi xuống"
+  ]
+}

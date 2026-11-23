@@ -1,0 +1,109 @@
+{
+  "id": "h14-e1",
+  "title": "Skill có tác dụng thật",
+  "task": "bonus giữ tổng sức mạnh của các skill. (1) Trong add_skill: cộng skill[\"add\"] vào bonus[skill[\"what\"]]. (2) Trong use_skills: có \"ring\" thì cứ 60 khung blast quanh hero; có \"cloud\" thì khi tick % 60 == 30 hurt một con ngẫu nhiên.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1), dưới owned.append(skill): bonus[skill[\"what\"]] += skill[\"add\"]",
+    "skill[\"what\"] là tên ngăn. Vòng Lửa có what là \"ring\" nên ngăn bonus[\"ring\"] lớn lên.",
+    "Chỗ (2): if bonus[\"ring\"] > 0 and tick % 60 == 0: rồi blast(hero, 130, bonus[\"ring\"])",
+    "if bonus[\"cloud\"] > 0 and tick % 60 == 30:",
+    "Thụt vào: hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])",
+    "Các skill khác chỉ cần đọc bonus ở đúng chỗ, code đã có sẵn: em tìm thử xem.",
+    "START_SKILLS = [1, 8] cho em sẵn Vòng Lửa và Mây Giông để thử."
+  ],
+  "hints": [
+    "Một dòng chỗ (1) đủ cho mọi skill trong bảng.",
+    "bonus[skill[\"what\"]] += skill[\"add\"]",
+    "blast(hero, 130, bonus[\"ring\"])",
+    "hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])"
+  ],
+  "test": {
+    "frames": 240,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 10,
+        "to": 10
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h14-e1-run"
+    },
+    {
+      "label": "Vòng Lửa có đốt",
+      "kind": "called",
+      "name": "blast",
+      "min": 3,
+      "id": "h14-e1-blast"
+    },
+    {
+      "label": "Sét giúp hạ quái nhanh hơn",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 6,
+      "id": "h14-e1-kills"
+    }
+  ],
+  "new_idea": "tên ngăn lấy từ biến: bonus[skill[\"what\"]]",
+  "reorganised": "Thêm bonus, add_skill, hurt, blast, use_skills. Chỗ nào cần skill thì đọc bonus (shoot, hit_mobs, remove_dead, check_hits, move_mobs); START_SKILLS cho sẵn skill để thử.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên cộng vào bonus",
+    "luôn cộng vào power",
+    "quên Mây Giông",
+    "quên Vòng Lửa"
+  ]
+}

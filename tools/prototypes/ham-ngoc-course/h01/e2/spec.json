@@ -1,0 +1,66 @@
+{
+  "id": "h01-e2",
+  "title": "Nhân vật đứng ở x, y",
+  "task": "Từ giờ x, y là giữa nhân vật. Trong draw(), vẽ hero-knight to gấp 3 với góc ảnh ở x - 24, y - 24. Rồi viết tên \"Kiếm sĩ\" cỡ 18 ở ngay trên đầu: x, y - 36.",
+  "mode": "game",
+  "input": "blocks",
+  "walkthrough": [
+    "Trong draw(), xóa dòng # Em viết tiếp ở đây, vẫn thụt vào 4 dấu cách.",
+    "Vẽ nhân vật: draw_image(\"images/hero-knight.png\", x - 24, y - 24, scale=3)",
+    "Viết tên: draw_text(\"Kiếm sĩ\", x, y - 36, 18)",
+    "Bấm ▶ Chạy. Thử đổi x = 300 thành x = 200 xem cả ảnh lẫn tên có đi cùng nhau không, rồi đổi lại 300."
+  ],
+  "hints": [
+    "Góc ảnh nằm bên trái và phía trên điểm giữa 24 bước.",
+    "draw_text có số thứ tư là cỡ chữ.",
+    "draw_image(\"images/hero-knight.png\", x - 24, y - 24, scale=3)"
+  ],
+  "test": {
+    "frames": 5,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h01-e2-run"
+    },
+    {
+      "label": "Nhân vật đứng giữa sân",
+      "kind": "drew",
+      "sprite": "hero-knight",
+      "at": [
+        276,
+        276
+      ],
+      "id": "h01-e2-hero"
+    },
+    {
+      "label": "Có tên trên đầu",
+      "kind": "drewText",
+      "text": "Kiếm sĩ",
+      "id": "h01-e2-name"
+    }
+  ],
+  "new_idea": "x, y là điểm giữa; góc ảnh = điểm giữa - 24",
+  "reorganised": "",
+  "toolbox": [
+    "pq_arith",
+    "pq_assign",
+    "pq_clear",
+    "pq_def",
+    "pq_draw_image_scale",
+    "pq_draw_text_size",
+    "pq_import",
+    "pq_number",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "vẽ góc ảnh ở x, y",
+    "quên tên"
+  ]
+}

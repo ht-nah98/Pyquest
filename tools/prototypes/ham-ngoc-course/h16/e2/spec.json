@@ -1,0 +1,132 @@
+{
+  "id": "h16-e2",
+  "title": "Màn chọn nhân vật",
+  "task": "(1) Trong update(), ở màn \"title\": nếu number > 0 thì start_game(HEROES[number - 1]). (2) Trong draw_title(): với mỗi i, lấy row = HEROES[i], vẽ ảnh ở (110, y + 50) to gấp 4, tên ở (340, y + 36) cỡ 32, và dòng \"Máu 8, tầm 200\" ở (340, y + 72).",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): if number > 0: rồi thụt vào start_game(HEROES[number - 1])",
+    "picked_number() viết cho thẻ skill mà dùng lại được y nguyên, vì 3 hàng nằm cùng chỗ.",
+    "Chỗ (2): row = HEROES[i]",
+    "draw_thing(row[\"image\"], 110, y + 50, 4) rồi draw_text(row[\"name\"], 340, y + 36, 32)",
+    "draw_text(\"Máu \" + str(row[\"hp\"]) + \", tầm \" + str(row[\"reach\"]), 340, y + 72)",
+    "Bấm ▶ Chạy: máy bấm phím 2 chọn Pháp sư. Rồi ⛶ và tự chọn."
+  ],
+  "hints": [
+    "Phím 1 là HEROES[0], nên phải trừ 1.",
+    "Số phải đổi thành chữ bằng str trước khi nối.",
+    "start_game(HEROES[number - 1])"
+  ],
+  "test": {
+    "frames": 60,
+    "taps": [],
+    "keys": [
+      {
+        "key": "2",
+        "from": 10,
+        "to": 10
+      },
+      {
+        "key": "1",
+        "from": 30,
+        "to": 30
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h16-e2-run"
+    },
+    {
+      "label": "Thấy đủ 3 nhân vật",
+      "kind": "drewCount",
+      "sprite": "hero",
+      "min": 3,
+      "id": "h16-e2-three"
+    },
+    {
+      "label": "Có dòng máu và tầm của kiếm sĩ",
+      "kind": "drewText",
+      "text": "Máu 8, tầm 200",
+      "id": "h16-e2-text"
+    },
+    {
+      "label": "Có tên cung thủ",
+      "kind": "drewText",
+      "text": "Cung thủ",
+      "id": "h16-e2-name"
+    },
+    {
+      "label": "Phím 2 là Pháp sư vào hầm",
+      "kind": "drew",
+      "sprite": "hero-mage",
+      "at": [
+        276,
+        276
+      ],
+      "tolerance": 1,
+      "id": "h16-e2-mage"
+    },
+    {
+      "label": "Vào được hầm",
+      "kind": "varEquals",
+      "name": "screen",
+      "value": "play",
+      "id": "h16-e2-play"
+    }
+  ],
+  "new_idea": "dùng lại picked_number() cho màn khác; hàm nhận cả một dòng của bảng",
+  "reorganised": "Bỏ START_HERO; start_game(row); make_mob cũng chép bằng for key in row; thua hay thắng thì Space về màn chọn.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "quên trừ 1",
+    "ai cũng là kiếm sĩ",
+    "vẽ ba lần một người"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "h03-e1",
+  "title": "Mỗi người một hộp",
+  "task": "knight là một hộp dict: mỗi ngăn có tên. Em làm hộp mage giống vậy: name \"Pháp sư\", image \"images/hero-mage.png\", x 420, y 300, hp 3. Pháp sư uống thuốc: cộng 2 vào mage[\"hp\"]. Rồi gọi draw_person(mage).",
+  "mode": "script",
+  "input": "blocks",
+  "walkthrough": [
+    "Nhìn dòng knight = {...}: mỗi ngăn có tên trong ngoặc kép, dấu hai chấm, rồi giá trị.",
+    "Viết mage = {\"name\": \"Pháp sư\", \"image\": \"images/hero-mage.png\", \"x\": 420, \"y\": 300, \"hp\": 3}",
+    "Uống thuốc: mage[\"hp\"] += 2",
+    "Vẽ: draw_person(mage)",
+    "Bấm ▶ Chạy: hai người đứng cạnh nhau, pháp sư có máu 5."
+  ],
+  "hints": [
+    "Dùng ngoặc nhọn { }, các ngăn cách nhau bằng dấu phẩy.",
+    "mage[\"hp\"] là ngăn hp của hộp mage.",
+    "mage[\"hp\"] += 2 phải nằm trên draw_person(mage)."
+  ],
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h03-e1-run"
+    },
+    {
+      "label": "draw_person chạy cho hai người",
+      "kind": "called",
+      "name": "draw_person",
+      "min": 2,
+      "distinct": true,
+      "id": "h03-e1-two"
+    },
+    {
+      "label": "Giống hình mẫu",
+      "kind": "matches",
+      "id": "h03-e1-same"
+    }
+  ],
+  "new_idea": "dict: một hộp nhiều ngăn, ngăn nào cũng có tên",
+  "reorganised": "",
+  "toolbox": [
+    "pq_arith",
+    "pq_assign",
+    "pq_clear",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_import",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_number",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "cộng máu sau khi vẽ",
+    "sửa nhầm hộp knight"
+  ]
+}

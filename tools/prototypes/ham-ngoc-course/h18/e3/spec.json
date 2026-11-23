@@ -1,0 +1,129 @@
+{
+  "id": "h18-e3",
+  "title": "Tháo đồ thử và ra mắt",
+  "task": "Trước khi ra mắt phải tháo đồ thử! (1) START_WAVE = 0 và START_SKILLS = []. (2) Ở màn chọn nhân vật, ký tên: viết \"Em làm game này!\" cỡ 20 ở (300, 575). Rồi đổi máy cho bạn chơi.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Gần đầu file: đổi START_WAVE = 3 thành START_WAVE = 0",
+    "Đổi START_SKILLS = [9] thành START_SKILLS = []",
+    "Trong draw_title(), chỗ đánh dấu: draw_text(\"Em làm game này!\", 300, 575, 20)",
+    "Bấm ▶ Chạy: ván mới bắt đầu ở Đợt 1/5 với 1 thẻ.",
+    "Đổi máy với bạn, chơi game của bạn 10 phút. Ghi 1 điều hay và 1 điều muốn sửa.",
+    "Sửa 1 số trong bảng theo góp ý của bạn rồi chơi lại. Game là của em, cứ đổi thoải mái."
+  ],
+  "hints": [
+    "Danh sách rỗng là []: không cho sẵn skill nào.",
+    "START_WAVE = 0",
+    "draw_text(\"Em làm game này!\", 300, 575, 20)"
+  ],
+  "test": {
+    "frames": 80,
+    "taps": [],
+    "keys": [
+      {
+        "key": "1",
+        "from": 5,
+        "to": 5
+      },
+      {
+        "key": "1",
+        "from": 15,
+        "to": 15
+      },
+      {
+        "key": "right",
+        "from": 20,
+        "to": 59
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h18-e3-run"
+    },
+    {
+      "label": "Bắt đầu từ đợt 1",
+      "kind": "drewText",
+      "text": "Đợt 1/5",
+      "id": "h18-e3-wave"
+    },
+    {
+      "label": "Có chữ ký của em",
+      "kind": "drewText",
+      "text": "Em làm game này!",
+      "id": "h18-e3-sign"
+    },
+    {
+      "label": "Không còn giày thử, chạy 3 bước mỗi khung",
+      "kind": "staysWithin",
+      "sprite": "hero",
+      "axis": "x",
+      "min": 390,
+      "max": 399,
+      "frames": [
+        62,
+        79
+      ],
+      "id": "h18-e3-plain"
+    }
+  ],
+  "new_idea": "tháo đồ thử, ký tên, chơi chéo và nhận xét",
+  "reorganised": "",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_not",
+    "pq_number",
+    "pq_play_music",
+    "pq_play_sound",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_stop_music",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": [
+      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+    ]
+  },
+  "wrong": [
+    "quên tháo skill thử",
+    "quên ký tên"
+  ]
+}

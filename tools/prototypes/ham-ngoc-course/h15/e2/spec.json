@@ -1,0 +1,121 @@
+{
+  "id": "h15-e2",
+  "title": "Từng đợt quái",
+  "task": "WAVES là bảng các đợt. Viết run_wave(): row = WAVES[wave]. Nếu left > 0: cứ row[\"gap\"] khung thì spawn_next(row) và left bớt 1. Không thì, nếu hết quái (len(mobs) == 0): gọi next_wave().",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Dòng đầu: row = WAVES[wave]: dòng của đợt này trong bảng.",
+    "if left > 0: còn quái chưa ra.",
+    "Thụt vào: if tick % row[\"gap\"] == 0: rồi thụt thêm spawn_next(row) và left -= 1",
+    "elif len(mobs) == 0: ra hết rồi và hạ hết rồi. Thụt vào next_wave()",
+    "Dùng elif: còn quái chưa ra thì chưa được sang đợt mới.",
+    "Bấm ▶ Chạy: máy chơi hết đợt 1. Rồi ⛶: em tới được đợt mấy?"
+  ],
+  "hints": [
+    "left là số quái của đợt còn chờ ra.",
+    "if tick % row[\"gap\"] == 0:\n    spawn_next(row)\n    left -= 1",
+    "elif len(mobs) == 0:\n    next_wave()"
+  ],
+  "test": {
+    "frames": 420,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 10,
+        "to": 10
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h15-e2-run"
+    },
+    {
+      "label": "Qua đợt 1, tới đợt 2",
+      "kind": "drewText",
+      "text": "Đợt 2/3",
+      "id": "h15-e2-two"
+    },
+    {
+      "label": "Phải hạ hết quái đợt 1",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 3,
+      "id": "h15-e2-kills"
+    },
+    {
+      "label": "Có dơi dẫn đầu",
+      "kind": "drewCount",
+      "sprite": "mob-bat",
+      "min": 1,
+      "id": "h15-e2-bat"
+    },
+    {
+      "label": "Hết quái đợt 1 mới tới đợt 2",
+      "kind": "varCompare",
+      "name": "left",
+      "op": ">=",
+      "value": 9,
+      "id": "h15-e2-left"
+    }
+  ],
+  "new_idea": "bảng WAVES điều khiển nhịp game; đếm số còn lại",
+  "reorganised": "Thêm WAVES, START_WAVE, wave, left, spawn_next, next_wave (qua đợt được +1 máu), màn win. Bỏ cách ra quái cũ.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_clicked",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_circle",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_index_set",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_mouse_y",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "sang đợt khi còn quái",
+    "quên trừ left",
+    "khung nào cũng ra quái"
+  ]
+}

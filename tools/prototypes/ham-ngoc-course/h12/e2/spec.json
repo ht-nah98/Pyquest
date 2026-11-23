@@ -1,0 +1,132 @@
+{
+  "id": "h12-e2",
+  "title": "Bốc 3 thẻ khác nhau",
+  "task": "Viết deal_cards(): chép mọi skill của SKILLS sang pool. Rồi lặp 3 lần: bốc một thẻ ngẫu nhiên trong pool, append vào cards và xóa khỏi pool để không bốc lại. Máy sẽ bốc 25 lần để thử.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "pool = [] rồi for skill in SKILLS: và thụt vào pool.append(skill)",
+    "for i in range(3): ba lần bốc.",
+    "Thụt vào: pick = pool[random_int(0, len(pool) - 1)]. Ngăn cuối là len(pool) - 1.",
+    "cards.append(pick): thẻ này được chọn.",
+    "pool.remove(pick): bỏ ra khỏi hộp, lần sau không bốc trúng nữa.",
+    "Bấm ▶ Chạy. Bấm ⛶ rồi bấm Space nhiều lần để bốc lại."
+  ],
+  "hints": [
+    "Giống bốc thăm: bốc xong không bỏ lại vào hộp.",
+    "Đừng xóa khỏi SKILLS, kẻo mất skill thật. Mình xóa ở bản chép pool.",
+    "pick = pool[random_int(0, len(pool) - 1)]",
+    "cards.append(pick)\npool.remove(pick)"
+  ],
+  "test": {
+    "frames": 120,
+    "taps": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28,
+      32,
+      36,
+      40,
+      44,
+      48,
+      52,
+      56,
+      60,
+      64,
+      68,
+      72,
+      76,
+      80,
+      84,
+      88,
+      92,
+      96,
+      100
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h12-e2-run"
+    },
+    {
+      "label": "Có 3 thẻ",
+      "kind": "drewCount",
+      "sprite": "skill",
+      "min": 3,
+      "id": "h12-e2-three"
+    },
+    {
+      "label": "Lần nào cũng 3 thẻ khác nhau",
+      "kind": "varEquals",
+      "name": "clashes",
+      "value": 0,
+      "id": "h12-e2-clash"
+    },
+    {
+      "label": "Bốc được cả thẻ cuối bảng",
+      "kind": "drewText",
+      "text": "Mây Giông: sét đánh",
+      "id": "h12-e2-random"
+    },
+    {
+      "label": "Bốc được cả thẻ giữa bảng",
+      "kind": "drewText",
+      "text": "Đòn Buốt: đạn làm chậm",
+      "id": "h12-e2-random2"
+    }
+  ],
+  "new_idea": "bốc không lặp lại: chép ra pool rồi remove",
+  "reorganised": "Sổ skill đổi thành draw_cards(). Để thử nhanh: game mở ngay ở màn cards, Space là bốc lại; check_cards() đếm số lần có thẻ trùng (Bài 13 bỏ đi).",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "bốc xong không xóa",
+    "luôn lấy 3 thẻ đầu",
+    "lấy hết cả bảng"
+  ]
+}

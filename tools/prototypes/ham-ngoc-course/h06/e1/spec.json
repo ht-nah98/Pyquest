@@ -1,0 +1,102 @@
+{
+  "id": "h06-e1",
+  "title": "Gần bao nhiêu là chạm?",
+  "task": "(1) distance(a, b) trả về đường đi ngang cộng đường đi dọc giữa hai hộp, dùng abs để không bị số âm. (2) Trong check_hits(): con quái nào near hero dưới 36 thì hero[\"hp\"] bớt 1.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1): dx = abs(a[\"x\"] - b[\"x\"]). abs(-5) là 5: bỏ dấu trừ đi.",
+    "dy = abs(a[\"y\"] - b[\"y\"]), rồi return dx + dy thay cho return 0.",
+    "Chỗ (2): for mob in mobs: rồi thụt vào if near(mob, hero, 36):",
+    "Thụt thêm: hero[\"hp\"] -= 1",
+    "Bấm ▶ Chạy: quái chạm tới thì máu tụt rất nhanh. Bài tập 2 sẽ sửa chuyện đó."
+  ],
+  "hints": [
+    "Nhớ xóa dòng return 0.",
+    "dx = abs(a[\"x\"] - b[\"x\"])\ndy = abs(a[\"y\"] - b[\"y\"])\nreturn dx + dy",
+    "for mob in mobs:\n    if near(mob, hero, 36):\n        hero[\"hp\"] -= 1"
+  ],
+  "test": {
+    "frames": 400,
+    "taps": []
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h06-e1-run"
+    },
+    {
+      "label": "Chưa chạm thì chưa mất máu",
+      "kind": "drewText",
+      "text": "Máu: 5",
+      "id": "h06-e1-full"
+    },
+    {
+      "label": "Bị chạm nhiều thì thua",
+      "kind": "varEquals",
+      "name": "game_over",
+      "value": true,
+      "id": "h06-e1-over"
+    },
+    {
+      "label": "Quái tới sát mới mất máu",
+      "kind": "varCompare",
+      "name": "tick",
+      "op": ">=",
+      "value": 205,
+      "id": "h06-e1-late"
+    },
+    {
+      "label": "Chạm là mất máu ngay",
+      "kind": "varCompare",
+      "name": "tick",
+      "op": "<=",
+      "value": 260,
+      "id": "h06-e1-soon"
+    }
+  ],
+  "new_idea": "abs; khoảng cách = ngang + dọc; near(a, b, size) trả về True/False",
+  "reorganised": "Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_import",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "chỉ đo chiều ngang",
+    "quên abs",
+    "trừ máu không cần chạm"
+  ]
+}

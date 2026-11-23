@@ -1,0 +1,116 @@
+{
+  "id": "h11-e2",
+  "title": "Lên cấp thì dừng game",
+  "task": "(1) Trong check_level(), khi lên cấp thì đổi screen = \"cards\" để game đứng lại. (2) Trong update(), thêm nhánh: đang \"cards\" mà bấm Space thì screen = \"play\" để chơi tiếp.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Chỗ (1), ngay dưới level += 1: screen = \"cards\"",
+    "Vì sao quái đứng lại? Vì update() chỉ gọi update_play() khi screen là \"play\".",
+    "Chỗ (2), thụt vào dưới elif screen == \"cards\": if key_pressed(\"space\"):",
+    "Thụt thêm: screen = \"play\"",
+    "Nhánh cuối là elif key_pressed(\"space\"): dành cho màn chờ và màn thua.",
+    "Bấm ▶ Chạy, rồi ⛶: lên cấp thì mọi thứ đứng im chờ em."
+  ],
+  "hints": [
+    "Dừng game không cần lệnh đặc biệt: chỉ cần đổi màn.",
+    "screen = \"cards\"",
+    "if key_pressed(\"space\"):\n    screen = \"play\""
+  ],
+  "test": {
+    "frames": 600,
+    "taps": [
+      5,
+      560
+    ],
+    "keys": [
+      {
+        "key": "up",
+        "from": 305,
+        "to": 335
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h11-e2-run"
+    },
+    {
+      "label": "Lên cấp thì hiện bảng",
+      "kind": "drewText",
+      "text": "Lên cấp 2!",
+      "id": "h11-e2-cards"
+    },
+    {
+      "label": "Game đứng lại lúc hiện bảng",
+      "kind": "varCompare",
+      "name": "tick",
+      "op": "<=",
+      "value": 530,
+      "id": "h11-e2-pause"
+    },
+    {
+      "label": "Bấm Space thì chơi tiếp",
+      "kind": "varEquals",
+      "name": "screen",
+      "value": "play",
+      "id": "h11-e2-play"
+    },
+    {
+      "label": "Chơi tiếp, không phải ván mới",
+      "kind": "varEquals",
+      "name": "games",
+      "value": 1,
+      "id": "h11-e2-same"
+    }
+  ],
+  "new_idea": "dừng game = đổi màn",
+  "reorganised": "START_HP về 5; thêm nhánh cards trong update() và bảng tối trong draw().",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "không dừng",
+    "không chơi tiếp được",
+    "chơi tiếp thành ván mới"
+  ]
+}

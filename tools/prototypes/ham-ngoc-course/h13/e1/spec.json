@@ -1,0 +1,119 @@
+{
+  "id": "h13-e1",
+  "title": "Chọn thẻ bằng phím",
+  "task": "picked_number() trả về số thẻ em chọn: 0 là chưa chọn. Viết 3 chữ if: bấm \"1\" thì number = 1, bấm \"2\" thì number = 2, bấm \"3\" thì number = 3. Vào hầm được chọn 3 thẻ để thử.",
+  "mode": "game",
+  "input": "typing",
+  "walkthrough": [
+    "Trong picked_number(), giữa number = 0 và return number: if key_pressed(\"1\"): rồi number = 1",
+    "Làm y hệt cho \"2\" và \"3\". Tên phím là chữ nên có ngoặc kép, number là số nên không có.",
+    "update() đã gọi picked_number(): số lớn hơn 0 thì lấy thẻ cards[number - 1].",
+    "Vì sao trừ 1? Phím đếm từ 1, còn danh sách đếm từ 0.",
+    "Bấm ▶ Chạy: máy bấm Space, rồi 1, 2, 3. Đủ 3 thẻ thì vào hầm."
+  ],
+  "hints": [
+    "if key_pressed(\"1\"):\n    number = 1",
+    "Đừng xóa number = 0 ở trên: không bấm gì thì là 0.",
+    "return number đứng cuối hàm, ngoài các chữ if."
+  ],
+  "test": {
+    "frames": 100,
+    "taps": [
+      5
+    ],
+    "keys": [
+      {
+        "key": "1",
+        "from": 20,
+        "to": 20
+      },
+      {
+        "key": "2",
+        "from": 40,
+        "to": 40
+      },
+      {
+        "key": "3",
+        "from": 60,
+        "to": 60
+      }
+    ]
+  },
+  "goals": [
+    {
+      "label": "Chạy không lỗi",
+      "kind": "noError",
+      "id": "h13-e1-run"
+    },
+    {
+      "label": "Phím 1, 2, 3 đều chọn được",
+      "kind": "varEquals",
+      "name": "screen",
+      "value": "play",
+      "id": "h13-e1-all"
+    },
+    {
+      "label": "Không bấm thì chưa chọn",
+      "kind": "varCompare",
+      "name": "tick",
+      "op": "<=",
+      "value": 42,
+      "id": "h13-e1-wait"
+    },
+    {
+      "label": "Thẻ đã chọn hiện dưới sân",
+      "kind": "drewCount",
+      "sprite": "skill",
+      "min": 3,
+      "id": "h13-e1-icons"
+    }
+  ],
+  "new_idea": "phím số; phím đếm từ 1, danh sách đếm từ 0",
+  "reorganised": "Bỏ check_cards và clashes; game lại mở ở màn chờ. Vào ván là được chọn START_PICKS thẻ; lên cấp được thêm 1 lượt chọn (picks). update() gọi picked_number() mọi khung. Thẻ đã lấy nằm trong owned.",
+  "toolbox": [
+    "pq_abs",
+    "pq_append",
+    "pq_arith",
+    "pq_assign",
+    "pq_aug",
+    "pq_bool",
+    "pq_clear",
+    "pq_compare",
+    "pq_def",
+    "pq_dict",
+    "pq_draw_image_scale",
+    "pq_draw_rect",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_for",
+    "pq_for_each",
+    "pq_global",
+    "pq_if",
+    "pq_if_chain",
+    "pq_if_else",
+    "pq_import",
+    "pq_index",
+    "pq_key_aug",
+    "pq_key_get",
+    "pq_key_held",
+    "pq_key_set",
+    "pq_len",
+    "pq_list",
+    "pq_logic",
+    "pq_number",
+    "pq_random",
+    "pq_remove",
+    "pq_return",
+    "pq_str",
+    "pq_text",
+    "pq_var_get"
+  ],
+  "blocks_expected": {
+    "code_text": []
+  },
+  "wrong": [
+    "thiếu phím 3",
+    "lúc nào cũng là 1",
+    "dùng chữ thay cho số phím"
+  ]
+}
