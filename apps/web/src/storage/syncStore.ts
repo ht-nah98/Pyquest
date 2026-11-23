@@ -77,7 +77,7 @@ export class SyncStore implements ProgressStore {
 
   async saveLessonState(profileId: string, lessonId: string, state: LessonState): Promise<void> {
     this.mine(profileId);
-    await this.local.putRow(profileId, lessonId, { state, at: Date.now() }, true);
+    await this.local.saveQueued(profileId, lessonId, state);
     if (this.state === 'synced') this.set('pending');
     this.schedule();
   }
@@ -93,20 +93,24 @@ export class SyncStore implements ProgressStore {
     try {
       const rows = await this.remote.pull(this.me.id);
       for (const r of rows) {
-        const mine = await this.local.getRow(this.me.id, r.lessonId);
-        const merged = mergeLessonState(mine, { state: r.state, at: r.at });
-        // Something this device had that the cloud lacks: queue it, flush sends it.
-        const changed =
-          mine !== undefined && JSON.stringify(merged.state) !== JSON.stringify(r.state);
-        if (mine === undefined || mine.at !== merged.at || changed) {
-          await this.local.putRow(this.me.id, r.lessonId, merged, changed);
-        }
+        // Once more when the child changed it between the read and the write.
+        while (!(await this.mergeIn(r.lessonId, { state: r.state, at: r.at })));
       }
     } catch {
       this.set('offline');
       return;
     }
     await this.flush();
+  }
+
+  private async mergeIn(lessonId: string, theirs: Stamped): Promise<boolean> {
+    const mine = await this.local.getRow(this.me.id, lessonId);
+    const merged = mergeLessonState(mine, theirs);
+    // Something this device had that the cloud lacks: queue it, flush sends it.
+    const changed =
+      mine !== undefined && JSON.stringify(merged.state) !== JSON.stringify(theirs.state);
+    if (mine !== undefined && mine.at === merged.at && !changed) return true;
+    return this.local.putMerged(this.me.id, lessonId, mine?.at, merged, changed);
   }
 
   /** Send every queued lesson. One flush at a time; a call during a flush runs once more after it. */

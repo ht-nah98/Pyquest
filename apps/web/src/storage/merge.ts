@@ -1,9 +1,18 @@
-import type { LessonState, StudioMeta } from './store';
+import type { ExerciseWork, LessonState, StudioMeta } from './store';
 
 /** A lesson state with the time (ms) it was last changed on the device that wrote it. */
 export type Stamped = { state: LessonState; at: number };
 
-/** A drawing's name and code follow the newer copy; once deleted on any device it stays deleted. */
+/** Each exercise from the copy where the child changed it last; the same change (or none): from the newer copy. */
+function mergeExercises(o: LessonState, n: LessonState): Record<string, ExerciseWork> {
+  const out: Record<string, ExerciseWork> = { ...o.exercises, ...n.exercises };
+  for (const [id, old] of Object.entries(o.exercises ?? {})) {
+    if ((old.changedAt ?? 0) > (n.exercises?.[id]?.changedAt ?? 0)) out[id] = old;
+  }
+  return out;
+}
+
+/** A drawing's name and code follow the copy the child changed last; once deleted on any device it stays deleted. */
 function mergeStudio(
   o: StudioMeta | undefined,
   n: StudioMeta | undefined,
@@ -13,12 +22,15 @@ function mergeStudio(
   const deleted = o.deleted === true || n.deleted === true;
   return {
     studio: {
-      ...n,
+      ...((o.changedAt ?? 0) > (n.changedAt ?? 0) ? o : n),
       createdAt: Math.min(o.createdAt, n.createdAt),
       ...(deleted ? { deleted: true } : {}),
     },
   };
 }
+
+const drawingIsNewer = (a: LessonState, b: LessonState): boolean =>
+  a.studio !== undefined && (a.studio.changedAt ?? 0) > (b.studio?.changedAt ?? 0);
 
 const union = <T>(a: readonly T[] | undefined, b: readonly T[] | undefined): T[] => [
   ...new Set([...(a ?? []), ...(b ?? [])]),
@@ -42,18 +54,23 @@ export function mergeLessonState(a: Stamped | undefined, b: Stamped | undefined)
     delete rest.workspace;
     return { at: newer.at, state: { ...rest, ...studio } };
   }
+  // Opening a drawing on another device saves its blocks: that must not bring the older code back.
+  const drawing = drawingIsNewer(o, n)
+    ? { files: o.files, ...(o.workspace === undefined ? {} : { workspace: o.workspace }) }
+    : {};
   return {
     at: newer.at,
     state: {
       ...n,
       quizAnswers: { ...o.quizAnswers, ...n.quizAnswers },
-      exercises: { ...o.exercises, ...n.exercises },
+      exercises: mergeExercises(o, n),
       exercisesDone: union(n.exercisesDone, o.exercisesDone),
       doneSteps: union(n.doneSteps, o.doneSteps),
       picks: { ...o.picks, ...n.picks },
       furthestSlide: furthest,
       done: o.done || n.done,
       ...studio,
+      ...drawing,
     },
   };
 }

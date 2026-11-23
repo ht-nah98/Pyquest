@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { DexieStore } from './dexieStore';
 import type { Stamped } from './merge';
 import { emptyLessonState, type Profile } from './store';
@@ -109,5 +109,58 @@ describe('SyncStore', () => {
     await a.flush();
     await b.start();
     expect((await b.getLessonState('u1', 'studio:abc'))?.studio?.deleted).toBe(true);
+  });
+
+  test('a change made while the first pull is being merged is never overwritten by the older copy', async () => {
+    const { store, cloud, local } = setup();
+    cloud.rows.set('u1/l01', { state: { ...emptyLessonState(), slideIndex: 1 }, at: 1000 });
+    const getRow = local.getRow.bind(local);
+    let raced = false;
+    local.getRow = async (profileId, lessonId) => {
+      const row = await getRow(profileId, lessonId);
+      if (!raced) {
+        raced = true;
+        await store.saveLessonState('u1', 'l01', { ...emptyLessonState(), slideIndex: 7 });
+      }
+      return row;
+    };
+    await store.start();
+    await store.flush();
+    expect((await store.getLessonState('u1', 'l01'))?.slideIndex).toBe(7);
+    expect(cloud.rows.get('u1/l01')?.state.slideIndex).toBe(7);
+  });
+
+  test('two saves in the same millisecond, the second one while the first is being sent: the second wins', async () => {
+    const { store, cloud } = setup();
+    vi.spyOn(Date, 'now').mockReturnValue(5000);
+    try {
+      await store.saveLessonState('u1', 'l01', { ...emptyLessonState(), slideIndex: 1 });
+      const put = cloud.put.bind(cloud);
+      let once = true;
+      cloud.put = async (userId, lessonId, row) => {
+        await put(userId, lessonId, row);
+        if (!once) return;
+        once = false;
+        await store.saveLessonState('u1', 'l01', { ...emptyLessonState(), slideIndex: 2 });
+      };
+      await store.flush();
+      await store.flush();
+      expect((await store.getLessonState('u1', 'l01'))?.slideIndex).toBe(2);
+      expect(cloud.rows.get('u1/l01')?.state.slideIndex).toBe(2);
+    } finally {
+      vi.restoreAllMocks();
+    }
+  });
+
+  test('a device whose clock is behind still keeps the child’s newest change', async () => {
+    const { store, cloud } = setup();
+    cloud.rows.set('u1/l01', {
+      state: { ...emptyLessonState(), slideIndex: 1 },
+      at: Date.now() + 3_600_000,
+    });
+    await store.start();
+    await store.saveLessonState('u1', 'l01', { ...emptyLessonState(), slideIndex: 9 });
+    await store.flush();
+    expect(cloud.rows.get('u1/l01')?.state.slideIndex).toBe(9);
   });
 });

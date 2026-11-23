@@ -4,7 +4,16 @@ export type Role = 'student' | 'coach';
 export type Profile = { id: string; nickname: string; avatar: string; role: Role };
 
 /** A child's work on one exercise of the code step. */
-export type ExerciseWork = { files: Record<string, string>; workspace?: object };
+export type ExerciseWork = {
+  files: Record<string, string>;
+  workspace?: object;
+  /** When the child last changed this code (ms): opening the exercise on another device does not count. */
+  changedAt?: number;
+};
+
+/** The time of a change: now, and always later than the change it follows (a clock may run behind). */
+export const changeTime = (before: number | undefined): number =>
+  Math.max(Date.now(), (before ?? 0) + 1);
 
 /**
  * A drawing of the 🎨 Xưởng vẽ: the row's lessonId is `studio:<id>`, its code is `files['main.py']` and

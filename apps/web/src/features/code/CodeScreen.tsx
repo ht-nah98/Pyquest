@@ -20,7 +20,7 @@ import { useGameKeys } from '../../stage/useGameKeys';
 import { useGameLoop } from '../../stage/useGameLoop';
 import { Button } from '../../ui/Button';
 import { TopBar } from '../../ui/TopBar';
-import type { LessonState } from '../../storage/store';
+import { changeTime, type LessonState } from '../../storage/store';
 import { useLessonState } from '../lesson/useLessonState';
 import { ExerciseBar } from './ExerciseBar';
 import { doneSteps, pickExercise, visibleExercises, workOf } from './exercises';
@@ -186,7 +186,11 @@ function CodeEditor({
         return {
           exercises: {
             ...s.exercises,
-            [code.id]: { ...w, files: { ...w.files, [file]: text } },
+            [code.id]: {
+              ...w,
+              files: { ...w.files, [file]: text },
+              changedAt: changeTime(w.changedAt),
+            },
           },
         };
       });

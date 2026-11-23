@@ -97,4 +97,37 @@ describe('mergeLessonState: newer wins, achievements are never lost', () => {
     const m = mergeLessonState({ state: s({}), at: 1 }, { state: s({}), at: 2 }).state;
     expect('studio' in m).toBe(false);
   });
+
+  test('a device that only opened the lesson later does not bring the older code of an exercise back', () => {
+    const work = (code: string, changedAt?: number) => ({
+      files: { 'main.py': code },
+      ...(changedAt === undefined ? {} : { changedAt }),
+    });
+    const typed = {
+      state: s({ exercises: { e1: work('a', 50), e2: work('typed', 90) } }),
+      at: 100,
+    };
+    const opened = { state: s({ exercises: { e1: work('a', 50), e2: work('starter') } }), at: 200 };
+    for (const m of [mergeLessonState(typed, opened), mergeLessonState(opened, typed)]) {
+      expect(m.state.exercises?.['e2']?.files['main.py']).toBe('typed');
+      expect(m.state.exercises?.['e1']?.files['main.py']).toBe('a');
+      expect(m.at).toBe(200);
+    }
+    // Work saved before this existed has no time: the newer copy decides, as it always did.
+    const old = (code: string, at: number) => ({ state: s({ exercises: { e1: work(code) } }), at });
+    expect(
+      mergeLessonState(old('x', 1), old('y', 2)).state.exercises?.['e1']?.files['main.py'],
+    ).toBe('y');
+  });
+
+  test('a device that only opened a drawing later does not bring its older code back', () => {
+    const d = (code: string, changedAt: number, title: string) =>
+      s({ files: { 'main.py': code }, studio: { title, createdAt: 1, changedAt } });
+    const typed = { state: d('new', 90, 'Trăng'), at: 100 };
+    const opened = { state: d('old', 50, 'Tranh 1'), at: 200 };
+    for (const m of [mergeLessonState(typed, opened), mergeLessonState(opened, typed)]) {
+      expect(m.state.files['main.py']).toBe('new');
+      expect(m.state.studio?.title).toBe('Trăng');
+    }
+  });
 });

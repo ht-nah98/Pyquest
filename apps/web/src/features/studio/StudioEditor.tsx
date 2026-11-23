@@ -7,7 +7,7 @@ import { brokenRun } from '../../runtime/broken';
 import { python } from '../../runtime/client';
 import { uiSound, unlock } from '../../stage/sound';
 import { Stage, type StageHandle } from '../../stage/Stage';
-import type { LessonState, StudioMeta } from '../../storage/store';
+import { changeTime, type LessonState, type StudioMeta } from '../../storage/store';
 import { Button } from '../../ui/Button';
 import { TopBar } from '../../ui/TopBar';
 import { EditorPanes, type EditorPanesHandle } from '../code/EditorPanes';
@@ -47,7 +47,9 @@ type Update = ReturnType<typeof useLessonState>['update'];
 
 /** The drawing's meta with a new change time (and maybe a new name). */
 const touched = (s: LessonState, patch: Partial<StudioMeta> = {}): Partial<LessonState> =>
-  s.studio === undefined ? {} : { studio: { ...s.studio, ...patch, changedAt: Date.now() } };
+  s.studio === undefined
+    ? {}
+    : { studio: { ...s.studio, ...patch, changedAt: changeTime(s.studio.changedAt) } };
 
 function DrawingEditor({
   studio,

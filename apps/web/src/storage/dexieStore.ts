@@ -56,11 +56,36 @@ export class DexieStore implements ProgressStore {
     return row === undefined ? undefined : { state: row.state, at: row.at ?? 0 };
   }
 
-  /** Writes a row; `pending` also queues it for the cloud, in the same transaction. */
-  async putRow(profileId: string, lessonId: string, row: Stamped, pending: boolean): Promise<void> {
+  /**
+   * The child's own change, queued for the cloud. Its time is always later than the copy it replaces (two saves in
+   * one millisecond, a device clock that runs behind), so a merge never takes it for the older one.
+   */
+  async saveQueued(profileId: string, lessonId: string, state: LessonState): Promise<void> {
     await this.db.transaction('rw', this.db.lessons, this.db.outbox, async () => {
+      const row = await this.db.lessons.get({ profileId, lessonId });
+      const at = Math.max(Date.now(), (row?.at ?? 0) + 1);
+      await this.db.lessons.put({ profileId, lessonId, state, at });
+      await this.db.outbox.put({ profileId, lessonId });
+    });
+  }
+
+  /**
+   * Stores a merged copy made from the row read at `readAt` (undefined: there was none); `pending` also queues it.
+   * False, and nothing written, when the child changed the row meanwhile.
+   */
+  async putMerged(
+    profileId: string,
+    lessonId: string,
+    readAt: number | undefined,
+    row: Stamped,
+    pending: boolean,
+  ): Promise<boolean> {
+    return this.db.transaction('rw', this.db.lessons, this.db.outbox, async () => {
+      const now = await this.db.lessons.get({ profileId, lessonId });
+      if ((now === undefined ? undefined : (now.at ?? 0)) !== readAt) return false;
       await this.db.lessons.put({ profileId, lessonId, state: row.state, at: row.at });
       if (pending) await this.db.outbox.put({ profileId, lessonId });
+      return true;
     });
   }
 
