@@ -14,7 +14,10 @@ export function VarWatch({ result }: { result: RunResult | null }) {
   const vars = Object.entries(result?.vars ?? {});
   if (vars.length === 0) return null;
   return (
-    <div className="rounded-[8px] bg-paper-2 px-2 py-1 font-code text-sm" data-testid="var-watch">
+    <div
+      className="max-h-[3.25rem] overflow-y-auto rounded-[8px] bg-paper-2 px-2 py-1 font-code text-sm"
+      data-testid="var-watch"
+    >
       {vars.map(([k, v]) => (
         <span key={k} className="mr-3 inline-block">
           {k} = <b>{pythonRepr(v)}</b>

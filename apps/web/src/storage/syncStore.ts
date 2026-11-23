@@ -109,7 +109,12 @@ export class SyncStore implements ProgressStore {
     // Something this device had that the cloud lacks: queue it, flush sends it.
     const changed =
       mine !== undefined && JSON.stringify(merged.state) !== JSON.stringify(theirs.state);
-    if (mine !== undefined && mine.at === merged.at && !changed) return true;
+    // Same time is not same content: the other device may have merged our copy in and kept its time.
+    const same =
+      mine !== undefined &&
+      mine.at === merged.at &&
+      JSON.stringify(mine.state) === JSON.stringify(merged.state);
+    if (same && !changed) return true;
     return this.local.putMerged(this.me.id, lessonId, mine?.at, merged, changed);
   }
 

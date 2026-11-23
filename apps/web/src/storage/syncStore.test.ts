@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
 import { DexieStore } from './dexieStore';
-import type { Stamped } from './merge';
+import { mergeLessonState, type Stamped } from './merge';
 import { emptyLessonState, type Profile } from './store';
 import { SyncStore, type Remote } from './syncStore';
 
@@ -162,5 +162,19 @@ describe('SyncStore', () => {
     await store.saveLessonState('u1', 'l01', { ...emptyLessonState(), slideIndex: 9 });
     await store.flush();
     expect(cloud.rows.get('u1/l01')?.state.slideIndex).toBe(9);
+  });
+
+  test('a copy merged on another device with the same time but other content still reaches this one', async () => {
+    const { store, cloud, local } = setup();
+    const drawing = { title: 'Mây', createdAt: 1, changedAt: 1 };
+    const mine = { ...emptyLessonState(), files: { 'main.py': 'x' }, studio: drawing };
+    await local.putMerged('u1', 'studio:a', undefined, { state: mine, at: 500 }, false);
+    // The other device deleted it earlier, merged our newer copy in and sent that: our time, its content.
+    const gone = { state: { ...mine, files: {}, studio: { ...drawing, deleted: true } }, at: 400 };
+    const merged = mergeLessonState(gone, { state: mine, at: 500 });
+    expect(merged.at).toBe(500);
+    cloud.rows.set('u1/studio:a', merged);
+    await store.start();
+    expect((await store.getLessonState('u1', 'studio:a'))?.studio?.deleted).toBe(true);
   });
 });
