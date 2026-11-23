@@ -40,10 +40,10 @@
             "choices": [
               "1",
               "2",
-              "3",
-              "5"
+              "5",
+              "3"
             ],
-            "answer": 3,
+            "answer": 2,
             "explain": "append thêm vào cuối danh sách: 3 + 2 = 5 phần tử. Vòng for đi qua đủ 5."
           }
         },
@@ -52,18 +52,18 @@
           "quiz": {
             "question": "Code chạy một lần: mobs có 3 con, vòng for vẽ xong cả bầy, rồi mới append con thứ tư. Trên sân có mấy con?",
             "choices": [
-              "4",
               "3",
+              "4",
               "1"
             ],
-            "answer": 1,
+            "answer": 0,
             "explain": "Máy đi từ trên xuống. Lúc vẽ, danh sách mới có 3 con; thêm sau thì không ai vẽ con đó nữa."
           }
         },
         {
           "id": "h04-factory",
           "title": "Máy đúc quái",
-          "text": "make_mob(x, y) trả về một hộp mới: con nhớt đứng ở (x, y) em đưa, có ba ngăn image, x, y. Giống khuôn bánh: một cái khuôn, mỗi lần ép ra một cái bánh riêng.",
+          "text": "make_mob(x, y) trả về một hộp mới: con nhớt (slime) đứng ở (x, y) em đưa, có ba ngăn image, x, y. Giống khuôn bánh: một cái khuôn, mỗi lần ép ra một cái bánh riêng.",
           "coachNotes": "Nhắc return ở Bay Qua Khe (Bài 10): hàm tính ra rồi trả lời. Lần này câu trả lời là cả một hộp."
         },
         {
@@ -78,10 +78,10 @@
             "question": "a = make_mob(100, 40) và b = make_mob(200, 40). Chạy a[\"x\"] += 5. Giờ b[\"x\"] bằng mấy?",
             "choices": [
               "105",
-              "200",
-              "205"
+              "205",
+              "200"
             ],
-            "answer": 1,
+            "answer": 2,
             "explain": "Mỗi lần gọi make_mob là một hộp mới. Đổi hộp a không đụng gì tới hộp b."
           }
         }
@@ -104,7 +104,7 @@
         {
           "id": "h04-code1",
           "title": "Bài tập 1: vẽ cả bầy",
-          "text": "Thêm ma và golem vào danh sách, rồi một vòng for vẽ cả bầy. Trước khi gõ, nghĩ xem: vì sao dòng vẽ phải thụt vào trong for?",
+          "text": "Thêm ma (ghost) và golem (người đá) vào danh sách, rồi một vòng for vẽ cả bầy. Trước khi gõ, nghĩ xem: vì sao dòng vẽ phải thụt vào trong for?",
           "coachNotes": "Không thụt vào thì Python báo lỗi hoặc chỉ vẽ con cuối cùng. Vẽ to gấp 4: 16 × 4 = 64, draw_thing tự lùi 8 × 4 = 32."
         },
         {

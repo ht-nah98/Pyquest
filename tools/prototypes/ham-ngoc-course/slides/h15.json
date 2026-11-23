@@ -12,17 +12,17 @@
         {
           "id": "h15-why",
           "title": "Game cần có đích",
-          "text": "Hiện giờ chỉ có nhớt, ra hoài không hết, và em không bao giờ thắng. Hôm nay có nhiều loại quái, quái ra từng đợt, đợt cuối có trùm. Hạ hết là thắng!",
+          "text": "Hiện giờ chỉ có nhớt, ra hoài không hết, và em không bao giờ thắng. Hôm nay có nhiều loại quái, quái ra từng đợt (một đợt là một lượt quái), đợt cuối có trùm. Hạ hết là thắng!",
           "widget": {
             "kind": "sampleGame"
           },
-          "coachNotes": "3 phút với game mẫu: hỏi các ải khác nhau chỗ nào, làm sao biết sắp hết ải. Game mẫu dài hơn bản của em, chỉ lấy ý tưởng."
+          "coachNotes": "Bài dài, nên cắt 2 buổi. Buổi 1: bảng MOBS, chép mẫu, Code vừa được dọn, rồi Bài tập 1. Buổi 2: WAVES, left, khi nào sang đợt, rồi Bài tập 2 và 3. 3 phút với game mẫu: hỏi các ải khác nhau chỗ nào, làm sao biết sắp hết ải. Game mẫu chia thành ải; bản của em chỉ có một hầm, chia thành đợt. Chỉ lấy ý tưởng."
         },
         {
           "id": "h15-mobs",
           "title": "Bảng tra theo tên",
-          "text": "MOBS là một hộp lớn, mỗi ngăn là một loại quái. MOBS[\"bat\"] là dòng của dơi. Giống tra từ điển: hỏi tên là ra ngay, không cần nhớ nó đứng thứ mấy.",
-          "coachNotes": "So với SKILLS: SKILLS là danh sách, hỏi bằng số thứ tự; MOBS là dict, hỏi bằng tên. bat là dơi, slime là nhớt, golem là người đá."
+          "text": "MOBS là một hộp lớn, mỗi ngăn là một loại quái: \"slime\" là nhớt, \"bat\" là dơi, \"golem\" là người đá. MOBS[\"bat\"] là dòng của dơi. Giống tra từ điển: hỏi tên là ra ngay, không cần nhớ nó đứng thứ mấy.",
+          "coachNotes": "So với SKILLS: SKILLS là danh sách, hỏi bằng số thứ tự; MOBS là dict, hỏi bằng tên."
         },
         {
           "id": "h15-copy",
@@ -60,11 +60,11 @@
           "quiz": {
             "question": "Đợt có count 12, every 2, mob \"slime\", lead \"bat\". Hai con đầu tiên ra là gì?",
             "choices": [
-              "Dơi rồi nhớt",
               "Nhớt rồi dơi",
-              "Dơi rồi dơi"
+              "Dơi rồi dơi",
+              "Dơi rồi nhớt"
             ],
-            "answer": 0,
+            "answer": 2,
             "explain": "left là 12, chia hết cho 2: dơi. Rồi left là 11, không chia hết: nhớt."
           }
         }
@@ -84,11 +84,11 @@
           "quiz": {
             "question": "left = 0, trên sân còn 2 con dơi. run_wave() nên làm gì?",
             "choices": [
+              "Chưa làm gì, chờ em hạ nốt",
               "Sang đợt mới",
-              "Cho ra thêm quái",
-              "Chưa làm gì, chờ em hạ nốt"
+              "Cho ra thêm quái"
             ],
-            "answer": 2,
+            "answer": 0,
             "explain": "Hết con chờ ra rồi, nhưng sân chưa trống nên len(mobs) == 0 còn sai. Phải hạ hết mới sang đợt."
           }
         }
@@ -102,6 +102,12 @@
           "title": "Code vừa được dọn",
           "text": "make_mob và spawn_mob giờ nhận tên quái. Va chạm tính theo size: con to dễ trúng và dễ đụng hơn. Ngọc mang xp của con quái. for axis in [\"x\", \"y\"] gom code hai trục làm một.",
           "coachNotes": "5 phút. axis là trục. Cho bé so move_hero cũ và mới: 8 dòng chặn mép còn 5 dòng. Hỏi: con size 3 thì chạm em khi khoảng cách dưới bao nhiêu? (16 + 10 * 3 = 46). step_to: còn cách chưa tới nửa bước thì thôi không bước trên trục đó, để con nhanh không nhảy qua nhảy lại quanh em. Nhớt từ 8 về 3 máu."
+        },
+        {
+          "id": "h15-given",
+          "title": "Phần có sẵn làm gì?",
+          "text": "for name in MOBS đi qua từng tên quái trong bảng, đầu ván mỗi loại ra 2 con. spawn_mob(name) cho quái ra ở mép xa em: khi thì mép trên hoặc dưới, khi thì mép trái hoặc phải. START_SKILLS là đồ thử: ba Đốm Lửa.",
+          "coachNotes": "for trên dict cho tên từng ngăn, Bài 16 học kỹ. random_int(1, 2) == 1 giống tung đồng xu: ra 1 thì quái ở mép trái hoặc phải. Hỏi: thêm dơi và golem vào bảng thì lúc vào ván có mấy con? (3 loại, mỗi loại 2 con là 6)."
         }
       ]
     },
@@ -112,13 +118,13 @@
           "id": "h15-code1",
           "title": "Bài tập 1: Bảng quái",
           "text": "Thêm dơi và golem vào MOBS. Rồi trong make_mob, chép nốt các ngăn từ row. Quên ngăn nào thì con quái dùng số tạm của nhớt, ví dụ golem chỉ có 3 máu.",
-          "coachNotes": "Số trên đầu quái là máu, số trên ngọc là xp: đồ thử để bé dò với bảng (golem 8 máu, ngọc +3), Bài tập 3 bỏ đi. Lỗi hay gặp: quên xp nên ngọc golem vẫn ghi +1. START_SKILLS = [0, 0, 0] cũng là đồ thử: ba Đốm Lửa nên đạn mạnh và có luôn Lò Than."
+          "coachNotes": "Chữ trên đầu quái là máu và cỡ, số trên ngọc là xp: đồ thử để bé dò với bảng (golem 8 máu, cỡ 3, ngọc +3), Bài tập 3 bỏ đi. Dạy 2 buổi thì dừng sau bài này. Lỗi hay gặp: quên xp nên ngọc golem vẫn ghi +1. Ba Đốm Lửa nên đạn mạnh và có luôn Lò Than."
         },
         {
           "id": "h15-code2",
           "title": "Bài tập 2 và 3: Đợt và trùm",
           "text": "Bài tập 2: viết run_wave() theo hai điều em vừa nghĩ. Bài tập 3: trùm chỉ là một dòng trong MOBS và một dòng trong WAVES. Muốn vào thẳng đợt 4 thì START_WAVE là mấy, khi đợt đếm từ 0?",
-          "coachNotes": "Giữ thứ tự: hỏi left trước, hỏi sân trống sau. Trùm 12 máu là đồ thử cho nhanh, Bài 16 đổi thành trùm thật. Con to (size hơn 4) có thanh máu đỏ."
+          "coachNotes": "Buổi 2 bắt đầu ở slide Mỗi dòng WAVES là một đợt. Giữ thứ tự: hỏi left trước, hỏi sân trống sau. Trùm 12 máu là đồ thử cho nhanh, Bài 16 đổi thành trùm thật. Con to (size hơn 4) có thanh máu đỏ và chữ 12/12: mob[\"max\"] nhớ máu lúc đầu. Trùm ra trước, dơi ra sau."
         }
       ]
     },

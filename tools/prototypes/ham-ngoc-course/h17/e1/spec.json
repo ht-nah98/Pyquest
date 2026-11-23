@@ -70,6 +70,22 @@
       "id": "h17-e1-poof"
     },
     {
+      "label": "Chiếu đủ tới hình cuối, hình số 8",
+      "kind": "varCompare",
+      "name": "page",
+      "op": ">=",
+      "value": 8,
+      "id": "h17-e1-flip"
+    },
+    {
+      "label": "Mỗi hình giữ 2 khung, không chiếu lại",
+      "kind": "varCompare",
+      "name": "page",
+      "op": "<=",
+      "value": 8.5,
+      "id": "h17-e1-slow"
+    },
+    {
       "label": "Hiệu ứng xong thì mất",
       "kind": "varCompare",
       "name": "busy",
@@ -95,7 +111,7 @@
     }
   ],
   "new_idea": "gói khuôn giữ lại thành hàm living(things); frame chạy dần = hoạt hình",
-  "reorganised": "Thêm effects, busy, add_effect(image, half, thing) (half là nửa ảnh: 24 hay 28) và các lời gọi add_effect; tia vàng của sét đổi thành hiệu ứng fx-spark; move_effects() chạy mỗi khung.",
+  "reorganised": "Thêm effects, busy, page (hình lớn nhất đã chiếu, máy chấm đọc), add_effect(image, half, thing) (half là nửa ảnh: 24 hay 28) và các lời gọi add_effect; tia vàng của sét đổi thành hiệu ứng fx-spark; move_effects() chạy mỗi khung.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -146,7 +162,12 @@
   "wrong": [
     "giữ thứ hết hp",
     "quên trừ hp",
-    "quên effects = living(effects)"
+    "quên effects = living(effects)",
+    "quên cộng frame",
+    "frame cộng 1",
+    "gán frame = 0.5",
+    "bớt hp quá nhanh",
+    "giữ cả thứ hp bằng 0"
   ],
   "alts": [
     "so >= 1",

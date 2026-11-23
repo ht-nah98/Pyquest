@@ -9,7 +9,7 @@
     "Thụt vào: xp -= need() trước, rồi level += 1",
     "Phải trừ trước: cộng level trước thì need() đổi mất rồi.",
     "Trong need(): đổi return 10 thành return 2 + level * 2",
-    "Bấm ▶ Chạy: chữ Cấp 2 hiện ra khi nhặt đủ 4 viên."
+    "Bấm ▶ Chạy: có sẵn 10 viên (đồ thử). Cấp 1 cần 4, còn dư 6. Cấp 2 cần 6, vừa đủ. Vậy lên tới Cấp 3."
   ],
   "hints": [
     "Dư ngọc thì giữ lại, đừng đặt xp = 0.",
@@ -17,7 +17,7 @@
     "return 2 + level * 2"
   ],
   "test": {
-    "frames": 420,
+    "frames": 60,
     "taps": []
   },
   "goals": [
@@ -27,15 +27,15 @@
       "id": "h10-e3-run"
     },
     {
-      "label": "Lên được cấp 2",
+      "label": "10 viên: dùng 4, dư 6, vừa đủ lên cấp 3",
       "kind": "varCompare",
       "name": "level",
       "op": ">=",
-      "value": 2,
+      "value": 3,
       "id": "h10-e3-level"
     },
     {
-      "label": "Không lên cấp quá nhanh",
+      "label": "Hết ngọc thì dừng ở cấp 3",
       "kind": "varCompare",
       "name": "level",
       "op": "<=",
@@ -43,22 +43,30 @@
       "id": "h10-e3-slow"
     },
     {
-      "label": "Lên cấp thì dùng hết ngọc của cấp đó",
+      "label": "Số ngọc không bị âm",
+      "kind": "varCompare",
+      "name": "xp",
+      "op": ">=",
+      "value": 0,
+      "id": "h10-e3-plus"
+    },
+    {
+      "label": "Lên cấp thì trừ ngọc đã dùng",
       "kind": "varCompare",
       "name": "xp",
       "op": "<=",
-      "value": 7,
+      "value": 0,
       "id": "h10-e3-spend"
     },
     {
-      "label": "Cấp 2 hiện trên màn hình",
+      "label": "Cấp 3 hiện trên màn hình",
       "kind": "drewText",
-      "text": "Cấp 2",
+      "text": "Cấp 3",
       "id": "h10-e3-text"
     }
   ],
   "new_idea": "ngưỡng tăng dần; trừ phần đã dùng, giữ phần dư",
-  "reorganised": "Thêm level, check_level(); chữ Ngọc đổi thành Cấp.",
+  "reorganised": "Thêm level, check_level(); chữ Ngọc đổi thành Cấp. Bắt đầu với 10 viên (đồ thử, Bài 11 về 0).",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -101,7 +109,13 @@
   "wrong": [
     "quên trừ xp",
     "quên cộng level",
-    "cấp nào cũng cần 1 viên"
+    "cấp nào cũng cần 1 viên",
+    "cộng level trước khi trừ",
+    "đặt xp = 0",
+    "cấp nào cũng cần 4 viên",
+    "quên đổi need()",
+    "level = 2 thay cho += 1",
+    "so >, vừa đủ mà không lên cấp"
   ],
   "alts": [
     "so > và trừ một",

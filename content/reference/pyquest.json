@@ -177,6 +177,7 @@
       "why": "Đi cùng mouse_x(): phải có đủ x và y thì mới biết chuột chỉ vào đâu.",
       "inside": "_state[\"mouse\"] là chỗ chuột (x, y) trang web báo mỗi khung hình. Số [1] là y.",
       "example": "draw_circle(mouse_x(), mouse_y(), 20, \"gold\")",
+      "lesson": "h13",
       "gameOnly": true
     },
     {
@@ -186,6 +187,7 @@
       "why": "Muốn làm nút bấm trong game thì phải biết lúc nào vừa bấm. key_pressed() thì True suốt lúc giữ, một lần bấm sẽ tính thành nhiều lần.",
       "inside": "_state[\"clicked\"] là True khi trang web báo vừa có một lần bấm, sang khung sau lại là False.",
       "example": "if clicked():\n    score = score + 1",
+      "lesson": "h13",
       "gameOnly": true
     }
   ]

@@ -5,17 +5,16 @@ hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 
 hero["reach"] = 400
 START_PICKS = 1
 START_SKILLS = [0, 0, 0]
-bolt = {}
-flash = 0
+bolt = {"x": 0, "y": 0}
 held = 0
 
 SKILLS = []
 SKILLS.append({"name": "Đốm Lửa: đạn mạnh hơn", "branch": "fire", "icon": 1, "what": "power", "add": 1})
 SKILLS.append({"name": "Vòng Lửa: đốt quái gần", "branch": "fire", "icon": 2, "what": "ring", "add": 2})
-SKILLS.append({"name": "Nổ Tung: quái thua nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
+SKILLS.append({"name": "Nổ Tung: quái thua là nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
 SKILLS.append({"name": "Đòn Buốt: đạn làm chậm", "branch": "ice", "icon": 1, "what": "slow", "add": 60})
 SKILLS.append({"name": "Vòng Sương: tỏa lạnh", "branch": "ice", "icon": 4, "what": "frost", "add": 80})
-SKILLS.append({"name": "Áo Băng: bất tử lâu", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
+SKILLS.append({"name": "Áo Băng: bất tử lâu hơn", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
 SKILLS.append({"name": "Tay Chớp: bắn nhanh", "branch": "spark", "icon": 1, "what": "fast", "add": 5})
 SKILLS.append({"name": "Tia Đôi: thêm 1 viên", "branch": "spark", "icon": 2, "what": "extra", "add": 1})
 SKILLS.append({"name": "Mây Giông: sét đánh", "branch": "spark", "icon": 3, "what": "cloud", "add": 3})
@@ -90,11 +89,9 @@ def start_game():
     xp = 0
     level = 1
     owned = []
-    bonus = {"power": 0, "ring": 0, "boom": 0, "slow": 0, "frost": 0, "armor": 0}
-    bonus["fast"] = 0
-    bonus["extra"] = 0
-    bonus["cloud"] = 0
-    bonus["speed"] = 0
+    bonus = {}
+    for name in ["power", "ring", "boom", "slow", "frost", "armor", "fast", "extra", "cloud", "speed"]:
+        bonus[name] = 0
     for number in START_SKILLS:
         add_skill(SKILLS[number])
     picks = START_PICKS
@@ -187,15 +184,12 @@ def splash(shot):
 
 
 def strike(mob, amount):
-    global bolt, flash
+    global bolt
     bolt = mob
-    flash = 10
     hurt(mob, amount)
 
 
 def use_skills():
-    global flash
-    flash -= 1
     if len(mobs) == 0:
         return
     if bonus["ring"] > 0 and tick % 60 == 0:
@@ -242,6 +236,10 @@ def remove_dead():
 
 def need():
     return 2 + level * 2
+
+
+def draw_bar(width):
+    draw_rect(0, 590, width, 10, "#2fc9a8")
 
 
 def deal_cards():
@@ -394,8 +392,9 @@ def draw_play():
         if mob["slow"] > 0:
             draw_circle(mob["x"], mob["y"], 9 * mob["size"], "#7fd8ff")
         draw_thing(mob["image"], mob["x"], mob["y"], mob["size"])
-        draw_text(str(mob["hp"]) + " máu", mob["x"], mob["y"] - 10 * mob["size"], 16)
-    if flash > 0:
+        text = str(mob["hp"]) + " máu, cỡ " + str(mob["size"])
+        draw_text(text, mob["x"], mob["y"] - 10 * mob["size"], 16)
+    if bonus["cloud"] > 0 and tick % 60 >= 30 and tick % 60 < 40:
         draw_line(bolt["x"], 0, bolt["x"], bolt["y"], "#ffe14d", 4)
     if safe % 10 < 5:
         draw_thing(hero["image"], hero["x"], hero["y"], 3)
@@ -404,7 +403,7 @@ def draw_play():
     draw_text("Quái: " + str(len(mobs)), 540, 24)
     draw_text("Hạ: " + str(kills), 300, 24)
     draw_rect(0, 588, 600, 12, "#33334a")
-    draw_rect(0, 590, 600 * xp / need(), 10, "#2fc9a8")
+    draw_bar(600 * xp / need())
     draw_text("Cấp " + str(level), 180, 24)
     for i in range(len(BRANCHES)):
         row = BRANCHES[i]

@@ -9,10 +9,10 @@ held = 0
 SKILLS = []
 SKILLS.append({"name": "Đốm Lửa: đạn mạnh hơn", "branch": "fire", "icon": 1, "what": "power", "add": 1})
 SKILLS.append({"name": "Vòng Lửa: đốt quái gần", "branch": "fire", "icon": 2, "what": "ring", "add": 2})
-SKILLS.append({"name": "Nổ Tung: quái thua nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
+SKILLS.append({"name": "Nổ Tung: quái thua là nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
 SKILLS.append({"name": "Đòn Buốt: đạn làm chậm", "branch": "ice", "icon": 1, "what": "slow", "add": 60})
 SKILLS.append({"name": "Vòng Sương: tỏa lạnh", "branch": "ice", "icon": 4, "what": "frost", "add": 80})
-SKILLS.append({"name": "Áo Băng: bất tử lâu", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
+SKILLS.append({"name": "Áo Băng: bất tử lâu hơn", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
 SKILLS.append({"name": "Tay Chớp: bắn nhanh", "branch": "spark", "icon": 1, "what": "fast", "add": 5})
 SKILLS.append({"name": "Tia Đôi: thêm 1 viên", "branch": "spark", "icon": 2, "what": "extra", "add": 1})
 SKILLS.append({"name": "Mây Giông: sét đánh", "branch": "spark", "icon": 3, "what": "cloud", "add": 3})
@@ -149,6 +149,10 @@ def remove_dead():
 
 def need():
     return 2 + level * 2
+
+
+def draw_bar(width):
+    draw_rect(0, 590, width, 10, "#2fc9a8")
 
 
 def deal_cards():
@@ -299,7 +303,7 @@ def draw_play():
     draw_text("Quái: " + str(len(mobs)), 540, 24)
     draw_text("Hạ: " + str(kills), 300, 24)
     draw_rect(0, 588, 600, 12, "#33334a")
-    draw_rect(0, 590, 600 * xp / need(), 10, "#2fc9a8")
+    draw_bar(600 * xp / need())
     draw_text("Cấp " + str(level), 180, 24)
     for i in range(len(owned)):
         skill = owned[i]

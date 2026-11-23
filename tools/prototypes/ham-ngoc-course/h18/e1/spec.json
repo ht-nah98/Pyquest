@@ -1,7 +1,7 @@
 {
   "id": "h18-e1",
   "title": "Quái mới, skill mới của em",
-  "task": "Thêm 3 dòng bảng, rồi đổi START_SKILLS = [] thành [9] để thử. (1) Skill \"Giày Gió: chạy nhanh\", branch common, icon 2, what speed, add 2. (2) MOBS[\"ghost\"]: hình mob-ghost, hp 10, speed 2, size 2, xp 2. (3) Đợt trước trùm: mob ghost, lead golem, every 4, count 32, gap 22.",
+  "task": "Thêm 3 dòng bảng, rồi đổi START_SKILLS = [] thành [9] để thử. (1) Skill \"Giày Gió: chạy nhanh\", branch common (chung), icon 2, what speed, add 2. (2) MOBS[\"ghost\"]: hình mob-ghost, hp 10, speed 2, size 2, xp 2. (3) Đợt trước trùm: mob ghost, lead golem, every 4, count 32, gap 22.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
@@ -9,7 +9,7 @@
     "Chỗ (2): MOBS[\"ghost\"] = {\"image\": \"mob-ghost\", \"hp\": 10, \"speed\": 2, \"size\": 2, \"xp\": 2}",
     "Chỗ (3): WAVES.append({\"mob\": \"ghost\", \"lead\": \"golem\", \"every\": 4, \"count\": 32, \"gap\": 22})",
     "Gần đầu file, đổi START_SKILLS = [] thành [9]: vào ván có sẵn Giày Gió (dòng thứ mười, đếm từ 0). START_WAVE = 3 có sẵn.",
-    "Bấm ▶ Chạy. Xong thì em đổi số, đổi tên, thêm dòng của riêng em."
+    "Bấm ▶ Chạy. Dòng của riêng em để tới Bài tập 3 hãy thêm: bài tập sau bắt đầu từ code mẫu."
   ],
   "hints": [
     "Ngoài 3 dòng bảng và START_SKILLS = [9], em không sửa gì khác.",
@@ -44,11 +44,18 @@
       "id": "h18-e1-run"
     },
     {
-      "label": "Có ma",
+      "label": "Đợt ma đông: có lúc 6 con",
       "kind": "drewCount",
       "sprite": "mob-ghost",
-      "min": 2,
+      "min": 6,
       "id": "h18-e1-ghost"
+    },
+    {
+      "label": "Golem dẫn đầu, cứ 4 con một golem",
+      "kind": "drewCount",
+      "sprite": "mob-golem",
+      "min": 2,
+      "id": "h18-e1-golem"
     },
     {
       "label": "Game có 5 đợt",
@@ -129,7 +136,15 @@
   },
   "wrong": [
     "quên đợt ma",
-    "what nhầm ngăn"
+    "what nhầm ngăn",
+    "đổi chỗ mob và lead",
+    "dẫn đầu là nhớt",
+    "đợt chỉ 3 con",
+    "ma ra quá thưa",
+    "con nào cũng là golem",
+    "ma chỉ 1 máu",
+    "nhầm nhánh",
+    "cộng 1"
   ],
   "alts": [
     "đặt tên khác"

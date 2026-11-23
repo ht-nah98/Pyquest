@@ -204,23 +204,25 @@ ex(
      "if bonus[\"cloud\"] > 0 and tick % 60 == 30:",
      "Thụt vào: strike(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"]). strike là sét đánh, vẽ luôn tia sét.",
      "Các skill khác chỉ cần đọc bonus ở đúng chỗ, code đã có sẵn: em tìm thử xem.",
-     "START_SKILLS = [1, 8] cho em sẵn Vòng Lửa và Mây Giông để thử."],
+     "START_SKILLS cho sẵn 5 Vòng Lửa, 3 Mây Giông; nhớt 24 máu (đồ thử). Nhìn số trên đầu: lửa trừ 10, sét trừ 9."],
     ["Một dòng chỗ (1) đủ cho mọi skill trong bảng.",
      "bonus[skill[\"what\"]] += skill[\"add\"]",
      "blast(hero, 130, bonus[\"ring\"])",
      "strike(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])"],
     [run_goal(),
-     goal("blast", "called", "Vòng Lửa có đốt", name="blast", min=2),
-     goal("strike", "called", "Mây Giông có đánh sét", name="strike", min=2)],
+     goal("blast", "called", "Vòng Lửa đốt đúng nhịp", name="blast", min=4),
+     goal("strike", "called", "Mây Giông đánh sét đúng nhịp", name="strike", min=5),
+     goal("bolt", "drewText", "Sét trừ 9 máu: 24 còn 15", text="15 máu"),
+     goal("burn", "varCompare", "Lửa đủ mạnh, đủ rộng: hạ được quái", name="kills", op=">=", value=3),
+     goal("beat", "varCompare", "Không ra đòn mỗi khung, không đốt cả sân", name="kills", op="<=", value=6)],
     prep=[('''START_PICKS = 3
 ''', '''START_PICKS = 1
-START_SKILLS = [1, 8]
-bolt = {}
-flash = 0
+START_SKILLS = [1, 1, 1, 1, 1, 8, 8, 8]
+bolt = {"x": 0, "y": 0}
 '''), ('''def make_mob(x, y):
     return {"image": "mob-slime", "x": x, "y": y, "hp": 2, "speed": 1}
 ''', '''def make_mob(x, y):
-    return {"image": "mob-slime", "x": x, "y": y, "hp": 2, "speed": 1, "slow": 0}
+    return {"image": "mob-slime", "x": x, "y": y, "hp": 24, "speed": 1, "slow": 0}
 '''), ('''def start_game():
     global mobs, shots, gems, owned, picks,''', '''def add_skill(skill):
     owned.append(skill)
@@ -231,11 +233,9 @@ def start_game():
     global mobs, shots, gems, owned, bonus, picks,'''), ('''    owned = []
     picks = START_PICKS
 ''', '''    owned = []
-    bonus = {"power": 0, "ring": 0, "boom": 0, "slow": 0, "frost": 0, "armor": 0}
-    bonus["fast"] = 0
-    bonus["extra"] = 0
-    bonus["cloud"] = 0
-    bonus["speed"] = 0
+    bonus = {}
+    for name in ["power", "ring", "boom", "slow", "frost", "armor", "fast", "extra", "cloud", "speed"]:
+        bonus[name] = 0
     for number in START_SKILLS:
         add_skill(SKILLS[number])
     picks = START_PICKS
@@ -263,15 +263,12 @@ def blast(center, size, amount):
 
 
 def strike(mob, amount):
-    global bolt, flash
+    global bolt
     bolt = mob
-    flash = 10
     hurt(mob, amount)
 
 
 def use_skills():
-    global flash
-    flash -= 1
     if len(mobs) == 0:
         return
     # Em viết tiếp ở đây (2)
@@ -310,18 +307,28 @@ def hit_mobs():
         if mob["slow"] > 0:
             draw_circle(mob["x"], mob["y"], 18, "#7fd8ff")
         draw_thing(mob["image"], mob["x"], mob["y"], 2)
-    if flash > 0:
+        draw_text(str(mob["hp"]) + " máu", mob["x"], mob["y"] - 20, 16)
+    if bonus["cloud"] > 0 and tick % 60 >= 30 and tick % 60 < 40:
         draw_line(bolt["x"], 0, bolt["x"], bolt["y"], "#ffe14d", 4)
 ''')],
     fills=['bonus[skill["what"]] += skill["add"]', USE],
     wrong=[("quên cộng vào bonus", ["", USE], []),
            ("luôn cộng vào power", ['bonus["power"] += skill["add"]', USE], []),
            ("quên Mây Giông", ['bonus[skill["what"]] += skill["add"]', "\n".join(USE.split("\n")[:2])], []),
-           ("quên Vòng Lửa", ['bonus[skill["what"]] += skill["add"]', "\n".join(USE.split("\n")[2:])], [])],
-    test={"frames": 240, "taps": [5], "keys": [hold("1", 10, 10)]},
+           ("quên Vòng Lửa", ['bonus[skill["what"]] += skill["add"]', "\n".join(USE.split("\n")[2:])], []),
+           ("gán = thay vì cộng +=", ['bonus[skill["what"]] = skill["add"]', USE], []),
+           ("cộng 1 thay vì cộng add", ['bonus[skill["what"]] += 1', USE], []),
+           ("đốt mỗi khung", ['bonus[skill["what"]] += skill["add"]', USE.replace(" and tick % 60 == 0", "")], []),
+           ("sét mỗi khung", ['bonus[skill["what"]] += skill["add"]', USE.replace(" and tick % 60 == 30", "")], []),
+           ("đốt cả sân", ['bonus[skill["what"]] += skill["add"]', USE.replace("130", "1300")], []),
+           ("đốt quá hẹp", ['bonus[skill["what"]] += skill["add"]', USE.replace("130", "13")], []),
+           ("lửa lúc nào cũng 1", ['bonus[skill["what"]] += skill["add"]', USE.replace('130, bonus["ring"]', "130, 1")], []),
+           ("sét lúc nào cũng 1", ['bonus[skill["what"]] += skill["add"]', USE.replace('1)], bonus["cloud"]', "1)], 1")], []),
+           ("sét cùng nhịp với lửa", ['bonus[skill["what"]] += skill["add"]', USE.replace("== 30", "== 0")], [])],
+    test={"frames": 295, "taps": [5], "keys": [hold("1", 10, 10)] + [hold("1", f, f) for f in range(150, 295, 8)]},
     new="tên ngăn lấy từ biến: bonus[skill[\"what\"]]",
     reorganised="Thêm bonus, add_skill, hurt, blast, strike (tia sét), use_skills; Vòng Lửa hiện vòng cam, sét hiện tia vàng. Chỗ nào cần skill thì đọc bonus (shoot, hit_mobs, remove_dead, "
-                "check_hits, move_mobs); START_SKILLS cho sẵn skill để thử.")
+                "check_hits, move_mobs); START_SKILLS cho sẵn skill để thử. Nhớt 24 máu, số máu hiện trên đầu (đồ thử).")
 
 COUNT = '''total = 0
 for skill in owned:
@@ -344,7 +351,7 @@ ex(
      goal("fire", "drewText", "Đếm đúng nhánh Lửa", text="Lửa 2"),
      goal("ice", "drewText", "Đếm đúng nhánh Băng", text="Băng 0"),
      goal("spark", "drewText", "Đếm đúng nhánh Sét", text="Sét 1")],
-    prep=[("START_SKILLS = [1, 8]\n", "START_SKILLS = [0, 1, 6]\n"), ('''
+    prep=[("START_SKILLS = [1, 1, 1, 1, 1, 8, 8, 8]\n", "START_SKILLS = [0, 1, 6]\n"), ("\"hp\": 24,", "\"hp\": 8,"), ('''
 
 def draw_thing''', '''BRANCHES = []
 BRANCHES.append({"branch": "fire", "name": "Lửa"})
@@ -381,32 +388,56 @@ for skill in owned:
 return total'''], [])],
     test={"frames": 60, "taps": [5], "keys": [hold("1", 40, 40)]},
     new="đếm có điều kiện trong danh sách dict",
-    reorganised="Thêm bảng BRANCHES và dòng đếm ba nhánh dưới sân.")
+    reorganised="Nhớt 8 máu. Thêm bảng BRANCHES và dòng đếm ba nhánh dưới sân.")
 
 CB = ["return count_branch(branch) >= 2", 'if has_combo("ice") and mob["slow"] > 0:\n    amount += 3',
       'if has_combo("spark") and tick % 90 == 0:\n    storm()', 'if has_combo("fire"):\n    splash(shot)']
 ex(
     "h14-e3", "Phối hợp",
-    "Từ 2 skill cùng nhánh là có phối hợp (bài này nhớt có 8 máu). (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau "
+    "Từ 2 skill cùng nhánh là có phối hợp. (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau "
     "thêm 3. (3) Sét: cứ 90 khung gọi storm(). (4) Lửa: đạn trúng thì gọi splash(shot).",
     ["Chỗ (1): return count_branch(branch) >= 2 (trả về True hoặc False).",
      "Chỗ (2), đầu hurt(): if has_combo(\"ice\") and mob[\"slow\"] > 0: rồi amount += 3",
      "Chỗ (3): if has_combo(\"spark\") and tick % 90 == 0: rồi storm(). storm nổ xa 1200: góc sân nào cũng tới.",
      "Chỗ (4), khi đạn trúng: if has_combo(\"fire\"): rồi splash(shot). Cả storm và splash đều viết sẵn bằng blast.",
-     "Số trên đầu quái là máu (đồ thử). Bấm ▶ Chạy: tên 3 phối hợp hiện dưới sân.",
+     "Đồ thử: lúc đầu mỗi nhánh 1 skill, tới tick 100 có thêm LATE_SKILLS. Bấm ▶ Chạy xem tên 3 phối hợp hiện ra dưới sân.",
      "Chơi thử: đi theo 1 nhánh hay trộn 3 nhánh thì mạnh hơn?"],
     ["return count_branch(branch) >= 2",
      "if has_combo(\"ice\") and mob[\"slow\"] > 0:\n    amount += 3",
      "if has_combo(\"spark\") and tick % 90 == 0:\n    storm()",
      "if has_combo(\"fire\"):\n    splash(shot)"],
     [run_goal(),
-     goal("fire", "drewText", "Mở được Lò Than", text="Lò Than"),
-     goal("ice", "drewText", "Mở được Thấu Xương", text="Thấu Xương"),
-     goal("spark", "drewText", "Mở được Bão Sét", text="Bão Sét"),
+     goal("one", "drewText", "Mới 1 skill Băng thì chưa có phối hợp", text="Băng 1"),
+     goal("fire", "drewText", "Đủ 2 thì mở được Lò Than", text="Lò Than"),
+     goal("ice", "drewText", "Đủ 2 thì mở được Thấu Xương", text="Thấu Xương"),
+     goal("spark", "drewText", "Đủ 2 thì mở được Bão Sét", text="Bão Sét"),
+     goal("early", "varEquals", "Chưa có phối hợp thì không nổ, không bão", name="early", value=0),
+     goal("soft", "varEquals", "Chưa có phối hợp thì đạn chỉ trừ 1", name="early_hit", value=1),
      goal("storm", "called", "Bão Sét nổ đúng nhịp", name="storm", min=1),
      goal("splash", "called", "Lò Than nổ lan khi đạn trúng", name="splash", min=2),
-     goal("chill", "drewText", "Thấu Xương: quái chậm đau thêm 3", text="1 máu")],
-    prep=[("START_SKILLS = [0, 1, 6]\n", "START_SKILLS = [0, 1, 3, 5, 6, 7]\n"), ("\"hp\": 2,", "\"hp\": 8,"), ('''"branch": "fire", "name": "Lửa"})
+     goal("chill", "drewText", "Thấu Xương: quái chậm đau thêm 3", text="Trúng: 4"),
+     goal("slow", "varEquals", "Quái chưa chậm thì không đau thêm", name="hit", value=1)],
+    prep=[("START_SKILLS = [0, 1, 6]\n", "START_SKILLS = [3, 6]\nLATE_SKILLS = [1, 5, 7]\ncombos = 0\nhit = 0\nearly = 0\nearly_hit = 0\n"),
+          ('''    global tick, screen
+    tick += 1
+''', '''    global tick, screen, early, early_hit
+    tick += 1
+    if tick == 100:
+        early = combos
+        early_hit = hit
+        for number in LATE_SKILLS:
+            add_skill(SKILLS[number])
+'''), ('''def hit_mobs():
+    for''', '''def hit_mobs():
+    global hit
+    for'''), ('''                hurt(mob, 1 + bonus["power"])
+''', '''                before = mob["hp"]
+                hurt(mob, 1 + bonus["power"])
+                hit = before - mob["hp"]
+'''), ('''    draw_text("Cấp " + str(level), 180, 24)
+''', '''    draw_text("Cấp " + str(level), 180, 24)
+    draw_text("Trúng: " + str(hit), 420, 24)
+'''), ('''"branch": "fire", "name": "Lửa"})
 ''', '''"branch": "fire", "name": "Lửa", "combo": "Lò Than"})
 '''), ('''"branch": "ice", "name": "Băng"})
 ''', '''"branch": "ice", "name": "Băng", "combo": "Thấu Xương"})
@@ -423,17 +454,18 @@ def start_game():
 ''', '''def hurt(mob, amount):
     # Em viết tiếp ở đây (2)
 '''), ('''def strike(''', '''def storm():
+    global combos
+    combos += 1
     blast(hero, 1200, 2)
 
 
 def splash(shot):
+    global combos
+    combos += 1
     blast(shot, 90, 2)
 
 
-def strike('''), ('''        draw_thing(mob["image"], mob["x"], mob["y"], 2)
-''', '''        draw_thing(mob["image"], mob["x"], mob["y"], 2)
-        draw_text(str(mob["hp"]) + " máu", mob["x"], mob["y"] - 20, 16)
-'''), ('''
+def strike('''), ('''
 
 def hit_mobs():
 ''', '''    # Em viết tiếp ở đây (3)
@@ -456,10 +488,19 @@ def hit_mobs():
            ("chỉ hiện tên, không có tác dụng", ["return count_branch(branch) >= 2", "", "", ""], [("    return count_branch(branch) >= 2\n    return False\n", "    return count_branch(branch) >= 2\n")]),
            ("lúc nào cũng có phối hợp mà quên tác dụng", ["return True", "", "", ""], []),
            ("cần tới 3 skill", ["return count_branch(branch) >= 3", 'if has_combo("ice") and mob["slow"] > 0:\n    amount += 3',
-           CB[2], CB[3]], [])],
-    test={"frames": 200, "taps": [5], "keys": [hold("1", 10, 10)]},
+           CB[2], CB[3]], []),
+           ("1 skill đã có phối hợp", [CB[0].replace(">= 2", ">= 1")] + CB[1:], []),
+           ("lúc nào cũng có phối hợp", ["return True"] + CB[1:], []),
+           ("nổ lan mà không hỏi has_combo", CB[:3] + ["splash(shot)"], []),
+           ("bão mà không hỏi has_combo", [CB[0], CB[1], "if tick % 90 == 0:\n    storm()", CB[3]], []),
+           ("bão mỗi khung", [CB[0], CB[1], 'if has_combo("spark"):\n    storm()', CB[3]], []),
+           ("Thấu Xương mà không hỏi has_combo", [CB[0], 'if mob["slow"] > 0:\n    amount += 3', CB[2], CB[3]], []),
+           ("Thấu Xương mà không hỏi slow", [CB[0], 'if has_combo("ice"):\n    amount += 3', CB[2], CB[3]], []),
+           ("đau thêm 1 thôi", [CB[0], CB[1].replace("3", "1"), CB[2], CB[3]], []),
+           ("gán amount = 3", [CB[0], CB[1].replace("+= 3", "= 3"), CB[2], CB[3]], [])],
+    test={"frames": 260, "taps": [5], "keys": [hold("1", 10, 10)] + [hold("1", f, f) for f in range(120, 260, 8)]},
     new="hàm trả về True/False mở thêm luật; bảng BRANCHES giữ tên",
-    reorganised="Nhớt 8 máu, có số máu trên đầu để thử; thêm storm(), splash(shot). Bảng BRANCHES thêm ngăn combo; đủ 2 skill thì dưới sân hiện tên phối hợp.")
+    reorganised="Thêm storm(), splash(shot); đồ thử: LATE_SKILLS thêm skill ở tick 100, hit và chữ Trúng là phát vừa rồi trừ mấy máu, combos đếm số lần nổ và bão, early / early_hit nhớ hai số đó trước khi có phối hợp. Bảng BRANCHES thêm ngăn combo; đủ 2 skill thì dưới sân hiện tên phối hợp.")
 
 # ---------------------------------------------------------------- h15
 TWO = '''MOBS["bat"] = {"image": "mob-bat", "hp": 2, "speed": 2, "size": 2, "xp": 1}
@@ -473,12 +514,12 @@ ex(
     "Quái cũng thành bảng: MOBS[\"slime\"] là một hộp. (1) Thêm MOBS[\"bat\"]: hình mob-bat, hp 2, speed 2, size 2, xp 1 và "
     "MOBS[\"golem\"]: hình mob-golem, hp 8, speed 1, size 3, xp 3. (2) Trong make_mob, chép hp, speed, size, xp từ row sang mob.",
     ["Chỗ (1): MOBS[\"bat\"] = {\"image\": \"mob-bat\", \"hp\": 2, \"speed\": 2, \"size\": 2, \"xp\": 1}",
-     "Golem: hp 8, speed 1, size 3, xp 3. Trâu hơn nhưng cho nhiều ngọc hơn.",
+     "Golem: hp 8, speed 1, size 3, xp 3. Lì đòn hơn nhưng cho nhiều ngọc hơn.",
      "Chỗ (2): row là dòng của con đó trong bảng. Viết mob[\"hp\"] = row[\"hp\"]",
      "Làm y hệt cho \"speed\", \"size\" và \"xp\".",
      "Vì sao phải chép? Mỗi con cần hp riêng, nếu dùng chung hộp thì một con đau là cả bầy đau.",
-     "Nhớt giờ có 3 máu. Số trên đầu là máu, số trên ngọc là xp: đồ thử để em thấy bảng có tác dụng, Bài tập 3 bỏ đi.",
-     "Bấm ▶ Chạy, rồi ⛶: dơi nhanh, golem to và trâu."],
+     "Nhớt giờ có 3 máu. Chữ trên đầu là máu và cỡ, số trên ngọc là xp: đồ thử để em thấy bảng có tác dụng, Bài tập 3 bỏ đi.",
+     "Bấm ▶ Chạy, rồi ⛶: dơi nhanh, golem (người đá) to và lì đòn."],
     ["Bảng này dùng tên làm chìa: MOBS[name] lấy đúng dòng.",
      "mob[\"hp\"] = row[\"hp\"]\nmob[\"speed\"] = row[\"speed\"]",
      "size là cỡ vẽ, cũng là cỡ va chạm."],
@@ -488,9 +529,32 @@ ex(
      goal("slime", "drewCount", "Vẫn có nhớt", sprite="mob-slime", min=2),
      goal("fastx", "staysWithin", "Dơi bay nhanh: đã vào sâu trong sân", sprite="mob-bat", axis="x", min=50, max=518, frames=[40, 41]),
      goal("fasty", "staysWithin", "Dơi bay nhanh theo cả chiều dọc", sprite="mob-bat", axis="y", min=50, max=518, frames=[40, 41]),
-     goal("tough", "drewText", "Golem có 8 máu", text="8 máu"),
+     goal("tough", "drewText", "Golem có 8 máu, cỡ 3", text="8 máu, cỡ 3"),
+     goal("light", "drewText", "Dơi có 2 máu, cỡ 2", text="2 máu, cỡ 2"),
      goal("gem", "drewText", "Golem rơi ngọc +3", text="+3")],
-    prep=[("START_SKILLS = [0, 1, 3, 5, 6, 7]\n", "START_SKILLS = [0, 0, 0]\n"), ('''
+    prep=[("START_SKILLS = [3, 6]\nLATE_SKILLS = [1, 5, 7]\ncombos = 0\nhit = 0\nearly = 0\nearly_hit = 0\n", "START_SKILLS = [0, 0, 0]\n"),
+          ('''    global tick, screen, early, early_hit
+    tick += 1
+    if tick == 100:
+        early = combos
+        early_hit = hit
+        for number in LATE_SKILLS:
+            add_skill(SKILLS[number])
+''', '''    global tick, screen
+    tick += 1
+'''), ('''def hit_mobs():
+    global hit
+''', '''def hit_mobs():
+'''), ('''                before = mob["hp"]
+                hurt(mob, 1 + bonus["power"])
+                hit = before - mob["hp"]
+''', '''                hurt(mob, 1 + bonus["power"])
+'''), ('''    draw_text("Trúng: " + str(hit), 420, 24)
+''', ''), ('''    global combos
+    combos += 1
+    blast(hero,''', '''    blast(hero,'''), ('''    global combos
+    combos += 1
+    blast(shot,''', '''    blast(shot,'''), ('''
 
 def draw_thing''', '''MOBS = {}
 MOBS["slime"] = {"image": "mob-slime", "hp": 3, "speed": 1, "size": 2, "xp": 1}
@@ -529,7 +593,8 @@ def draw_thing'''), ('''def make_mob(x, y):
         draw_text(str(mob["hp"]) + " máu", mob["x"], mob["y"] - 20, 16)
 ''', '''            draw_circle(mob["x"], mob["y"], 9 * mob["size"], "#7fd8ff")
         draw_thing(mob["image"], mob["x"], mob["y"], mob["size"])
-        draw_text(str(mob["hp"]) + " máu", mob["x"], mob["y"] - 10 * mob["size"], 16)
+        text = str(mob["hp"]) + " máu, cỡ " + str(mob["size"])
+        draw_text(text, mob["x"], mob["y"] - 10 * mob["size"], 16)
 '''), ('''        draw_thing("item-xp", gem["x"], gem["y"], 1)
 ''', '''        draw_thing("item-xp", gem["x"], gem["y"], 1)
         draw_text("+" + str(gem["xp"]), gem["x"], gem["y"] - 14, 18)
@@ -571,7 +636,10 @@ mob["size"] = row["size"]
 mob["xp"] = row["xp"]'''], []),
            ("quên chép xp", [TWO, COPY.replace('\nmob["xp"] = row["xp"]', "")], []),
            ("quên chép hp", [TWO, COPY.replace('mob["hp"] = row["hp"]\n', "")], []),
-           ("quên chép speed", [TWO, COPY.replace('mob["speed"] = row["speed"]\n', "")], [])],
+           ("quên chép speed", [TWO, COPY.replace('mob["speed"] = row["speed"]\n', "")], []),
+           ("quên chép size", [TWO, COPY.replace('mob["size"] = row["size"]\n', "")], []),
+           ("golem cỡ 2", [TWO.replace('"size": 3', '"size": 2'), COPY], []),
+           ("dơi nhầm máu", [TWO.replace('"mob-bat", "hp": 2', '"mob-bat", "hp": 20'), COPY], [])],
     test={"frames": 600, "taps": [5], "keys": [hold("1", f, f) for f in range(10, 600, 25)]},
     new="bảng tra theo tên: MOBS[name]; chép số từ bảng sang từng con",
     reorganised="Nhớt từ 8 về 3 máu. Số máu và số xp tạm hiện trên quái và ngọc. Sắp xếp lại lần 3: make_mob và spawn_mob nhận tên quái, quái ra cả bốn mép; va chạm theo size; ngọc mang "
@@ -687,6 +755,8 @@ elif len(mobs) == 0:
     new="bảng WAVES điều khiển nhịp game; đếm số còn lại",
     reorganised="Thêm WAVES, START_WAVE, wave, left, spawn_next, next_wave (qua đợt được +1 máu), màn win. Bỏ cách ra quái cũ.")
 
+BOSS = 'MOBS["boss"] = {"image": "boss-1", "hp": 12, "speed": 1, "size": 6, "xp": 9}'
+BOSS_WAVE = 'WAVES.append({"mob": "bat", "lead": "boss", "every": 3, "count": 3, "gap": 60})'
 ex(
     "h15-e3", "Trùm cuối",
     "(1) Thêm MOBS[\"boss\"]: hình boss-1, hp 12, speed 1, size 6, xp 9. (2) Thêm vào WAVES một dòng: mob \"bat\", lead "
@@ -695,13 +765,16 @@ ex(
      "Chỗ (2): WAVES.append({\"mob\": \"bat\", \"lead\": \"boss\", \"every\": 3, \"count\": 3, \"gap\": 60})",
      "left là 3, 2, 1. Chỉ 3 chia hết cho 3, nên trùm ra đúng một lần và ra trước.",
      "Chỗ (3), gần đầu file: START_WAVE = 3 (đợt thứ tư, vì đếm từ 0).",
-     "Máu 12 là để thử cho nhanh. Bài sau mình đổi thành trùm thật.",
+     "mob[\"max\"] nhớ máu lúc đầu: thanh đỏ dài 100 * hp / max, chữ ghi 12/12. Máu 12 là để thử, Bài 16 có trùm thật.",
      "Bấm ▶ Chạy: hạ trùm và dơi xong thì hiện Em thắng rồi!"],
-    ["Trùm chỉ là một dòng trong bảng: to hơn, trâu hơn.",
+    ["Trùm chỉ là một dòng trong bảng: to hơn, lì đòn hơn.",
      "MOBS[\"boss\"] = {\"image\": \"boss-1\", \"hp\": 12, \"speed\": 1, \"size\": 6, \"xp\": 9}",
      "START_WAVE = 3"],
     [run_goal(),
      goal("boss", "drewCount", "Trùm ra sân", sprite="boss", min=1),
+     goal("big", "drewText", "Trùm to, đủ 12 máu", text="12/12"),
+     goal("first", "staysWithin", "Trùm ra trước, sau 60 khung, đi từ từ", sprite="boss", axis="x", min=-60, max=10, frames=[75, 90]),
+     goal("bat", "drewCount", "Dơi ra theo trùm", sprite="mob-bat", min=1),
      goal("win", "varEquals", "Hạ trùm thì thắng", name="screen", value="win"),
      goal("text", "drewText", "Có chữ thắng", text="Em thắng rồi!"),
      goal("kills", "varCompare", "Hạ cả trùm lẫn dơi", name="kills", op=">=", value=3)],
@@ -712,24 +785,30 @@ ex(
 ''', '''"every": 3, "count": 15, "gap": 40})
 # Em viết tiếp ở đây (2)
 '''), ('''        draw_thing(mob["image"], mob["x"], mob["y"], mob["size"])
-        draw_text(str(mob["hp"]) + " máu", mob["x"], mob["y"] - 10 * mob["size"], 16)
+        text = str(mob["hp"]) + " máu, cỡ " + str(mob["size"])
+        draw_text(text, mob["x"], mob["y"] - 10 * mob["size"], 16)
 ''', '''        draw_thing(mob["image"], mob["x"], mob["y"], mob["size"])
         if mob["size"] > 4:
             draw_rect(mob["x"] - 50, mob["y"] - 60, 100 * mob["hp"] / mob["max"], 8, "#ff6b6b")
+            draw_text(str(mob["hp"]) + "/" + str(mob["max"]), mob["x"], mob["y"] - 74, 16)
 '''), ('''        draw_text("+" + str(gem["xp"]), gem["x"], gem["y"] - 14, 18)
 ''', ''), ('''    mob["hp"] = row["hp"]
 ''', '''    mob["hp"] = row["hp"]
     mob["max"] = row["hp"]
 '''), ("START_SKILLS = [5]\n", "START_SKILLS = [0, 0, 6, 6]\n")],
-    fills=['MOBS["boss"] = {"image": "boss-1", "hp": 12, "speed": 1, "size": 6, "xp": 9}',
-           'WAVES.append({"mob": "bat", "lead": "boss", "every": 3, "count": 3, "gap": 60})'],
+    fills=[BOSS, BOSS_WAVE],
     sol=[("START_WAVE = 0\n", "START_WAVE = 3\n")],
     wrong=[("quên dòng trong WAVES", ['MOBS["boss"] = {"image": "boss-1", "hp": 12, "speed": 1, "size": 6, "xp": 9}', ""], []),
            ("đợt cuối không có trùm", ['MOBS["boss"] = {"image": "boss-1", "hp": 12, "speed": 1, "size": 6, "xp": 9}',
-            'WAVES.append({"mob": "bat", "lead": "golem", "every": 3, "count": 3, "gap": 60})'], [("START_WAVE = 0\n", "START_WAVE = 3\n")])],
+            'WAVES.append({"mob": "bat", "lead": "golem", "every": 3, "count": 3, "gap": 60})'], [("START_WAVE = 0\n", "START_WAVE = 3\n")])] + [
+           (what, [BOSS.replace(a, b), BOSS_WAVE.replace(a, b)], [("START_WAVE = 0\n", "START_WAVE = 3\n")]) for what, a, b in [
+               ("đổi chỗ mob và lead", '"mob": "bat", "lead": "boss"', '"mob": "boss", "lead": "bat"'), ("con nào cũng là trùm", '"every": 3', '"every": 1'),
+               ("trùm ra giữa đợt", '"every": 3', '"every": 2'), ("quên dơi", '"mob": "bat"', '"mob": "golem"'),
+               ("trùm bé xíu", '"size": 6', '"size": 2'), ("trùm 1 máu", '"hp": 12', '"hp": 1'),
+               ("trùm chạy quá nhanh", '"speed": 1', '"speed": 3'), ("ra dồn một lúc", '"gap": 60', '"gap": 1')]],
     test={"frames": 600, "taps": [5], "keys": [hold("1", 10, 10), hold("1", 200, 200), hold("1", 300, 300), hold("1", 400, 400), hold("1", 450, 450), hold("1", 500, 500)]},
     new="trùm = một dòng trong bảng; biến START_WAVE để thử nhanh",
-    reorganised="Bỏ số máu, số xp tạm. Thêm thanh máu cho con to (size > 4) và ngăn max.")
+    reorganised="Bỏ chữ máu, số xp tạm. Thêm thanh máu, số máu cho con to (size > 4) và ngăn max.")
 
 # ---------------------------------------------------------------- h16
 HERO2 = '''HEROES.append({"name": "Pháp sư", "image": "hero-mage", "hp": 5, "speed": 3, "reach": 320, "power": 3})
@@ -743,8 +822,8 @@ ex(
      "Chỗ (2): for key in row: đi qua từng tên ngăn: \"name\", \"image\", \"hp\"…",
      "Thụt vào: hero[key] = row[key]. Hai dòng chép được mọi ngăn.",
      "Chỗ (3), đầu file: START_HERO = 2 để thử cung thủ.",
-     "Từ bài này quái trâu thật: nhớt 4 máu, dơi 3, golem 18, trùm 400 và đụng một cái mất 3 máu.",
-     "Bấm ▶ Chạy: nhân vật là cung thủ, chạy nhanh hơn."],
+     "Từ bài này quái lì đòn hơn: nhớt 4 máu, dơi 3, golem 18, trùm 400 và đụng một cái mất 3 máu.",
+     "Bấm ▶ Chạy: màn chờ ghi từng dòng của bảng (máu, tốc độ, tầm, sức), rồi cung thủ vào hầm, chạy nhanh hơn."],
     ["for trên một dict cho em tên từng ngăn.",
      "for key in row:\n    hero[key] = row[key]",
      "Đếm từ 0: Kiếm sĩ 0, Pháp sư 1, Cung thủ 2."],
@@ -752,6 +831,9 @@ ex(
      goal("archer", "drew", "Cung thủ vào hầm", sprite="hero-archer"),
      goal("name", "drewText", "Có tên Cung thủ", text="Cung thủ"),
      goal("hp", "drewText", "Máu của cung thủ là 6", text="Máu: 6"),
+     goal("rest", "drewText", "Chép cả sức 2 và tầm 500", text="Sức 2, tầm 500"),
+     goal("mage", "drewText", "Dòng Pháp sư đủ 4 số", text="Pháp sư 5 3 320 3"),
+     goal("bow", "drewText", "Dòng Cung thủ đủ 4 số", text="Cung thủ 6 4 500 2"),
      goal("fast", "distinctCount", "Cung thủ đi được", sprite="hero-archer", axis="x", min=10),
      goal("far", "drew", "Chạy nhanh 4 bước mỗi khung", sprite="hero-archer", at=[356, 276], tolerance=1)],
     prep=[('''            safe = 60 + bonus["armor"]
@@ -786,23 +868,31 @@ HEROES.append({"name": "Kiếm sĩ", "image": "hero-knight", "hp": 8, "speed": 3
           ('''"every": 3, "count": 3, "gap": 60''', '''"every": 20, "count": 20, "gap": 45'''),
           ('''    draw_thing(hero["image"], 300, 320, 5)
 ''', '''    draw_thing("hero-knight", 300, 320, 5)
-'''), ('''        draw_thing(hero["image"], hero["x"], hero["y"], 3)
-    draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
-    draw_text("Máu: " + str(hero["hp"]), 60, 24)
-''', '''        draw_thing(hero["image"], hero["x"], hero["y"], 3)
-    draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
-    draw_text("Máu: " + str(hero["hp"]), 60, 24)
+'''), ('''    draw_text("Bấm Space để vào hầm", 300, 430)
+''', '''    draw_text("Bấm Space để vào hầm", 300, 430)
+    for i in range(len(HEROES)):
+        row = HEROES[i]
+        text = row["name"]
+        for key in ["hp", "speed", "reach", "power"]:
+            text += " " + str(row[key])
+        draw_text(text, 300, 480 + i * 30)
+'''), ('''    draw_text("Máu: " + str(hero["hp"]), 60, 24)
+''', '''    draw_text("Máu: " + str(hero["hp"]), 60, 24)
+    draw_text("Sức " + str(hero["power"]) + ", tầm " + str(hero["reach"]), 90, 52, 18)
 ''')],
     fills=[HERO2,
            "for key in row:\n    hero[key] = row[key]"],
     sol=[("START_HERO = 0\n", "START_HERO = 2\n")],
     wrong=[("quên chép ngăn", [HERO2, ""], [("START_HERO = 0\n", "START_HERO = 2\n")]),
            ("chọn nhầm người", [HERO2, "for key in row:\n    hero[key] = row[key]"], [("START_HERO = 0\n", "START_HERO = 1\n")]),
-           ("chỉ chép hình", [HERO2, 'hero["image"] = row["image"]'], [("START_HERO = 0\n", "START_HERO = 2\n")])],
+           ("chỉ chép hình", [HERO2, 'hero["image"] = row["image"]'], [("START_HERO = 0\n", "START_HERO = 2\n")]),
+           ("quên chép tầm và sức", [HERO2, 'for key in ["name", "image", "hp", "speed"]:\n    hero[key] = row[key]'], [("START_HERO = 0\n", "START_HERO = 2\n")]),
+           ("nhầm số của pháp sư", [HERO2.replace("320", "32"), "for key in row:\n    hero[key] = row[key]"], [("START_HERO = 0\n", "START_HERO = 2\n")]),
+           ("nhầm sức của cung thủ", [HERO2.replace('"power": 2', '"power": 20'), "for key in row:\n    hero[key] = row[key]"], [("START_HERO = 0\n", "START_HERO = 2\n")])],
     test={"frames": 60, "taps": [5], "keys": [hold("1", 10, 10), hold("right", 20, 45)]},
     new="for key in row: chép cả dict",
-    reorganised="Bỏ START_HP; mọi số của hero lấy từ HEROES; đạn mạnh theo hero[\"power\"]; chỉ bắn khi "
-                "quái trong tầm. Đồ thử về 0, trùm thật 400 máu và đụng một cái mất 3 máu; các đợt đông hơn, quái trâu hơn để game vừa sức.")
+    reorganised="Bỏ START_HP; màn chờ tạm ghi bảng HEROES; thêm chữ Sức, tầm; mọi số của hero lấy từ HEROES; đạn mạnh theo hero[\"power\"]; chỉ bắn khi "
+                "quái trong tầm. Đồ thử về 0, trùm thật 400 máu và đụng một cái mất 3 máu; các đợt đông hơn, quái lì đòn hơn để game vừa sức.")
 
 PICK = '''row = HEROES[i]
 draw_thing(row["image"], 110, y + 50, 4)
@@ -818,14 +908,15 @@ ex(
      "Chỗ (2): row = HEROES[i]",
      "draw_thing(row[\"image\"], 110, y + 50, 4) rồi draw_text(row[\"name\"], 340, y + 36, 32)",
      "draw_text(\"Máu \" + str(row[\"hp\"]) + \", tầm \" + str(row[\"reach\"]), 340, y + 72)",
-     "Bấm ▶ Chạy: máy bấm phím 2 chọn Pháp sư. Rồi ⛶ và tự chọn."],
+     "Bấm ▶ Chạy: máy bấm phím 3 chọn Cung thủ. Rồi ⛶ và tự chọn."],
     ["Phím 1 là HEROES[0], nên phải trừ 1.",
      "Số phải đổi thành chữ bằng str trước khi nối.",
      "start_game(HEROES[number - 1])"],
     [run_goal(),
      goal("three", "drewCount", "Thấy đủ 3 nhân vật", sprite="hero", min=3),
-     goal("name", "drewText", "Có tên cung thủ", text="Cung thủ"),
-     goal("mage", "drew", "Phím 2 là Pháp sư vào hầm", sprite="hero-mage", at=[276, 276], tolerance=1),
+     goal("rows", "distinctCount", "Mỗi nhân vật một hàng", sprite="hero", axis="y", min=3),
+     goal("name", "drewText", "Có tên pháp sư", text="Pháp sư"),
+     goal("archer", "drew", "Phím 3 là Cung thủ vào hầm", sprite="hero-archer", at=[276, 276], tolerance=1),
      goal("play", "varEquals", "Vào được hầm", name="screen", value="play")],
     prep=[('''hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 5, "speed": 3}
 hero["reach"] = 400
@@ -865,6 +956,12 @@ START_HERO = 2
 '''), ('''    draw_text("HẦM NGỌC", 300, 220, 64)
     draw_thing("hero-knight", 300, 320, 5)
     draw_text("Bấm Space để vào hầm", 300, 430)
+    for i in range(len(HEROES)):
+        row = HEROES[i]
+        text = row["name"]
+        for key in ["hp", "speed", "reach", "power"]:
+            text += " " + str(row[key])
+        draw_text(text, 300, 480 + i * 30)
 ''', '''    draw_text("HẦM NGỌC", 300, 70, 64)
     draw_text("Chọn nhân vật: bấm 1, 2, 3", 300, 140)
     for i in range(3):
@@ -889,8 +986,11 @@ screen = "title"'''), ('''    if screen == "win":
     fills=[PICK_NUMBER, PICK],
     wrong=[("quên trừ 1", ["if number > 0 and number < 3:\n    start_game(HEROES[number])", PICK], []),
            ("ai cũng là kiếm sĩ", [PICK_NUMBER.replace("number - 1", "0"), PICK], []),
-           ("vẽ ba lần một người", [PICK_NUMBER, PICK.replace("HEROES[i]", "HEROES[0]")], [])],
-    test={"frames": 60, "keys": [hold("2", 10, 10), hold("1", 30, 30)]},
+           ("vẽ ba lần một người", [PICK_NUMBER, PICK.replace("HEROES[i]", "HEROES[0]")], []),
+           ("phím nào cũng ra pháp sư", [PICK_NUMBER.replace("number - 1", "1"), PICK], []),
+           ("đếm ngược", [PICK_NUMBER.replace("number - 1", "3 - number"), PICK], []),
+           ("vẽ chồng lên một hàng", [PICK_NUMBER, PICK.replace("y + 50", "230")], [])],
+    test={"frames": 60, "keys": [hold("3", 10, 10), hold("1", 30, 30)]},
     new="dùng lại picked_number() cho màn khác; hàm nhận cả một dòng của bảng",
     reorganised="Bỏ START_HERO; start_game(row); make_mob cũng chép bằng for key in row; thua hay thắng thì Space về màn chọn.")
 
@@ -900,6 +1000,10 @@ for thing in things:
     if thing["hp"] > 0:
         kept.append(thing)
 return kept'''
+FLIP = '''for effect in effects:
+    effect["frame"] += 0.5
+    effect["hp"] -= 1
+effects = living(effects)'''
 ex(
     "h17-e1", "Hiệu ứng",
     "Mỗi hiệu ứng là một hộp có frame và hp. (1) living(things) trả về danh sách mới chỉ giữ những thứ có hp > 0. (2) Trong "
@@ -917,6 +1021,8 @@ ex(
     [run_goal(),
      goal("hit", "drewCount", "Trúng đạn thì tóe sáng", sprite="fx-hit", min=1),
      goal("poof", "drewCount", "Quái thua thì bụp khói", sprite="fx-poof", min=1),
+     goal("flip", "varCompare", "Chiếu đủ tới hình cuối, hình số 8", name="page", op=">=", value=8),
+     goal("slow", "varCompare", "Mỗi hình giữ 2 khung, không chiếu lại", name="page", op="<=", value=8.5),
      goal("gone", "varCompare", "Hiệu ứng xong thì mất", name="busy", op="<=", value=3),
      goal("more", "varCompare", "Có lúc có hiệu ứng", name="busy", op=">=", value=1, when="ever"),
      goal("keep", "called", "Có dùng living", name="living", min=10)],
@@ -949,23 +1055,26 @@ def move_hero():
 '''), ('''                shot["live"] = False
 ''', '''                shot["live"] = False
                 add_effect("fx-hit", 24, mob)
+'''), ('''    blast(hero, 1200, 2)
+''', '''    blast(hero, 1200, 2)
+    for mob in mobs:
+        add_effect("fx-spark", 24, mob)
+'''), ('''    blast(shot, 90, 2)
+''', '''    blast(shot, 90, 2)
+    add_effect("fx-fire", 24, shot)
 '''), ('''            kills += 1
 ''', '''            kills += 1
             add_effect("fx-poof", 28, mob)
 '''), ('''        blast(hero, 130, bonus["ring"])
 ''', '''        blast(hero, 130, bonus["ring"])
         add_effect("fx-fire", 24, hero)
-'''), ('''    global bolt, flash
+'''), ('''    global bolt
     bolt = mob
-    flash = 10
     hurt(mob, amount)
 ''', '''    hurt(mob, amount)
     add_effect("fx-spark", 24, mob)
-'''), ('''    global flash
-    flash -= 1
-    if len(mobs)''', '''    if len(mobs)'''), ('''bolt = {}
-flash = 0
-''', ''), ('''    if flash > 0:
+'''), ('''bolt = {"x": 0, "y": 0}
+''', "page = 0\n"), ('''    if bonus["cloud"] > 0 and tick % 60 >= 30 and tick % 60 < 40:
         draw_line(bolt["x"], 0, bolt["x"], bolt["y"], "#ffe14d", 4)
 ''', ''), ('''        level += 1
 ''', '''        level += 1
@@ -978,11 +1087,13 @@ flash = 0
 '''), ('''    draw_text(hero["name"], hero["x"]''', '''    for effect in effects:
         path = "images/" + effect["image"] + ".png"
         draw_image(path, effect["x"], effect["y"], effect["frame"])
-    draw_text(hero["name"], hero["x"]'''), ('''def far_edge(value)''', '''def far_edge(value)''')],
-    fills=[LIVING, '''for effect in effects:
-    effect["frame"] += 0.5
-    effect["hp"] -= 1
-effects = living(effects)'''],
+        if effect["frame"] > page:
+            page = effect["frame"]
+    draw_text(hero["name"], hero["x"]'''), ('''def draw_play():
+''', '''def draw_play():
+    global page
+'''), ('''def far_edge(value)''', '''def far_edge(value)''')],
+    fills=[LIVING, FLIP],
     sol=[("    return kept\n    return things\n", "    return kept\n")],
     wrong=[("giữ thứ hết hp", [LIVING.replace("> 0", "<= 0"), '''for effect in effects:
     effect["frame"] += 0.5
@@ -994,10 +1105,14 @@ effects = living(effects)'''], [("    return kept\n    return things\n", "    re
            ("quên effects = living(effects)", [LIVING, '''for effect in effects:
     effect["frame"] += 0.5
     effect["hp"] -= 1
-living(effects)'''], [("    return kept\n    return things\n", "    return kept\n")])],
+living(effects)'''], [("    return kept\n    return things\n", "    return kept\n")])] + [
+           (what, [LIVING.replace(a, b), FLIP.replace(a, b)], [("    return kept\n    return things\n", "    return kept\n")]) for what, a, b in [
+               ("quên cộng frame", 'effect["frame"] += 0.5', 'effect["frame"] += 0'), ("frame cộng 1", "+= 0.5", "+= 1"),
+               ("gán frame = 0.5", "+= 0.5", "= 0.5"), ("bớt hp quá nhanh", 'effect["hp"] -= 1', 'effect["hp"] -= 5'),
+               ("giữ cả thứ hp bằng 0", '> 0', '>= 0')]],
     test={"frames": 420, "taps": [], "keys": [hold("1", 10, 10), hold("1", 20, 20), hold("1", 300, 300), hold("2", 350, 350), hold("2", 400, 400)]},
     new="gói khuôn giữ lại thành hàm living(things); frame chạy dần = hoạt hình",
-    reorganised="Thêm effects, busy, add_effect(image, half, thing) (half là nửa ảnh: 24 hay 28) và các lời gọi add_effect; tia vàng của "
+    reorganised="Thêm effects, busy, page (hình lớn nhất đã chiếu, máy chấm đọc), add_effect(image, half, thing) (half là nửa ảnh: 24 hay 28) và các lời gọi add_effect; tia vàng của "
                 "sét đổi thành hiệu ứng fx-spark; move_effects() chạy mỗi khung.")
 
 ex(
@@ -1065,7 +1180,12 @@ ex(
     gems = living(gems)
 '''), ('''"xp": mob["xp"]})''', '''"xp": mob["xp"], "hp": 1})'''), ('''    global effects, busy
 ''', '''    global effects
-'''), ('''    effects = living(effects)
+'''), ("page = 0\n", ""), ('''def draw_play():
+    global page
+''', '''def draw_play():
+'''), ('''        if effect["frame"] > page:
+            page = effect["frame"]
+''', ''), ('''    effects = living(effects)
     busy = len(effects)
 ''', '''    effects = living(effects)
 '''), ('''        start_game(HEROES[number - 1])
@@ -1094,7 +1214,7 @@ ex(
            ("nhầm tiếng lên cấp", ['play_sound("click")', 'play_sound("point")', 'play_sound("point")', 'play_sound("hit")', 'play_music("adventure")'], [])],
     test={"frames": 600, "taps": [], "keys": [hold("2", 5, 5), hold("1", 15, 15)] + [hold("1", f, f) for f in range(100, 600, 50)]},
     new="tiếng đặt ở đúng lúc việc xảy ra, không đặt ở chỗ chạy mỗi khung",
-    reorganised="Thua hay thắng thì tắt nhạc, thua có tiếng fall. Sắp xếp lại lần 4: đạn và ngọc cũng có hp và dùng living(); bỏ remove_shots, live, busy. START_WAVE = 2 "
+    reorganised="Thua hay thắng thì tắt nhạc, thua có tiếng fall. Sắp xếp lại lần 4: đạn và ngọc cũng có hp và dùng living(); bỏ remove_shots, live, busy, page. START_WAVE = 2 "
                 "để thử đợt đông quái (Bài 18 trả về 0).")
 
 # ---------------------------------------------------------------- h18
@@ -1103,18 +1223,19 @@ NEW_MOB = 'MOBS["ghost"] = {"image": "mob-ghost", "hp": 10, "speed": 2, "size": 
 NEW_WAVE = 'WAVES.append({"mob": "ghost", "lead": "golem", "every": 4, "count": 32, "gap": 22})'
 ex(
     "h18-e1", "Quái mới, skill mới của em",
-    "Thêm 3 dòng bảng, rồi đổi START_SKILLS = [] thành [9] để thử. (1) Skill \"Giày Gió: chạy nhanh\", branch common, icon 2, what speed, add 2. (2) MOBS[\"ghost\"]: "
+    "Thêm 3 dòng bảng, rồi đổi START_SKILLS = [] thành [9] để thử. (1) Skill \"Giày Gió: chạy nhanh\", branch common (chung), icon 2, what speed, add 2. (2) MOBS[\"ghost\"]: "
     "hình mob-ghost, hp 10, speed 2, size 2, xp 2. (3) Đợt trước trùm: mob ghost, lead golem, every 4, count 32, gap 22.",
     ["Chỗ (1): SKILLS.append({\"name\": \"Giày Gió: chạy nhanh\", \"branch\": \"common\", \"icon\": 2, \"what\": \"speed\", \"add\": 2})",
      "Chỗ (2): MOBS[\"ghost\"] = {\"image\": \"mob-ghost\", \"hp\": 10, \"speed\": 2, \"size\": 2, \"xp\": 2}",
      "Chỗ (3): WAVES.append({\"mob\": \"ghost\", \"lead\": \"golem\", \"every\": 4, \"count\": 32, \"gap\": 22})",
      "Gần đầu file, đổi START_SKILLS = [] thành [9]: vào ván có sẵn Giày Gió (dòng thứ mười, đếm từ 0). START_WAVE = 3 có sẵn.",
-     "Bấm ▶ Chạy. Xong thì em đổi số, đổi tên, thêm dòng của riêng em."],
+     "Bấm ▶ Chạy. Dòng của riêng em để tới Bài tập 3 hãy thêm: bài tập sau bắt đầu từ code mẫu."],
     ["Ngoài 3 dòng bảng và START_SKILLS = [9], em không sửa gì khác.",
      "what phải là một ngăn có trong bonus.",
      "SKILLS.append({\"name\": \"Giày Gió: chạy nhanh\", \"branch\": \"common\", \"icon\": 2, …"],
     [run_goal(),
-     goal("ghost", "drewCount", "Có ma", sprite="mob-ghost", min=2),
+     goal("ghost", "drewCount", "Đợt ma đông: có lúc 6 con", sprite="mob-ghost", min=6),
+     goal("golem", "drewCount", "Golem dẫn đầu, cứ 4 con một golem", sprite="mob-golem", min=2),
      goal("wave", "drewText", "Game có 5 đợt", text="Đợt 4/5"),
      goal("icon", "drewCount", "Có hình Giày Gió", sprite="skill-common-2", min=1),
      goal("fast", "drew", "Giày Gió làm em chạy nhanh hơn", sprite="hero", at=[476, 276], tolerance=1)],
@@ -1151,11 +1272,18 @@ ex(
     sol=[("START_SKILLS = []\n", "START_SKILLS = [9]\n")],
     wrong=[("quên đợt ma", [NEW_SKILL, NEW_MOB, ""], [("START_SKILLS = []\n", "START_SKILLS = [9]\n")]),
            ("what nhầm ngăn", [NEW_SKILL.replace("speed", "power"), NEW_MOB, NEW_WAVE],
-            [("START_SKILLS = []\n", "START_SKILLS = [9]\n")])],
+            [("START_SKILLS = []\n", "START_SKILLS = [9]\n")])] + [
+           (what, [x.replace(a, b) for x in (NEW_SKILL, NEW_MOB, NEW_WAVE)], [("START_SKILLS = []\n", "START_SKILLS = [9]\n")]) for what, a, b in [
+               ("đổi chỗ mob và lead", '"mob": "ghost", "lead": "golem"', '"mob": "golem", "lead": "ghost"'),
+               ("dẫn đầu là nhớt", '"lead": "golem"', '"lead": "slime"'), ("đợt chỉ 3 con", '"count": 32', '"count": 3'),
+               ("ma ra quá thưa", '"gap": 22', '"gap": 60'), ("con nào cũng là golem", '"every": 4', '"every": 1'),
+               ("ma chỉ 1 máu", '"hp": 10', '"hp": 1'), ("nhầm nhánh", '"common"', '"fire"'), ("cộng 1", '"add": 2', '"add": 1')]],
     test={"frames": 260, "taps": [], "keys": [hold("1", 5, 5), hold("1", 15, 15), hold("right", 20, 59)]},
     new="thêm nội dung chỉ bằng dữ liệu",
     reorganised="move_hero() cộng bonus[\"speed\"]; START_WAVE, START_SKILLS để thử.")
 
+RECORD = '''draw_text("Hạ " + str(kills) + " quái, cấp " + str(level), 300, 370)
+draw_text("Kỷ lục: " + str(record), 300, 410)'''
 ex(
     "h18-e2", "Kỷ lục",
     "(1) Trong finish(result): nếu kills > record thì record = kills. (2) Ở màn hết ván: viết \"Hạ 12 quái, cấp 4\" (số thật của em) "
@@ -1164,15 +1292,17 @@ ex(
      "Vì sao record không nằm trong start_game? Vì kỷ lục phải nhớ qua nhiều ván.",
      "Chỗ (2): draw_text(\"Hạ \" + str(kills) + \" quái, cấp \" + str(level), 300, 370)",
      "draw_text(\"Kỷ lục: \" + str(record), 300, 410)",
-     "Bấm ▶ Chạy: máy thua một ván giữa đợt ma, rồi hiện kỷ lục."],
+     "Đồ thử: record = 2 là kỷ lục cũ, START_WAVE = 4 là gặp trùm ngay để thua nhanh.",
+     "Bấm ▶ Chạy: máy thua hai ván, hạ 3 quái rồi 1 quái. Kỷ lục phải là 3."],
     ["Kỷ lục cũng là tìm lớn nhất.", "if kills > record:\n    record = kills", "Nhớ str() khi nối số với chữ."],
     [run_goal(),
-     goal("keep", "varCompare", "Sang ván hai vẫn nhớ kỷ lục ván một", name="record", op=">=", value=1),
-     goal("new", "varEquals", "Đã vào ván hai", name="screen", value="play"),
-     goal("record", "drewText", "Hiện kỷ lục", text="Kỷ lục: 4")],
-    prep=[('''hero = {}
+     goal("first", "drewText", "Ván một: hiện số quái và cấp", text="Hạ 3 quái, cấp 1"),
+     goal("record", "drewText", "Hiện kỷ lục", text="Kỷ lục: 3"),
+     goal("second", "drewText", "Chơi tiếp ván hai: hạ ít hơn", text="Hạ 1 quái, cấp 1"),
+     goal("keep", "varEquals", "Ván hai ít hơn thì vẫn giữ kỷ lục 3", name="record", value=3)],
+    prep=[("START_WAVE = 3\n", "START_WAVE = 4\n"), ('''hero = {}
 ''', '''hero = {}
-record = 0
+record = 2
 '''), ('''def next_wave():
     global wave, left, screen
     if wave + 1 == len(WAVES):
@@ -1210,15 +1340,21 @@ def next_wave():
 ''', '''        draw_text("Bấm Space để chơi lại", 300, 320)
         # Em viết tiếp ở đây (2)
 ''')],
-    fills=["if kills > record:\n    record = kills", '''draw_text("Hạ " + str(kills) + " quái, cấp " + str(level), 300, 370)
-draw_text("Kỷ lục: " + str(record), 300, 410)'''],
+    fills=["if kills > record:\n    record = kills", RECORD],
     wrong=[("quên gán", ["", '''draw_text("Hạ " + str(kills) + " quái, cấp " + str(level), 300, 370)
 draw_text("Kỷ lục: " + str(record), 300, 410)'''], []),
-           ("quên hiện kỷ lục", ["if kills > record:\n    record = kills", ""], [])],
-    test={"frames": 560, "taps": [], "keys": [hold("2", 5, 5), hold("up", 67, 146), hold("up", 188, 274)]
-          + [hold("1", f, f) for f in range(17, 450, 12)] + [hold("space", 470, 470), hold("2", 482, 482), hold("1", 494, 494)]},
+           ("quên hiện kỷ lục", ["if kills > record:\n    record = kills", ""], [])] + [
+           (what, [code, RECORD], []) for what, code in [
+               ("thay luôn không cần hơn", "record = kills"), ("cộng dồn", "if kills > record:\n    record += kills"),
+               ("cộng dồn mọi ván", "record += kills"), ("so ngược dấu", "if kills < record:\n    record = kills")]] + [
+           ("quên dòng Hạ", ["if kills > record:\n    record = kills", RECORD.split("\n")[1]], []),
+           ("kỷ lục đặt lại mỗi ván", ["record = 0\nif kills > record:\n    record = kills", RECORD], [])],
+    test={"frames": 560, "taps": [], "keys": [hold("2", 5, 5), hold("1", 15, 15), hold("right", 41, 60), hold("right", 61, 90),
+                                    hold("up", 131, 170), hold("left", 171, 230), hold("down", 231, 270), hold("space", 332, 332),
+                                    hold("2", 342, 342), hold("1", 352, 352), hold("right", 353, 372), hold("up", 403, 462),
+                                    hold("left", 463, 502), hold("left", 503, 522), hold("right", 523, 542)]},
     new="nhớ lớn nhất qua nhiều ván",
-    reorganised="Thêm record, finish(result); hết ván thì tắt nhạc.")
+    reorganised="Thêm record, finish(result); hết ván thì tắt nhạc. START_WAVE = 4 để thua nhanh, record = 2 là kỷ lục cũ để thử.")
 
 SIGN = '''draw_thing("item-heart", 150, 575, 2)
 draw_text("Em làm game này!", 300, 575, 20)'''
@@ -1226,13 +1362,13 @@ ex(
     "h18-e3", "Tháo đồ thử và ra mắt",
     "Trước khi ra mắt phải tháo đồ thử! (1) START_WAVE = 0 và START_SKILLS = []. (2) Ở màn chọn nhân vật, ký tên: vẽ "
     "item-heart to gấp 2 ở (150, 575) và viết chữ ký của em (biệt danh thôi) cỡ 20 ở (300, 575). Rồi đổi máy cho bạn chơi.",
-    ["Gần đầu file: đổi START_WAVE = 3 thành START_WAVE = 0",
+    ["Gần đầu file: đổi START_WAVE = 4 thành START_WAVE = 0",
      "Đổi START_SKILLS = [9] thành START_SKILLS = []",
      "Trong draw_title(), chỗ đánh dấu: draw_thing(\"item-heart\", 150, 575, 2)",
      "Dưới đó: draw_text(\"Em làm game này!\", 300, 575, 20). Đổi câu tùy em, đừng ghi tên thật.",
      "Bấm ▶ Chạy: ván mới bắt đầu ở Đợt 1/5 với 1 thẻ.",
      "Đổi máy với bạn, chơi game của bạn 10 phút. Ghi 1 điều hay và 1 điều muốn sửa.",
-     "Sửa 1 số trong bảng theo góp ý của bạn rồi chơi lại. Game là của em, cứ đổi thoải mái."],
+     "Bấm ▶ Chạy cho đạt hết mục tiêu đã, rồi mới thêm quái, skill, đợt của em và sửa theo góp ý. Đây là bản của em, cứ đổi."],
     ["Danh sách rỗng là []: không cho sẵn skill nào.", "START_WAVE = 0",
      "draw_text(\"Em làm game này!\", 300, 575, 20)"],
     [run_goal(),
@@ -1240,7 +1376,7 @@ ex(
      goal("sign", "drew", "Có trái tim cạnh chữ ký", sprite="item-heart", at=[134, 559], tolerance=40),
      goal("plain", "staysWithin", "Không còn giày thử, chạy 3 bước mỗi khung", sprite="hero", axis="x", min=390, max=399,
           frames=[62, 79])],
-    prep=[('''    for i in range(3):
+    prep=[("record = 2\n", "record = 0\n"), ('''    for i in range(3):
         y = 180 + i * 120
         draw_rect(60, y, 480, 100, "#33334a")
         row''', '''    # Em viết tiếp ở đây
@@ -1249,8 +1385,10 @@ ex(
         draw_rect(60, y, 480, 100, "#33334a")
         row''')],
     fills=[SIGN],
-    sol=[("START_WAVE = 3\n", "START_WAVE = 0\n"), ("START_SKILLS = [9]\n", "START_SKILLS = []\n")],
-    wrong=[("quên tháo skill thử", [SIGN], [("START_WAVE = 3\n", "START_WAVE = 0\n")]),
-           ("quên ký tên", [""], [("START_WAVE = 3\n", "START_WAVE = 0\n"), ("START_SKILLS = [9]\n", "START_SKILLS = []\n")])],
+    sol=[("START_WAVE = 4\n", "START_WAVE = 0\n"), ("START_SKILLS = [9]\n", "START_SKILLS = []\n")],
+    wrong=[("quên tháo skill thử", [SIGN], [("START_WAVE = 4\n", "START_WAVE = 0\n")]),
+           ("quên tháo START_WAVE", [SIGN], [("START_SKILLS = [9]\n", "START_SKILLS = []\n")]),
+           ("quên ký tên", [""], [("START_WAVE = 4\n", "START_WAVE = 0\n"), ("START_SKILLS = [9]\n", "START_SKILLS = []\n")])],
     test={"frames": 80, "taps": [], "keys": [hold("1", 5, 5), hold("1", 15, 15), hold("right", 20, 59)]},
-    new="tháo đồ thử, ký tên, chơi chéo và nhận xét")
+    new="tháo đồ thử, ký tên, chơi chéo và nhận xét",
+    reorganised="record bắt đầu từ 0.")

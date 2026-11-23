@@ -9,11 +9,11 @@
     "Chỗ (2): WAVES.append({\"mob\": \"bat\", \"lead\": \"boss\", \"every\": 3, \"count\": 3, \"gap\": 60})",
     "left là 3, 2, 1. Chỉ 3 chia hết cho 3, nên trùm ra đúng một lần và ra trước.",
     "Chỗ (3), gần đầu file: START_WAVE = 3 (đợt thứ tư, vì đếm từ 0).",
-    "Máu 12 là để thử cho nhanh. Bài sau mình đổi thành trùm thật.",
+    "mob[\"max\"] nhớ máu lúc đầu: thanh đỏ dài 100 * hp / max, chữ ghi 12/12. Máu 12 là để thử, Bài 16 có trùm thật.",
     "Bấm ▶ Chạy: hạ trùm và dơi xong thì hiện Em thắng rồi!"
   ],
   "hints": [
-    "Trùm chỉ là một dòng trong bảng: to hơn, trâu hơn.",
+    "Trùm chỉ là một dòng trong bảng: to hơn, lì đòn hơn.",
     "MOBS[\"boss\"] = {\"image\": \"boss-1\", \"hp\": 12, \"speed\": 1, \"size\": 6, \"xp\": 9}",
     "START_WAVE = 3"
   ],
@@ -69,6 +69,32 @@
       "id": "h15-e3-boss"
     },
     {
+      "label": "Trùm to, đủ 12 máu",
+      "kind": "drewText",
+      "text": "12/12",
+      "id": "h15-e3-big"
+    },
+    {
+      "label": "Trùm ra trước, sau 60 khung, đi từ từ",
+      "kind": "staysWithin",
+      "sprite": "boss",
+      "axis": "x",
+      "min": -60,
+      "max": 10,
+      "frames": [
+        75,
+        90
+      ],
+      "id": "h15-e3-first"
+    },
+    {
+      "label": "Dơi ra theo trùm",
+      "kind": "drewCount",
+      "sprite": "mob-bat",
+      "min": 1,
+      "id": "h15-e3-bat"
+    },
+    {
       "label": "Hạ trùm thì thắng",
       "kind": "varEquals",
       "name": "screen",
@@ -91,7 +117,7 @@
     }
   ],
   "new_idea": "trùm = một dòng trong bảng; biến START_WAVE để thử nhanh",
-  "reorganised": "Bỏ số máu, số xp tạm. Thêm thanh máu cho con to (size > 4) và ngăn max.",
+  "reorganised": "Bỏ chữ máu, số xp tạm. Thêm thanh máu, số máu cho con to (size > 4) và ngăn max.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -140,7 +166,15 @@
   },
   "wrong": [
     "quên dòng trong WAVES",
-    "đợt cuối không có trùm"
+    "đợt cuối không có trùm",
+    "đổi chỗ mob và lead",
+    "con nào cũng là trùm",
+    "trùm ra giữa đợt",
+    "quên dơi",
+    "trùm bé xíu",
+    "trùm 1 máu",
+    "trùm chạy quá nhanh",
+    "ra dồn một lúc"
   ],
   "alts": [
     "every lớn hơn count vẫn một trùm"

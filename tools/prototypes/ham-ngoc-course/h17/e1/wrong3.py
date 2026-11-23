@@ -8,15 +8,16 @@ HEROES.append({"name": "Cung thủ", "image": "hero-archer", "hp": 6, "speed": 4
 START_PICKS = 1
 START_WAVE = 0
 START_SKILLS = []
+page = 0
 held = 0
 
 SKILLS = []
 SKILLS.append({"name": "Đốm Lửa: đạn mạnh hơn", "branch": "fire", "icon": 1, "what": "power", "add": 1})
 SKILLS.append({"name": "Vòng Lửa: đốt quái gần", "branch": "fire", "icon": 2, "what": "ring", "add": 2})
-SKILLS.append({"name": "Nổ Tung: quái thua nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
+SKILLS.append({"name": "Nổ Tung: quái thua là nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
 SKILLS.append({"name": "Đòn Buốt: đạn làm chậm", "branch": "ice", "icon": 1, "what": "slow", "add": 60})
 SKILLS.append({"name": "Vòng Sương: tỏa lạnh", "branch": "ice", "icon": 4, "what": "frost", "add": 80})
-SKILLS.append({"name": "Áo Băng: bất tử lâu", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
+SKILLS.append({"name": "Áo Băng: bất tử lâu hơn", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
 SKILLS.append({"name": "Tay Chớp: bắn nhanh", "branch": "spark", "icon": 1, "what": "fast", "add": 5})
 SKILLS.append({"name": "Tia Đôi: thêm 1 viên", "branch": "spark", "icon": 2, "what": "extra", "add": 1})
 SKILLS.append({"name": "Mây Giông: sét đánh", "branch": "spark", "icon": 3, "what": "cloud", "add": 3})
@@ -128,11 +129,9 @@ def start_game(row):
     xp = 0
     level = 1
     owned = []
-    bonus = {"power": 0, "ring": 0, "boom": 0, "slow": 0, "frost": 0, "armor": 0}
-    bonus["fast"] = 0
-    bonus["extra"] = 0
-    bonus["cloud"] = 0
-    bonus["speed"] = 0
+    bonus = {}
+    for name in ["power", "ring", "boom", "slow", "frost", "armor", "fast", "extra", "cloud", "speed"]:
+        bonus[name] = 0
     for number in START_SKILLS:
         add_skill(SKILLS[number])
     picks = START_PICKS
@@ -241,10 +240,13 @@ def blast(center, size, amount):
 
 def storm():
     blast(hero, 1200, 2)
+    for mob in mobs:
+        add_effect("fx-spark", 24, mob)
 
 
 def splash(shot):
     blast(shot, 90, 2)
+    add_effect("fx-fire", 24, shot)
 
 
 def strike(mob, amount):
@@ -302,6 +304,10 @@ def remove_dead():
 
 def need():
     return 2 + level * 2
+
+
+def draw_bar(width):
+    draw_rect(0, 590, width, 10, "#2fc9a8")
 
 
 def deal_cards():
@@ -455,6 +461,7 @@ def draw_title():
 
 
 def draw_play():
+    global page
     clear("#2b2438")
     draw_thing("deco-torch", 124, 84, 3)
     draw_thing("deco-torch", 476, 84, 3)
@@ -470,17 +477,21 @@ def draw_play():
         draw_thing(mob["image"], mob["x"], mob["y"], mob["size"])
         if mob["size"] > 4:
             draw_rect(mob["x"] - 50, mob["y"] - 60, 100 * mob["hp"] / mob["max"], 8, "#ff6b6b")
+            draw_text(str(mob["hp"]) + "/" + str(mob["max"]), mob["x"], mob["y"] - 74, 16)
     if safe % 10 < 5:
         draw_thing(hero["image"], hero["x"], hero["y"], 3)
     for effect in effects:
         path = "images/" + effect["image"] + ".png"
         draw_image(path, effect["x"], effect["y"], effect["frame"])
+        if effect["frame"] > page:
+            page = effect["frame"]
     draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
     draw_text("Máu: " + str(hero["hp"]), 60, 24)
+    draw_text("Sức " + str(hero["power"]) + ", tầm " + str(hero["reach"]), 90, 52, 18)
     draw_text("Đợt " + str(wave + 1) + "/" + str(len(WAVES)), 530, 24)
     draw_text("Hạ: " + str(kills), 300, 24)
     draw_rect(0, 588, 600, 12, "#33334a")
-    draw_rect(0, 590, 600 * xp / need(), 10, "#2fc9a8")
+    draw_bar(600 * xp / need())
     draw_text("Cấp " + str(level), 180, 24)
     for i in range(len(BRANCHES)):
         row = BRANCHES[i]

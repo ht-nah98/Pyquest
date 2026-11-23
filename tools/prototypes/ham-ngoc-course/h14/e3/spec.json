@@ -1,7 +1,7 @@
 {
   "id": "h14-e3",
   "title": "Phối hợp",
-  "task": "Từ 2 skill cùng nhánh là có phối hợp (bài này nhớt có 8 máu). (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau thêm 3. (3) Sét: cứ 90 khung gọi storm(). (4) Lửa: đạn trúng thì gọi splash(shot).",
+  "task": "Từ 2 skill cùng nhánh là có phối hợp. (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau thêm 3. (3) Sét: cứ 90 khung gọi storm(). (4) Lửa: đạn trúng thì gọi splash(shot).",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
@@ -9,7 +9,7 @@
     "Chỗ (2), đầu hurt(): if has_combo(\"ice\") and mob[\"slow\"] > 0: rồi amount += 3",
     "Chỗ (3): if has_combo(\"spark\") and tick % 90 == 0: rồi storm(). storm nổ xa 1200: góc sân nào cũng tới.",
     "Chỗ (4), khi đạn trúng: if has_combo(\"fire\"): rồi splash(shot). Cả storm và splash đều viết sẵn bằng blast.",
-    "Số trên đầu quái là máu (đồ thử). Bấm ▶ Chạy: tên 3 phối hợp hiện dưới sân.",
+    "Đồ thử: lúc đầu mỗi nhánh 1 skill, tới tick 100 có thêm LATE_SKILLS. Bấm ▶ Chạy xem tên 3 phối hợp hiện ra dưới sân.",
     "Chơi thử: đi theo 1 nhánh hay trộn 3 nhánh thì mạnh hơn?"
   ],
   "hints": [
@@ -19,7 +19,7 @@
     "if has_combo(\"fire\"):\n    splash(shot)"
   ],
   "test": {
-    "frames": 200,
+    "frames": 260,
     "taps": [
       5
     ],
@@ -28,6 +28,96 @@
         "key": "1",
         "from": 10,
         "to": 10
+      },
+      {
+        "key": "1",
+        "from": 120,
+        "to": 120
+      },
+      {
+        "key": "1",
+        "from": 128,
+        "to": 128
+      },
+      {
+        "key": "1",
+        "from": 136,
+        "to": 136
+      },
+      {
+        "key": "1",
+        "from": 144,
+        "to": 144
+      },
+      {
+        "key": "1",
+        "from": 152,
+        "to": 152
+      },
+      {
+        "key": "1",
+        "from": 160,
+        "to": 160
+      },
+      {
+        "key": "1",
+        "from": 168,
+        "to": 168
+      },
+      {
+        "key": "1",
+        "from": 176,
+        "to": 176
+      },
+      {
+        "key": "1",
+        "from": 184,
+        "to": 184
+      },
+      {
+        "key": "1",
+        "from": 192,
+        "to": 192
+      },
+      {
+        "key": "1",
+        "from": 200,
+        "to": 200
+      },
+      {
+        "key": "1",
+        "from": 208,
+        "to": 208
+      },
+      {
+        "key": "1",
+        "from": 216,
+        "to": 216
+      },
+      {
+        "key": "1",
+        "from": 224,
+        "to": 224
+      },
+      {
+        "key": "1",
+        "from": 232,
+        "to": 232
+      },
+      {
+        "key": "1",
+        "from": 240,
+        "to": 240
+      },
+      {
+        "key": "1",
+        "from": 248,
+        "to": 248
+      },
+      {
+        "key": "1",
+        "from": 256,
+        "to": 256
       }
     ]
   },
@@ -38,22 +128,42 @@
       "id": "h14-e3-run"
     },
     {
-      "label": "Mở được Lò Than",
+      "label": "Mới 1 skill Băng thì chưa có phối hợp",
+      "kind": "drewText",
+      "text": "Băng 1",
+      "id": "h14-e3-one"
+    },
+    {
+      "label": "Đủ 2 thì mở được Lò Than",
       "kind": "drewText",
       "text": "Lò Than",
       "id": "h14-e3-fire"
     },
     {
-      "label": "Mở được Thấu Xương",
+      "label": "Đủ 2 thì mở được Thấu Xương",
       "kind": "drewText",
       "text": "Thấu Xương",
       "id": "h14-e3-ice"
     },
     {
-      "label": "Mở được Bão Sét",
+      "label": "Đủ 2 thì mở được Bão Sét",
       "kind": "drewText",
       "text": "Bão Sét",
       "id": "h14-e3-spark"
+    },
+    {
+      "label": "Chưa có phối hợp thì không nổ, không bão",
+      "kind": "varEquals",
+      "name": "early",
+      "value": 0,
+      "id": "h14-e3-early"
+    },
+    {
+      "label": "Chưa có phối hợp thì đạn chỉ trừ 1",
+      "kind": "varEquals",
+      "name": "early_hit",
+      "value": 1,
+      "id": "h14-e3-soft"
     },
     {
       "label": "Bão Sét nổ đúng nhịp",
@@ -72,12 +182,19 @@
     {
       "label": "Thấu Xương: quái chậm đau thêm 3",
       "kind": "drewText",
-      "text": "1 máu",
+      "text": "Trúng: 4",
       "id": "h14-e3-chill"
+    },
+    {
+      "label": "Quái chưa chậm thì không đau thêm",
+      "kind": "varEquals",
+      "name": "hit",
+      "value": 1,
+      "id": "h14-e3-slow"
     }
   ],
   "new_idea": "hàm trả về True/False mở thêm luật; bảng BRANCHES giữ tên",
-  "reorganised": "Nhớt 8 máu, có số máu trên đầu để thử; thêm storm(), splash(shot). Bảng BRANCHES thêm ngăn combo; đủ 2 skill thì dưới sân hiện tên phối hợp.",
+  "reorganised": "Thêm storm(), splash(shot); đồ thử: LATE_SKILLS thêm skill ở tick 100, hit và chữ Trúng là phát vừa rồi trừ mấy máu, combos đếm số lần nổ và bão, early / early_hit nhớ hai số đó trước khi có phối hợp. Bảng BRANCHES thêm ngăn combo; đủ 2 skill thì dưới sân hiện tên phối hợp.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -104,6 +221,7 @@
     "pq_if_else",
     "pq_import",
     "pq_index",
+    "pq_index_set",
     "pq_key_aug",
     "pq_key_get",
     "pq_key_held",
@@ -129,12 +247,22 @@
     "quên Lửa",
     "chỉ hiện tên, không có tác dụng",
     "lúc nào cũng có phối hợp mà quên tác dụng",
-    "cần tới 3 skill"
+    "cần tới 3 skill",
+    "1 skill đã có phối hợp",
+    "lúc nào cũng có phối hợp",
+    "nổ lan mà không hỏi has_combo",
+    "bão mà không hỏi has_combo",
+    "bão mỗi khung",
+    "Thấu Xương mà không hỏi has_combo",
+    "Thấu Xương mà không hỏi slow",
+    "đau thêm 1 thôi",
+    "gán amount = 3"
   ],
   "alts": [
     "if / return True",
     "trừ máu thẳng trong hurt",
     "nhân, if lồng nhau",
+    "gom điều kiện vào biến",
     "nổ lan trước khi hạ cờ"
   ]
 }

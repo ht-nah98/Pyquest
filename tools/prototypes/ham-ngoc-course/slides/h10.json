@@ -16,7 +16,7 @@
           "widget": {
             "kind": "sampleGame"
           },
-          "coachNotes": "3 phút. Cho một bé chơi game mẫu, cả lớp nhìn ngọc và thanh dưới đáy. Hỏi: ngọc rơi ở đâu? Đứng xa có lấy được không? Lúc nào thanh đầy? Game mẫu có nhiều thứ hơn, hôm nay chỉ nhìn ngọc."
+          "coachNotes": "Bài dài, nên cắt 2 buổi. Buổi 1: ba slide đầu và quiz, slide Nhặt ngọc, rồi Bài tập 1. Buổi 2: Nam châm, thanh, bảng need, rồi Bài tập 2 và 3. 3 phút: cho một bé chơi game mẫu, cả lớp nhìn ngọc và thanh dưới đáy. Hỏi: ngọc rơi ở đâu? Đứng xa có lấy được không? Lúc nào thanh đầy? Game mẫu có nhiều thứ hơn, hôm nay chỉ nhìn ngọc."
         },
         {
           "id": "h10-box",
@@ -29,11 +29,11 @@
           "quiz": {
             "question": "Quái ở (120, 80) vừa thua, em đứng ở (300, 300). Hộp nào được thêm vào gems?",
             "choices": [
-              "{\"x\": 300, \"y\": 300}",
               "{\"x\": 120, \"y\": 80}",
+              "{\"x\": 300, \"y\": 300}",
               "{\"x\": 180, \"y\": 220}"
             ],
-            "answer": 1,
+            "answer": 0,
             "explain": "Ngọc rơi ở chỗ con quái vừa thua, nên lấy x và y của con quái."
           }
         },
@@ -102,19 +102,19 @@
           "id": "h10-code1",
           "title": "Bài tập 1: Rơi và nhặt",
           "text": "Ở remove_dead(), chỗ con quái hết máu, thêm một hộp vào gems. Rồi viết take_gems() (nhặt ngọc) theo khuôn giữ lại. Chạy thử: số Ngọc phải tăng từng viên một.",
-          "coachNotes": "15 phút. Bé bí thì đặt remove_dead() và take_gems() cạnh nhau: cùng một khuôn. Lỗi hay gặp: quên dòng gán gems ở cuối, hoặc thụt dòng đó vào trong vòng for."
+          "coachNotes": "15 phút. Bé bí thì đặt remove_dead() và take_gems() cạnh nhau: cùng một khuôn. Lỗi hay gặp: quên gems = kept (viên nhặt rồi vẫn còn, Ngọc tăng mãi). Viết thụt vào for vẫn chạy đúng, nhưng để ngoài cho dễ đọc. Dạy 2 buổi thì dừng ở đây."
         },
         {
           "id": "h10-code2",
           "title": "Bài tập 2: Nam châm và thanh",
-          "text": "step_to viết cho quái, nhưng ngọc cũng có x và y nên dùng lại được. Em chỉ cần nghĩ: ai bước, bước về phía ai, mỗi khung mấy bước? Rồi vẽ thanh xanh chồng lên thanh tối có sẵn.",
-          "coachNotes": "Hỏi trước khi code: nếu viết ngược hai hộp trong step_to thì ai chạy? (nhân vật bị kéo về phía ngọc)."
+          "text": "step_to viết cho quái, nhưng ngọc cũng có x và y nên dùng lại được. Em chỉ cần nghĩ: ai bước, bước về phía ai, mỗi khung mấy bước? Rồi gọi draw_bar với bề rộng đúng: thanh xanh chồng lên thanh tối có sẵn.",
+          "coachNotes": "Buổi 2 bắt đầu ở slide Nam châm hút ngọc. draw_bar(width) có sẵn, chỉ vẽ một hình chữ nhật xanh. Hỏi trước khi code: nếu viết ngược hai hộp trong step_to thì ai chạy? (nhân vật bị kéo về phía ngọc)."
         },
         {
           "id": "h10-code3",
           "title": "Bài tập 3: Lên cấp",
-          "text": "Viết check_level(): đủ ngọc thì trừ phần đã dùng, giữ phần dư, rồi lên một cấp. Trừ trước, cộng sau. Nhớ đổi need() theo công thức em vừa điền bảng.",
-          "coachNotes": "Hỏi: vì sao không đặt xp = 0? (mất viên dư của em, hơi oan)."
+          "text": "Viết check_level(): đủ ngọc thì trừ phần đã dùng, giữ phần dư, rồi lên một cấp. Trừ trước, cộng sau. Nhớ đổi need() theo công thức em vừa điền bảng. Em có sẵn 10 ngọc để thử: sẽ lên tới cấp mấy?",
+          "coachNotes": "Đáp: cấp 3. 10 - 4 = 6, cấp 2 cần 6, vừa đủ, còn 0. xp = 10 là đồ thử, Bài 11 về 0. Hỏi: vì sao không đặt xp = 0? (mất viên dư của em, hơi oan)."
         }
       ]
     },

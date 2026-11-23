@@ -5,11 +5,11 @@
   "mode": "game",
   "input": "typing",
   "walkthrough": [
-    "Chỗ (1): if value < 300: rồi thụt vào return 580. Dòng cuối, ngoài if: return 20",
+    "Chỗ (1): if value < 300: rồi thụt vào return 580. Ngoài if: thay return 300 bằng return 20.",
     "Vì sao mép xa? Để quái không hiện ra ngay sát em, như vậy mới công bằng.",
     "Chỗ (2): tick % 50 == 0 nghĩa là cứ 50 khung thì đúng một lần.",
     "if tick % 50 == 0 and len(mobs) < 14: rồi thụt vào spawn_mob()",
-    "Bấm ▶ Chạy, rồi ⛶: đứng gần mép trên thì quái ra ở mép dưới."
+    "Bấm ▶ Chạy: máy đi lên rồi đi xuống. ⛶: đứng gần mép trên thì quái ra ở mép dưới. edge nhớ mép quái vừa ra."
   ],
   "hints": [
     "Hàm gặp return là xong, không chạy dòng dưới nữa.",
@@ -23,6 +23,11 @@
       {
         "key": "up",
         "from": 0,
+        "to": 159
+      },
+      {
+        "key": "down",
+        "from": 160,
         "to": 599
       }
     ]
@@ -52,6 +57,13 @@
       "id": "h05-e2-far"
     },
     {
+      "label": "Em ở dưới thì quái ra ở mép trên",
+      "kind": "varEquals",
+      "name": "edge",
+      "value": 20,
+      "id": "h05-e2-near"
+    },
+    {
       "label": "Có gọi far_edge",
       "kind": "called",
       "name": "far_edge",
@@ -68,7 +80,7 @@
     }
   ],
   "new_idea": "đếm khung bằng tick, % để làm việc theo nhịp; hàm có return sớm",
-  "reorganised": "Thêm tick, crowd (số quái, để hiện chữ) và spawn_mob().",
+  "reorganised": "Thêm tick, crowd (số quái, để hiện chữ), edge (mép quái vừa ra, máy chấm đọc) và spawn_mob().",
   "toolbox": [
     "pq_append",
     "pq_arith",
@@ -106,7 +118,10 @@
   "wrong": [
     "nhầm mép gần",
     "khung nào cũng ra quái, không giới hạn",
-    "trả về 20 mãi"
+    "trả về 20 mãi",
+    "quên thay return 300",
+    "trả về 580 mãi",
+    "quên nhịp, ra dồn một lúc"
   ],
   "alts": [
     "if/else, so >=",

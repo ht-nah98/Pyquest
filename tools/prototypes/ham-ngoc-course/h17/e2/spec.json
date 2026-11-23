@@ -123,7 +123,7 @@
     }
   ],
   "new_idea": "tiếng đặt ở đúng lúc việc xảy ra, không đặt ở chỗ chạy mỗi khung",
-  "reorganised": "Thua hay thắng thì tắt nhạc, thua có tiếng fall. Sắp xếp lại lần 4: đạn và ngọc cũng có hp và dùng living(); bỏ remove_shots, live, busy. START_WAVE = 2 để thử đợt đông quái (Bài 18 trả về 0).",
+  "reorganised": "Thua hay thắng thì tắt nhạc, thua có tiếng fall. Sắp xếp lại lần 4: đạn và ngọc cũng có hp và dùng living(); bỏ remove_shots, live, busy, page. START_WAVE = 2 để thử đợt đông quái (Bài 18 trả về 0).",
   "toolbox": [
     "pq_abs",
     "pq_append",

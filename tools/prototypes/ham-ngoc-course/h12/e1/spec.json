@@ -6,7 +6,7 @@
   "input": "typing",
   "walkthrough": [
     "Nhìn dòng SKILLS.append(...) của Áo Băng: em viết 3 dòng giống vậy, ngay dưới nó.",
-    "name là tên, branch là nhánh, icon là số của hình, what là tên tác dụng, add là cộng bao nhiêu.",
+    "name là tên, branch là nhánh, icon là số của hình, what là tên ngăn trong sổ sức mạnh, add là cộng bao nhiêu.",
     "Dòng 1: {\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5}",
     "Làm tiếp Tia Đôi và Mây Giông.",
     "Bấm ▶ Chạy: sổ skill tự dài ra 9 dòng dù em không sửa code vẽ."

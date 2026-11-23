@@ -18,8 +18,20 @@
     "shots = kept nằm ngoài vòng for."
   ],
   "test": {
-    "frames": 400,
-    "taps": []
+    "frames": 407,
+    "taps": [],
+    "keys": [
+      {
+        "key": "right",
+        "from": 77,
+        "to": 177
+      },
+      {
+        "key": "down",
+        "from": 129,
+        "to": 229
+      }
+    ]
   },
   "goals": [
     {
@@ -32,7 +44,7 @@
       "kind": "varCompare",
       "name": "kills",
       "op": ">=",
-      "value": 2,
+      "value": 4,
       "id": "h09-e2-kill"
     },
     {
@@ -44,11 +56,11 @@
       "id": "h09-e2-one"
     },
     {
-      "label": "Đạn trúng hay bay quá tầm thì mất",
+      "label": "Đạn trúng rồi hay bay quá tầm thì mất",
       "kind": "varCompare",
       "name": "flying",
       "op": "<=",
-      "value": 6,
+      "value": 1,
       "id": "h09-e2-few"
     },
     {
@@ -104,7 +116,11 @@
   "wrong": [
     "quên shot live = False",
     "giữ hết đạn",
-    "xóa hết đạn"
+    "xóa hết đạn",
+    "quên xét tầm bắn",
+    "quên xét live",
+    "or thay and",
+    "giữ viên ngoài tầm"
   ],
   "alts": [
     "hai if lồng nhau",

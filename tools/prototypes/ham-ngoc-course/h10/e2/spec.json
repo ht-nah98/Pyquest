@@ -1,23 +1,23 @@
 {
   "id": "h10-e2",
   "title": "Nam châm và thanh kinh nghiệm",
-  "task": "(1) Đầu vòng for trong take_gems(): nếu near(gem, hero, 150) thì gem bước về phía hero, mỗi bước 6. Dùng lại step_to nhé. (2) Trong draw(): vẽ thanh xanh ở (0, 590), rộng 600 * xp / need(), cao 10, màu \"#2fc9a8\".",
+  "task": "(1) Đầu vòng for trong take_gems(): nếu near(gem, hero, 150) thì gem bước về phía hero, mỗi bước 6. Dùng lại step_to nhé. (2) Trong draw(): gọi draw_bar(600 * xp / need()). draw_bar(width) có sẵn: vẽ thanh xanh rộng width.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
     "Chỗ (1), trong vòng for gem: if near(gem, hero, 150): rồi thụt vào step_to(gem, hero, 6)",
     "step_to viết cho quái mà ngọc cũng dùng được, vì ngọc cũng có x, y.",
-    "Chỗ (2): draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")",
+    "Chỗ (2): draw_bar(600 * xp / need()). Trong ngoặc là bề rộng của thanh.",
     "need() trả về số ngọc cần để lên cấp. Nhặt một nửa thì thanh dài một nửa.",
     "Bấm ▶ Chạy, rồi ⛶: ngọc tự bay về em."
   ],
   "hints": [
     "Chỗ (1) chỉ 2 dòng.",
     "step_to(gem, hero, 6)",
-    "draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")"
+    "draw_bar(600 * xp / need())"
   ],
   "test": {
-    "frames": 300,
+    "frames": 215,
     "taps": []
   },
   "goals": [
@@ -27,12 +27,38 @@
       "id": "h10-e2-run"
     },
     {
-      "label": "Ngọc tự bay về em",
+      "label": "Ngọc gần em tự bay nhanh về em",
       "kind": "varCompare",
       "name": "xp",
       "op": ">=",
       "value": 2,
       "id": "h10-e2-fly"
+    },
+    {
+      "label": "Ngọc ở xa thì chưa bay",
+      "kind": "varCompare",
+      "name": "xp",
+      "op": "<=",
+      "value": 3,
+      "id": "h10-e2-wait"
+    },
+    {
+      "label": "Ngọc bay tới em, em đứng yên",
+      "kind": "staysWithin",
+      "sprite": "hero",
+      "axis": "x",
+      "min": 276,
+      "max": 276,
+      "id": "h10-e2-stay"
+    },
+    {
+      "label": "Em cũng không bị kéo lên xuống",
+      "kind": "staysWithin",
+      "sprite": "hero",
+      "axis": "y",
+      "min": 276,
+      "max": 276,
+      "id": "h10-e2-stay2"
     },
     {
       "label": "Có thanh kinh nghiệm",
@@ -43,10 +69,18 @@
         590
       ],
       "id": "h10-e2-bar"
+    },
+    {
+      "label": "Nhặt thêm ngọc thì thanh đổi bề rộng",
+      "kind": "called",
+      "name": "draw_bar",
+      "min": 3,
+      "distinct": true,
+      "id": "h10-e2-grow"
     }
   ],
   "new_idea": "dùng lại hàm cho thứ khác; thanh = bề rộng × phần đã có",
-  "reorganised": "Thêm need() và nền tối của thanh.",
+  "reorganised": "Thêm need(), draw_bar(width) (vẽ thanh xanh) và nền tối của thanh.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -89,7 +123,11 @@
   "wrong": [
     "ngọc không bay",
     "quên vẽ thanh",
-    "ngọc chạy ngược"
+    "em bị kéo về phía ngọc",
+    "em bị kéo về phía ngọc, 6 bước",
+    "ngọc ở đâu cũng bay về",
+    "ngọc bước quá chậm",
+    "thanh lúc nào cũng dài 600"
   ],
   "alts": [
     "hút sau khi xét nhặt",

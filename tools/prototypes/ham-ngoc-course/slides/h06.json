@@ -38,12 +38,12 @@
           "quiz": {
             "question": "Em (300, 300), quái (285, 320). Khoảng cách bằng mấy? Có chạm (dưới 36) không?",
             "choices": [
+              "35, có chạm",
               "5, có chạm",
               "15, có chạm",
-              "35, có chạm",
               "35, không chạm"
             ],
-            "answer": 2,
+            "answer": 0,
             "explain": "Ngang 15, dọc 20, cộng lại 35. 35 nhỏ hơn 36 nên là chạm."
           },
           "coachNotes": "5 là quên abs (-15 + 20). 15 là chỉ đo một trục."
@@ -57,7 +57,7 @@
         {
           "id": "h06-safe",
           "title": "Đồng hồ bất tử",
-          "text": "safe là đồng hồ đếm ngược. Bị chạm thì lên dây: safe = 60. Mỗi khung safe bớt 1. Còn lớn hơn 0 thì không mất máu. 60 khung là khoảng 1 giây để chạy.",
+          "text": "safe là đồng hồ đếm ngược. Bị chạm thì đặt lại safe = 60. Mỗi khung safe bớt 1. Còn lớn hơn 0 thì không mất máu. 60 khung là khoảng 1 giây để chạy.",
           "coachNotes": "Cho lớp đếm ngược thật 60, 59, 58… thật nhanh. Hỏi: nếu quên bớt 1 thì sao? (bất tử mãi mãi)."
         },
         {
@@ -72,11 +72,11 @@
             "question": "safe = 2 và quái vẫn dính vào em. Sau 3 khung hình nữa, em mất mấy máu?",
             "choices": [
               "0",
-              "1",
               "2",
-              "3"
+              "3",
+              "1"
             ],
-            "answer": 1,
+            "answer": 3,
             "explain": "Khung 1: safe còn 1. Khung 2: còn 0. Khung 3: hết bất tử, bị chạm nên mất 1 máu."
           }
         }
@@ -105,7 +105,7 @@
         {
           "id": "h06-code2",
           "title": "Bài tập 2: một giây bất tử",
-          "text": "(1) Đầu hàm: đang bất tử thì bớt safe rồi thôi. (2) Lúc bị chạm: lên dây đồng hồ rồi return, để hai con chạm cùng lúc cũng chỉ mất 1 máu.",
+          "text": "(1) Đầu hàm: đang bất tử thì bớt safe rồi thôi. (2) Lúc bị chạm: đặt lại đồng hồ safe rồi return, để hai con chạm cùng lúc cũng chỉ mất 1 máu.",
           "coachNotes": "Cả bầy đã trở lại: 6 con, thêm dần tới 14. Hỏi: safe là một biến thường nên cần global, còn hero[\"hp\"] thì không. Vì sao? (Bài 3: chỉ đổi một ngăn)."
         }
       ]

@@ -130,6 +130,10 @@ def need():
     return 10
 
 
+def draw_bar(width):
+    draw_rect(0, 590, width, 10, "#2fc9a8")
+
+
 def take_gems():
     global gems, xp
     kept = []

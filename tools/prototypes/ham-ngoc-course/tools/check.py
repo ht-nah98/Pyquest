@@ -121,14 +121,14 @@ def main():
                 totals["wrong"] += 1
                 r, m = grader.grade(code, spec, sol)
                 if not m:
-                    bad.append(name + " passes: " + spec["wrong"][int(name[5]) - 1])
+                    bad.append(name + " passes: " + spec["wrong"][int(name[5:-3]) - 1])
                 if "-v" in sys.argv:
                     print("   ", name, m, r.error or "")
             if name.startswith("alt"):
                 totals["alts"] += 1
                 r, m = grader.grade(code, spec, sol)
                 if m:
-                    bad.append(name + " misses " + ", ".join(m) + ": " + spec["alts"][int(name[3]) - 1])
+                    bad.append(name + " misses " + ", ".join(m) + ": " + spec["alts"][int(name[3:-3]) - 1])
         line = spec["id"] + " lines " + str(len(sol.splitlines())) + " goals " + str(len(spec["goals"]))
         line += " starter fails " + str(len(start_missed))
         if "-v" in sys.argv:

@@ -137,6 +137,10 @@ def need():
     return 2 + level * 2
 
 
+def draw_bar(width):
+    draw_rect(0, 590, width, 10, "#2fc9a8")
+
+
 def check_level():
     global xp, level
     if xp >= need():
@@ -237,7 +241,7 @@ def draw_play():
     draw_text("Quái: " + str(len(mobs)), 540, 24)
     draw_text("Hạ: " + str(kills), 300, 24)
     draw_rect(0, 588, 600, 12, "#33334a")
-    draw_rect(0, 590, 600 * xp / need(), 10, "#2fc9a8")
+    draw_bar(600 * xp / need())
     draw_text("Cấp " + str(level), 180, 24)
 
 

@@ -55,7 +55,7 @@
     }
   ],
   "new_idea": "đếm có điều kiện trong danh sách dict",
-  "reorganised": "Thêm bảng BRANCHES và dòng đếm ba nhánh dưới sân.",
+  "reorganised": "Nhớt 8 máu. Thêm bảng BRANCHES và dòng đếm ba nhánh dưới sân.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -82,6 +82,7 @@
     "pq_if_else",
     "pq_import",
     "pq_index",
+    "pq_index_set",
     "pq_key_aug",
     "pq_key_get",
     "pq_key_held",

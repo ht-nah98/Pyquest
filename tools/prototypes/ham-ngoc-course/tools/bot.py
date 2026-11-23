@@ -1,5 +1,5 @@
 """A simple player for the finished game: keeps away from monsters, walks to gems, takes random or planned cards.
-python3 -B tools/bot.py [exercise=h18/e2] [games=20]"""
+python3 -B tools/bot.py [exercise=h18/e3] [games=20]"""
 import os
 import random
 import sys
@@ -68,7 +68,7 @@ def play(code, hero, seed, frames=12000, plan="random", slow=6, noise=0.0):
 
 
 def main():
-    path = sys.argv[1] if len(sys.argv) > 1 else "h18/e2"
+    path = sys.argv[1] if len(sys.argv) > 1 else "h18/e3"
     games = int(sys.argv[2]) if len(sys.argv) > 2 else 20
     with open(os.path.join(os.path.dirname(HERE), path, "solution.py"), encoding="utf-8") as f:
         code = compile(f.read(), "main.py", "exec")

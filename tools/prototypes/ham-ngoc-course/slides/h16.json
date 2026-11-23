@@ -31,10 +31,10 @@
             "question": "row là {\"hp\": 6, \"speed\": 4}. Trong vòng for key in row, key lần lượt là gì?",
             "choices": [
               "6 rồi 4",
-              "\"hp\" rồi \"speed\"",
-              "0 rồi 1"
+              "0 rồi 1",
+              "\"hp\" rồi \"speed\""
             ],
-            "answer": 1,
+            "answer": 2,
             "explain": "for trên dict cho tên ngăn. Muốn lấy số trong ngăn thì viết row[key]."
           }
         },
@@ -50,10 +50,10 @@
             "question": "Giả sử viết hero = row. Cung thủ 6 máu thua hết máu rồi chơi lại bằng cung thủ. Vào ván hai có mấy máu?",
             "choices": [
               "6",
-              "5",
-              "0"
+              "0",
+              "5"
             ],
-            "answer": 2,
+            "answer": 1,
             "explain": "hero và dòng trong bảng là một hộp. hp trong hộp đã về 0, nên ván hai vào với 0 máu."
           }
         }
@@ -65,8 +65,8 @@
         {
           "id": "h16-balance",
           "title": "Cân cho công bằng",
-          "text": "Không ai mạnh hết mọi thứ: được cái này thì bớt cái kia. Kẻ bảng 3 nhân vật, 4 cột: máu, tốc độ, tầm, sức. Khoanh người mạnh nhất ở mỗi cột.",
-          "coachNotes": "5 phút. Kiếm sĩ 8, 3, 200, 3. Pháp sư 5, 3, 320, 3. Cung thủ 6, 4, 500, 2. Máu: Kiếm sĩ. Tốc độ và tầm: Cung thủ. Sức: Kiếm sĩ và Pháp sư bằng nhau. Hỏi: có người nào thiệt không?"
+          "text": "Máu, tốc độ, tầm, sức:\nKiếm sĩ 8, 3, 200, 3\nPháp sư 5, 3, 320, 3\nCung thủ 6, 4, 500, 2\nKhông ai mạnh hết mọi thứ. Kẻ thành bảng, khoanh người mạnh nhất ở mỗi cột.",
+          "coachNotes": "5 phút. Đáp án: Máu: Kiếm sĩ. Tốc độ và tầm: Cung thủ. Sức: Kiếm sĩ và Pháp sư bằng nhau. Hỏi: có người nào thiệt không?"
         },
         {
           "id": "h16-quiz-golem",
@@ -74,10 +74,10 @@
             "question": "Golem có 18 máu. Cung thủ sức 2, chưa có skill nào. Cần mấy phát trúng mới hạ được?",
             "choices": [
               "6",
-              "8",
-              "9"
+              "9",
+              "8"
             ],
-            "answer": 2,
+            "answer": 1,
             "explain": "Mỗi phát trừ 2 máu: 18 / 2 = 9 phát. Kiếm sĩ sức 3 thì chỉ cần 6 phát."
           }
         }
@@ -101,7 +101,7 @@
           "id": "h16-code1",
           "title": "Bài tập 1: Bảng nhân vật",
           "text": "Thêm Pháp sư và Cung thủ vào HEROES. Trong start_game, chép mọi ngăn của row sang hero bằng vòng for. START_HERO đang là 0 (Kiếm sĩ), muốn thử Cung thủ thì là số mấy?",
-          "coachNotes": "Lỗi hay gặp: chép mỗi image nên trông là cung thủ mà máu và tốc độ vẫn cũ. Đếm từ 0."
+          "coachNotes": "Màn chờ tạm ghi từng dòng của bảng (máu, tốc độ, tầm, sức) để bé dò; Bài tập 2 đổi thành màn chọn. Lỗi hay gặp: chép mỗi image nên trông là cung thủ mà máu và tốc độ vẫn cũ. Đếm từ 0."
         },
         {
           "id": "h16-code2",
@@ -118,7 +118,7 @@
           "id": "h16-try",
           "title": "Chơi đủ ba người",
           "text": "Chơi mỗi người một ván, ghi lại tới đợt mấy. Với em, ai khó nhất? Đổi một số trong HEROES cho cân hơn rồi chơi lại, và hỏi bạn có thấy công bằng không.",
-          "coachNotes": "12 phút. Đổi số của ai cũng được, Bài tập 2 không chấm các số này; chỉ giữ tên Cung thủ tới khi bài đạt. Nhắc: thua ở đợt 2, 3 là bình thường, đây là bản thật. Ghi kết quả cả lớp lên bảng để so."
+          "coachNotes": "12 phút. Đổi số của ai cũng được, Bài tập 2 không chấm các số này; chỉ giữ tên Pháp sư tới khi bài đạt. Nhắc: thua ở đợt 2, 3 là bình thường, đây là bản thật. Ghi kết quả cả lớp lên bảng để so."
         }
       ]
     }

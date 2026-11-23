@@ -10,8 +10,8 @@
     "Chỗ (2): for key in row: đi qua từng tên ngăn: \"name\", \"image\", \"hp\"…",
     "Thụt vào: hero[key] = row[key]. Hai dòng chép được mọi ngăn.",
     "Chỗ (3), đầu file: START_HERO = 2 để thử cung thủ.",
-    "Từ bài này quái trâu thật: nhớt 4 máu, dơi 3, golem 18, trùm 400 và đụng một cái mất 3 máu.",
-    "Bấm ▶ Chạy: nhân vật là cung thủ, chạy nhanh hơn."
+    "Từ bài này quái lì đòn hơn: nhớt 4 máu, dơi 3, golem 18, trùm 400 và đụng một cái mất 3 máu.",
+    "Bấm ▶ Chạy: màn chờ ghi từng dòng của bảng (máu, tốc độ, tầm, sức), rồi cung thủ vào hầm, chạy nhanh hơn."
   ],
   "hints": [
     "for trên một dict cho em tên từng ngăn.",
@@ -61,6 +61,24 @@
       "id": "h16-e1-hp"
     },
     {
+      "label": "Chép cả sức 2 và tầm 500",
+      "kind": "drewText",
+      "text": "Sức 2, tầm 500",
+      "id": "h16-e1-rest"
+    },
+    {
+      "label": "Dòng Pháp sư đủ 4 số",
+      "kind": "drewText",
+      "text": "Pháp sư 5 3 320 3",
+      "id": "h16-e1-mage"
+    },
+    {
+      "label": "Dòng Cung thủ đủ 4 số",
+      "kind": "drewText",
+      "text": "Cung thủ 6 4 500 2",
+      "id": "h16-e1-bow"
+    },
+    {
       "label": "Cung thủ đi được",
       "kind": "distinctCount",
       "sprite": "hero-archer",
@@ -81,7 +99,7 @@
     }
   ],
   "new_idea": "for key in row: chép cả dict",
-  "reorganised": "Bỏ START_HP; mọi số của hero lấy từ HEROES; đạn mạnh theo hero[\"power\"]; chỉ bắn khi quái trong tầm. Đồ thử về 0, trùm thật 400 máu và đụng một cái mất 3 máu; các đợt đông hơn, quái trâu hơn để game vừa sức.",
+  "reorganised": "Bỏ START_HP; màn chờ tạm ghi bảng HEROES; thêm chữ Sức, tầm; mọi số của hero lấy từ HEROES; đạn mạnh theo hero[\"power\"]; chỉ bắn khi quái trong tầm. Đồ thử về 0, trùm thật 400 máu và đụng một cái mất 3 máu; các đợt đông hơn, quái lì đòn hơn để game vừa sức.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -131,7 +149,10 @@
   "wrong": [
     "quên chép ngăn",
     "chọn nhầm người",
-    "chỉ chép hình"
+    "chỉ chép hình",
+    "quên chép tầm và sức",
+    "nhầm số của pháp sư",
+    "nhầm sức của cung thủ"
   ],
   "alts": [
     "chép từng ngăn"

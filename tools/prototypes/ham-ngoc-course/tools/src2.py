@@ -137,10 +137,13 @@ if wait <= 0:
     new="đếm ngược rồi làm, làm xong đặt lại; danh sách đạn",
     reorganised="Bỏ target_far và vạch trắng (nearest() giờ dùng để bắn); thêm shots, wait, fired, make_shot, move_shots.")
 
+AIM = '''far = distance(target, hero) + 1
+vx = (target["x"] - hero["x"]) / far * 8
+vy = (target["y"] - hero["y"]) / far * 8'''
 ex(
     "h08-e2", "Bắn về phía quái",
     "Giờ cho đạn bay tới target. Trong make_shot: far = distance(target, hero) + 1. vx là (x của target - x của hero) / far "
-    "* 8. vy cũng vậy với y. hits đếm số lần đạn chạm quái.",
+    "* 8. vy cũng vậy với y. Phần đếm hits đã có sẵn.",
     ["Trong make_shot, thay vx = 0 và vy = -7.",
      "far = distance(target, hero) + 1. Cộng 1 để không bao giờ chia cho 0.",
      "vx = (target[\"x\"] - hero[\"x\"]) / far * 8. Nhớ dấu ngoặc tròn.",
@@ -154,8 +157,9 @@ ex(
      goal("side", "distinctCount", "Đạn bay cả sang ngang", sprite="shot", axis="x", min=20),
      goal("up", "distinctCount", "Đạn bay cả lên xuống", sprite="shot", axis="y", min=20),
      goal("down", "drew", "Quái ở dưới thì đạn bay xuống", sprite="shot-spark", at=[300, 1000], tolerance=580),
-     goal("smooth", "staysWithin", "Đạn bay đều, không nhảy vọt", sprite="shot", axis="y", min=-2700, max=3300),
-     goal("hit", "varCompare", "Đạn chạm quái nhiều lần", name="hits", op=">=", value=120)],
+     goal("smooth", "staysWithin", "Đạn bay đều, không nhảy vọt", sprite="shot", axis="y", min=-4300, max=4500),
+     goal("hit", "varCompare", "Ngắm đúng cả ngang lẫn dọc nên trúng nhiều", name="hits", op=">=", value=180),
+     goal("fast", "varCompare", "Đạn bay nhanh, không nằm lì trên quái", name="hits", op="<=", value=310)],
     prep=[('''    vx = 0
     vy = -7
 ''', '''    # Em viết tiếp ở đây
@@ -217,8 +221,12 @@ vy = 0'''], [('''vy = 0
     vx = 0
     vy = -7
 ''', '''vy = 0
-''')])],
-    test={"frames": 330, "keys": [hold("up", 150, 245)]},
+''')])] + [(what, [AIM.replace(old, new)], [("    vx = 0\n    vy = -7\n", "")]) for what, old, new in [
+        ("ngược mỗi vx", '(target["x"] - hero["x"])', '(hero["x"] - target["x"])'),
+        ("ngược mỗi vy", '(target["y"] - hero["y"])', '(hero["y"] - target["y"])'),
+        ("quên cộng 1", " + 1", ""), ("nhân 1 thay cho 8", "* 8", "* 1"),
+        ("quên ngoặc tròn", '(target["x"] - hero["x"])', 'target["x"] - hero["x"]')]],
+    test={"frames": 443, "keys": [hold("right", 0, 100), hold("left", 313, 383), hold("up", 313, 353)]},
     new="hướng = (đích - mình) / khoảng cách × tốc độ",
     reorganised="make_shot có sẵn luật: vx và vy đều 0 (quái ở đúng chỗ em) thì bắn thẳng lên. Thay fired bằng hits; thêm hit_mobs() đếm lần đạn chạm quái.")
 
@@ -244,10 +252,10 @@ ex(
      "if mob[\"hp\"] > 0:\n    alive.append(mob)\nelse:\n    kills += 1",
      "mobs = alive nằm ngoài vòng for."],
     [run_goal(),
-     goal("kill", "varCompare", "Hạ được quái", name="kills", op=">=", value=5),
-     goal("once", "varCompare", "Mỗi con chỉ đếm một lần", name="kills", op="<=", value=16),
-     goal("gone", "varCompare", "Quái hạ rồi thì biến mất", name="crowd", op="<=", value=10),
-     goal("keep", "drewCount", "Quái còn máu thì vẫn ở lại", sprite="mob", min=6)],
+     goal("kill", "varCompare", "Hết máu là bị hạ ngay: hạ được 10 con", name="kills", op=">=", value=10),
+     goal("once", "varCompare", "Còn máu thì chưa bị hạ, mỗi con đếm một lần", name="kills", op="<=", value=10),
+     goal("gone", "varCompare", "Quái hạ rồi thì biến mất", name="crowd", op="<=", value=6),
+     goal("keep", "varCompare", "Quái còn máu thì vẫn ở lại", name="crowd", op=">=", value=2)],
     prep=[('''"y": y, "speed": 1}''', '''"y": y, "hp": 2, "speed": 1}'''), ('''hits = 0
 ''', '''kills = 0
 '''), ('''def hit_mobs():
@@ -282,8 +290,11 @@ def remove_dead():
     fills=[DEAD],
     wrong=[("quên mobs = alive", [DEAD.replace("\nmobs = alive", "")], []),
            ("giữ con hết máu", [DEAD.replace("> 0", "<= 0")], []),
-           ("xóa khi hết máu mà không đếm", [DEAD.replace("kills += 1", "kills += 0")], [])],
-    test={"frames": 400},
+           ("xóa khi hết máu mà không đếm", [DEAD.replace("kills += 1", "kills += 0")], []),
+           ("giữ cả con còn 0 máu", [DEAD.replace("> 0", ">= 0")], []),
+           ("bỏ luôn con còn 1 máu", [DEAD.replace("> 0", "> 1")], []),
+           ("gặp con hết máu là thôi xem tiếp", [DEAD.replace("kills += 1", "kills += 1\n        break")], [])],
+    test={"frames": 305},
     new="giữ lại bằng danh sách mới: duyệt, append con muốn giữ, rồi thay danh sách cũ",
     reorganised="Hộp quái thêm ngăn hp (bài đầu tiên cần tới). hit_mobs() giờ trừ máu quái thay vì đếm hits; shoot() chỉ bắn khi còn quái (danh sách có thể rỗng).")
 
@@ -301,9 +312,9 @@ ex(
      "if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n    kept.append(shot)",
      "shots = kept nằm ngoài vòng for."],
     [run_goal(),
-     goal("kill", "varCompare", "Vẫn hạ được quái", name="kills", op=">=", value=2),
+     goal("kill", "varCompare", "Vẫn hạ được quái", name="kills", op=">=", value=4),
      goal("one", "varCompare", "Một viên chỉ trúng một lần", name="kills", op="<=", value=9),
-     goal("few", "varCompare", "Đạn trúng hay bay quá tầm thì mất", name="flying", op="<=", value=6),
+     goal("few", "varCompare", "Đạn trúng rồi hay bay quá tầm thì mất", name="flying", op="<=", value=1),
      goal("some", "varCompare", "Đạn chưa trúng thì vẫn bay", name="flying", op=">=", value=1, when="ever")],
     prep=[('''"hp": 5, "speed": 3}
 ''', '''"hp": 5, "speed": 3}
@@ -343,8 +354,12 @@ shots = kept'''], []),
 for shot in shots:
     kept.append(shot)
 shots = kept'''], []),
-           ("xóa hết đạn", ['shot["live"] = False', "shots = []"], [])],
-    test={"frames": 400},
+           ("xóa hết đạn", ['shot["live"] = False', "shots = []"], [])] + [
+           (what, ['shot["live"] = False', "kept = []\nfor shot in shots:\n    if " + cond + ":\n        kept.append(shot)\nshots = kept"], [])
+           for what, cond in [("quên xét tầm bắn", 'shot["live"]'), ("quên xét live", 'near(shot, hero, hero["reach"])'),
+                              ("or thay and", 'shot["live"] or near(shot, hero, hero["reach"])'),
+                              ("giữ viên ngoài tầm", 'shot["live"] and not near(shot, hero, hero["reach"])')]],
+    test={"frames": 407, "keys": [hold("right", 77, 177), hold("down", 129, 229)]},
     new="cờ True/False trong dict (live) để đánh dấu, dọn sau",
     reorganised="make_shot thêm ngăn live; thêm biến flying (số đạn đang bay).")
 
@@ -416,16 +431,20 @@ def take_gems():
 ex(
     "h10-e2", "Nam châm và thanh kinh nghiệm",
     "(1) Đầu vòng for trong take_gems(): nếu near(gem, hero, 150) thì gem bước về phía hero, mỗi bước 6. Dùng lại step_to "
-    "nhé. (2) Trong draw(): vẽ thanh xanh ở (0, 590), rộng 600 * xp / need(), cao 10, màu \"#2fc9a8\".",
+    "nhé. (2) Trong draw(): gọi draw_bar(600 * xp / need()). draw_bar(width) có sẵn: vẽ thanh xanh rộng width.",
     ["Chỗ (1), trong vòng for gem: if near(gem, hero, 150): rồi thụt vào step_to(gem, hero, 6)",
      "step_to viết cho quái mà ngọc cũng dùng được, vì ngọc cũng có x, y.",
-     "Chỗ (2): draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")",
+     "Chỗ (2): draw_bar(600 * xp / need()). Trong ngoặc là bề rộng của thanh.",
      "need() trả về số ngọc cần để lên cấp. Nhặt một nửa thì thanh dài một nửa.",
      "Bấm ▶ Chạy, rồi ⛶: ngọc tự bay về em."],
-    ["Chỗ (1) chỉ 2 dòng.", "step_to(gem, hero, 6)", "draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")"],
+    ["Chỗ (1) chỉ 2 dòng.", "step_to(gem, hero, 6)", "draw_bar(600 * xp / need())"],
     [run_goal(),
-     goal("fly", "varCompare", "Ngọc tự bay về em", name="xp", op=">=", value=2),
-     goal("bar", "drewRects", "Có thanh kinh nghiệm", min=2, at=[0, 590])],
+     goal("fly", "varCompare", "Ngọc gần em tự bay nhanh về em", name="xp", op=">=", value=2),
+     goal("wait", "varCompare", "Ngọc ở xa thì chưa bay", name="xp", op="<=", value=3),
+     goal("stay", "staysWithin", "Ngọc bay tới em, em đứng yên", sprite="hero", axis="x", min=276, max=276),
+     goal("stay2", "staysWithin", "Em cũng không bị kéo lên xuống", sprite="hero", axis="y", min=276, max=276),
+     goal("bar", "drewRects", "Có thanh kinh nghiệm", min=2, at=[0, 590]),
+     goal("grow", "called", "Nhặt thêm ngọc thì thanh đổi bề rộng", name="draw_bar", min=3, distinct=True)],
     prep=[('''    for gem in gems:
         if near(gem, hero, 40):
 ''', '''    for gem in gems:
@@ -436,17 +455,25 @@ ex(
     return 10
 
 
+def draw_bar(width):
+    draw_rect(0, 590, width, 10, "#2fc9a8")
+
+
 def take_gems():
 '''), ('''    draw_text("Ngọc: ''', '''    draw_rect(0, 588, 600, 12, "#33334a")
     # Em viết tiếp ở đây (2)
     draw_text("Ngọc: ''')],
-    fills=["if near(gem, hero, 150):\n    step_to(gem, hero, 6)", 'draw_rect(0, 590, 600 * xp / need(), 10, "#2fc9a8")'],
-    wrong=[("ngọc không bay", ["", 'draw_rect(0, 590, 600 * xp / need(), 10, "#2fc9a8")'], []),
+    fills=["if near(gem, hero, 150):\n    step_to(gem, hero, 6)", "draw_bar(600 * xp / need())"],
+    wrong=[("ngọc không bay", ["", "draw_bar(600 * xp / need())"], []),
            ("quên vẽ thanh", ["if near(gem, hero, 150):\n    step_to(gem, hero, 6)", ""], []),
-           ("ngọc chạy ngược", ["if near(gem, hero, 150):\n    step_to(hero, gem, 1)", ""], [])],
-    test={"frames": 300},
+           ("em bị kéo về phía ngọc", ["if near(gem, hero, 150):\n    step_to(hero, gem, 1)", "draw_bar(600 * xp / need())"], []),
+           ("em bị kéo về phía ngọc, 6 bước", ["if near(gem, hero, 150):\n    step_to(hero, gem, 6)", "draw_bar(600 * xp / need())"], []),
+           ("ngọc ở đâu cũng bay về", ["step_to(gem, hero, 6)", "draw_bar(600 * xp / need())"], []),
+           ("ngọc bước quá chậm", ["if near(gem, hero, 150):\n    step_to(gem, hero, 1)", "draw_bar(600 * xp / need())"], []),
+           ("thanh lúc nào cũng dài 600", ["if near(gem, hero, 150):\n    step_to(gem, hero, 6)", "draw_bar(600)"], [])],
+    test={"frames": 215},
     new="dùng lại hàm cho thứ khác; thanh = bề rộng × phần đã có",
-    reorganised="Thêm need() và nền tối của thanh.")
+    reorganised="Thêm need(), draw_bar(width) (vẽ thanh xanh) và nền tối của thanh.")
 
 ex(
     "h10-e3", "Lên cấp",
@@ -456,17 +483,18 @@ ex(
      "Thụt vào: xp -= need() trước, rồi level += 1",
      "Phải trừ trước: cộng level trước thì need() đổi mất rồi.",
      "Trong need(): đổi return 10 thành return 2 + level * 2",
-     "Bấm ▶ Chạy: chữ Cấp 2 hiện ra khi nhặt đủ 4 viên."],
+     "Bấm ▶ Chạy: có sẵn 10 viên (đồ thử). Cấp 1 cần 4, còn dư 6. Cấp 2 cần 6, vừa đủ. Vậy lên tới Cấp 3."],
     ["Dư ngọc thì giữ lại, đừng đặt xp = 0.",
      "if xp >= need():\n    xp -= need()\n    level += 1",
      "return 2 + level * 2"],
     [run_goal(),
-     goal("level", "varCompare", "Lên được cấp 2", name="level", op=">=", value=2),
-     goal("slow", "varCompare", "Không lên cấp quá nhanh", name="level", op="<=", value=3),
-     goal("spend", "varCompare", "Lên cấp thì dùng hết ngọc của cấp đó", name="xp", op="<=", value=7),
-     goal("text", "drewText", "Cấp 2 hiện trên màn hình", text="Cấp 2")],
+     goal("level", "varCompare", "10 viên: dùng 4, dư 6, vừa đủ lên cấp 3", name="level", op=">=", value=3),
+     goal("slow", "varCompare", "Hết ngọc thì dừng ở cấp 3", name="level", op="<=", value=3),
+     goal("plus", "varCompare", "Số ngọc không bị âm", name="xp", op=">=", value=0),
+     goal("spend", "varCompare", "Lên cấp thì trừ ngọc đã dùng", name="xp", op="<=", value=0),
+     goal("text", "drewText", "Cấp 3 hiện trên màn hình", text="Cấp 3")],
     prep=[('''xp = 0
-''', '''xp = 0
+''', '''xp = 10
 level = 1
 '''), ('''def take_gems():
 ''', '''def check_level():
@@ -486,10 +514,16 @@ def take_gems():
     sol=[("    return 10\n", "    return 2 + level * 2\n")],
     wrong=[("quên trừ xp", ["if xp >= need():\n    level += 1"], [("    return 10\n", "    return 2\n")]),
            ("quên cộng level", ["if xp >= need():\n    xp -= need()"], [("    return 10\n", "    return 2 + level * 2\n")]),
-           ("cấp nào cũng cần 1 viên", ["if xp >= need():\n    xp -= need()\n    level += 1"], [("    return 10\n", "    return 1\n")])],
-    test={"frames": 420},
+           ("cấp nào cũng cần 1 viên", ["if xp >= need():\n    xp -= need()\n    level += 1"], [("    return 10\n", "    return 1\n")]),
+           ("cộng level trước khi trừ", ["if xp >= need():\n    level += 1\n    xp -= need()"], [("    return 10\n", "    return 2 + level * 2\n")]),
+           ("đặt xp = 0", ["if xp >= need():\n    xp = 0\n    level += 1"], [("    return 10\n", "    return 2 + level * 2\n")]),
+           ("cấp nào cũng cần 4 viên", ["if xp >= need():\n    xp -= need()\n    level += 1"], [("    return 10\n", "    return 4\n")]),
+           ("quên đổi need()", ["if xp >= need():\n    xp -= need()\n    level += 1"], []),
+           ("level = 2 thay cho += 1", ["if xp >= need():\n    xp -= need()\n    level = 2"], [("    return 10\n", "    return 2 + level * 2\n")]),
+           ("so >, vừa đủ mà không lên cấp", ["if xp > need():\n    xp -= need()\n    level += 1"], [("    return 10\n", "    return 2 + level * 2\n")])],
+    test={"frames": 60},
     new="ngưỡng tăng dần; trừ phần đã dùng, giữ phần dư",
-    reorganised="Thêm level, check_level(); chữ Ngọc đổi thành Cấp.")
+    reorganised="Thêm level, check_level(); chữ Ngọc đổi thành Cấp. Bắt đầu với 10 viên (đồ thử, Bài 11 về 0).")
 
 # ---------------------------------------------------------------- h11
 ex(
@@ -500,7 +534,7 @@ ex(
      "Thụt vào: update_play()",
      "elif key_pressed(\"space\"): rồi thụt vào start_game()",
      "start_game() đặt lại máu, quái, đạn, ngọc, cấp… rồi đổi screen = \"play\".",
-     "START_HP = 1 để thua nhanh cho dễ thử. Bài sau mình đổi lại 5.",
+     "START_HP = 1 để thua nhanh cho dễ thử. Bài tập 2 có sẵn 5 máu.",
      "Bấm ▶ Chạy: máy bấm Space, chơi, thua, bấm Space chơi lại."],
     ["Mỗi lúc game ở đúng một màn.",
      "Đang chơi mà bấm Space thì không được bắt đầu lại, nên dùng elif.",
@@ -520,7 +554,7 @@ shots = []
 wait = 0
 kills = 0
 gems = []
-xp = 0
+xp = 10
 level = 1
 ''', '''START_HP = 1
 hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 5, "speed": 3}
@@ -618,7 +652,7 @@ if screen == "play":'''], [('''if screen == "play":
 ''')])],
     test={"frames": 400, "taps": [30, 90, 320]},
     new="biến screen: mỗi lúc game ở đúng một màn",
-    reorganised="Sắp xếp lại lần 2: game_over thay bằng screen; start_game() đặt giá trị đầu cho mọi biến (không còn viết hai lần ở đầu file), cuối file gọi "
+    reorganised="Sắp xếp lại lần 2 (ngọc lại bắt đầu từ 0): game_over thay bằng screen; start_game() đặt giá trị đầu cho mọi biến (không còn viết hai lần ở đầu file), cuối file gọi "
                 "start_game() rồi đặt screen = \"title\"; bỏ crowd; update "
                 "cũ thành update_play(), draw cũ thành draw_play(); thêm draw_title(), games, START_HP.")
 
@@ -691,7 +725,7 @@ ex(
     "Mỗi skill là một dòng trong bảng SKILLS. Em viết 3 dòng nhánh \"spark\": \"Tay Chớp: bắn nhanh\" (số 1, fast, 5), "
     "\"Tia Đôi: thêm 1 viên\" (số 2, extra, 1), \"Mây Giông: sét đánh\" (số 3, cloud, 3). Không sửa phần vẽ.",
     ["Nhìn dòng SKILLS.append(...) của Áo Băng: em viết 3 dòng giống vậy, ngay dưới nó.",
-     "name là tên, branch là nhánh, icon là số của hình, what là tên tác dụng, add là cộng bao nhiêu.",
+     "name là tên, branch là nhánh, icon là số của hình, what là tên ngăn trong sổ sức mạnh, add là cộng bao nhiêu.",
      "Dòng 1: {\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5}",
      "Làm tiếp Tia Đôi và Mây Giông.",
      "Bấm ▶ Chạy: sổ skill tự dài ra 9 dòng dù em không sửa code vẽ."],
@@ -714,10 +748,10 @@ def draw_thing(''', '''let_go = True
 SKILLS = []
 SKILLS.append({"name": "Đốm Lửa: đạn mạnh hơn", "branch": "fire", "icon": 1, "what": "power", "add": 1})
 SKILLS.append({"name": "Vòng Lửa: đốt quái gần", "branch": "fire", "icon": 2, "what": "ring", "add": 2})
-SKILLS.append({"name": "Nổ Tung: quái thua nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
+SKILLS.append({"name": "Nổ Tung: quái thua là nổ", "branch": "fire", "icon": 4, "what": "boom", "add": 2})
 SKILLS.append({"name": "Đòn Buốt: đạn làm chậm", "branch": "ice", "icon": 1, "what": "slow", "add": 60})
 SKILLS.append({"name": "Vòng Sương: tỏa lạnh", "branch": "ice", "icon": 4, "what": "frost", "add": 80})
-SKILLS.append({"name": "Áo Băng: bất tử lâu", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
+SKILLS.append({"name": "Áo Băng: bất tử lâu hơn", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
 # Em viết tiếp ở đây
 
 

@@ -79,7 +79,7 @@
     }
   ],
   "new_idea": "abs; khoảng cách = ngang + dọc; near(a, b, size) trả về True/False",
-  "reorganised": "Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi. Bài tập này chỉ có 1 con quái cho dễ nhìn máu tụt.",
+  "reorganised": "Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi; bỏ edge. Bài tập này chỉ có 1 con quái cho dễ nhìn máu tụt.",
   "toolbox": [
     "pq_abs",
     "pq_append",

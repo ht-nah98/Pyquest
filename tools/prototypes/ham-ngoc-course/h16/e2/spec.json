@@ -10,7 +10,7 @@
     "Chỗ (2): row = HEROES[i]",
     "draw_thing(row[\"image\"], 110, y + 50, 4) rồi draw_text(row[\"name\"], 340, y + 36, 32)",
     "draw_text(\"Máu \" + str(row[\"hp\"]) + \", tầm \" + str(row[\"reach\"]), 340, y + 72)",
-    "Bấm ▶ Chạy: máy bấm phím 2 chọn Pháp sư. Rồi ⛶ và tự chọn."
+    "Bấm ▶ Chạy: máy bấm phím 3 chọn Cung thủ. Rồi ⛶ và tự chọn."
   ],
   "hints": [
     "Phím 1 là HEROES[0], nên phải trừ 1.",
@@ -22,7 +22,7 @@
     "taps": [],
     "keys": [
       {
-        "key": "2",
+        "key": "3",
         "from": 10,
         "to": 10
       },
@@ -47,21 +47,29 @@
       "id": "h16-e2-three"
     },
     {
-      "label": "Có tên cung thủ",
+      "label": "Mỗi nhân vật một hàng",
+      "kind": "distinctCount",
+      "sprite": "hero",
+      "axis": "y",
+      "min": 3,
+      "id": "h16-e2-rows"
+    },
+    {
+      "label": "Có tên pháp sư",
       "kind": "drewText",
-      "text": "Cung thủ",
+      "text": "Pháp sư",
       "id": "h16-e2-name"
     },
     {
-      "label": "Phím 2 là Pháp sư vào hầm",
+      "label": "Phím 3 là Cung thủ vào hầm",
       "kind": "drew",
-      "sprite": "hero-mage",
+      "sprite": "hero-archer",
       "at": [
         276,
         276
       ],
       "tolerance": 1,
-      "id": "h16-e2-mage"
+      "id": "h16-e2-archer"
     },
     {
       "label": "Vào được hầm",
@@ -122,7 +130,10 @@
   "wrong": [
     "quên trừ 1",
     "ai cũng là kiếm sĩ",
-    "vẽ ba lần một người"
+    "vẽ ba lần một người",
+    "phím nào cũng ra pháp sư",
+    "đếm ngược",
+    "vẽ chồng lên một hàng"
   ],
   "alts": [
     "biến pick",

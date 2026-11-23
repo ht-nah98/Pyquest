@@ -5,13 +5,13 @@
   "mode": "game",
   "input": "typing",
   "walkthrough": [
-    "Gần đầu file: đổi START_WAVE = 3 thành START_WAVE = 0",
+    "Gần đầu file: đổi START_WAVE = 4 thành START_WAVE = 0",
     "Đổi START_SKILLS = [9] thành START_SKILLS = []",
     "Trong draw_title(), chỗ đánh dấu: draw_thing(\"item-heart\", 150, 575, 2)",
     "Dưới đó: draw_text(\"Em làm game này!\", 300, 575, 20). Đổi câu tùy em, đừng ghi tên thật.",
     "Bấm ▶ Chạy: ván mới bắt đầu ở Đợt 1/5 với 1 thẻ.",
     "Đổi máy với bạn, chơi game của bạn 10 phút. Ghi 1 điều hay và 1 điều muốn sửa.",
-    "Sửa 1 số trong bảng theo góp ý của bạn rồi chơi lại. Game là của em, cứ đổi thoải mái."
+    "Bấm ▶ Chạy cho đạt hết mục tiêu đã, rồi mới thêm quái, skill, đợt của em và sửa theo góp ý. Đây là bản của em, cứ đổi."
   ],
   "hints": [
     "Danh sách rỗng là []: không cho sẵn skill nào.",
@@ -77,7 +77,7 @@
     }
   ],
   "new_idea": "tháo đồ thử, ký tên, chơi chéo và nhận xét",
-  "reorganised": "",
+  "reorganised": "record bắt đầu từ 0.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -130,6 +130,7 @@
   },
   "wrong": [
     "quên tháo skill thử",
+    "quên tháo START_WAVE",
     "quên ký tên"
   ],
   "alts": [

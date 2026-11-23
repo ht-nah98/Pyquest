@@ -18,8 +18,8 @@
         {
           "id": "h03-dict",
           "title": "dict: hộp có tên",
-          "text": "dict là một cái hộp nhiều ngăn, mỗi ngăn dán một cái tên. Giống tủ đồ dán nhãn: muốn lấy gì thì đọc nhãn.\nbag = {\"pen\": 3, \"book\": 2}",
-          "coachNotes": "Hoạt động giấy 5 phút: mỗi bé gấp tờ giấy thành 6 ô, dán nhãn name, image, x, y, hp, speed rồi điền cho nhân vật của mình. Giữ lại để dùng ở slide sau."
+          "text": "dict là một cái hộp nhiều ngăn, mỗi ngăn dán một cái tên. dict là từ điển: muốn lấy gì thì tra theo tên.\nbag = {\"pen\": 3, \"book\": 2}",
+          "coachNotes": "dict viết tắt của dictionary (từ điển); cũng giống tủ đồ dán nhãn. Hoạt động giấy 5 phút: mỗi bé gấp tờ giấy thành 6 ô, dán nhãn name, image, x, y, hp, speed rồi điền cho nhân vật của mình. Giữ lại để dùng ở slide sau."
         },
         {
           "id": "h03-vs-list",
@@ -45,11 +45,11 @@
             "question": "hero có \"hp\": 5. Chạy hero[\"hp\"] -= 1, rồi hero[\"hp\"] += 2. Ngăn hp bằng mấy?",
             "choices": [
               "2",
-              "4",
               "6",
+              "4",
               "7"
             ],
-            "answer": 2,
+            "answer": 1,
             "explain": "5 bớt 1 còn 4, rồi thêm 2 thành 6. Mỗi dòng đổi tiếp số đang có trong ngăn."
           }
         },
@@ -58,12 +58,12 @@
           "quiz": {
             "question": "Cách nào lấy đúng ngăn hp của hộp hero?",
             "choices": [
-              "hero[hp]",
               "hero[\"hp\"]",
+              "hero[hp]",
               "hero(\"hp\")",
               "hp[\"hero\"]"
             ],
-            "answer": 1,
+            "answer": 0,
             "explain": "Tên ngăn là chữ nên cần ngoặc kép. Viết hero[hp] thì máy đi tìm một biến tên hp, mà không có biến đó."
           },
           "coachNotes": "hero(\"hp\") là cách gọi hàm: ngoặc tròn để gọi, ngoặc vuông để mở ngăn."
@@ -73,6 +73,12 @@
           "title": "Đưa cả hộp vào hàm",
           "text": "draw_person(person) nhận cả một cái hộp, rồi tự mở các ngăn bên trong: person[\"x\"], person[\"name\"]… Đưa hộp nào thì vẽ người đó. Một hàm, vẽ được mọi người.",
           "coachNotes": "Cho hai bé đưa tủ giấy của mình cho một bạn đóng vai draw_person, bạn đó đọc từng ô rồi vẽ lên bảng."
+        },
+        {
+          "id": "h03-join",
+          "title": "Nối chữ bằng dấu +",
+          "text": "\"images/\" + \"hero-mage\" + \".png\" thành \"images/hero-mage.png\". Dấu + nối chữ liền nhau, không thêm dấu cách. Số thì đổi thành chữ bằng str trước rồi mới nối: \"Máu: \" + str(5) thành \"Máu: 5\".",
+          "coachNotes": "3 phút. Cho lớp đọc dòng draw_image trong draw_person: ba mảnh chữ, mảnh giữa lấy từ ngăn image. Hỏi: \"Máu: \" có dấu cách ở cuối để làm gì? (để số không dính vào chữ). Quên str thì máy báo lỗi vì chữ không cộng được với số."
         }
       ]
     },

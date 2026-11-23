@@ -18,28 +18,48 @@
     "Cả bốn chữ if thẳng hàng nhau."
   ],
   "test": {
-    "frames": 160,
+    "frames": 150,
     "taps": [],
     "keys": [
       {
         "key": "right",
         "from": 0,
-        "to": 29
+        "to": 39
       },
       {
         "key": "down",
-        "from": 30,
-        "to": 49
+        "from": 10,
+        "to": 39
       },
       {
         "key": "left",
-        "from": 50,
+        "from": 40,
         "to": 99
       },
       {
         "key": "up",
-        "from": 100,
-        "to": 159
+        "from": 50,
+        "to": 109
+      },
+      {
+        "key": "right",
+        "from": 110,
+        "to": 129
+      },
+      {
+        "key": "up",
+        "from": 110,
+        "to": 129
+      },
+      {
+        "key": "left",
+        "from": 130,
+        "to": 149
+      },
+      {
+        "key": "down",
+        "from": 130,
+        "to": 149
       }
     ]
   },
@@ -54,16 +74,16 @@
       "kind": "varCompare",
       "name": "x",
       "op": ">=",
-      "value": 330,
+      "value": 410,
       "when": "ever",
       "id": "h02-e1-right"
     },
     {
-      "label": "Đi xuống được",
+      "label": "Giữ → và ↓ cùng lúc thì đi chéo xuống",
       "kind": "varCompare",
       "name": "y",
       "op": ">=",
-      "value": 330,
+      "value": 380,
       "when": "ever",
       "id": "h02-e1-down"
     },
@@ -72,16 +92,26 @@
       "kind": "varCompare",
       "name": "x",
       "op": "<=",
-      "value": 290,
+      "value": 250,
+      "when": "ever",
       "id": "h02-e1-left"
     },
     {
-      "label": "Đi lên được",
+      "label": "Giữ ← và ↑ cùng lúc thì đi chéo lên",
       "kind": "varCompare",
       "name": "y",
       "op": "<=",
-      "value": 290,
+      "value": 170,
+      "when": "ever",
       "id": "h02-e1-up"
+    },
+    {
+      "label": "Giữ ← và ↓ cùng lúc cũng đi chéo",
+      "kind": "varCompare",
+      "name": "y",
+      "op": ">=",
+      "value": 200,
+      "id": "h02-e1-both"
     }
   ],
   "new_idea": "key_pressed(\"left\"), \"up\", \"down\": giữ phím nào thì làm việc đó",
@@ -108,7 +138,13 @@
   "wrong": [
     "lên xuống bị ngược",
     "quên phím lên",
-    "mới viết một phím"
+    "mới viết một phím",
+    "dùng elif nên không đi chéo được",
+    "lên, xuống là elif của trái",
+    "lên là elif của trái"
   ],
-  "alts": []
+  "alts": [
+    "phím ngược chiều nhau thì elif cũng được",
+    "viết = thay +="
+  ]
 }

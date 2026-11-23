@@ -33,8 +33,8 @@
         {
           "id": "h02-trace",
           "title": "Dò ba khung hình",
-          "text": "speed = 3, x = 300, em giữ phím →.\nKhung 1: x = 303\nKhung 2: x = 306\nKhung 3: x = 309\nx += speed là viết gọn của x = x + speed.",
-          "coachNotes": "Cho bé dò tiếp khung 4 và 5. Hỏi: giữ phím 1 giây thì đi được bao xa? (60 × 3 = 180 bước). Trừ cũng viết gọn được: x -= speed."
+          "text": "speed = 3, x = 300, em giữ phím →.\nKhung 1: x = 303\nKhung 2: x = 306\nKhung 3: x = 309\nx += speed là viết gọn của x = x + speed. x -= speed là bớt đi speed.",
+          "coachNotes": "Cho bé dò tiếp khung 4 và 5. Hỏi: giữ phím 1 giây thì đi được bao xa? (60 × 3 = 180 bước). Hỏi: giữ ← một khung, x = 300 thì x -= speed ra mấy? (297)."
         },
         {
           "id": "h02-quiz-up",
@@ -42,11 +42,11 @@
             "question": "y = 300, speed = 3. Em giữ phím ↑ trong 10 khung hình. y bằng mấy?",
             "choices": [
               "330",
-              "297",
               "270",
+              "297",
               "310"
             ],
-            "answer": 2,
+            "answer": 1,
             "explain": "Đi lên thì y giảm. Mỗi khung bớt 3, sau 10 khung bớt 30: 300 - 30 = 270."
           },
           "coachNotes": "330 là nhầm chiều. 297 là mới tính một khung."
@@ -56,12 +56,12 @@
           "quiz": {
             "question": "Bốn phím viết bằng if, elif, elif, elif, hỏi → đầu tiên. Em giữ → và ↓ cùng lúc. Nhân vật đi thế nào?",
             "choices": [
+              "Chỉ đi sang phải",
               "Đi chéo",
               "Chỉ đi xuống",
-              "Đứng yên",
-              "Chỉ đi sang phải"
+              "Đứng yên"
             ],
-            "answer": 3,
+            "answer": 0,
             "explain": "elif chỉ được xét khi các điều kiện trên đều sai. → đã đúng nên ↓ bị bỏ qua. Bốn if riêng mới đi chéo được."
           }
         }
@@ -88,11 +88,11 @@
             "question": "x = 575, speed = 3, mép phải chặn ở 576. Giữ phím → thêm một khung hình. x bằng mấy?",
             "choices": [
               "578",
-              "576",
               "575",
-              "600"
+              "600",
+              "576"
             ],
-            "answer": 1,
+            "answer": 3,
             "explain": "Đi trước: 575 + 3 = 578. 578 lớn hơn 576 nên được đặt lại thành 576."
           }
         }
@@ -122,7 +122,7 @@
           "id": "h02-try",
           "title": "Lái thử",
           "text": "Bấm ⛶ rồi đi bằng phím mũi tên. Đẩy vào cả bốn mép, đi chéo vào góc. Rồi chỉnh speed thành 1, 5, 8. Số nào đi sướng tay mà vẫn điều khiển được?",
-          "coachNotes": "Cho mỗi bé chọn một số và nói lý do. Để ý: đi chéo thì mỗi khung cộng cả ngang lẫn dọc nên nhanh hơn đi thẳng. Bài sau: gom đồ của nhân vật vào một cái hộp."
+          "coachNotes": "iPad: phải có bàn phím gắn ngoài mới đi được; không có thì bé xem máy bạn. Cho mỗi bé chọn một số và nói lý do. Để ý: đi chéo thì mỗi khung cộng cả ngang lẫn dọc nên nhanh hơn đi thẳng. Bài sau: gom đồ của nhân vật vào một cái hộp."
         }
       ]
     }
@@ -161,16 +161,16 @@
           "kind": "varCompare",
           "name": "x",
           "op": ">=",
-          "value": 330,
+          "value": 410,
           "when": "ever",
           "id": "h02-e1-right"
         },
         {
-          "label": "Đi xuống được",
+          "label": "Giữ → và ↓ cùng lúc thì đi chéo xuống",
           "kind": "varCompare",
           "name": "y",
           "op": ">=",
-          "value": 330,
+          "value": 380,
           "when": "ever",
           "id": "h02-e1-down"
         },
@@ -179,41 +179,71 @@
           "kind": "varCompare",
           "name": "x",
           "op": "<=",
-          "value": 290,
+          "value": 250,
+          "when": "ever",
           "id": "h02-e1-left"
         },
         {
-          "label": "Đi lên được",
+          "label": "Giữ ← và ↑ cùng lúc thì đi chéo lên",
           "kind": "varCompare",
           "name": "y",
           "op": "<=",
-          "value": 290,
+          "value": 170,
+          "when": "ever",
           "id": "h02-e1-up"
+        },
+        {
+          "label": "Giữ ← và ↓ cùng lúc cũng đi chéo",
+          "kind": "varCompare",
+          "name": "y",
+          "op": ">=",
+          "value": 200,
+          "id": "h02-e1-both"
         }
       ],
       "test": {
-        "frames": 160,
+        "frames": 150,
         "taps": [],
         "keys": [
           {
             "key": "right",
             "from": 0,
-            "to": 29
+            "to": 39
           },
           {
             "key": "down",
-            "from": 30,
-            "to": 49
+            "from": 10,
+            "to": 39
           },
           {
             "key": "left",
-            "from": 50,
+            "from": 40,
             "to": 99
           },
           {
             "key": "up",
-            "from": 100,
-            "to": 159
+            "from": 50,
+            "to": 109
+          },
+          {
+            "key": "right",
+            "from": 110,
+            "to": 129
+          },
+          {
+            "key": "up",
+            "from": 110,
+            "to": 129
+          },
+          {
+            "key": "left",
+            "from": 130,
+            "to": 149
+          },
+          {
+            "key": "down",
+            "from": 130,
+            "to": 149
           }
         ]
       },

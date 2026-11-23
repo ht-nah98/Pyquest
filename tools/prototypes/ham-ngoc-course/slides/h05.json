@@ -53,12 +53,12 @@
           "quiz": {
             "question": "Quái ở phía trên em. Em viết nhầm: thing[\"y\"] < target[\"y\"] thì thing[\"y\"] -= speed. Quái làm gì?",
             "choices": [
-              "Chạy lên, càng lúc càng xa em",
               "Đi xuống chỗ em",
               "Đứng yên",
-              "Đi sang ngang"
+              "Đi sang ngang",
+              "Chạy lên, càng lúc càng xa em"
             ],
-            "answer": 0,
+            "answer": 3,
             "explain": "Trừ y là đi lên. Quái đang ở trên mà còn đi lên thì nó đang chạy trốn em."
           }
         },

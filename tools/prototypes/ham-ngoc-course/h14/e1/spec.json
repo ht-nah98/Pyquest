@@ -11,7 +11,7 @@
     "if bonus[\"cloud\"] > 0 and tick % 60 == 30:",
     "Thụt vào: strike(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"]). strike là sét đánh, vẽ luôn tia sét.",
     "Các skill khác chỉ cần đọc bonus ở đúng chỗ, code đã có sẵn: em tìm thử xem.",
-    "START_SKILLS = [1, 8] cho em sẵn Vòng Lửa và Mây Giông để thử."
+    "START_SKILLS cho sẵn 5 Vòng Lửa, 3 Mây Giông; nhớt 24 máu (đồ thử). Nhìn số trên đầu: lửa trừ 10, sét trừ 9."
   ],
   "hints": [
     "Một dòng chỗ (1) đủ cho mọi skill trong bảng.",
@@ -20,7 +20,7 @@
     "strike(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])"
   ],
   "test": {
-    "frames": 240,
+    "frames": 295,
     "taps": [
       5
     ],
@@ -29,6 +29,101 @@
         "key": "1",
         "from": 10,
         "to": 10
+      },
+      {
+        "key": "1",
+        "from": 150,
+        "to": 150
+      },
+      {
+        "key": "1",
+        "from": 158,
+        "to": 158
+      },
+      {
+        "key": "1",
+        "from": 166,
+        "to": 166
+      },
+      {
+        "key": "1",
+        "from": 174,
+        "to": 174
+      },
+      {
+        "key": "1",
+        "from": 182,
+        "to": 182
+      },
+      {
+        "key": "1",
+        "from": 190,
+        "to": 190
+      },
+      {
+        "key": "1",
+        "from": 198,
+        "to": 198
+      },
+      {
+        "key": "1",
+        "from": 206,
+        "to": 206
+      },
+      {
+        "key": "1",
+        "from": 214,
+        "to": 214
+      },
+      {
+        "key": "1",
+        "from": 222,
+        "to": 222
+      },
+      {
+        "key": "1",
+        "from": 230,
+        "to": 230
+      },
+      {
+        "key": "1",
+        "from": 238,
+        "to": 238
+      },
+      {
+        "key": "1",
+        "from": 246,
+        "to": 246
+      },
+      {
+        "key": "1",
+        "from": 254,
+        "to": 254
+      },
+      {
+        "key": "1",
+        "from": 262,
+        "to": 262
+      },
+      {
+        "key": "1",
+        "from": 270,
+        "to": 270
+      },
+      {
+        "key": "1",
+        "from": 278,
+        "to": 278
+      },
+      {
+        "key": "1",
+        "from": 286,
+        "to": 286
+      },
+      {
+        "key": "1",
+        "from": 294,
+        "to": 294
       }
     ]
   },
@@ -39,22 +134,44 @@
       "id": "h14-e1-run"
     },
     {
-      "label": "Vòng Lửa có đốt",
+      "label": "Vòng Lửa đốt đúng nhịp",
       "kind": "called",
       "name": "blast",
-      "min": 2,
+      "min": 4,
       "id": "h14-e1-blast"
     },
     {
-      "label": "Mây Giông có đánh sét",
+      "label": "Mây Giông đánh sét đúng nhịp",
       "kind": "called",
       "name": "strike",
-      "min": 2,
+      "min": 5,
       "id": "h14-e1-strike"
+    },
+    {
+      "label": "Sét trừ 9 máu: 24 còn 15",
+      "kind": "drewText",
+      "text": "15 máu",
+      "id": "h14-e1-bolt"
+    },
+    {
+      "label": "Lửa đủ mạnh, đủ rộng: hạ được quái",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": ">=",
+      "value": 3,
+      "id": "h14-e1-burn"
+    },
+    {
+      "label": "Không ra đòn mỗi khung, không đốt cả sân",
+      "kind": "varCompare",
+      "name": "kills",
+      "op": "<=",
+      "value": 6,
+      "id": "h14-e1-beat"
     }
   ],
   "new_idea": "tên ngăn lấy từ biến: bonus[skill[\"what\"]]",
-  "reorganised": "Thêm bonus, add_skill, hurt, blast, strike (tia sét), use_skills; Vòng Lửa hiện vòng cam, sét hiện tia vàng. Chỗ nào cần skill thì đọc bonus (shoot, hit_mobs, remove_dead, check_hits, move_mobs); START_SKILLS cho sẵn skill để thử.",
+  "reorganised": "Thêm bonus, add_skill, hurt, blast, strike (tia sét), use_skills; Vòng Lửa hiện vòng cam, sét hiện tia vàng. Chỗ nào cần skill thì đọc bonus (shoot, hit_mobs, remove_dead, check_hits, move_mobs); START_SKILLS cho sẵn skill để thử. Nhớt 24 máu, số máu hiện trên đầu (đồ thử).",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -81,6 +198,7 @@
     "pq_if_else",
     "pq_import",
     "pq_index",
+    "pq_index_set",
     "pq_key_aug",
     "pq_key_get",
     "pq_key_held",
@@ -104,7 +222,16 @@
     "quên cộng vào bonus",
     "luôn cộng vào power",
     "quên Mây Giông",
-    "quên Vòng Lửa"
+    "quên Vòng Lửa",
+    "gán = thay vì cộng +=",
+    "cộng 1 thay vì cộng add",
+    "đốt mỗi khung",
+    "sét mỗi khung",
+    "đốt cả sân",
+    "đốt quá hẹp",
+    "lửa lúc nào cũng 1",
+    "sét lúc nào cũng 1",
+    "sét cùng nhịp với lửa"
   ],
   "alts": [
     "sét trước, vòng sau",

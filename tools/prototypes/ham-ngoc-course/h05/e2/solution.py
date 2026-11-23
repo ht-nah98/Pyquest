@@ -4,6 +4,7 @@ hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 
 mobs = []
 tick = 0
 crowd = 0
+edge = 0
 
 
 def draw_thing(image, x, y, size):
@@ -21,7 +22,9 @@ def far_edge(value):
 
 
 def spawn_mob():
-    mobs.append(make_mob(random_int(20, 580), far_edge(hero["y"])))
+    global edge
+    edge = far_edge(hero["y"])
+    mobs.append(make_mob(random_int(20, 580), edge))
 
 
 def start_game():

@@ -1,5 +1,5 @@
 {
-  "title": "Trúng thì biến mất",
+  "title": "Hết máu thì biến mất",
   "summary": "Giữ lại bằng danh sách mới: quái hết máu và đạn đã trúng thì không còn nữa.",
   "unlocksRoadmap": [
     "attack"
@@ -100,7 +100,7 @@
           "id": "h09-code1",
           "title": "Bài tập 1: remove_dead()",
           "text": "hit_mobs() đã trừ máu quái giúp em. Em viết remove_dead() theo khuôn. Có thêm một nhánh else: con không được giữ thì đếm vào kills, hiện ở chữ Hạ.",
-          "coachNotes": "Lỗi hay gặp: mobs = alive thụt trong for (mất quái lung tung); giữ nhầm con hết máu. mobs và kills cần global vì cả biến được gán lại. Hộp quái giờ thêm ngăn hp: 2. Chữ Quái đếm sau remove_dead() nên giảm cùng lúc chữ Hạ tăng."
+          "coachNotes": "Lỗi hay gặp: quên mobs = alive (con hết máu vẫn còn, Hạ tăng mãi); giữ nhầm con hết máu. Viết mobs = alive thụt vào for vẫn chạy đúng, nhưng để ngoài cho dễ đọc. mobs và kills cần global vì cả biến được gán lại. Hộp quái giờ thêm ngăn hp: 2. Chữ Quái đếm sau remove_dead() nên giảm cùng lúc chữ Hạ tăng."
         },
         {
           "id": "h09-code2",
@@ -117,7 +117,7 @@
           "id": "h09-try",
           "title": "Vừa né vừa bắn",
           "text": "Đứng im giữa sân xem cầm cự được bao lâu, rồi vừa chạy vừa bắn: hạ được mấy con? Đổi reach thành 150, rồi đổi hp của nhớt thành 4. Game khó lên ở chỗ nào?",
-          "coachNotes": "Phần Tự đánh trên lộ trình sáng lên. Khi reach nhỏ, nhân vật vẫn bắn con ở xa và đạn mất giữa đường: hỏi bé muốn sửa luật đó không. Thua thì tắt rồi chạy lại (Bài 11 mới có chơi lại). Chọn một bộ số cả lớp thấy vui, ghi lại. Bài sau: quái bị hạ sẽ rơi ngọc."
+          "coachNotes": "Phần Tự đánh trên lộ trình sáng lên. Khi reach nhỏ, nhân vật vẫn bắn con ở xa và đạn mất giữa đường: hỏi bé muốn sửa luật đó không. Thua thì tắt rồi chạy lại (Bài 11 mới có chơi lại). Bộ số cả lớp thấy vui thì ghi vào vở: bài sau lại bắt đầu từ code mẫu. Bài sau: quái bị hạ sẽ rơi ngọc."
         }
       ]
     }

@@ -25,10 +25,10 @@
             "question": "Em bấm phím 3. Máy phải lấy thẻ nào?",
             "choices": [
               "cards[3]",
-              "cards[2]",
-              "cards[1]"
+              "cards[1]",
+              "cards[2]"
             ],
-            "answer": 1,
+            "answer": 2,
             "explain": "3 - 1 = 2. cards chỉ có ngăn 0, 1, 2, nên đòi cards[3] là máy báo lỗi."
           }
         },

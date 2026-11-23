@@ -16,7 +16,7 @@
         {
           "id": "h12-row",
           "title": "Đọc một dòng của bảng",
-          "text": "Đốm Lửa là một dòng: name là tên, branch là nhánh (fire là Lửa), icon là số của hình, what là loại sức mạnh, add là cộng thêm bao nhiêu. Mỗi dòng là một hộp có tên ngăn.",
+          "text": "Đốm Lửa là một dòng: name là tên, branch là nhánh (fire là Lửa), icon là số của hình, what là tên ngăn trong sổ sức mạnh, add là cộng thêm bao nhiêu. Mỗi dòng là một hộp có tên ngăn.",
           "coachNotes": "Chiếu dòng Đốm Lửa trong code. Cho bé đọc to dòng Áo Băng bằng tiếng Việt: tên gì, nhánh gì, cộng bao nhiêu. ice là Băng, spark là Sét."
         },
         {
@@ -30,11 +30,11 @@
           "quiz": {
             "question": "SKILLS có 6 dòng. Em thêm 3 dòng rồi chạy. Phải sửa mấy dòng trong hàm vẽ sổ skill?",
             "choices": [
-              "0 dòng",
               "3 dòng",
+              "0 dòng",
               "9 dòng"
             ],
-            "answer": 0,
+            "answer": 1,
             "explain": "Vòng lặp đi theo len(SKILLS). Bảng dài 9 thì nó tự vẽ 9 dòng."
           }
         },
@@ -65,19 +65,19 @@
           "id": "h12-own",
           "title": "Viết bảng ra giấy trước",
           "text": "Kẻ 5 cột: name, branch, icon, what, add. Điền 3 skill nhánh Sét theo đề: Tay Chớp, Tia Đôi, Mây Giông. Còn giờ thì nghĩ thêm một skill của riêng em.",
-          "coachNotes": "6 phút. Giữ lại tờ giấy có skill của bé tới Bài 18. Nhắc: hôm nay what mới chỉ là chữ, Bài 14 mới có tác dụng."
+          "coachNotes": "6 phút. Giữ lại tờ giấy có skill của bé tới Bài 18 (code của các bài không mang theo được). Nhắc: hôm nay what mới chỉ là chữ, Bài 14 mới có tác dụng."
         },
         {
           "id": "h12-quiz-pool",
           "quiz": {
             "question": "pool có 9 thẻ, em bốc 2 lần và lần nào cũng remove. Lần thứ ba, ngăn cuối của pool là số mấy?",
             "choices": [
+              "6",
               "9",
               "8",
-              "7",
-              "6"
+              "7"
             ],
-            "answer": 3,
+            "answer": 0,
             "explain": "9 - 2 = 7 thẻ. Đếm từ 0 nên ngăn cuối là 6, đúng bằng len(pool) - 1."
           },
           "coachNotes": "Nói thêm: bốc tới len(pool) thì lâu lâu mới lỗi, vì không phải lần nào cũng trúng số cuối. Lỗi lúc có lúc không là loại khó tìm."
@@ -119,7 +119,7 @@
           "id": "h12-try",
           "title": "Bấm Space 20 lần",
           "text": "Có lần nào hai thẻ trùng nhau không? Mây Giông ở cuối bảng có ra không? Rồi đổi tên một skill trong bảng thành tên em thích và bốc lại.",
-          "coachNotes": "5 phút. Đổi tên skill nào cũng được, máy chấm không đọc tên. Đừng đổi ngăn what, vì Bài 14 dùng tới."
+          "coachNotes": "5 phút. Đổi tên skill nào cũng được, máy chấm không đọc tên. Bài 13 lại bắt đầu từ code mẫu: tên hay thì ghi vào vở, tới Bài 18 đưa vào bản của mình."
         }
       ]
     }

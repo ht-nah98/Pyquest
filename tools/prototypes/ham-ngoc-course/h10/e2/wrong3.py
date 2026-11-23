@@ -130,6 +130,10 @@ def need():
     return 10
 
 
+def draw_bar(width):
+    draw_rect(0, 590, width, 10, "#2fc9a8")
+
+
 def take_gems():
     global gems, xp
     kept = []
@@ -211,6 +215,7 @@ def draw():
     draw_text("Quái: " + str(crowd), 540, 24)
     draw_text("Hạ: " + str(kills), 300, 24)
     draw_rect(0, 588, 600, 12, "#33334a")
+    draw_bar(600 * xp / need())
     draw_text("Ngọc: " + str(xp), 180, 24)
     if game_over:
         draw_text("Thua rồi!", 300, 250, 48)

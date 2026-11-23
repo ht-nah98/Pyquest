@@ -39,11 +39,11 @@
             "question": "Đường tới em lần lượt là 150, 200, 80, 120, 70. Bắt đầu best là con đầu. best đổi sang con khác mấy lần?",
             "choices": [
               "1",
-              "2",
               "3",
+              "2",
               "4"
             ],
-            "answer": 1,
+            "answer": 2,
             "explain": "150 → 80 là một lần, 80 → 70 là lần hai. 200 và 120 đều không nhỏ hơn kỷ lục lúc đó."
           }
         },
@@ -73,10 +73,10 @@
             "choices": [
               "Con gần nhất",
               "Con cuối danh sách",
-              "Luôn là con đầu danh sách",
-              "Không trả về con nào"
+              "Không trả về con nào",
+              "Luôn là con đầu danh sách"
             ],
-            "answer": 2,
+            "answer": 3,
             "explain": "Vòng đầu so con đầu với chính nó, không đổi gì, rồi gặp return là dừng hàm."
           }
         }

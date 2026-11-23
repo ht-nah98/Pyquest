@@ -47,12 +47,12 @@
           "quiz": {
             "question": "Ảnh rộng 16, vẽ với scale=5. Muốn giữa ảnh ở x = 300 thì góc ảnh ở x bằng mấy?",
             "choices": [
+              "260",
               "300",
               "276",
-              "260",
               "220"
             ],
-            "answer": 2,
+            "answer": 0,
             "explain": "Ảnh rộng 16 × 5 = 80, nửa ảnh là 40. Góc ở 300 - 40 = 260."
           },
           "coachNotes": "276 là đáp án của scale=3. 220 là lùi cả ảnh thay vì nửa ảnh. Hỏi bé chọn số nào và vì sao."
@@ -63,11 +63,11 @@
             "question": "Đuốc 16 × 16 vẽ ở (100, 60) với scale=3. Giữa ngọn đuốc ở đâu?",
             "choices": [
               "(100, 60)",
-              "(124, 84)",
               "(76, 36)",
+              "(124, 84)",
               "(148, 108)"
             ],
-            "answer": 1,
+            "answer": 2,
             "explain": "(100, 60) là góc trên bên trái. Đi thêm nửa ảnh là 24: sang phải được 124, xuống dưới được 84."
           }
         }
@@ -88,11 +88,11 @@
             "question": "x = 300, y = 300. Em lỡ vẽ ảnh 48 × 48 ở x, y thay vì x - 24, y - 24. Nhân vật ở đâu?",
             "choices": [
               "Vẫn đúng giữa sân",
-              "Lệch sang phải và xuống dưới",
               "Lệch sang trái và lên trên",
-              "Máy báo lỗi"
+              "Máy báo lỗi",
+              "Lệch sang phải và xuống dưới"
             ],
-            "answer": 1,
+            "answer": 3,
             "explain": "Góc ảnh nằm ở (300, 300), nên cả ảnh nằm bên phải và bên dưới điểm giữa sân."
           }
         }
@@ -104,8 +104,8 @@
         {
           "id": "h01-code1",
           "title": "Bài tập 1: to gấp ba",
-          "text": "Kiếm sĩ đang bé xíu. Thêm scale rồi tính chỗ đặt góc để giữa ảnh rơi đúng (300, 300). Em tự tính ra giấy trước nhé. Xong thì treo hai ngọn đuốc.",
-          "coachNotes": "Lỗi hay gặp: quên dấu phẩy trước scale, hoặc viết scale 3 thiếu dấu bằng. Bấm 👀 để so hình mẫu. clear(\"#2b2438\") là màu tím than viết bằng mã màu."
+          "text": "Kiếm sĩ đang bé xíu. Thêm scale rồi tính chỗ đặt góc để giữa ảnh rơi đúng (300, 300). Em tự tính ra giấy trước nhé. Xong thì treo hai ngọn đuốc. #2b2438 là mã màu tím than.",
+          "coachNotes": "Lỗi hay gặp: quên dấu phẩy trước scale, hoặc viết scale 3 thiếu dấu bằng. Bấm 👀 để so hình mẫu. Mã màu: # rồi 6 ký tự, màu nào cũng viết được; chưa cần học cách đọc."
         },
         {
           "id": "h01-code2",

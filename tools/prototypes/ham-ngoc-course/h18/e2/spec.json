@@ -9,7 +9,8 @@
     "Vì sao record không nằm trong start_game? Vì kỷ lục phải nhớ qua nhiều ván.",
     "Chỗ (2): draw_text(\"Hạ \" + str(kills) + \" quái, cấp \" + str(level), 300, 370)",
     "draw_text(\"Kỷ lục: \" + str(record), 300, 410)",
-    "Bấm ▶ Chạy: máy thua một ván giữa đợt ma, rồi hiện kỷ lục."
+    "Đồ thử: record = 2 là kỷ lục cũ, START_WAVE = 4 là gặp trùm ngay để thua nhanh.",
+    "Bấm ▶ Chạy: máy thua hai ván, hạ 3 quái rồi 1 quái. Kỷ lục phải là 3."
   ],
   "hints": [
     "Kỷ lục cũng là tìm lớn nhất.",
@@ -26,214 +27,74 @@
         "to": 5
       },
       {
-        "key": "up",
-        "from": 67,
-        "to": 146
-      },
-      {
-        "key": "up",
-        "from": 188,
-        "to": 274
-      },
-      {
         "key": "1",
-        "from": 17,
-        "to": 17
+        "from": 15,
+        "to": 15
       },
       {
-        "key": "1",
-        "from": 29,
-        "to": 29
-      },
-      {
-        "key": "1",
+        "key": "right",
         "from": 41,
-        "to": 41
+        "to": 60
       },
       {
-        "key": "1",
-        "from": 53,
-        "to": 53
+        "key": "right",
+        "from": 61,
+        "to": 90
       },
       {
-        "key": "1",
-        "from": 65,
-        "to": 65
+        "key": "up",
+        "from": 131,
+        "to": 170
       },
       {
-        "key": "1",
-        "from": 77,
-        "to": 77
+        "key": "left",
+        "from": 171,
+        "to": 230
       },
       {
-        "key": "1",
-        "from": 89,
-        "to": 89
-      },
-      {
-        "key": "1",
-        "from": 101,
-        "to": 101
-      },
-      {
-        "key": "1",
-        "from": 113,
-        "to": 113
-      },
-      {
-        "key": "1",
-        "from": 125,
-        "to": 125
-      },
-      {
-        "key": "1",
-        "from": 137,
-        "to": 137
-      },
-      {
-        "key": "1",
-        "from": 149,
-        "to": 149
-      },
-      {
-        "key": "1",
-        "from": 161,
-        "to": 161
-      },
-      {
-        "key": "1",
-        "from": 173,
-        "to": 173
-      },
-      {
-        "key": "1",
-        "from": 185,
-        "to": 185
-      },
-      {
-        "key": "1",
-        "from": 197,
-        "to": 197
-      },
-      {
-        "key": "1",
-        "from": 209,
-        "to": 209
-      },
-      {
-        "key": "1",
-        "from": 221,
-        "to": 221
-      },
-      {
-        "key": "1",
-        "from": 233,
-        "to": 233
-      },
-      {
-        "key": "1",
-        "from": 245,
-        "to": 245
-      },
-      {
-        "key": "1",
-        "from": 257,
-        "to": 257
-      },
-      {
-        "key": "1",
-        "from": 269,
-        "to": 269
-      },
-      {
-        "key": "1",
-        "from": 281,
-        "to": 281
-      },
-      {
-        "key": "1",
-        "from": 293,
-        "to": 293
-      },
-      {
-        "key": "1",
-        "from": 305,
-        "to": 305
-      },
-      {
-        "key": "1",
-        "from": 317,
-        "to": 317
-      },
-      {
-        "key": "1",
-        "from": 329,
-        "to": 329
-      },
-      {
-        "key": "1",
-        "from": 341,
-        "to": 341
-      },
-      {
-        "key": "1",
-        "from": 353,
-        "to": 353
-      },
-      {
-        "key": "1",
-        "from": 365,
-        "to": 365
-      },
-      {
-        "key": "1",
-        "from": 377,
-        "to": 377
-      },
-      {
-        "key": "1",
-        "from": 389,
-        "to": 389
-      },
-      {
-        "key": "1",
-        "from": 401,
-        "to": 401
-      },
-      {
-        "key": "1",
-        "from": 413,
-        "to": 413
-      },
-      {
-        "key": "1",
-        "from": 425,
-        "to": 425
-      },
-      {
-        "key": "1",
-        "from": 437,
-        "to": 437
-      },
-      {
-        "key": "1",
-        "from": 449,
-        "to": 449
+        "key": "down",
+        "from": 231,
+        "to": 270
       },
       {
         "key": "space",
-        "from": 470,
-        "to": 470
+        "from": 332,
+        "to": 332
       },
       {
         "key": "2",
-        "from": 482,
-        "to": 482
+        "from": 342,
+        "to": 342
       },
       {
         "key": "1",
-        "from": 494,
-        "to": 494
+        "from": 352,
+        "to": 352
+      },
+      {
+        "key": "right",
+        "from": 353,
+        "to": 372
+      },
+      {
+        "key": "up",
+        "from": 403,
+        "to": 462
+      },
+      {
+        "key": "left",
+        "from": 463,
+        "to": 502
+      },
+      {
+        "key": "left",
+        "from": 503,
+        "to": 522
+      },
+      {
+        "key": "right",
+        "from": 523,
+        "to": 542
       }
     ]
   },
@@ -244,29 +105,33 @@
       "id": "h18-e2-run"
     },
     {
-      "label": "Sang ván hai vẫn nhớ kỷ lục ván một",
-      "kind": "varCompare",
-      "name": "record",
-      "op": ">=",
-      "value": 1,
-      "id": "h18-e2-keep"
-    },
-    {
-      "label": "Đã vào ván hai",
-      "kind": "varEquals",
-      "name": "screen",
-      "value": "play",
-      "id": "h18-e2-new"
+      "label": "Ván một: hiện số quái và cấp",
+      "kind": "drewText",
+      "text": "Hạ 3 quái, cấp 1",
+      "id": "h18-e2-first"
     },
     {
       "label": "Hiện kỷ lục",
       "kind": "drewText",
-      "text": "Kỷ lục: 4",
+      "text": "Kỷ lục: 3",
       "id": "h18-e2-record"
+    },
+    {
+      "label": "Chơi tiếp ván hai: hạ ít hơn",
+      "kind": "drewText",
+      "text": "Hạ 1 quái, cấp 1",
+      "id": "h18-e2-second"
+    },
+    {
+      "label": "Ván hai ít hơn thì vẫn giữ kỷ lục 3",
+      "kind": "varEquals",
+      "name": "record",
+      "value": 3,
+      "id": "h18-e2-keep"
     }
   ],
   "new_idea": "nhớ lớn nhất qua nhiều ván",
-  "reorganised": "Thêm record, finish(result); hết ván thì tắt nhạc.",
+  "reorganised": "Thêm record, finish(result); hết ván thì tắt nhạc. START_WAVE = 4 để thua nhanh, record = 2 là kỷ lục cũ để thử.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -319,11 +184,18 @@
   },
   "wrong": [
     "quên gán",
-    "quên hiện kỷ lục"
+    "quên hiện kỷ lục",
+    "thay luôn không cần hơn",
+    "cộng dồn",
+    "cộng dồn mọi ván",
+    "so ngược dấu",
+    "quên dòng Hạ",
+    "kỷ lục đặt lại mỗi ván"
   ],
   "alts": [
     "so ngược",
     "so >=",
+    "dùng max",
     "tắt nhạc trước"
   ]
 }

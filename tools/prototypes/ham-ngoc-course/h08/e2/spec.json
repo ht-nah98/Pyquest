@@ -1,7 +1,7 @@
 {
   "id": "h08-e2",
   "title": "Bắn về phía quái",
-  "task": "Giờ cho đạn bay tới target. Trong make_shot: far = distance(target, hero) + 1. vx là (x của target - x của hero) / far * 8. vy cũng vậy với y. hits đếm số lần đạn chạm quái.",
+  "task": "Giờ cho đạn bay tới target. Trong make_shot: far = distance(target, hero) + 1. vx là (x của target - x của hero) / far * 8. vy cũng vậy với y. Phần đếm hits đã có sẵn.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
@@ -18,13 +18,23 @@
     "vx = (target[\"x\"] - hero[\"x\"]) / far * 8\nvy = (target[\"y\"] - hero[\"y\"]) / far * 8"
   ],
   "test": {
-    "frames": 330,
+    "frames": 443,
     "taps": [],
     "keys": [
       {
+        "key": "right",
+        "from": 0,
+        "to": 100
+      },
+      {
+        "key": "left",
+        "from": 313,
+        "to": 383
+      },
+      {
         "key": "up",
-        "from": 150,
-        "to": 245
+        "from": 313,
+        "to": 353
       }
     ]
   },
@@ -66,17 +76,25 @@
       "kind": "staysWithin",
       "sprite": "shot",
       "axis": "y",
-      "min": -2700,
-      "max": 3300,
+      "min": -4300,
+      "max": 4500,
       "id": "h08-e2-smooth"
     },
     {
-      "label": "Đạn chạm quái nhiều lần",
+      "label": "Ngắm đúng cả ngang lẫn dọc nên trúng nhiều",
       "kind": "varCompare",
       "name": "hits",
       "op": ">=",
-      "value": 120,
+      "value": 180,
       "id": "h08-e2-hit"
+    },
+    {
+      "label": "Đạn bay nhanh, không nằm lì trên quái",
+      "kind": "varCompare",
+      "name": "hits",
+      "op": "<=",
+      "value": 310,
+      "id": "h08-e2-fast"
     }
   ],
   "new_idea": "hướng = (đích - mình) / khoảng cách × tốc độ",
@@ -121,7 +139,12 @@
   "wrong": [
     "bay ngược",
     "quên chia cho far",
-    "quên vy"
+    "quên vy",
+    "ngược mỗi vx",
+    "ngược mỗi vy",
+    "quên cộng 1",
+    "nhân 1 thay cho 8",
+    "quên ngoặc tròn"
   ],
   "alts": [
     "nhân trước chia sau",

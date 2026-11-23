@@ -25,8 +25,8 @@
         {
           "id": "h08-wait",
           "title": "Đồng hồ giữa hai phát",
-          "text": "wait là đồng hồ đếm ngược, giống safe ở Bài 6. Mỗi khung bớt 1. Hết giờ thì bắn một viên và lên dây lại 30. 30 khung là nửa giây, mỗi giây 2 viên.",
-          "coachNotes": "Hỏi: muốn bắn nhanh gấp đôi thì lên dây lại bao nhiêu? (15)."
+          "text": "wait là đồng hồ đếm ngược, giống safe ở Bài 6. Mỗi khung bớt 1. Hết giờ thì bắn một viên và đặt lại 30. 30 khung là nửa giây, mỗi giây 2 viên.",
+          "coachNotes": "Hỏi: muốn bắn nhanh gấp đôi thì đặt lại bao nhiêu? (15)."
         },
         {
           "id": "h08-quiz-wait",
@@ -48,11 +48,11 @@
             "question": "Em quên dòng đặt lại wait = 30. Sau 60 khung hình có bao nhiêu viên đã bắn?",
             "choices": [
               "1",
+              "60",
               "2",
-              "30",
-              "60"
+              "30"
             ],
-            "answer": 3,
+            "answer": 1,
             "explain": "wait tụt xuống dưới 0 và ở đó mãi, nên khung nào cũng bắn: 60 khung, 60 viên."
           },
           "coachNotes": "Cho bé thử thật: đạn ra thành một vệt liền. Đây là lỗi hay gặp nhất của bài tập 1."
@@ -66,8 +66,8 @@
         {
           "id": "h08-divide",
           "title": "Vì sao phải chia?",
-          "text": "Quái cách 300 bước thì phép trừ ra 300: bay một phát hết nửa sân! Chia cho cả đường đi, chỉ còn phần của một bước. Nhân 8: mỗi khung đi gần 8 bước, xa hay gần cũng vậy.",
-          "coachNotes": "Đếm bước kiểu bàn cờ (ngang + dọc) như Bài 6. Quái dính sát em thì đạn chậm hơn chút, vì số 1 cộng vào far lúc đó mới đáng kể. Ví dụ đời thường: biết cả quãng đường, muốn mỗi lần chỉ đi một đoạn bằng nhau."
+          "text": "Quái cách 300 bước thì phép trừ ra 300: bay một phát hết nửa sân! Nên chia cho cả đường đi. Ngang 75, đường đi 100: 75 / 100 = 0.75 là phần ngang của một bước. Nhân 8 là 8 bước: 0.75 * 8 = 6. Xa hay gần đạn cũng bay đều.",
+          "coachNotes": "Python viết 0.75 với dấu chấm, ở lớp toán em viết 0,75 với dấu phẩy: cùng một số. Đếm bước kiểu bàn cờ (ngang + dọc) như Bài 6. Quái dính sát em thì đạn chậm hơn chút, vì số 1 cộng vào far lúc đó mới đáng kể. Ví dụ đời thường: biết cả quãng đường, muốn mỗi lần chỉ đi một đoạn bằng nhau."
         },
         {
           "id": "h08-trace",
@@ -80,12 +80,12 @@
           "quiz": {
             "question": "Em (300, 300), quái (250, 349). far = 50 + 49 + 1 = 100. vx = (đích - mình) / far * 8 bằng mấy?",
             "choices": [
-              "4",
               "-4",
+              "4",
               "-50",
               "-0.5"
             ],
-            "answer": 1,
+            "answer": 0,
             "explain": "250 - 300 = -50. -50 / 100 = -0.5. Nhân 8 là -4: quái ở bên trái nên vx âm."
           },
           "coachNotes": "4 là trừ ngược. -50 là quên chia. -0.5 là quên nhân 8."
@@ -109,7 +109,7 @@
         {
           "id": "h08-code1",
           "title": "Bài tập 1: bắn theo nhịp",
-          "text": "shoot() chạy mỗi khung. Ghi ra giấy ba việc phải làm khi tới lượt: thêm đạn vào shots, đếm fired, lên dây đồng hồ. Đạn tạm bay thẳng lên.",
+          "text": "shoot() chạy mỗi khung. Ghi ra giấy ba việc phải làm khi tới lượt: thêm đạn vào shots, đếm fired, đặt lại đồng hồ. Đạn tạm bay thẳng lên.",
           "coachNotes": "Chữ \"Đã bắn\" trên sân hiện số fired: 7 sau 200 khung chạy thử. wait, fired cần global vì bị gán lại."
         },
         {

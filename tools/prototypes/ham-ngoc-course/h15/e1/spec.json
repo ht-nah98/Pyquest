@@ -6,12 +6,12 @@
   "input": "typing",
   "walkthrough": [
     "Chỗ (1): MOBS[\"bat\"] = {\"image\": \"mob-bat\", \"hp\": 2, \"speed\": 2, \"size\": 2, \"xp\": 1}",
-    "Golem: hp 8, speed 1, size 3, xp 3. Trâu hơn nhưng cho nhiều ngọc hơn.",
+    "Golem: hp 8, speed 1, size 3, xp 3. Lì đòn hơn nhưng cho nhiều ngọc hơn.",
     "Chỗ (2): row là dòng của con đó trong bảng. Viết mob[\"hp\"] = row[\"hp\"]",
     "Làm y hệt cho \"speed\", \"size\" và \"xp\".",
     "Vì sao phải chép? Mỗi con cần hp riêng, nếu dùng chung hộp thì một con đau là cả bầy đau.",
-    "Nhớt giờ có 3 máu. Số trên đầu là máu, số trên ngọc là xp: đồ thử để em thấy bảng có tác dụng, Bài tập 3 bỏ đi.",
-    "Bấm ▶ Chạy, rồi ⛶: dơi nhanh, golem to và trâu."
+    "Nhớt giờ có 3 máu. Chữ trên đầu là máu và cỡ, số trên ngọc là xp: đồ thử để em thấy bảng có tác dụng, Bài tập 3 bỏ đi.",
+    "Bấm ▶ Chạy, rồi ⛶: dơi nhanh, golem (người đá) to và lì đòn."
   ],
   "hints": [
     "Bảng này dùng tên làm chìa: MOBS[name] lấy đúng dòng.",
@@ -200,10 +200,16 @@
       "id": "h15-e1-fasty"
     },
     {
-      "label": "Golem có 8 máu",
+      "label": "Golem có 8 máu, cỡ 3",
       "kind": "drewText",
-      "text": "8 máu",
+      "text": "8 máu, cỡ 3",
       "id": "h15-e1-tough"
+    },
+    {
+      "label": "Dơi có 2 máu, cỡ 2",
+      "kind": "drewText",
+      "text": "2 máu, cỡ 2",
+      "id": "h15-e1-light"
     },
     {
       "label": "Golem rơi ngọc +3",
@@ -264,7 +270,10 @@
     "quên golem",
     "quên chép xp",
     "quên chép hp",
-    "quên chép speed"
+    "quên chép speed",
+    "quên chép size",
+    "golem cỡ 2",
+    "dơi nhầm máu"
   ],
   "alts": [
     "golem viết trước dơi",

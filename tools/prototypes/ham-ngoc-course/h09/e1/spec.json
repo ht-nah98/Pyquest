@@ -18,7 +18,7 @@
     "mobs = alive nằm ngoài vòng for."
   ],
   "test": {
-    "frames": 400,
+    "frames": 305,
     "taps": []
   },
   "goals": [
@@ -28,19 +28,19 @@
       "id": "h09-e1-run"
     },
     {
-      "label": "Hạ được quái",
+      "label": "Hết máu là bị hạ ngay: hạ được 10 con",
       "kind": "varCompare",
       "name": "kills",
       "op": ">=",
-      "value": 5,
+      "value": 10,
       "id": "h09-e1-kill"
     },
     {
-      "label": "Mỗi con chỉ đếm một lần",
+      "label": "Còn máu thì chưa bị hạ, mỗi con đếm một lần",
       "kind": "varCompare",
       "name": "kills",
       "op": "<=",
-      "value": 16,
+      "value": 10,
       "id": "h09-e1-once"
     },
     {
@@ -48,14 +48,15 @@
       "kind": "varCompare",
       "name": "crowd",
       "op": "<=",
-      "value": 10,
+      "value": 6,
       "id": "h09-e1-gone"
     },
     {
       "label": "Quái còn máu thì vẫn ở lại",
-      "kind": "drewCount",
-      "sprite": "mob",
-      "min": 6,
+      "kind": "varCompare",
+      "name": "crowd",
+      "op": ">=",
+      "value": 2,
       "id": "h09-e1-keep"
     }
   ],
@@ -102,7 +103,10 @@
   "wrong": [
     "quên mobs = alive",
     "giữ con hết máu",
-    "xóa khi hết máu mà không đếm"
+    "xóa khi hết máu mà không đếm",
+    "giữ cả con còn 0 máu",
+    "bỏ luôn con còn 1 máu",
+    "gặp con hết máu là thôi xem tiếp"
   ],
   "alts": [
     "if <= 0 trước",

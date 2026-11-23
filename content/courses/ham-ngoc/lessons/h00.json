@@ -30,10 +30,10 @@
             "question": "Quái chạm vào em thì em mất máu. Muốn có việc này, cần những phần nào trước?",
             "choices": [
               "Skill và các ải",
-              "Nhân vật, quái và máu",
-              "Chỉ cần nhân vật"
+              "Chỉ cần nhân vật",
+              "Nhân vật, quái và máu"
             ],
-            "answer": 1,
+            "answer": 2,
             "explain": "Phải có nhân vật, có quái để chạm, và có số máu để trừ đi."
           }
         },
@@ -46,19 +46,19 @@
         {
           "id": "h00-yours",
           "title": "Bản của em",
-          "text": "Game mẫu dài hơn 1000 dòng. Em không chép nó. Em tự xây bản của em, mỗi bài thêm một ít, và em hiểu từng dòng. Game mẫu để chơi và lấy ý tưởng."
+          "text": "Game mẫu dài hơn 1000 dòng. Em không chép nó. Mỗi bài em viết một phần quan trọng của bản nhỏ hơn. Phần có sẵn thì em đọc xem nó làm gì."
         },
         {
           "id": "h00-quiz-yours",
           "quiz": {
             "question": "Mỗi bài trong khóa này, em sẽ làm gì?",
             "choices": [
+              "Viết một phần quan trọng của game",
               "Chép game mẫu vào máy",
-              "Thêm một phần vào game của em",
               "Làm một game mới từ đầu"
             ],
-            "answer": 1,
-            "explain": "Bài sau bắt đầu từ code của bài trước, nên game của em lớn dần lên."
+            "answer": 0,
+            "explain": "Bài sau bắt đầu từ code mẫu của bài trước. Tên, số em đã đổi thì ghi vào vở, tới Bài 18 em đưa vào bản của mình."
           }
         }
       ]
@@ -82,7 +82,7 @@
             "choices": [
               "Vì quái dễ vẽ hơn",
               "Vì phải có quái thì mới có cái để đánh",
-              "Vì quái xuất hiện trước"
+              "Vì quái chạy nhanh hơn em"
             ],
             "answer": 1,
             "explain": "Tự đánh cần biết con quái nào ở gần, nên phải có quái trước."

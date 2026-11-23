@@ -30,7 +30,7 @@
         {
           "id": "h17-frame",
           "title": "frame chạy dần",
-          "text": "frame là số hình đang chiếu. Mỗi khung nó cộng 0.5: 0, 0.5, 1, 1.5, 2… Máy bỏ phần lẻ để lấy số hình, nên mỗi hình hiện 2 khung. 9 hình thì sống 18 khung.",
+          "text": "frame là số hình: đang chiếu hình thứ mấy. Mỗi khung của game nó cộng 0.5: 0, 0.5, 1, 1.5, 2… Máy bỏ phần lẻ để lấy số hình, nên mỗi hình hiện 2 khung. 9 hình thì sống 18 khung.",
           "coachNotes": "Kẻ bảng: khung 0 tới 7, frame 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, hình 0, 0, 1, 1, 2, 2, 3, 3. Hỏi: nếu cộng 1 thì sao? (nhanh gấp đôi, frame chạy tới 17 nên dãy hình chiếu hai lượt)."
         },
         {
@@ -38,11 +38,11 @@
           "quiz": {
             "question": "frame bắt đầu từ 0, mỗi khung cộng 0.5. Cộng 5 lần rồi, máy vẽ hình số mấy?",
             "choices": [
-              "5",
               "2",
+              "5",
               "3"
             ],
-            "answer": 1,
+            "answer": 0,
             "explain": "5 lần 0.5 là 2.5. Máy bỏ phần lẻ nên vẽ hình số 2."
           }
         },
@@ -63,11 +63,11 @@
           "quiz": {
             "question": "things có 4 hộp, hp lần lượt là 3, 0, 1, -2. living(things) trả về mấy hộp?",
             "choices": [
+              "2",
               "4",
-              "3",
-              "2"
+              "3"
             ],
-            "answer": 2,
+            "answer": 0,
             "explain": "Chỉ hp 3 và hp 1 lớn hơn 0. hp bằng 0 hay số âm đều là hết."
           }
         }
@@ -79,7 +79,7 @@
         {
           "id": "h17-sounds",
           "title": "Tiếng nào, lúc nào?",
-          "text": "Kẻ bảng hai cột: việc xảy ra và tiếng. Chọn thẻ, nhặt ngọc, bị chạm, lên cấp, vào hầm. Với mỗi việc, tìm hàm nào trong code biết việc đó vừa xảy ra.",
+          "text": "play_sound(\"point\") kêu một tiếng rồi thôi, như ở Bay Qua Khe. Kẻ bảng hai cột: việc xảy ra và tiếng. Chọn thẻ, nhặt ngọc, bị chạm, lên cấp, vào hầm. Với mỗi việc, tìm hàm nào biết việc đó vừa xảy ra.",
           "coachNotes": "6 phút. take_card: click. take_gems: point. check_hits: hit. check_level: win. Vào hầm: nhạc adventure, đặt trong update ở màn title, đúng lúc người chơi chọn nhân vật; hết ván thì tắt. Để bé tự tìm hàm trước rồi mới chữa."
         },
         {
@@ -88,10 +88,10 @@
             "question": "Em đặt play_sound(\"hit\") ngay đầu update_play(), không có if nào. Lúc đang chơi sẽ nghe gì?",
             "choices": [
               "Kêu một lần khi vào hầm",
-              "Kêu liên tục, khung nào cũng kêu",
-              "Chỉ kêu khi bị chạm"
+              "Chỉ kêu khi bị chạm",
+              "Kêu liên tục, khung nào cũng kêu"
             ],
-            "answer": 1,
+            "answer": 2,
             "explain": "update_play() chạy mỗi khung, cỡ 60 lần một giây. Tiếng phải đặt ở chỗ việc vừa xảy ra."
           }
         }
@@ -115,7 +115,7 @@
           "id": "h17-code1",
           "title": "Bài tập 1: Hiệu ứng",
           "text": "Viết living(things) theo khuôn giữ lại. Rồi move_effects(): mỗi hiệu ứng lật sang hình kế và bớt giờ sống, xong thì chỉ giữ những cái còn sống.",
-          "coachNotes": "Các lời gọi add_effect đã có sẵn: cho bé tìm xem hiệu ứng nào nổ ở đâu. fx là viết tắt của hiệu ứng. Tia vàng của sét ở Bài 14 giờ thành hiệu ứng fx-spark."
+          "coachNotes": "Các lời gọi add_effect đã có sẵn: cho bé tìm xem hiệu ứng nào nổ ở đâu. fx là viết tắt của hiệu ứng. Tia vàng của sét ở Bài 14 giờ thành hiệu ứng fx-spark. Hai phối hợp giờ nhìn thấy được: Lò Than tóe lửa (fx-fire) chỗ đạn trúng, Bão Sét tóe sét (fx-spark) trên quái. page và busy chỉ để máy chấm."
         },
         {
           "id": "h17-code2",

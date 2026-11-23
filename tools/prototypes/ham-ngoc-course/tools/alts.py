@@ -2,6 +2,9 @@
 
 ORDER_MOVE = [("    move_hero()\n    move_mobs()\n", "    move_mobs()\n    move_hero()\n")]
 ALTS = {
+    "h02-e1": [
+        ("phím ngược chiều nhau thì elif cũng được", [('    if key_pressed("left"):', '    elif key_pressed("left"):'), ('    if key_pressed("down"):', '    elif key_pressed("down"):')]),
+        ("viết = thay +=", [("        y += speed", "        y = y + speed")])],
     "h05-e1": [
         ("elif cho chiều dọc", [('    if thing["y"] > target["y"]:\n        thing["y"] -= speed', '    elif thing["y"] > target["y"]:\n        thing["y"] -= speed')]),
         ("dọc trước, viết = thay -=", [('        thing["y"] -= speed', '        thing["y"] = thing["y"] - speed')])],
@@ -69,7 +72,7 @@ ALTS = {
         ("sét trước, vòng sau", [('    if bonus["ring"] > 0 and tick % 60 == 0:\n        blast(hero, 130, bonus["ring"])\n', ""), ('        strike(mobs[random_int(0, len(mobs) - 1)], bonus["cloud"])\n', '        strike(mobs[random_int(0, len(mobs) - 1)], bonus["cloud"])\n    if bonus["ring"] > 0 and tick % 60 == 0:\n        blast(hero, 130, bonus["ring"])\n')]),
         ("if lồng nhau, biến target", [('    if bonus["cloud"] > 0 and tick % 60 == 30:\n        strike(mobs[random_int(0, len(mobs) - 1)], bonus["cloud"])\n', '    if tick % 60 == 30:\n        if bonus["cloud"] >= 1:\n            target = mobs[random_int(0, len(mobs) - 1)]\n            strike(target, bonus["cloud"])\n')]),
         ("viết = thay +=", [('bonus[skill["what"]] += skill["add"]', 'bonus[skill["what"]] = bonus[skill["what"]] + skill["add"]')]),
-        ("bốc thăm thêm một lần (số ngẫu nhiên lệch)", [('    if bonus["cloud"] > 0 and', '    lucky = random_int(0, 9)\n    if bonus["cloud"] > 0 and')])],
+        ("bốc thăm thêm một lần (số ngẫu nhiên lệch)", [('    if bonus["cloud"] > 0 and tick % 60 == 30', '    lucky = random_int(0, 9)\n    if bonus["cloud"] > 0 and tick % 60 == 30')])],
     "h14-e2": [
         ("đi bằng số thứ tự", [("    for skill in owned:\n        if skill[\"branch\"] == branch:", "    for i in range(len(owned)):\n        skill = owned[i]\n        if branch == skill[\"branch\"]:")]),
         ("gom vào danh sách", [("    total = 0\n    for skill in owned:\n        if skill[\"branch\"] == branch:\n            total += 1\n    return total\n", "    found = []\n    for skill in owned:\n        if skill[\"branch\"] == branch:\n            found.append(skill)\n    return len(found)\n")])],
@@ -77,6 +80,7 @@ ALTS = {
         ("if / return True", [("    return count_branch(branch) >= 2\n", "    if count_branch(branch) > 1:\n        return True\n    return False\n")]),
         ("trừ máu thẳng trong hurt", [('        amount += 3\n', '        mob["hp"] -= 3\n')]),
         ("nhân, if lồng nhau", [('    if has_combo("ice") and mob["slow"] > 0:\n        amount += 3\n', '    if mob["slow"] > 0:\n        if has_combo("ice"):\n            amount = amount + 3\n')]),
+        ("gom điều kiện vào biến", [('    if has_combo("spark") and tick % 90 == 0:\n        storm()\n', '    beat = tick % 90\n    if beat == 0:\n        if has_combo("spark"):\n            storm()\n')]),
         ("nổ lan trước khi hạ cờ", [('                shot["live"] = False\n                if has_combo("fire"):\n                    splash(shot)\n', '                if has_combo("fire"):\n                    splash(shot)\n                shot["live"] = False\n')])],
     "h15-e1": [
         ("golem viết trước dơi", [('MOBS["bat"] = {"image": "mob-bat", "hp": 2, "speed": 2, "size": 2, "xp": 1}\n', ""), ('"size": 3, "xp": 3}\n', '"size": 3, "xp": 3}\nMOBS["bat"] = {"image": "mob-bat", "hp": 2, "speed": 2, "size": 2, "xp": 1}\n')]),
@@ -105,6 +109,7 @@ ALTS = {
     "h18-e2": [
         ("so ngược", [("if kills > record:", "if record < kills:")]),
         ("so >=", [("if kills > record:", "if kills >= record:")]),
+        ("dùng max", [("    if kills > record:\n        record = kills\n", "    record = max(record, kills)\n")]),
         ("tắt nhạc trước", [("    if kills > record:\n        record = kills\n    stop_music()\n", "    stop_music()\n    if kills > record:\n        record = kills\n")])],
     "h18-e3": [
         ("chữ ký khác, tim lệch", [('"Em làm game này!"', '"Cáo Lửa 12 tuổi"'), ('"item-heart", 150, 575', '"item-heart", 160, 580')])],

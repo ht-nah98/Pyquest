@@ -90,10 +90,11 @@ ex(
      "Bấm ▶ Chạy: máy tự giữ phím. Rồi bấm ⛶ và đi bằng phím mũi tên."],
     ["Đi lên là y nhỏ đi.", "if key_pressed(\"left\"):\n    x -= speed", "Cả bốn chữ if thẳng hàng nhau."],
     [run_goal(),
-     goal("right", "varCompare", "Đi sang phải được", name="x", op=">=", value=330, when="ever"),
-     goal("down", "varCompare", "Đi xuống được", name="y", op=">=", value=330, when="ever"),
-     goal("left", "varCompare", "Đi sang trái được", name="x", op="<=", value=290),
-     goal("up", "varCompare", "Đi lên được", name="y", op="<=", value=290)],
+     goal("right", "varCompare", "Đi sang phải được", name="x", op=">=", value=410, when="ever"),
+     goal("down", "varCompare", "Giữ → và ↓ cùng lúc thì đi chéo xuống", name="y", op=">=", value=380, when="ever"),
+     goal("left", "varCompare", "Đi sang trái được", name="x", op="<=", value=250, when="ever"),
+     goal("up", "varCompare", "Giữ ← và ↑ cùng lúc thì đi chéo lên", name="y", op="<=", value=170, when="ever"),
+     goal("both", "varCompare", "Giữ ← và ↓ cùng lúc cũng đi chéo", name="y", op=">=", value=200)],
     prep=[("y = 300\n", "y = 300\nspeed = 3\n"),
           ("def update():\n    pass\n", '''def update():
     global x, y
@@ -108,8 +109,12 @@ ex(
 if key_pressed("down"):
     y += speed'''], []),
            ("mới viết một phím", ['''    if key_pressed("left"):
-        x -= speed'''.replace("    if", "if").replace("        x", "    x")], [])],
-    test={"frames": 160, "keys": [hold("right", 0, 29), hold("down", 30, 49), hold("left", 50, 99), hold("up", 100, 159)]},
+        x -= speed'''.replace("    if", "if").replace("        x", "    x")], []),
+           ("dùng elif nên không đi chéo được", [FOUR.replace("if key", "elif key")], []),
+           ("lên, xuống là elif của trái", [FOUR.replace('if key_pressed("up")', 'elif key_pressed("up")').replace('if key_pressed("down")', 'elif key_pressed("down")')], []),
+           ("lên là elif của trái", [FOUR.replace('if key_pressed("up")', 'elif key_pressed("up")')], [])],
+    test={"frames": 150, "keys": [hold("right", 0, 39), hold("down", 10, 39), hold("left", 40, 99), hold("up", 50, 109),
+                                  hold("right", 110, 129), hold("up", 110, 129), hold("left", 130, 149), hold("down", 130, 149)]},
     input="blocks", new="key_pressed(\"left\"), \"up\", \"down\": giữ phím nào thì làm việc đó",
     reorganised="Thêm speed = 3 và global x, y.")
 
@@ -418,23 +423,25 @@ ex(
     "h05-e2", "Quái ra liên tục",
     "far_edge(value) trả về mép sân ở xa em: value nhỏ hơn 300 thì trả về 580, còn lại trả về 20. Rồi trong update(): cứ 50 "
     "khung hình, nếu có ít hơn 14 con thì gọi spawn_mob().",
-    ["Chỗ (1): if value < 300: rồi thụt vào return 580. Dòng cuối, ngoài if: return 20",
+    ["Chỗ (1): if value < 300: rồi thụt vào return 580. Ngoài if: thay return 300 bằng return 20.",
      "Vì sao mép xa? Để quái không hiện ra ngay sát em, như vậy mới công bằng.",
      "Chỗ (2): tick % 50 == 0 nghĩa là cứ 50 khung thì đúng một lần.",
      "if tick % 50 == 0 and len(mobs) < 14: rồi thụt vào spawn_mob()",
-     "Bấm ▶ Chạy, rồi ⛶: đứng gần mép trên thì quái ra ở mép dưới."],
+     "Bấm ▶ Chạy: máy đi lên rồi đi xuống. ⛶: đứng gần mép trên thì quái ra ở mép dưới. edge nhớ mép quái vừa ra."],
     ["Hàm gặp return là xong, không chạy dòng dưới nữa.",
      "if value < 300:\n    return 580\nreturn 20",
      "if tick % 50 == 0 and len(mobs) < 14:\n    spawn_mob()"],
     [run_goal(),
      goal("more", "drewCount", "Quái đông dần lên 14 con", sprite="mob", min=14),
      goal("far", "drew", "Em ở trên thì quái ra ở mép dưới", sprite="mob-slime", at=[284, 800], tolerance=300),
+     goal("near", "varEquals", "Em ở dưới thì quái ra ở mép trên", name="edge", value=20),
      goal("edge", "called", "Có gọi far_edge", name="far_edge", min=5),
      goal("limit", "varCompare", "Không quá 14 con", name="crowd", op="<=", value=14)],
     prep=[('''mobs = []
 ''', '''mobs = []
 tick = 0
 crowd = 0
+edge = 0
 '''), ('''def start_game():
 ''', '''def far_edge(value):
     # Em viết tiếp ở đây (1)
@@ -442,7 +449,9 @@ crowd = 0
 
 
 def spawn_mob():
-    mobs.append(make_mob(random_int(20, 580), far_edge(hero["y"])))
+    global edge
+    edge = far_edge(hero["y"])
+    mobs.append(make_mob(random_int(20, 580), edge))
 
 
 def start_game():
@@ -464,10 +473,13 @@ def start_game():
     sol=[("    return 20\n    return 300\n", "    return 20\n")],
     wrong=[("nhầm mép gần", ["if value < 300:\n    return 20\nreturn 580", "if tick % 50 == 0 and len(mobs) < 14:\n    spawn_mob()"], []),
            ("khung nào cũng ra quái, không giới hạn", ["if value < 300:\n    return 580\nreturn 20", "spawn_mob()"], []),
-           ("trả về 20 mãi", ["return 20", "if tick % 50 == 0 and len(mobs) < 14:\n    spawn_mob()"], [])],
-    test={"frames": 600, "keys": [hold("up", 0, 599)]},
+           ("trả về 20 mãi", ["return 20", "if tick % 50 == 0 and len(mobs) < 14:\n    spawn_mob()"], []),
+           ("quên thay return 300", ["if value < 300:\n    return 580", "if tick % 50 == 0 and len(mobs) < 14:\n    spawn_mob()"], []),
+           ("trả về 580 mãi", ["return 580", "if tick % 50 == 0 and len(mobs) < 14:\n    spawn_mob()"], []),
+           ("quên nhịp, ra dồn một lúc", ["if value < 300:\n    return 580\nreturn 20", "if len(mobs) < 14:\n    spawn_mob()"], [("    return 20\n    return 300\n", "    return 20\n")])],
+    test={"frames": 600, "keys": [hold("up", 0, 159), hold("down", 160, 599)]},
     new="đếm khung bằng tick, % để làm việc theo nhịp; hàm có return sớm",
-    reorganised="Thêm tick, crowd (số quái, để hiện chữ) và spawn_mob().")
+    reorganised="Thêm tick, crowd (số quái, để hiện chữ), edge (mép quái vừa ra, máy chấm đọc) và spawn_mob().")
 
 # ---------------------------------------------------------------- h06
 ex(
@@ -487,7 +499,11 @@ ex(
      goal("over", "varEquals", "Bị chạm nhiều thì thua", name="game_over", value=True),
      goal("late", "varCompare", "Quái tới sát mới mất máu", name="tick", op=">=", value=230),
      goal("soon", "varCompare", "Chạm là mất máu ngay", name="tick", op="<=", value=520)],
-    prep=[('''range(6)''', '''range(1)'''), ('''len(mobs) < 14''', '''len(mobs) < 1'''), ('''crowd = 0
+    prep=[("edge = 0\n", ""), ('''    global edge
+    edge = far_edge(hero["y"])
+    mobs.append(make_mob(random_int(20, 580), edge))
+''', '''    mobs.append(make_mob(random_int(20, 580), far_edge(hero["y"])))
+'''), ('''range(6)''', '''range(1)'''), ('''len(mobs) < 14''', '''len(mobs) < 1'''), ('''crowd = 0
 ''', '''crowd = 0
 game_over = False
 '''), ('''def step_to(''', '''def distance(a, b):
@@ -541,7 +557,7 @@ return dx + dy''', '''for mob in mobs:
     hero["hp"] -= 1'''], [])],
     test={"frames": 560, "keys": [hold("right", 130, 190), hold("up", 130, 172), hold("right", 293, 322), hold("down", 293, 322)]},
     new="abs; khoảng cách = ngang + dọc; near(a, b, size) trả về True/False",
-    reorganised="Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi. Bài tập này chỉ có 1 con quái cho dễ nhìn máu tụt.")
+    reorganised="Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi; bỏ edge. Bài tập này chỉ có 1 con quái cho dễ nhìn máu tụt.")
 
 ex(
     "h06-e2", "Bất tử một chút",
