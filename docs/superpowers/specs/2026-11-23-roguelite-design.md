@@ -55,3 +55,42 @@ Không máu me, không súng, không hình giống nhân vật game có sẵn.
 ## 6. Còn phải hỏi HLV
 
 Tên game, hình (bảng xem trước), độ khó sau khi chơi thử, đề cương bài.
+
+## 7. Khóa học `[AI đề xuất, HLV duyệt sau]`
+
+Khóa `ham-ngoc`, sân 600 × 600, học sau Bay Qua Khe, **cả khóa là bản nháp** (`draft: true`: chỉ HLV thấy thẻ khóa và mở
+được bài). Bé không chép game mẫu (hơn 1000 dòng) mà tự xây **bản của em** (~250 dòng), mỗi bài thêm một phần; game mẫu để
+chơi và lấy ý tưởng. Mỗi bài bắt đầu từ lời giải bài trước.
+
+| # | Bài | Ý mới | Phần game |
+|---|---|---|---|
+| h00 | Vượt ải là làm gì? | tách game thành phần, quy trình | lộ trình |
+| h01 | Nhân vật vào hầm | sân 600, `draw_image(..., scale=3)` | nhân vật |
+| h02 | Đi bốn hướng | `key_pressed("left")`, chặn mép | di chuyển |
+| h03 | Hộp có tên: dict | `hero = {"x": 300, "hp": 5}` | nhân vật |
+| h04 | Cả bầy quái | danh sách các dict, `for mob in mobs` | quái |
+| h05 | Quái đuổi theo | so sánh từng trục, gọi hàm với dict | quái |
+| h06 | Chạm là mất máu | `abs`, `near(a, b, d)`, đếm khung bất tử | máu |
+| h07 | Con nào gần nhất? | tìm nhỏ nhất trong danh sách | tự đánh |
+| h08 | Tự bắn | danh sách đạn, đếm ngược khung hình | tự đánh |
+| h09 | Trúng thì biến mất | giữ lại bằng danh sách mới, `append` | tự đánh |
+| h10 | Ngọc kinh nghiệm | rơi ngọc, nhặt, thanh kinh nghiệm | kinh nghiệm |
+| h11 | Game có nhiều màn hình | biến `screen`, dừng game khi lên cấp | lên cấp |
+| h12 | Bảng skill | dữ liệu tách khỏi code, bốc 3 thẻ khác nhau | skill |
+| h13 | Chọn thẻ | phím 1 2 3, `clicked`, bấm mới tính | skill |
+| h14 | Phối hợp | đếm skill theo nhánh, thưởng nhánh | phối hợp |
+| h15 | Đợt quái và trùm | bảng `WAVES`, trùm nhiều máu | vượt ải |
+| h16 | Chọn nhân vật | bảng `HEROES`, màn chọn | nhân vật |
+| h17 | Hiệu ứng và tiếng | `frame`, danh sách hiệu ứng, `play_sound` | hiệu ứng |
+| h18 | Ra mắt | chơi chéo, tự thêm quái / skill vào bảng | ra mắt |
+
+## 8. Hợp đồng kỹ thuật của khóa
+
+- `course.json`: thêm `draft?: true` (chỉ HLV thấy) và `after?: "<id khóa>"` (📘 Thư viện tính các lệnh của khóa trước là đã
+  học). Mã bài: một chữ thường + hai số (`h05`), **duy nhất toàn nền tảng**.
+- `Exercise.test` thêm `keys?: [{ key, from, to }]` (giữ phím từ khung `from` tới hết `to`) và
+  `clicks?: [{ frame, x, y }]`. Thiếu = như cũ.
+- Mục tiêu mới `varCompare { name, op: ">=" | "<=" | "!=" , value, when?: "end" | "ever" }` (mặc định `end`).
+- Khối mới: `pq_dict` (`{"x": 1, "hp": 5}`), `pq_key_get` (`mob["x"]`), `pq_key_set` (`mob["x"] = …`), `pq_key_aug`
+  (`mob["x"] += …`, cũng cho `xs[i] += …`), `pq_abs`, `pq_remove` (`xs.remove(x)`), `draw_image` có `scale` (`pq_draw_image_scale`).
+  `mob["x"]` với chữ là khối có tên, `xs[i]` giữ khối cũ. Đi vòng khối ↔ code không đổi một ký tự.
