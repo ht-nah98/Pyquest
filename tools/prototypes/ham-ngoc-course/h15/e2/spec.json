@@ -18,7 +18,7 @@
     "elif len(mobs) == 0:\n    next_wave()"
   ],
   "test": {
-    "frames": 420,
+    "frames": 400,
     "taps": [
       5
     ],
@@ -27,6 +27,81 @@
         "key": "1",
         "from": 10,
         "to": 10
+      },
+      {
+        "key": "1",
+        "from": 35,
+        "to": 35
+      },
+      {
+        "key": "1",
+        "from": 60,
+        "to": 60
+      },
+      {
+        "key": "1",
+        "from": 85,
+        "to": 85
+      },
+      {
+        "key": "1",
+        "from": 110,
+        "to": 110
+      },
+      {
+        "key": "1",
+        "from": 135,
+        "to": 135
+      },
+      {
+        "key": "1",
+        "from": 160,
+        "to": 160
+      },
+      {
+        "key": "1",
+        "from": 185,
+        "to": 185
+      },
+      {
+        "key": "1",
+        "from": 210,
+        "to": 210
+      },
+      {
+        "key": "1",
+        "from": 235,
+        "to": 235
+      },
+      {
+        "key": "1",
+        "from": 260,
+        "to": 260
+      },
+      {
+        "key": "1",
+        "from": 285,
+        "to": 285
+      },
+      {
+        "key": "1",
+        "from": 310,
+        "to": 310
+      },
+      {
+        "key": "1",
+        "from": 335,
+        "to": 335
+      },
+      {
+        "key": "1",
+        "from": 360,
+        "to": 360
+      },
+      {
+        "key": "1",
+        "from": 385,
+        "to": 385
       }
     ]
   },
@@ -58,11 +133,18 @@
       "id": "h15-e2-bat"
     },
     {
-      "label": "Hết quái đợt 1 mới tới đợt 2",
+      "label": "Đang ở đợt 2, chưa nhảy tới đợt 3",
+      "kind": "varEquals",
+      "name": "wave",
+      "value": 1,
+      "id": "h15-e2-wave"
+    },
+    {
+      "label": "Quái ra từ từ từng con",
       "kind": "varCompare",
       "name": "left",
       "op": ">=",
-      "value": 9,
+      "value": 1,
       "id": "h15-e2-left"
     }
   ],
@@ -82,6 +164,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -117,5 +200,10 @@
     "sang đợt khi còn quái",
     "quên trừ left",
     "khung nào cũng ra quái"
+  ],
+  "alts": [
+    "hai if rời",
+    "xét hết quái trước",
+    "chạy ở cuối update_play"
   ]
 }

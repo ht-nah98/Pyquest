@@ -1,13 +1,14 @@
 {
   "id": "h18-e3",
   "title": "Tháo đồ thử và ra mắt",
-  "task": "Trước khi ra mắt phải tháo đồ thử! (1) START_WAVE = 0 và START_SKILLS = []. (2) Ở màn chọn nhân vật, ký tên: viết \"Em làm game này!\" cỡ 20 ở (300, 575). Rồi đổi máy cho bạn chơi.",
+  "task": "Trước khi ra mắt phải tháo đồ thử! (1) START_WAVE = 0 và START_SKILLS = []. (2) Ở màn chọn nhân vật, ký tên: vẽ item-heart to gấp 2 ở (150, 575) và viết chữ ký của em (biệt danh thôi) cỡ 20 ở (300, 575). Rồi đổi máy cho bạn chơi.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
     "Gần đầu file: đổi START_WAVE = 3 thành START_WAVE = 0",
     "Đổi START_SKILLS = [9] thành START_SKILLS = []",
-    "Trong draw_title(), chỗ đánh dấu: draw_text(\"Em làm game này!\", 300, 575, 20)",
+    "Trong draw_title(), chỗ đánh dấu: draw_thing(\"item-heart\", 150, 575, 2)",
+    "Dưới đó: draw_text(\"Em làm game này!\", 300, 575, 20). Đổi câu tùy em, đừng ghi tên thật.",
     "Bấm ▶ Chạy: ván mới bắt đầu ở Đợt 1/5 với 1 thẻ.",
     "Đổi máy với bạn, chơi game của bạn 10 phút. Ghi 1 điều hay và 1 điều muốn sửa.",
     "Sửa 1 số trong bảng theo góp ý của bạn rồi chơi lại. Game là của em, cứ đổi thoải mái."
@@ -51,9 +52,14 @@
       "id": "h18-e3-wave"
     },
     {
-      "label": "Có chữ ký của em",
-      "kind": "drewText",
-      "text": "Em làm game này!",
+      "label": "Có trái tim cạnh chữ ký",
+      "kind": "drew",
+      "sprite": "item-heart",
+      "at": [
+        134,
+        559
+      ],
+      "tolerance": 40,
       "id": "h18-e3-sign"
     },
     {
@@ -119,11 +125,14 @@
   ],
   "blocks_expected": {
     "code_text": [
-      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+      "draw_image(path, effect[\"x\"], effect[\"y\"], effect[\"frame\"])"
     ]
   },
   "wrong": [
     "quên tháo skill thử",
     "quên ký tên"
+  ],
+  "alts": [
+    "chữ ký khác, tim lệch"
   ]
 }

@@ -60,7 +60,7 @@
     }
   ],
   "new_idea": "giữ lại bằng danh sách mới: duyệt, append con muốn giữ, rồi thay danh sách cũ",
-  "reorganised": "hit_mobs() giờ trừ máu quái thay vì đếm hits; shoot() chỉ bắn khi còn quái (danh sách có thể rỗng).",
+  "reorganised": "Hộp quái thêm ngăn hp (bài đầu tiên cần tới). hit_mobs() giờ trừ máu quái thay vì đếm hits; shoot() chỉ bắn khi còn quái (danh sách có thể rỗng).",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -103,5 +103,9 @@
     "quên mobs = alive",
     "giữ con hết máu",
     "xóa khi hết máu mà không đếm"
+  ],
+  "alts": [
+    "if <= 0 trước",
+    "đếm bằng phép trừ"
   ]
 }

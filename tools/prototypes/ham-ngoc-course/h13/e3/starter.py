@@ -99,6 +99,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "live": True}
 
 
@@ -307,7 +309,8 @@ def draw_skill(skill, x, y, size):
 
 def draw_cards():
     draw_rect(40, 80, 520, 460, "#101018")
-    draw_text("Chọn một thẻ", 300, 120, 40)
+    draw_text("Chọn một thẻ", 300, 115, 40)
+    draw_text("Bấm 1, 2, 3 để chọn", 300, 156, 20)
     for i in range(len(cards)):
         skill = cards[i]
         y = 180 + i * 120

@@ -60,6 +60,7 @@ def next_wave():
     if wave + 1 == len(WAVES):
         screen = "win"
         play_sound("win")
+        stop_music()
         return
     wave += 1
     row = WAVES[wave]
@@ -137,7 +138,6 @@ def start_game(row):
     for number in START_SKILLS:
         add_skill(SKILLS[number])
     picks = START_PICKS
-    # Em viết tiếp ở đây (1)
     deal_cards()
     screen = "cards"
     wave = START_WAVE - 1
@@ -152,9 +152,11 @@ def living(things):
     return kept
 
 
-def add_effect(image, thing):
+def add_effect(image, half, thing):
     if len(effects) < 20:
-        effects.append({"image": image, "x": thing["x"], "y": thing["y"], "frame": 0, "hp": 16})
+        x = thing["x"] - half
+        y = thing["y"] - half
+        effects.append({"image": image, "x": x, "y": y, "frame": 0, "hp": 18})
 
 
 def move_effects():
@@ -203,6 +205,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "hp": 1}
 
 
@@ -240,18 +244,29 @@ def blast(center, size, amount):
             hurt(mob, amount)
 
 
+def storm():
+    blast(hero, 1200, 2)
+
+
+def splash(shot):
+    blast(shot, 90, 2)
+
+
+def strike(mob, amount):
+    hurt(mob, amount)
+    add_effect("fx-spark", 24, mob)
+
+
 def use_skills():
     if len(mobs) == 0:
         return
     if bonus["ring"] > 0 and tick % 60 == 0:
         blast(hero, 130, bonus["ring"])
-        add_effect("fx-fire", hero)
+        add_effect("fx-fire", 24, hero)
     if bonus["cloud"] > 0 and tick % 60 == 30:
-        target = mobs[random_int(0, len(mobs) - 1)]
-        hurt(target, bonus["cloud"])
-        add_effect("fx-spark", target)
+        strike(mobs[random_int(0, len(mobs) - 1)], bonus["cloud"])
     if has_combo("spark") and tick % 90 == 0:
-        blast(hero, 900, 2)
+        storm()
 
 
 def hit_mobs():
@@ -261,9 +276,9 @@ def hit_mobs():
                 hurt(mob, hero["power"] + bonus["power"])
                 mob["slow"] += bonus["slow"]
                 shot["hp"] = 0
-                add_effect("fx-hit", mob)
+                add_effect("fx-hit", 24, mob)
                 if has_combo("fire"):
-                    blast(shot, 90, 1)
+                    splash(shot)
 
 
 def remove_dead():
@@ -274,7 +289,7 @@ def remove_dead():
             alive.append(mob)
         else:
             kills += 1
-            add_effect("fx-poof", mob)
+            add_effect("fx-poof", 28, mob)
             gems.append({"x": mob["x"], "y": mob["y"], "xp": mob["xp"], "hp": 1})
             if bonus["boom"] > 0:
                 blast(mob, 90, bonus["boom"])
@@ -321,7 +336,7 @@ def take_card(skill):
     global picks, screen
     add_skill(skill)
     picks -= 1
-    # Em viết tiếp ở đây (2)
+    # Em viết tiếp ở đây (1)
     deal_cards()
     if picks <= 0:
         screen = "play"
@@ -332,8 +347,8 @@ def check_level():
     if xp >= need():
         xp -= need()
         level += 1
-        # Em viết tiếp ở đây (3)
-        add_effect("fx-levelup", hero)
+        # Em viết tiếp ở đây (2)
+        add_effect("fx-pickup", 24, hero)
         picks += 1
         deal_cards()
         screen = "cards"
@@ -347,7 +362,7 @@ def take_gems():
         if near(gem, hero, 40):
             xp += gem["xp"]
             gem["hp"] = 0
-            # Em viết tiếp ở đây (4)
+            # Em viết tiếp ở đây (3)
             pass
     gems = living(gems)
 
@@ -360,7 +375,7 @@ def check_hits():
     for mob in mobs:
         if near(mob, hero, 16 + 10 * mob["size"]):
             hero["hp"] -= 1
-            # Em viết tiếp ở đây (5)
+            # Em viết tiếp ở đây (4)
             safe = 60 + bonus["armor"]
             if mob["size"] > 4:
                 hero["hp"] -= 2
@@ -369,9 +384,9 @@ def check_hits():
 
 def step_to(thing, target, speed):
     for axis in ["x", "y"]:
-        if thing[axis] < target[axis]:
+        if thing[axis] < target[axis] - speed / 2:
             thing[axis] += speed
-        if thing[axis] > target[axis]:
+        if thing[axis] > target[axis] + speed / 2:
             thing[axis] -= speed
 
 
@@ -407,6 +422,8 @@ def update_play():
     if hero["hp"] <= 0:
         hero["hp"] = 0
         screen = "over"
+        play_sound("fall")
+        stop_music()
 
 
 def update():
@@ -420,6 +437,8 @@ def update():
     elif screen == "title":
         if number > 0:
             start_game(HEROES[number - 1])
+            # Em viết tiếp ở đây (5)
+            pass
     elif key_pressed("space"):
         screen = "title"
 
@@ -445,6 +464,8 @@ def draw_play():
         draw_thing("item-xp", gem["x"], gem["y"], 1)
     for shot in shots:
         draw_thing("shot-spark", shot["x"], shot["y"], 1)
+    if bonus["ring"] > 0 and tick % 60 < 10:
+        draw_circle(hero["x"], hero["y"], 110, "#ff8a3c66")
     for mob in mobs:
         if mob["slow"] > 0:
             draw_circle(mob["x"], mob["y"], 9 * mob["size"], "#7fd8ff")
@@ -455,7 +476,7 @@ def draw_play():
         draw_thing(hero["image"], hero["x"], hero["y"], 3)
     for effect in effects:
         path = "images/" + effect["image"] + ".png"
-        draw_image(path, effect["x"] - 24, effect["y"] - 24, effect["frame"])
+        draw_image(path, effect["x"], effect["y"], effect["frame"])
     draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
     draw_text("Máu: " + str(hero["hp"]), 60, 24)
     draw_text("Đợt " + str(wave + 1) + "/" + str(len(WAVES)), 530, 24)
@@ -480,7 +501,8 @@ def draw_skill(skill, x, y, size):
 
 def draw_cards():
     draw_rect(40, 80, 520, 460, "#101018")
-    draw_text("Chọn một thẻ", 300, 120, 40)
+    draw_text("Chọn một thẻ", 300, 115, 40)
+    draw_text("Bấm 1, 2, 3 để chọn", 300, 156, 20)
     for i in range(len(cards)):
         skill = cards[i]
         y = 180 + i * 120

@@ -1,13 +1,14 @@
 {
   "id": "h11-e2",
   "title": "Lên cấp thì dừng game",
-  "task": "(1) Trong check_level(), khi lên cấp thì đổi screen = \"cards\" để game đứng lại. (2) Trong update(), thêm nhánh: đang \"cards\" mà bấm Space thì screen = \"play\" để chơi tiếp.",
+  "task": "(1) Trong check_level(), khi lên cấp thì đổi screen = \"cards\" để game đứng lại. (2) Trong update(), ở màn \"cards\": nếu let_go đúng và đang bấm Space thì screen = \"play\". let_go là: em đã thả Space ra kể từ lúc lên cấp.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
     "Chỗ (1), ngay dưới level += 1: screen = \"cards\"",
     "Vì sao quái đứng lại? Vì update() chỉ gọi update_play() khi screen là \"play\".",
-    "Chỗ (2), thụt vào dưới elif screen == \"cards\": if key_pressed(\"space\"):",
+    "let_go nghĩa là đã thả. Có sẵn: lên cấp thì let_go = False, thả Space ra thì thành True. Nhờ vậy giữ Space không lướt mất bảng.",
+    "Chỗ (2), dưới dòng let_go = True, thẳng hàng với if ở trên nó: if let_go and key_pressed(\"space\"):",
     "Thụt thêm: screen = \"play\"",
     "Nhánh cuối là elif key_pressed(\"space\"): dành cho màn chờ và màn thua.",
     "Bấm ▶ Chạy, rồi ⛶: lên cấp thì mọi thứ đứng im chờ em."
@@ -15,7 +16,7 @@
   "hints": [
     "Dừng game không cần lệnh đặc biệt: chỉ cần đổi màn.",
     "screen = \"cards\"",
-    "if key_pressed(\"space\"):\n    screen = \"play\""
+    "if let_go and key_pressed(\"space\"):\n    screen = \"play\""
   ],
   "test": {
     "frames": 600,
@@ -28,6 +29,11 @@
         "key": "up",
         "from": 305,
         "to": 335
+      },
+      {
+        "key": "space",
+        "from": 300,
+        "to": 480
       }
     ]
   },
@@ -67,7 +73,7 @@
     }
   ],
   "new_idea": "dừng game = đổi màn",
-  "reorganised": "START_HP về 5; thêm nhánh cards trong update() và bảng tối trong draw().",
+  "reorganised": "START_HP về 5; let_go (phải thả Space rồi bấm lại); thêm nhánh cards trong update() và bảng tối trong draw().",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -98,6 +104,7 @@
     "pq_len",
     "pq_list",
     "pq_logic",
+    "pq_not",
     "pq_number",
     "pq_random",
     "pq_return",
@@ -110,7 +117,12 @@
   },
   "wrong": [
     "không dừng",
+    "giữ Space là lướt qua bảng",
     "không chơi tiếp được",
     "chơi tiếp thành ván mới"
+  ],
+  "alts": [
+    "hai if lồng nhau",
+    "so let_go == True"
   ]
 }

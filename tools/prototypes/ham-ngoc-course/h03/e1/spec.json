@@ -1,12 +1,12 @@
 {
   "id": "h03-e1",
   "title": "Mỗi người một hộp",
-  "task": "knight là một hộp dict: mỗi ngăn có tên. Em làm hộp mage giống vậy: name \"Pháp sư\", image \"images/hero-mage.png\", x 420, y 300, hp 3. Pháp sư uống thuốc: cộng 2 vào mage[\"hp\"]. Rồi gọi draw_person(mage).",
+  "task": "knight là một hộp dict: mỗi ngăn có tên. Em làm hộp mage giống vậy: name \"Pháp sư\", image \"hero-mage\", x 420, y 300, hp 3. Pháp sư uống thuốc: cộng 2 vào mage[\"hp\"]. Rồi gọi draw_person(mage).",
   "mode": "script",
   "input": "blocks",
   "walkthrough": [
     "Nhìn dòng knight = {...}: mỗi ngăn có tên trong ngoặc kép, dấu hai chấm, rồi giá trị.",
-    "Viết mage = {\"name\": \"Pháp sư\", \"image\": \"images/hero-mage.png\", \"x\": 420, \"y\": 300, \"hp\": 3}",
+    "Viết mage = {\"name\": \"Pháp sư\", \"image\": \"hero-mage\", \"x\": 420, \"y\": 300, \"hp\": 3}",
     "Uống thuốc: mage[\"hp\"] += 2",
     "Vẽ: draw_person(mage)",
     "Bấm ▶ Chạy: hai người đứng cạnh nhau, pháp sư có máu 5."
@@ -60,5 +60,6 @@
   "wrong": [
     "cộng máu sau khi vẽ",
     "sửa nhầm hộp knight"
-  ]
+  ],
+  "alts": []
 }

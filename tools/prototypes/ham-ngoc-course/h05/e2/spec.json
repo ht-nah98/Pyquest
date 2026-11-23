@@ -107,5 +107,9 @@
     "nhầm mép gần",
     "khung nào cũng ra quái, không giới hạn",
     "trả về 20 mãi"
+  ],
+  "alts": [
+    "if/else, so >=",
+    "hai if lồng nhau"
   ]
 }

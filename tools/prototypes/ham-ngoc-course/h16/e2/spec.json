@@ -47,12 +47,6 @@
       "id": "h16-e2-three"
     },
     {
-      "label": "Có dòng máu và tầm của kiếm sĩ",
-      "kind": "drewText",
-      "text": "Máu 8, tầm 200",
-      "id": "h16-e2-text"
-    },
-    {
       "label": "Có tên cung thủ",
       "kind": "drewText",
       "text": "Cung thủ",
@@ -93,6 +87,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -128,5 +123,10 @@
     "quên trừ 1",
     "ai cũng là kiếm sĩ",
     "vẽ ba lần một người"
+  ],
+  "alts": [
+    "biến pick",
+    "chữ khác",
+    "đổi số của kiếm sĩ"
   ]
 }

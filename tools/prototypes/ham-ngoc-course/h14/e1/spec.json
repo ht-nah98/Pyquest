@@ -1,7 +1,7 @@
 {
   "id": "h14-e1",
   "title": "Skill có tác dụng thật",
-  "task": "bonus giữ tổng sức mạnh của các skill. (1) Trong add_skill: cộng skill[\"add\"] vào bonus[skill[\"what\"]]. (2) Trong use_skills: có \"ring\" thì cứ 60 khung blast quanh hero; có \"cloud\" thì khi tick % 60 == 30 hurt một con ngẫu nhiên.",
+  "task": "bonus giữ tổng sức mạnh của các skill. (1) Trong add_skill: cộng skill[\"add\"] vào bonus[skill[\"what\"]]. (2) Trong use_skills: có \"ring\" thì cứ 60 khung blast quanh hero; có \"cloud\" thì khi tick % 60 == 30 strike một con ngẫu nhiên.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
@@ -9,7 +9,7 @@
     "skill[\"what\"] là tên ngăn. Vòng Lửa có what là \"ring\" nên ngăn bonus[\"ring\"] lớn lên.",
     "Chỗ (2): if bonus[\"ring\"] > 0 and tick % 60 == 0: rồi blast(hero, 130, bonus[\"ring\"])",
     "if bonus[\"cloud\"] > 0 and tick % 60 == 30:",
-    "Thụt vào: hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])",
+    "Thụt vào: strike(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"]). strike là sét đánh, vẽ luôn tia sét.",
     "Các skill khác chỉ cần đọc bonus ở đúng chỗ, code đã có sẵn: em tìm thử xem.",
     "START_SKILLS = [1, 8] cho em sẵn Vòng Lửa và Mây Giông để thử."
   ],
@@ -17,7 +17,7 @@
     "Một dòng chỗ (1) đủ cho mọi skill trong bảng.",
     "bonus[skill[\"what\"]] += skill[\"add\"]",
     "blast(hero, 130, bonus[\"ring\"])",
-    "hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])"
+    "strike(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])"
   ],
   "test": {
     "frames": 240,
@@ -42,20 +42,19 @@
       "label": "Vòng Lửa có đốt",
       "kind": "called",
       "name": "blast",
-      "min": 3,
+      "min": 2,
       "id": "h14-e1-blast"
     },
     {
-      "label": "Sét giúp hạ quái nhanh hơn",
-      "kind": "varCompare",
-      "name": "kills",
-      "op": ">=",
-      "value": 6,
-      "id": "h14-e1-kills"
+      "label": "Mây Giông có đánh sét",
+      "kind": "called",
+      "name": "strike",
+      "min": 2,
+      "id": "h14-e1-strike"
     }
   ],
   "new_idea": "tên ngăn lấy từ biến: bonus[skill[\"what\"]]",
-  "reorganised": "Thêm bonus, add_skill, hurt, blast, use_skills. Chỗ nào cần skill thì đọc bonus (shoot, hit_mobs, remove_dead, check_hits, move_mobs); START_SKILLS cho sẵn skill để thử.",
+  "reorganised": "Thêm bonus, add_skill, hurt, blast, strike (tia sét), use_skills; Vòng Lửa hiện vòng cam, sét hiện tia vàng. Chỗ nào cần skill thì đọc bonus (shoot, hit_mobs, remove_dead, check_hits, move_mobs); START_SKILLS cho sẵn skill để thử.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -70,6 +69,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -105,5 +105,11 @@
     "luôn cộng vào power",
     "quên Mây Giông",
     "quên Vòng Lửa"
+  ],
+  "alts": [
+    "sét trước, vòng sau",
+    "if lồng nhau, biến target",
+    "viết = thay +=",
+    "bốc thăm thêm một lần (số ngẫu nhiên lệch)"
   ]
 }

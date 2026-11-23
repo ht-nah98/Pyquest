@@ -69,7 +69,7 @@
     }
   ],
   "new_idea": "phím số; phím đếm từ 1, danh sách đếm từ 0",
-  "reorganised": "Bỏ check_cards và clashes; game lại mở ở màn chờ. Vào ván là được chọn START_PICKS thẻ; lên cấp được thêm 1 lượt chọn (picks). update() gọi picked_number() mọi khung. Thẻ đã lấy nằm trong owned.",
+  "reorganised": "Bỏ check_cards, clashes, let_go; game lại mở ở màn chờ. Vào ván là được chọn START_PICKS thẻ; lên cấp được thêm 1 lượt chọn (picks). update() gọi picked_number() mọi khung. Thẻ đã lấy nằm trong owned.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -115,5 +115,9 @@
     "thiếu phím 3",
     "lúc nào cũng là 1",
     "dùng chữ thay cho số phím"
+  ],
+  "alts": [
+    "elif",
+    "thứ tự ngược"
   ]
 }

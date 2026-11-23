@@ -78,6 +78,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "live": True}
 
 
@@ -174,13 +176,13 @@ def update():
         spawn_mob()
     move_hero()
     move_mobs()
-    crowd = len(mobs)
     shoot()
     move_shots()
     hit_mobs()
     remove_shots()
     remove_dead()
     take_gems()
+    crowd = len(mobs)
     check_hits()
     if hero["hp"] <= 0:
         game_over = True

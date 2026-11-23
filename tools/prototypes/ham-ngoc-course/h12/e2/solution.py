@@ -3,6 +3,7 @@ from pyquest import *
 START_HP = 5
 hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 5, "speed": 3}
 hero["reach"] = 400
+let_go = True
 cards = []
 clashes = 0
 
@@ -96,6 +97,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "live": True}
 
 
@@ -168,10 +171,11 @@ def check_cards():
 
 
 def check_level():
-    global xp, level, screen
+    global xp, level, screen, let_go
     if xp >= need():
         xp -= need()
         level += 1
+        let_go = False
         screen = "cards"
 
 
@@ -238,11 +242,14 @@ def update_play():
 
 
 def update():
-    global screen
+    global screen, let_go
     if screen == "play":
         update_play()
     elif screen == "cards":
-        if key_pressed("space"):
+        if not key_pressed("space"):
+            let_go = True
+        if let_go and key_pressed("space"):
+            let_go = False
             deal_cards()
             check_cards()
     elif key_pressed("space"):
@@ -283,7 +290,8 @@ def draw_skill(skill, x, y, size):
 
 def draw_cards():
     draw_rect(40, 80, 520, 460, "#101018")
-    draw_text("Chọn một thẻ", 300, 120, 40)
+    draw_text("Chọn một thẻ", 300, 115, 40)
+    draw_text("Bấm Space để bốc thẻ", 300, 156, 20)
     for i in range(len(cards)):
         skill = cards[i]
         y = 180 + i * 120

@@ -10,8 +10,8 @@ Thiết kế: `../specs/2026-11-23-roguelite-design.md`. **Phiên mới: đọc 
 | 3 | Hình vào kho | manifest `pixel: true`, ghi công, `content:check` xanh | xong (bfa0cea) |
 | 4 | Ghép hình + hiệu ứng + âm thanh vào game mẫu | ảnh chụp xem được, vẫn 60 FPS | xong, đã chép vào khóa; chờ HLV chơi thử |
 | 5 | Khóa mới: khung khóa, id bài riêng, để **bản nháp** (bé không thấy) | e2e: bé không vào được | xong, khóa để bản nháp |
-| 6 | Đề cương + nội dung bài, mỗi bài qua `content:check` | mọi bài `draft: true` | đủ 19 bài nháp; đang sửa lỗi code bài (agent), rồi chỉnh slide theo |
-| 7 | Soát code độc lập, chạy cả bộ kiểm, đo dung lượng | báo cáo thật | chưa |
+| 6 | Đề cương + nội dung bài, mỗi bài qua `content:check` | mọi bài `draft: true` | đủ 19 bài nháp, code bài đã sửa; còn chỉnh slide theo code rồi chạy `tools/lessons.py` |
+| 7 | Soát code độc lập, chạy cả bộ kiểm, đo dung lượng | báo cáo thật | đã soát 49bb902..HEAD; đang sửa P1, N1–N11 kèm test, rồi chạy cả bộ e2e (`PQ_E2E_PORT=5397`) |
 | — | **HLV chơi thử, đọc lại chữ, dạy thử, bỏ `draft`** | AI không tự tích | HLV |
 
 ## Hình đã chọn

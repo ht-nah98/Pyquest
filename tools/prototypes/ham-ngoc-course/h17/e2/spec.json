@@ -1,15 +1,16 @@
 {
   "id": "h17-e2",
   "title": "Tiếng động",
-  "task": "Thêm 5 tiếng: (1) vào hầm: play_music(\"adventure\"). (2) Chọn thẻ: play_sound(\"click\"). (3) Lên cấp: play_sound(\"win\"). (4) Nhặt ngọc: play_sound(\"point\"). (5) Bị chạm: play_sound(\"hit\"). Đừng đặt tiếng ở chỗ chạy mỗi khung nhé.",
+  "task": "Thêm 5 tiếng: (1) chọn thẻ: play_sound(\"click\"). (2) Lên cấp: play_sound(\"win\"). (3) Nhặt ngọc: play_sound(\"point\"). (4) Bị chạm: play_sound(\"hit\"). (5) Vào hầm: play_music(\"adventure\"). Đừng đặt tiếng ở chỗ chạy mỗi khung nhé.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
-    "Chỗ (1), trong start_game: play_music(\"adventure\"). Thử cả \"happy\" và \"calm\".",
-    "Chỗ (2), trong take_card: play_sound(\"click\")",
-    "Chỗ (3), trong check_level, dưới level += 1: play_sound(\"win\")",
-    "Chỗ (4), trong take_gems, dưới gem[\"hp\"] = 0: play_sound(\"point\")",
-    "Chỗ (5), trong check_hits, dưới hero[\"hp\"] -= 1: play_sound(\"hit\")",
+    "Chỗ (1), trong take_card: play_sound(\"click\")",
+    "Chỗ (2), trong check_level, dưới level += 1: play_sound(\"win\")",
+    "Chỗ (3), trong take_gems, dưới gem[\"hp\"] = 0: play_sound(\"point\")",
+    "Chỗ (4), trong check_hits, dưới hero[\"hp\"] -= 1: play_sound(\"hit\")",
+    "Chỗ (5), trong update, ngay dưới start_game(HEROES[number - 1]): play_music(\"adventure\"). Thử cả \"happy\" và \"calm\".",
+    "Hết ván thì stop_music() tắt nhạc, có sẵn cho em. Màn chọn nhân vật luôn im.",
     "Bấm 🔊 nếu không nghe thấy gì. Rồi ⛶ và chơi thử với loa."
   ],
   "hints": [
@@ -122,7 +123,7 @@
     }
   ],
   "new_idea": "tiếng đặt ở đúng lúc việc xảy ra, không đặt ở chỗ chạy mỗi khung",
-  "reorganised": "Sắp xếp lại lần 4: đạn và ngọc cũng có hp và dùng living(); bỏ remove_shots, live, busy. START_WAVE = 2 để thử đợt đông quái (Bài 18 trả về 0).",
+  "reorganised": "Thua hay thắng thì tắt nhạc, thua có tiếng fall. Sắp xếp lại lần 4: đạn và ngọc cũng có hp và dùng living(); bỏ remove_shots, live, busy. START_WAVE = 2 để thử đợt đông quái (Bài 18 trả về 0).",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -163,17 +164,22 @@
     "pq_random",
     "pq_remove",
     "pq_return",
+    "pq_stop_music",
     "pq_str",
     "pq_text",
     "pq_var_get"
   ],
   "blocks_expected": {
     "code_text": [
-      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+      "draw_image(path, effect[\"x\"], effect[\"y\"], effect[\"frame\"])"
     ]
   },
   "wrong": [
     "quên tiếng bị chạm",
     "nhầm tiếng lên cấp"
+  ],
+  "alts": [
+    "nhạc khác",
+    "tiếng đặt ở đầu take_card"
   ]
 }

@@ -4,6 +4,7 @@ START_HP = 5
 hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 5, "speed": 3}
 hero["reach"] = 400
 games = 0
+let_go = True
 
 
 def draw_thing(image, x, y, size):
@@ -85,6 +86,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "live": True}
 
 
@@ -136,10 +139,11 @@ def need():
 
 
 def check_level():
-    global xp, level, screen
+    global xp, level, screen, let_go
     if xp >= need():
         xp -= need()
         level += 1
+        let_go = False
         screen = "cards"
 
 
@@ -206,11 +210,14 @@ def update_play():
 
 
 def update():
-    global screen
+    global screen, let_go
     if screen == "play":
         update_play()
     elif screen == "cards":
-        pass
+        if not key_pressed("space"):
+            let_go = True
+        if key_pressed("space"):
+            screen = "play"
     elif key_pressed("space"):
         start_game()
 

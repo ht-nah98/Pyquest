@@ -1,25 +1,25 @@
 {
   "id": "h14-e3",
   "title": "Phối hợp",
-  "task": "Từ 2 skill cùng nhánh là có phối hợp. (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau thêm 3. (3) Sét: cứ 90 khung, blast cả sân 2 máu. (4) Lửa: đạn trúng thì blast quanh viên đạn 1 máu.",
+  "task": "Từ 2 skill cùng nhánh là có phối hợp (bài này nhớt có 8 máu). (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau thêm 3. (3) Sét: cứ 90 khung gọi storm(). (4) Lửa: đạn trúng thì gọi splash(shot).",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
     "Chỗ (1): return count_branch(branch) >= 2 (trả về True hoặc False).",
     "Chỗ (2), đầu hurt(): if has_combo(\"ice\") and mob[\"slow\"] > 0: rồi amount += 3",
-    "Chỗ (3): if has_combo(\"spark\") and tick % 90 == 0: rồi blast(hero, 900, 2). 900 là trùm cả sân.",
-    "Chỗ (4), khi đạn trúng: if has_combo(\"fire\"): rồi blast(shot, 90, 1)",
-    "Bấm ▶ Chạy: tên 3 phối hợp hiện dưới sân.",
+    "Chỗ (3): if has_combo(\"spark\") and tick % 90 == 0: rồi storm(). storm nổ xa 1200: góc sân nào cũng tới.",
+    "Chỗ (4), khi đạn trúng: if has_combo(\"fire\"): rồi splash(shot). Cả storm và splash đều viết sẵn bằng blast.",
+    "Số trên đầu quái là máu (đồ thử). Bấm ▶ Chạy: tên 3 phối hợp hiện dưới sân.",
     "Chơi thử: đi theo 1 nhánh hay trộn 3 nhánh thì mạnh hơn?"
   ],
   "hints": [
     "return count_branch(branch) >= 2",
     "if has_combo(\"ice\") and mob[\"slow\"] > 0:\n    amount += 3",
-    "if has_combo(\"spark\") and tick % 90 == 0:\n    blast(hero, 900, 2)",
-    "if has_combo(\"fire\"):\n    blast(shot, 90, 1)"
+    "if has_combo(\"spark\") and tick % 90 == 0:\n    storm()",
+    "if has_combo(\"fire\"):\n    splash(shot)"
   ],
   "test": {
-    "frames": 112,
+    "frames": 200,
     "taps": [
       5
     ],
@@ -56,16 +56,28 @@
       "id": "h14-e3-spark"
     },
     {
-      "label": "Phối hợp làm em mạnh hơn hẳn",
-      "kind": "varCompare",
-      "name": "kills",
-      "op": ">=",
-      "value": 4,
-      "id": "h14-e3-kills"
+      "label": "Bão Sét nổ đúng nhịp",
+      "kind": "called",
+      "name": "storm",
+      "min": 1,
+      "id": "h14-e3-storm"
+    },
+    {
+      "label": "Lò Than nổ lan khi đạn trúng",
+      "kind": "called",
+      "name": "splash",
+      "min": 2,
+      "id": "h14-e3-splash"
+    },
+    {
+      "label": "Thấu Xương: quái chậm đau thêm 3",
+      "kind": "drewText",
+      "text": "1 máu",
+      "id": "h14-e3-chill"
     }
   ],
   "new_idea": "hàm trả về True/False mở thêm luật; bảng BRANCHES giữ tên",
-  "reorganised": "Bảng BRANCHES thêm ngăn combo; đủ 2 skill thì dưới sân hiện tên phối hợp.",
+  "reorganised": "Nhớt 8 máu, có số máu trên đầu để thử; thêm storm(), splash(shot). Bảng BRANCHES thêm ngăn combo; đủ 2 skill thì dưới sân hiện tên phối hợp.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -80,6 +92,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -117,5 +130,11 @@
     "chỉ hiện tên, không có tác dụng",
     "lúc nào cũng có phối hợp mà quên tác dụng",
     "cần tới 3 skill"
+  ],
+  "alts": [
+    "if / return True",
+    "trừ máu thẳng trong hurt",
+    "nhân, if lồng nhau",
+    "nổ lan trước khi hạ cờ"
   ]
 }

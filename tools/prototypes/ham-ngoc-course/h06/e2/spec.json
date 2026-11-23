@@ -56,7 +56,7 @@
     }
   ],
   "new_idea": "đếm ngược khung hình (cooldown)",
-  "reorganised": "Thêm safe; draw() nhấp nháy nhân vật khi safe > 0.",
+  "reorganised": "Cả bầy trở lại (6 con, thêm dần tới 14). Thêm safe; draw() nhấp nháy nhân vật khi safe > 0.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -96,5 +96,10 @@
   "wrong": [
     "quên trừ safe",
     "quên đặt safe = 60"
+  ],
+  "alts": [
+    "if/else, không return sớm",
+    "trừ safe ở cuối bằng elif",
+    "gán safe trước khi trừ máu"
   ]
 }

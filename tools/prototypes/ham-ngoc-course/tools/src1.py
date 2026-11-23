@@ -153,9 +153,9 @@ ex(
 ex(
     "h03-e1", "Mỗi người một hộp",
     "knight là một hộp dict: mỗi ngăn có tên. Em làm hộp mage giống vậy: name \"Pháp sư\", image "
-    "\"images/hero-mage.png\", x 420, y 300, hp 3. Pháp sư uống thuốc: cộng 2 vào mage[\"hp\"]. Rồi gọi draw_person(mage).",
+    "\"hero-mage\", x 420, y 300, hp 3. Pháp sư uống thuốc: cộng 2 vào mage[\"hp\"]. Rồi gọi draw_person(mage).",
     ["Nhìn dòng knight = {...}: mỗi ngăn có tên trong ngoặc kép, dấu hai chấm, rồi giá trị.",
-     "Viết mage = {\"name\": \"Pháp sư\", \"image\": \"images/hero-mage.png\", \"x\": 420, \"y\": 300, \"hp\": 3}",
+     "Viết mage = {\"name\": \"Pháp sư\", \"image\": \"hero-mage\", \"x\": 420, \"y\": 300, \"hp\": 3}",
      "Uống thuốc: mage[\"hp\"] += 2",
      "Vẽ: draw_person(mage)",
      "Bấm ▶ Chạy: hai người đứng cạnh nhau, pháp sư có máu 5."],
@@ -170,23 +170,23 @@ from pyquest import *
 
 
 def draw_person(person):
-    draw_image(person["image"], person["x"] - 24, person["y"] - 24, scale=3)
+    draw_image("images/" + person["image"] + ".png", person["x"] - 24, person["y"] - 24, scale=3)
     draw_text(person["name"], person["x"], person["y"] - 40)
     draw_text("Máu: " + str(person["hp"]), person["x"], person["y"] + 44)
 
 
 clear("#2b2438")
-knight = {"name": "Kiếm sĩ", "image": "images/hero-knight.png", "x": 180, "y": 300, "hp": 5}
+knight = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 180, "y": 300, "hp": 5}
 draw_person(knight)
 # Em viết tiếp ở đây
 ''',
-    fills=['''mage = {"name": "Pháp sư", "image": "images/hero-mage.png", "x": 420, "y": 300, "hp": 3}
+    fills=['''mage = {"name": "Pháp sư", "image": "hero-mage", "x": 420, "y": 300, "hp": 3}
 mage["hp"] += 2
 draw_person(mage)'''],
-    wrong=[("cộng máu sau khi vẽ", ['''mage = {"name": "Pháp sư", "image": "images/hero-mage.png", "x": 420, "y": 300, "hp": 3}
+    wrong=[("cộng máu sau khi vẽ", ['''mage = {"name": "Pháp sư", "image": "hero-mage", "x": 420, "y": 300, "hp": 3}
 draw_person(mage)
 mage["hp"] += 2'''], []),
-           ("sửa nhầm hộp knight", ['''mage = {"name": "Pháp sư", "image": "images/hero-mage.png", "x": 420, "y": 300, "hp": 3}
+           ("sửa nhầm hộp knight", ['''mage = {"name": "Pháp sư", "image": "hero-mage", "x": 420, "y": 300, "hp": 3}
 knight["hp"] += 2
 draw_person(mage)'''], [])],
     mode="script", input="blocks", keep=False, new="dict: một hộp nhiều ngăn, ngăn nào cũng có tên")
@@ -331,7 +331,7 @@ ex(
 mobs = []
 '''), ('''def move_hero():
 ''', '''def make_mob(x, y):
-    return {"image": "mob-slime", "x": x, "y": y, "hp": 2, "speed": 1}
+    return {"image": "mob-slime", "x": x, "y": y}
 
 
 def start_game():
@@ -381,7 +381,7 @@ ex(
      goal("y", "staysWithin", "Quái đi xuống tới chỗ em", sprite="mob", axis="y", min=264, max=304, frames=[280, 290]),
      goal("right", "staysWithin", "Em chạy sang phải, quái theo", sprite="mob", axis="x", min=290, max=340, frames=[585, 599]),
      goal("up", "staysWithin", "Em chạy lên, quái theo", sprite="mob", axis="y", min=50, max=96, frames=[585, 599])],
-    prep=[('''def update():
+    prep=[('''"mob-slime", "x": x, "y": y}''', '''"mob-slime", "x": x, "y": y, "speed": 1}'''), ('''def update():
     move_hero()
 ''', '''def step_to(thing, target, speed):
     if thing["x"] < target["x"]:
@@ -412,7 +412,7 @@ if thing["y"] > target["y"]:
     thing["y"] -= speed'''], [])],
     test={"frames": 600, "keys": [hold("left", 0, 60), hold("right", 300, 370), hold("up", 300, 369)]},
     new="so sánh từng trục; hàm nhận vào cả một dict",
-    reorganised="Thêm move_mobs() gọi step_to cho từng con, kèm lắc lư ngẫu nhiên (-1 tới 1).")
+    reorganised="Hộp quái thêm ngăn speed. Thêm move_mobs() gọi step_to cho từng con, kèm lắc lư ngẫu nhiên (-1 tới 1).")
 
 ex(
     "h05-e2", "Quái ra liên tục",
@@ -478,16 +478,16 @@ ex(
      "dy = abs(a[\"y\"] - b[\"y\"]), rồi return dx + dy thay cho return 0.",
      "Chỗ (2): for mob in mobs: rồi thụt vào if near(mob, hero, 36):",
      "Thụt thêm: hero[\"hp\"] -= 1",
-     "Bấm ▶ Chạy: quái chạm tới thì máu tụt rất nhanh. Bài tập 2 sẽ sửa chuyện đó."],
+     "Bấm ▶ Chạy: hầm chỉ có 1 con. Nó vừa chạm là máu tụt ngay, máy chạy né một lần rồi vẫn thua. Bài tập 2 sẽ sửa."],
     ["Nhớ xóa dòng return 0.",
      "dx = abs(a[\"x\"] - b[\"x\"])\ndy = abs(a[\"y\"] - b[\"y\"])\nreturn dx + dy",
      "for mob in mobs:\n    if near(mob, hero, 36):\n        hero[\"hp\"] -= 1"],
     [run_goal(),
      goal("full", "drewText", "Chưa chạm thì chưa mất máu", text="Máu: 5"),
      goal("over", "varEquals", "Bị chạm nhiều thì thua", name="game_over", value=True),
-     goal("late", "varCompare", "Quái tới sát mới mất máu", name="tick", op=">=", value=205),
-     goal("soon", "varCompare", "Chạm là mất máu ngay", name="tick", op="<=", value=260)],
-    prep=[('''crowd = 0
+     goal("late", "varCompare", "Quái tới sát mới mất máu", name="tick", op=">=", value=230),
+     goal("soon", "varCompare", "Chạm là mất máu ngay", name="tick", op="<=", value=520)],
+    prep=[('''range(6)''', '''range(1)'''), ('''len(mobs) < 14''', '''len(mobs) < 1'''), ('''crowd = 0
 ''', '''crowd = 0
 game_over = False
 '''), ('''def step_to(''', '''def distance(a, b):
@@ -532,13 +532,16 @@ return dx + dy''', '''for mob in mobs:
            ("quên abs", ['return a["x"] - b["x"] + a["y"] - b["y"]', '''for mob in mobs:
     if near(mob, hero, 36):
         hero["hp"] -= 1'''], []),
+           ("chỉ đo chiều dọc", ['return abs(a["y"] - b["y"])', '''for mob in mobs:
+    if near(mob, hero, 36):
+        hero["hp"] -= 1'''], []),
            ("trừ máu không cần chạm", ['''dx = abs(a["x"] - b["x"])
 dy = abs(a["y"] - b["y"])
 return dx + dy''', '''for mob in mobs:
     hero["hp"] -= 1'''], [])],
-    test={"frames": 400},
+    test={"frames": 560, "keys": [hold("right", 130, 190), hold("up", 130, 172), hold("right", 293, 322), hold("down", 293, 322)]},
     new="abs; khoảng cách = ngang + dọc; near(a, b, size) trả về True/False",
-    reorganised="Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi.")
+    reorganised="Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi. Bài tập này chỉ có 1 con quái cho dễ nhìn máu tụt.")
 
 ex(
     "h06-e2", "Bất tử một chút",
@@ -557,7 +560,7 @@ ex(
      goal("two", "drewText", "Hết bất tử lại mất máu", text="Máu: 2"),
      goal("alive", "varEquals", "Không thua ngay lập tức", name="game_over", value=False),
      goal("blink", "varCompare", "Có lúc đang bất tử", name="safe", op=">=", value=30, when="ever")],
-    prep=[('''game_over = False
+    prep=[('''range(1)''', '''range(6)'''), ('''len(mobs) < 1:''', '''len(mobs) < 14:'''), ('''game_over = False
 ''', '''game_over = False
 safe = 0
 '''), ('''def check_hits():
@@ -580,4 +583,4 @@ safe = 0
            ("quên đặt safe = 60", ["if safe > 0:\n    safe -= 1\n    return", "return"], [])],
     test={"frames": 400},
     new="đếm ngược khung hình (cooldown)",
-    reorganised="Thêm safe; draw() nhấp nháy nhân vật khi safe > 0.")
+    reorganised="Cả bầy trở lại (6 con, thêm dần tới 14). Thêm safe; draw() nhấp nháy nhân vật khi safe > 0.")

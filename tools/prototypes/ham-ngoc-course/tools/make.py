@@ -32,6 +32,9 @@ def main():
         for i, (what, code) in enumerate(e["wrong"]):
             files["wrong" + str(i + 1) + ".py"] = code
         e["spec"]["wrong"] = [w for w, _ in e["wrong"]]
+        for i, (what, code) in enumerate(e["alts"]):
+            files["alt" + str(i + 1) + ".py"] = code
+        e["spec"]["alts"] = [w for w, _ in e["alts"]]
         files["spec.json"] = json.dumps(e["spec"], ensure_ascii=False, indent=2) + "\n"
         for name, text in files.items():
             with open(os.path.join(folder, name), "w", encoding="utf-8") as f:

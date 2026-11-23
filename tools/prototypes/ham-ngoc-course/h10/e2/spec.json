@@ -31,7 +31,7 @@
       "kind": "varCompare",
       "name": "xp",
       "op": ">=",
-      "value": 3,
+      "value": 2,
       "id": "h10-e2-fly"
     },
     {
@@ -90,5 +90,10 @@
     "ngọc không bay",
     "quên vẽ thanh",
     "ngọc chạy ngược"
+  ],
+  "alts": [
+    "hút sau khi xét nhặt",
+    "so <= 150",
+    "vẽ thanh bằng phép khác"
   ]
 }

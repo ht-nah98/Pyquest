@@ -9,7 +9,7 @@
     "dy = abs(a[\"y\"] - b[\"y\"]), rồi return dx + dy thay cho return 0.",
     "Chỗ (2): for mob in mobs: rồi thụt vào if near(mob, hero, 36):",
     "Thụt thêm: hero[\"hp\"] -= 1",
-    "Bấm ▶ Chạy: quái chạm tới thì máu tụt rất nhanh. Bài tập 2 sẽ sửa chuyện đó."
+    "Bấm ▶ Chạy: hầm chỉ có 1 con. Nó vừa chạm là máu tụt ngay, máy chạy né một lần rồi vẫn thua. Bài tập 2 sẽ sửa."
   ],
   "hints": [
     "Nhớ xóa dòng return 0.",
@@ -17,8 +17,30 @@
     "for mob in mobs:\n    if near(mob, hero, 36):\n        hero[\"hp\"] -= 1"
   ],
   "test": {
-    "frames": 400,
-    "taps": []
+    "frames": 560,
+    "taps": [],
+    "keys": [
+      {
+        "key": "right",
+        "from": 130,
+        "to": 190
+      },
+      {
+        "key": "up",
+        "from": 130,
+        "to": 172
+      },
+      {
+        "key": "right",
+        "from": 293,
+        "to": 322
+      },
+      {
+        "key": "down",
+        "from": 293,
+        "to": 322
+      }
+    ]
   },
   "goals": [
     {
@@ -44,7 +66,7 @@
       "kind": "varCompare",
       "name": "tick",
       "op": ">=",
-      "value": 205,
+      "value": 230,
       "id": "h06-e1-late"
     },
     {
@@ -52,12 +74,12 @@
       "kind": "varCompare",
       "name": "tick",
       "op": "<=",
-      "value": 260,
+      "value": 520,
       "id": "h06-e1-soon"
     }
   ],
   "new_idea": "abs; khoảng cách = ngang + dọc; near(a, b, size) trả về True/False",
-  "reorganised": "Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi.",
+  "reorganised": "Thêm game_over và chữ Thua rồi! (như Bay Qua Khe); tick chỉ đếm khi còn chơi. Bài tập này chỉ có 1 con quái cho dễ nhìn máu tụt.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -97,6 +119,13 @@
   "wrong": [
     "chỉ đo chiều ngang",
     "quên abs",
+    "chỉ đo chiều dọc",
     "trừ máu không cần chạm"
+  ],
+  "alts": [
+    "một dòng return",
+    "trừ ngược chiều, near(hero, mob)",
+    "không gọi near, so <=",
+    "quái đi trước"
   ]
 }

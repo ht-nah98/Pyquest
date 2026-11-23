@@ -91,7 +91,7 @@
     }
   ],
   "new_idea": "trùm = một dòng trong bảng; biến START_WAVE để thử nhanh",
-  "reorganised": "Thêm thanh máu cho con to (size > 4) và ngăn max.",
+  "reorganised": "Bỏ số máu, số xp tạm. Thêm thanh máu cho con to (size > 4) và ngăn max.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -106,6 +106,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -140,5 +141,8 @@
   "wrong": [
     "quên dòng trong WAVES",
     "đợt cuối không có trùm"
+  ],
+  "alts": [
+    "every lớn hơn count vẫn một trùm"
   ]
 }

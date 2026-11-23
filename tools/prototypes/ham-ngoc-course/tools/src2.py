@@ -22,7 +22,7 @@ ex(
      "return best nằm ngoài vòng for, đừng thụt vào trong.",
      "if distance(mob, hero) < distance(best, hero):\n    best = mob"],
     [run_goal(),
-     goal("near", "varCompare", "Vạch chỉ đúng con gần nhất", name="target_far", op="<=", value=105),
+     goal("near", "varCompare", "Vạch chỉ đúng con gần nhất", name="target_far", op="<=", value=120),
      goal("called", "called", "Có gọi distance để so sánh", name="distance", min=20)],
     prep=[('''safe = 0
 ''', '''safe = 0
@@ -112,6 +112,9 @@ def check_hits():
     draw_line(hero["x"], hero["y"], target["x"], target["y"], "#ffffff", 2)
 ''', '''    for shot in shots:
         draw_thing("shot-spark", shot["x"], shot["y"], 1)
+'''), ('''str(crowd), 540, 24)
+''', '''str(crowd), 540, 24)
+    draw_text("Đã bắn: " + str(fired), 300, 24)
 ''')],
     fills=['''wait -= 1
 if wait <= 0:
@@ -142,7 +145,7 @@ ex(
      "far = distance(target, hero) + 1. Cộng 1 để không bao giờ chia cho 0.",
      "vx = (target[\"x\"] - hero[\"x\"]) / far * 8. Nhớ dấu ngoặc tròn.",
      "vy = (target[\"y\"] - hero[\"y\"]) / far * 8",
-     "Chia cho far để đạn bay đều: quái xa hay gần thì đạn cũng nhanh như nhau.",
+     "Chia cho far để đạn bay đều. Quái ở đúng ngay chỗ em thì vx, vy đều là 0: hai dòng if có sẵn cho đạn bay thẳng lên.",
      "Bấm ▶ Chạy, rồi ⛶: đạn tự tìm con gần nhất."],
     ["target trừ hero, đừng viết ngược.",
      "Không chia cho far thì đạn bay vèo một phát hết sân.",
@@ -150,14 +153,17 @@ ex(
     [run_goal(),
      goal("side", "distinctCount", "Đạn bay cả sang ngang", sprite="shot", axis="x", min=20),
      goal("up", "distinctCount", "Đạn bay cả lên xuống", sprite="shot", axis="y", min=20),
-     goal("smooth", "staysWithin", "Đạn bay đều, không nhảy vọt", sprite="shot", axis="y", min=-1500, max=2000),
-     goal("hit", "varCompare", "Đạn chạm quái nhiều lần", name="hits", op=">=", value=8)],
+     goal("down", "drew", "Quái ở dưới thì đạn bay xuống", sprite="shot-spark", at=[300, 1000], tolerance=580),
+     goal("smooth", "staysWithin", "Đạn bay đều, không nhảy vọt", sprite="shot", axis="y", min=-2700, max=3300),
+     goal("hit", "varCompare", "Đạn chạm quái nhiều lần", name="hits", op=">=", value=120)],
     prep=[('''    vx = 0
     vy = -7
 ''', '''    # Em viết tiếp ở đây
     vx = 0
     vy = -7
-'''), ('''fired = 0
+    if vx == 0 and vy == 0:
+        vy = -8
+'''), ('''str(fired), 300''', '''str(hits), 300'''), ('''"Đã bắn: "''', '''"Đạn chạm: "'''), ('''fired = 0
 ''', '''hits = 0
 '''), ('''    global wait, fired
 ''', '''    global wait
@@ -212,9 +218,9 @@ vy = 0'''], [('''vy = 0
     vy = -7
 ''', '''vy = 0
 ''')])],
-    test={"frames": 200},
+    test={"frames": 330, "keys": [hold("up", 150, 245)]},
     new="hướng = (đích - mình) / khoảng cách × tốc độ",
-    reorganised="Thay fired bằng hits; thêm hit_mobs() đếm lần đạn chạm quái.")
+    reorganised="make_shot có sẵn luật: vx và vy đều 0 (quái ở đúng chỗ em) thì bắn thẳng lên. Thay fired bằng hits; thêm hit_mobs() đếm lần đạn chạm quái.")
 
 # ---------------------------------------------------------------- h09
 DEAD = '''alive = []
@@ -242,7 +248,7 @@ ex(
      goal("once", "varCompare", "Mỗi con chỉ đếm một lần", name="kills", op="<=", value=16),
      goal("gone", "varCompare", "Quái hạ rồi thì biến mất", name="crowd", op="<=", value=10),
      goal("keep", "drewCount", "Quái còn máu thì vẫn ở lại", sprite="mob", min=6)],
-    prep=[('''hits = 0
+    prep=[('''"y": y, "speed": 1}''', '''"y": y, "hp": 2, "speed": 1}'''), ('''hits = 0
 ''', '''kills = 0
 '''), ('''def hit_mobs():
     global hits
@@ -265,20 +271,21 @@ def remove_dead():
     if wait <= 0:
 ''', '''    wait -= 1
     if wait <= 0 and len(mobs) > 0:
+'''), ('''    crowd = len(mobs)
+    shoot()
+''', '''    shoot()
 '''), ('''    hit_mobs()
 ''', '''    hit_mobs()
     remove_dead()
-'''), ('''str(crowd), 540, 24)
-''', '''str(crowd), 540, 24)
-    draw_text("Hạ: " + str(kills), 300, 24)
-''')],
+    crowd = len(mobs)
+'''), ('''"Đạn chạm: " + str(hits)''', '''"Hạ: " + str(kills)''')],
     fills=[DEAD],
     wrong=[("quên mobs = alive", [DEAD.replace("\nmobs = alive", "")], []),
            ("giữ con hết máu", [DEAD.replace("> 0", "<= 0")], []),
            ("xóa khi hết máu mà không đếm", [DEAD.replace("kills += 1", "kills += 0")], [])],
     test={"frames": 400},
     new="giữ lại bằng danh sách mới: duyệt, append con muốn giữ, rồi thay danh sách cũ",
-    reorganised="hit_mobs() giờ trừ máu quái thay vì đếm hits; shoot() chỉ bắn khi còn quái (danh sách có thể rỗng).")
+    reorganised="Hộp quái thêm ngăn hp (bài đầu tiên cần tới). hit_mobs() giờ trừ máu quái thay vì đếm hits; shoot() chỉ bắn khi còn quái (danh sách có thể rỗng).")
 
 ex(
     "h09-e2", "Đạn trúng là mất",
@@ -417,7 +424,7 @@ ex(
      "Bấm ▶ Chạy, rồi ⛶: ngọc tự bay về em."],
     ["Chỗ (1) chỉ 2 dòng.", "step_to(gem, hero, 6)", "draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")"],
     [run_goal(),
-     goal("fly", "varCompare", "Ngọc tự bay về em", name="xp", op=">=", value=3),
+     goal("fly", "varCompare", "Ngọc tự bay về em", name="xp", op=">=", value=2),
      goal("bar", "drewRects", "Có thanh kinh nghiệm", min=2, at=[0, 590])],
     prep=[('''    for gem in gems:
         if near(gem, hero, 40):
@@ -499,7 +506,6 @@ ex(
      "Đang chơi mà bấm Space thì không được bắt đầu lại, nên dùng elif.",
      "if screen == \"play\":\n    update_play()\nelif key_pressed(\"space\"):\n    start_game()"],
     [run_goal(),
-     goal("title", "drewText", "Có màn chờ", text="Bấm Space để vào hầm"),
      goal("wait", "varCompare", "Chưa bấm thì game chưa chạy", name="tick", op="<=", value=300),
      goal("again", "varEquals", "Thua rồi chơi lại được", name="games", value=2),
      goal("play", "varEquals", "Đang chơi ván hai", name="screen", value="play")],
@@ -618,37 +624,46 @@ if screen == "play":'''], [('''if screen == "play":
 
 ex(
     "h11-e2", "Lên cấp thì dừng game",
-    "(1) Trong check_level(), khi lên cấp thì đổi screen = \"cards\" để game đứng lại. (2) Trong update(), thêm nhánh: đang "
-    "\"cards\" mà bấm Space thì screen = \"play\" để chơi tiếp.",
+    "(1) Trong check_level(), khi lên cấp thì đổi screen = \"cards\" để game đứng lại. (2) Trong update(), ở màn \"cards\": nếu "
+    "let_go đúng và đang bấm Space thì screen = \"play\". let_go là: em đã thả Space ra kể từ lúc lên cấp.",
     ["Chỗ (1), ngay dưới level += 1: screen = \"cards\"",
      "Vì sao quái đứng lại? Vì update() chỉ gọi update_play() khi screen là \"play\".",
-     "Chỗ (2), thụt vào dưới elif screen == \"cards\": if key_pressed(\"space\"):",
+     "let_go nghĩa là đã thả. Có sẵn: lên cấp thì let_go = False, thả Space ra thì thành True. Nhờ vậy giữ Space không lướt mất bảng.",
+     "Chỗ (2), dưới dòng let_go = True, thẳng hàng với if ở trên nó: if let_go and key_pressed(\"space\"):",
      "Thụt thêm: screen = \"play\"",
      "Nhánh cuối là elif key_pressed(\"space\"): dành cho màn chờ và màn thua.",
      "Bấm ▶ Chạy, rồi ⛶: lên cấp thì mọi thứ đứng im chờ em."],
     ["Dừng game không cần lệnh đặc biệt: chỉ cần đổi màn.",
      "screen = \"cards\"",
-     "if key_pressed(\"space\"):\n    screen = \"play\""],
+     "if let_go and key_pressed(\"space\"):\n    screen = \"play\""],
     [run_goal(),
      goal("cards", "drewText", "Lên cấp thì hiện bảng", text="Lên cấp 2!"),
      goal("pause", "varCompare", "Game đứng lại lúc hiện bảng", name="tick", op="<=", value=530),
      goal("play", "varEquals", "Bấm Space thì chơi tiếp", name="screen", value="play"),
      goal("same", "varEquals", "Chơi tiếp, không phải ván mới", name="games", value=1)],
-    prep=[("START_HP = 1\n", "START_HP = 5\n"), ('''    global xp, level
-''', '''    global xp, level, screen
+    prep=[("START_HP = 1\n", "START_HP = 5\n"), ('''games = 0
+
+''', '''games = 0
+let_go = True
+
+'''), ('''    global xp, level
+''', '''    global xp, level, screen, let_go
 '''), ('''        xp -= need()
         level += 1
 ''', '''        xp -= need()
         level += 1
+        let_go = False
         # Em viết tiếp ở đây (1)
 '''), ('''def update():
     if screen == "play":
         update_play()
 ''', '''def update():
-    global screen
+    global screen, let_go
     if screen == "play":
         update_play()
     elif screen == "cards":
+        if not key_pressed("space"):
+            let_go = True
         # Em viết tiếp ở đây (2)
         pass
 '''), ('''    if screen == "over":
@@ -658,13 +673,14 @@ ex(
         draw_text("Bấm Space để chơi tiếp", 300, 500)
     if screen == "over":
         draw_text("Thua''')],
-    fills=['screen = "cards"', 'if key_pressed("space"):\n    screen = "play"'],
-    wrong=[("không dừng", ["", 'if key_pressed("space"):\n    screen = "play"'], []),
+    fills=['screen = "cards"', 'if let_go and key_pressed("space"):\n    screen = "play"'],
+    wrong=[("không dừng", ["", 'if let_go and key_pressed("space"):\n    screen = "play"'], []),
+           ("giữ Space là lướt qua bảng", ['screen = "cards"', 'if key_pressed("space"):\n    screen = "play"'], []),
            ("không chơi tiếp được", ['screen = "cards"', ""], []),
-           ("chơi tiếp thành ván mới", ['screen = "cards"', 'if key_pressed("space"):\n    start_game()'], [])],
-    test={"frames": 600, "taps": [5, 560], "keys": [hold("up", 305, 335)]},
+           ("chơi tiếp thành ván mới", ['screen = "cards"', 'if let_go and key_pressed("space"):\n    start_game()'], [])],
+    test={"frames": 600, "taps": [5, 560], "keys": [hold("up", 305, 335), hold("space", 300, 480)]},
     new="dừng game = đổi màn",
-    reorganised="START_HP về 5; thêm nhánh cards trong update() và bảng tối trong draw().")
+    reorganised="START_HP về 5; let_go (phải thả Space rồi bấm lại); thêm nhánh cards trong update() và bảng tối trong draw().")
 
 # ---------------------------------------------------------------- h12
 ROWS = '''SKILLS.append({"name": "Tay Chớp: bắn nhanh", "branch": "spark", "icon": 1, "what": "fast", "add": 5})
@@ -683,16 +699,18 @@ ex(
      "Cả 3 dòng đều có \"branch\": \"spark\".",
      "Tia Đôi: \"icon\": 2, \"what\": \"extra\", \"add\": 1"],
     [run_goal(),
-     goal("fast", "drewText", "Có Tay Chớp", text="Tay Chớp: bắn nhanh"),
-     goal("extra", "drewText", "Có Tia Đôi", text="Tia Đôi: thêm 1 viên"),
-     goal("cloud", "drewText", "Có Mây Giông", text="Mây Giông: sét đánh"),
-     goal("icons", "drewCount", "Đủ 3 hình nhánh sét", sprite="skill-spark", min=3),
-     goal("row", "drew", "Mây Giông dùng đúng hình số 3", sprite="skill-spark-3"),
-     goal("bolt", "drew", "Tay Chớp dùng đúng hình số 1", sprite="skill-spark-1")],
+     goal("fast", "drewText", "Tay Chớp cộng 5 vào fast", text="fast +5"),
+     goal("extra", "drewText", "Tia Đôi cộng 1 vào extra", text="extra +1"),
+     goal("cloud", "drewText", "Mây Giông cộng 3 vào cloud", text="cloud +3"),
+     goal("icon1", "drew", "Có hình sét số 1", sprite="skill-spark-1"),
+     goal("icon2", "drew", "Có hình sét số 2", sprite="skill-spark-2"),
+     goal("icon3", "drew", "Có hình sét số 3", sprite="skill-spark-3")],
     prep=[('''games = 0
+let_go = True
 
 
-def draw_thing(''', '''
+def draw_thing(''', '''let_go = True
+
 SKILLS = []
 SKILLS.append({"name": "Đốm Lửa: đạn mạnh hơn", "branch": "fire", "icon": 1, "what": "power", "add": 1})
 SKILLS.append({"name": "Vòng Lửa: đốt quái gần", "branch": "fire", "icon": 2, "what": "ring", "add": 2})
@@ -709,7 +727,11 @@ def draw_thing('''), ('''kills, xp, level, games, screen
 ''', ''), ('''screen = "title"
 games = 0
 ''', '''screen = "title"
-'''), ('''def draw():
+'''), ('''let_go = True
+
+''', '''let_go = True
+
+''') if False else ('''def draw():
 ''', '''def draw_skill(skill, x, y, size):
     draw_thing("skill-" + skill["branch"] + "-" + str(skill["icon"]), x, y, size)
 
@@ -719,8 +741,9 @@ def draw_book():
     draw_text("Sổ skill", 300, 40, 40)
     for i in range(len(SKILLS)):
         skill = SKILLS[i]
-        draw_skill(skill, 70, 100 + i * 54, 2)
-        draw_text(skill["name"], 330, 100 + i * 54)
+        draw_skill(skill, 50, 100 + i * 54, 2)
+        draw_text(skill["name"], 270, 100 + i * 54)
+        draw_text(skill["what"] + " +" + str(skill["add"]), 520, 100 + i * 54)
 
 
 def draw():
@@ -728,7 +751,8 @@ def draw():
     else:''', '''        draw_book()
     else:''')],
     fills=[ROWS],
-    wrong=[("gõ nhầm tên", [ROWS.replace("Tia Đôi", "Tia Chớp")], []),
+    wrong=[("nhầm what của Tia Đôi", [ROWS.replace('"extra"', '"fast"')], []),
+           ("cộng nhầm số", [ROWS.replace('"add": 5', '"add": 50')], []),
            ("thiếu dòng Mây Giông", ["\n".join(ROWS.split("\n")[:2])], []),
            ("nhầm hình", [ROWS.replace('"icon": 3', '"icon": 2')], [])],
     test={"frames": 5},
@@ -759,8 +783,8 @@ ex(
     [run_goal(),
      goal("three", "drewCount", "Có 3 thẻ", sprite="skill", min=3),
      goal("clash", "varEquals", "Lần nào cũng 3 thẻ khác nhau", name="clashes", value=0),
-     goal("random", "drewText", "Bốc được cả thẻ cuối bảng", text="Mây Giông: sét đánh"),
-     goal("random2", "drewText", "Bốc được cả thẻ giữa bảng", text="Đòn Buốt: đạn làm chậm")],
+     goal("random", "drew", "Bốc được cả thẻ cuối bảng", sprite="skill-spark-3"),
+     goal("random2", "drew", "Bốc được cả thẻ giữa bảng", sprite="skill-ice-1")],
     prep=[('''
 SKILLS = []
 ''', '''cards = []
@@ -784,9 +808,10 @@ def check_cards():
 
 
 def check_level():
-'''), ('''        if key_pressed("space"):
+'''), ('''        if let_go and key_pressed("space"):
             screen = "play"
-''', '''        if key_pressed("space"):
+''', '''        if let_go and key_pressed("space"):
+            let_go = False
             deal_cards()
             check_cards()
 '''), ('''def draw_book():
@@ -794,11 +819,13 @@ def check_level():
     draw_text("Sổ skill", 300, 40, 40)
     for i in range(len(SKILLS)):
         skill = SKILLS[i]
-        draw_skill(skill, 70, 100 + i * 54, 2)
-        draw_text(skill["name"], 330, 100 + i * 54)
+        draw_skill(skill, 50, 100 + i * 54, 2)
+        draw_text(skill["name"], 270, 100 + i * 54)
+        draw_text(skill["what"] + " +" + str(skill["add"]), 520, 100 + i * 54)
 ''', '''def draw_cards():
     draw_rect(40, 80, 520, 460, "#101018")
-    draw_text("Chọn một thẻ", 300, 120, 40)
+    draw_text("Chọn một thẻ", 300, 115, 40)
+    draw_text("Bấm Space để bốc thẻ", 300, 156, 20)
     for i in range(len(cards)):
         skill = cards[i]
         y = 180 + i * 120

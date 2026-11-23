@@ -102,5 +102,10 @@
     "quên trừ xp",
     "quên cộng level",
     "cấp nào cũng cần 1 viên"
+  ],
+  "alts": [
+    "so > và trừ một",
+    "cộng hai lần",
+    "while thay if"
   ]
 }

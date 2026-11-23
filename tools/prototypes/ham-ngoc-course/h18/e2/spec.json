@@ -248,7 +248,7 @@
       "kind": "varCompare",
       "name": "record",
       "op": ">=",
-      "value": 4,
+      "value": 1,
       "id": "h18-e2-keep"
     },
     {
@@ -314,11 +314,16 @@
   ],
   "blocks_expected": {
     "code_text": [
-      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+      "draw_image(path, effect[\"x\"], effect[\"y\"], effect[\"frame\"])"
     ]
   },
   "wrong": [
     "quên gán",
     "quên hiện kỷ lục"
+  ],
+  "alts": [
+    "so ngược",
+    "so >=",
+    "tắt nhạc trước"
   ]
 }

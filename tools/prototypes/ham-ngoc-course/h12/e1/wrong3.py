@@ -3,6 +3,7 @@ from pyquest import *
 START_HP = 5
 hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 5, "speed": 3}
 hero["reach"] = 400
+let_go = True
 
 SKILLS = []
 SKILLS.append({"name": "Đốm Lửa: đạn mạnh hơn", "branch": "fire", "icon": 1, "what": "power", "add": 1})
@@ -13,7 +14,6 @@ SKILLS.append({"name": "Vòng Sương: tỏa lạnh", "branch": "ice", "icon": 4
 SKILLS.append({"name": "Áo Băng: bất tử lâu", "branch": "ice", "icon": 3, "what": "armor", "add": 40})
 SKILLS.append({"name": "Tay Chớp: bắn nhanh", "branch": "spark", "icon": 1, "what": "fast", "add": 5})
 SKILLS.append({"name": "Tia Đôi: thêm 1 viên", "branch": "spark", "icon": 2, "what": "extra", "add": 1})
-SKILLS.append({"name": "Mây Giông: sét đánh", "branch": "spark", "icon": 2, "what": "cloud", "add": 3})
 
 
 def draw_thing(image, x, y, size):
@@ -94,6 +94,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "live": True}
 
 
@@ -145,10 +147,11 @@ def need():
 
 
 def check_level():
-    global xp, level, screen
+    global xp, level, screen, let_go
     if xp >= need():
         xp -= need()
         level += 1
+        let_go = False
         screen = "cards"
 
 
@@ -215,11 +218,13 @@ def update_play():
 
 
 def update():
-    global screen
+    global screen, let_go
     if screen == "play":
         update_play()
     elif screen == "cards":
-        if key_pressed("space"):
+        if not key_pressed("space"):
+            let_go = True
+        if let_go and key_pressed("space"):
             screen = "play"
     elif key_pressed("space"):
         start_game()
@@ -262,8 +267,9 @@ def draw_book():
     draw_text("Sổ skill", 300, 40, 40)
     for i in range(len(SKILLS)):
         skill = SKILLS[i]
-        draw_skill(skill, 70, 100 + i * 54, 2)
-        draw_text(skill["name"], 330, 100 + i * 54)
+        draw_skill(skill, 50, 100 + i * 54, 2)
+        draw_text(skill["name"], 270, 100 + i * 54)
+        draw_text(skill["what"] + " +" + str(skill["add"]), 520, 100 + i * 54)
 
 
 def draw():

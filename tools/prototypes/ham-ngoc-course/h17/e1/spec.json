@@ -13,8 +13,8 @@
     "Bấm ▶ Chạy, rồi ⛶: trúng đạn thì tóe sáng, quái thua thì bụp khói."
   ],
   "hints": [
-    "frame là số hình của sách lật: 0, 1, 2… tới 7.",
-    "hp 16 nghĩa là sống 16 khung, mỗi hình giữ 2 khung.",
+    "frame là số hình của sách lật: 0, 1, 2… tới 8, tất cả 9 hình.",
+    "hp 18 nghĩa là sống 18 khung: 9 hình, mỗi hình giữ 2 khung.",
     "effect[\"frame\"] += 0.5\neffect[\"hp\"] -= 1",
     "effects = living(effects)"
   ],
@@ -95,7 +95,7 @@
     }
   ],
   "new_idea": "gói khuôn giữ lại thành hàm living(things); frame chạy dần = hoạt hình",
-  "reorganised": "Thêm effects, busy, add_effect(image, thing) và các lời gọi add_effect; move_effects() chạy mỗi khung.",
+  "reorganised": "Thêm effects, busy, add_effect(image, half, thing) (half là nửa ảnh: 24 hay 28) và các lời gọi add_effect; tia vàng của sét đổi thành hiệu ứng fx-spark; move_effects() chạy mỗi khung.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -140,12 +140,16 @@
   ],
   "blocks_expected": {
     "code_text": [
-      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+      "draw_image(path, effect[\"x\"], effect[\"y\"], effect[\"frame\"])"
     ]
   },
   "wrong": [
     "giữ thứ hết hp",
     "quên trừ hp",
     "quên effects = living(effects)"
+  ],
+  "alts": [
+    "so >= 1",
+    "bớt hp trước, living trước khi đổi frame"
   ]
 }

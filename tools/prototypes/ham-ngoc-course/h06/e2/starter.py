@@ -13,7 +13,7 @@ def draw_thing(image, x, y, size):
 
 
 def make_mob(x, y):
-    return {"image": "mob-slime", "x": x, "y": y, "hp": 2, "speed": 1}
+    return {"image": "mob-slime", "x": x, "y": y, "speed": 1}
 
 
 def far_edge(value):

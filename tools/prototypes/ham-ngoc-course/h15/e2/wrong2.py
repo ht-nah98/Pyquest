@@ -6,6 +6,8 @@ hero["reach"] = 400
 START_PICKS = 1
 START_WAVE = 0
 START_SKILLS = [5]
+bolt = {}
+flash = 0
 held = 0
 
 SKILLS = []
@@ -28,7 +30,7 @@ MOBS["bat"] = {"image": "mob-bat", "hp": 2, "speed": 2, "size": 2, "xp": 1}
 MOBS["golem"] = {"image": "mob-golem", "hp": 8, "speed": 1, "size": 3, "xp": 3}
 WAVES = []
 WAVES.append({"mob": "slime", "lead": "bat", "every": 3, "count": 3, "gap": 40})
-WAVES.append({"mob": "slime", "lead": "bat", "every": 2, "count": 12, "gap": 40})
+WAVES.append({"mob": "slime", "lead": "bat", "every": 2, "count": 12, "gap": 20})
 WAVES.append({"mob": "bat", "lead": "golem", "every": 3, "count": 15, "gap": 40})
 
 
@@ -174,6 +176,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "live": True}
 
 
@@ -207,15 +211,32 @@ def blast(center, size, amount):
             hurt(mob, amount)
 
 
+def storm():
+    blast(hero, 1200, 2)
+
+
+def splash(shot):
+    blast(shot, 90, 2)
+
+
+def strike(mob, amount):
+    global bolt, flash
+    bolt = mob
+    flash = 10
+    hurt(mob, amount)
+
+
 def use_skills():
+    global flash
+    flash -= 1
     if len(mobs) == 0:
         return
     if bonus["ring"] > 0 and tick % 60 == 0:
         blast(hero, 130, bonus["ring"])
     if bonus["cloud"] > 0 and tick % 60 == 30:
-        hurt(mobs[random_int(0, len(mobs) - 1)], bonus["cloud"])
+        strike(mobs[random_int(0, len(mobs) - 1)], bonus["cloud"])
     if has_combo("spark") and tick % 90 == 0:
-        blast(hero, 900, 2)
+        storm()
 
 
 def hit_mobs():
@@ -226,7 +247,7 @@ def hit_mobs():
                 mob["slow"] += bonus["slow"]
                 shot["live"] = False
                 if has_combo("fire"):
-                    blast(shot, 90, 1)
+                    splash(shot)
 
 
 def remove_shots():
@@ -334,9 +355,9 @@ def check_hits():
 
 def step_to(thing, target, speed):
     for axis in ["x", "y"]:
-        if thing[axis] < target[axis]:
+        if thing[axis] < target[axis] - speed / 2:
             thing[axis] += speed
-        if thing[axis] > target[axis]:
+        if thing[axis] > target[axis] + speed / 2:
             thing[axis] -= speed
 
 
@@ -397,12 +418,18 @@ def draw_play():
     draw_thing("deco-torch", 476, 84, 3)
     for gem in gems:
         draw_thing("item-xp", gem["x"], gem["y"], 1)
+        draw_text("+" + str(gem["xp"]), gem["x"], gem["y"] - 14, 18)
     for shot in shots:
         draw_thing("shot-spark", shot["x"], shot["y"], 1)
+    if bonus["ring"] > 0 and tick % 60 < 10:
+        draw_circle(hero["x"], hero["y"], 110, "#ff8a3c66")
     for mob in mobs:
         if mob["slow"] > 0:
             draw_circle(mob["x"], mob["y"], 9 * mob["size"], "#7fd8ff")
         draw_thing(mob["image"], mob["x"], mob["y"], mob["size"])
+        draw_text(str(mob["hp"]) + " máu", mob["x"], mob["y"] - 10 * mob["size"], 16)
+    if flash > 0:
+        draw_line(bolt["x"], 0, bolt["x"], bolt["y"], "#ffe14d", 4)
     if safe % 10 < 5:
         draw_thing(hero["image"], hero["x"], hero["y"], 3)
     draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
@@ -429,7 +456,8 @@ def draw_skill(skill, x, y, size):
 
 def draw_cards():
     draw_rect(40, 80, 520, 460, "#101018")
-    draw_text("Chọn một thẻ", 300, 120, 40)
+    draw_text("Chọn một thẻ", 300, 115, 40)
+    draw_text("Bấm 1, 2, 3 để chọn", 300, 156, 20)
     for i in range(len(cards)):
         skill = cards[i]
         y = 180 + i * 120

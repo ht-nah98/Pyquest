@@ -1,13 +1,14 @@
 # Hầm Ngọc — đề cương phần code (bản nháp, HLV chưa đọc lại)
 
 Phần code của khóa "bản của em": 18 bài (h01–h18), 40 bài tập. Mỗi bài tập nằm ở `hNN/eK/`:
-`starter.py`, `solution.py`, `wrongN.py` (cách làm sai phải trượt), `spec.json` (đề, các bước, gợi ý, mục tiêu, toolbox).
-Đừng sửa tay các tệp đó: sửa `tools/src1.py` (h01–h06), `src2.py` (h07–h12), `src3.py` (h13–h18) rồi chạy lại.
+`starter.py`, `solution.py`, `wrongN.py` (cách làm sai phải trượt), `altN.py` (cách làm đúng khác phải qua), `spec.json` (đề, các bước, gợi ý, mục tiêu, toolbox).
+Đừng sửa tay các tệp đó: sửa `tools/src1.py` (h01–h06), `src2.py` (h07–h12), `src3.py` (h13–h18) rồi chạy lại. Cách làm đúng khác nằm ở `tools/alts.py`.
 
 ```bash
 python3 -B tools/make.py                  # viết lại hNN/eK/
 python3 -B tools/check.py [h05 …] [-v] [--fuzz] [--png THƯ_MỤC]
 python3 -B tools/bot.py h18/e3 20         # người máy chơi bản hoàn chỉnh
+python3 -B tools/seeds.py 30 [h05 …]      # mục tiêu có còn đúng khi số ngẫu nhiên khác đi?
 ```
 
 Bài sau bắt đầu từ lời giải bài trước. Chỗ code được dọn lại giữa hai bài ghi ở mục "Dọn code" và ở
@@ -45,7 +46,7 @@ trong game. Nên nói với lớp đây là thói quen của người làm game 
 - **Ý mới:** danh sách các dict, `for mob in mobs`; hàm trả về một dict mới.
 - **Vì sao lúc này:** một con là một hộp, cả bầy là một danh sách hộp.
 - **Bé thấy:** 5 con khác nhau trên hình mẫu (e1), 6 con nhớt xếp trên đầu hầm (e2).
-- **Dọn code:** thêm `mobs`, `make_mob`, `start_game()` gọi ở cuối file.
+- **Dọn code:** thêm `mobs`, `make_mob`, `start_game()` gọi ở cuối file. Ngăn `speed` tới Bài 5, ngăn `hp` tới Bài 9 mới thêm.
 - **Lỗi hay gặp:** `append` sau khi vẽ; để lệnh vẽ ngoài vòng `for`.
 - **Hỏi lớp:** vì sao `make_mob` phải làm hộp mới mỗi lần? Dùng chung một hộp thì sao?
 
@@ -58,7 +59,7 @@ trong game. Nên nói với lớp đây là thói quen của người làm game 
 
 ## h06 — Chạm là mất máu
 - **Ý mới:** `abs`, `distance`, `near`; đếm ngược khung bất tử.
-- **Vì sao lúc này:** đã đuổi kịp thì phải có hậu quả. e1 cố ý cho máu tụt vèo để e2 có lý do.
+- **Vì sao lúc này:** đã đuổi kịp thì phải có hậu quả. e1 cố ý cho máu tụt vèo để e2 có lý do (chỉ có 1 con cho dễ nhìn, cả bầy trở lại ở e2).
 - **Bé thấy:** chạm là thua ngay (e1), rồi chạm thì nhấp nháy 1 giây (e2).
 - **Dọn code:** `game_over` như Bay Qua Khe; `tick` chỉ đếm khi còn chơi (e1 chấm bằng lúc thua).
 - **Lỗi hay gặp:** quên `abs` nên khoảng cách âm; chỉ đo một trục; quên trừ `safe`.
@@ -75,7 +76,8 @@ trong game. Nên nói với lớp đây là thói quen của người làm game 
 - **Ý mới:** danh sách đạn; đếm ngược `wait`; hướng = (đích - mình) / khoảng cách × tốc độ.
 - **Vì sao lúc này:** có `nearest()` và `distance()` rồi, ghép lại là ngắm được.
 - **Bé thấy:** e1 đạn bay thẳng lên đều đặn, e2 đạn tự tìm quái.
-- **Dọn code:** bỏ vạch trắng; `hit_mobs()` đếm lần chạm.
+- **Dọn code:** bỏ vạch trắng; `hit_mobs()` đếm lần chạm; chữ "Đã bắn", "Đạn chạm" trên sân. Luật có sẵn: quái đứng đúng chỗ em
+  (vx, vy đều 0) thì đạn bay thẳng lên.
 - **Lỗi hay gặp:** quên đặt lại `wait` (bắn như mưa); viết ngược `hero - target`; quên chia `far`.
 - **Hỏi lớp:** vì sao `+ 1` ở `far`? (không bao giờ chia cho 0)
 
@@ -100,6 +102,7 @@ trong game. Nên nói với lớp đây là thói quen của người làm game 
 - **Bé thấy:** màn chờ, thua rồi chơi lại, lên cấp thì mọi thứ đứng im.
 - **Dọn code (lần 2):** `game_over` → `screen`; mọi biến của ván đặt trong `start_game()` (không viết hai lần); `update` cũ thành
   `update_play`, `draw` cũ thành `draw_play`.
+- **Thả rồi mới bấm:** `let_go` (có sẵn) buộc thả Space ra rồi bấm lại, nên giữ Space không lướt mất bảng; Bài 13 thay bằng `held`.
 - **Lỗi hay gặp:** dùng `if` thay `elif` nên đang chơi bấm Space là chơi lại từ đầu.
 - **Hỏi lớp:** vẽ sơ đồ các màn và mũi tên. Mũi tên nào cần phím gì?
 
@@ -123,7 +126,8 @@ trong game. Nên nói với lớp đây là thói quen của người làm game 
 - **Ý mới:** tên ngăn lấy từ biến `bonus[skill["what"]]`; đếm có điều kiện; hàm True/False mở luật.
 - **Vì sao lúc này:** skill đã lấy phải có tác dụng thật trước khi nói chuyện phối hợp.
 - **Bé thấy:** vòng lửa, sét (e1); dòng Lửa/Băng/Sét đếm đúng (e2); Lò Than, Thấu Xương, Bão Sét (e3).
-- **Dọn code (nặng nhất khóa):** thêm `hurt`, `blast`, `use_skills`, đọc `bonus` ở 5 chỗ. Nên dạy e1 trong một buổi riêng:
+- **Dọn code (nặng nhất khóa):** thêm `hurt`, `blast`, `strike`, `use_skills`, đọc `bonus` ở 5 chỗ; Vòng Lửa hiện vòng cam, Mây Giông hiện
+  tia vàng. e3: nhớt 8 máu, số máu tạm hiện trên đầu; `storm()`, `splash(shot)` viết sẵn. Nên dạy e1 trong một buổi riêng:
   cho lớp đi tìm 5 chỗ đọc `bonus`.
 - **Lỗi hay gặp:** cộng nhầm ngăn `power`; `== "branch"` (chữ) thay vì `== branch` (biến).
 - **Hỏi lớp:** một dòng `bonus[skill["what"]] += skill["add"]` đủ cho mọi skill. Vì sao?
@@ -132,7 +136,8 @@ trong game. Nên nói với lớp đây là thói quen của người làm game 
 - **Ý mới:** bảng tra theo tên `MOBS[name]`; bảng `WAVES` điều khiển nhịp; trùm chỉ là một dòng.
 - **Vì sao lúc này:** skill mạnh rồi thì cần quái xứng sức.
 - **Bé thấy:** dơi, golem (e1); hết quái mới sang đợt (e2); trùm to có thanh máu, "Em thắng rồi!" (e3).
-- **Dọn code (lần 3):** `make_mob(name, x, y)`; va chạm theo `size`; `for axis in ["x", "y"]` gom code hai trục.
+- **Dọn code (lần 3):** `make_mob(name, x, y)`; va chạm theo `size`; `for axis in ["x", "y"]` gom code hai trục, gần hơn nửa bước thì
+  `step_to` thôi bước. Nhớt về 3 máu; số máu và `+xp` hiện tạm tới hết e2.
 - **Lỗi hay gặp:** `else` thay `elif len(mobs) == 0` (sang đợt khi còn quái); quên `left -= 1`.
 - **Hỏi lớp:** `left % row["every"] == 0` với `every` = `count` nghĩa là gì?
 
@@ -140,7 +145,7 @@ trong game. Nên nói với lớp đây là thói quen của người làm game 
 - **Ý mới:** `for key in row` chép cả dict; dùng lại `picked_number()` cho màn khác.
 - **Vì sao lúc này:** mọi con số của nhân vật đã nằm trong `hero`, đổi nhân vật chỉ là đổi dòng.
 - **Bé thấy:** 3 nhân vật chơi khác nhau thật (máu, tầm, tốc độ, sức).
-- **Dọn code:** số quái / đợt / trùm đổi từ bản thử sang bản thật (bot chơi thử: xem `tools/bot.py`).
+- **Dọn code:** số quái / đợt / trùm đổi từ bản thử sang bản thật (nhớt 4, dơi 3, golem 18, trùm 400; bot chơi thử: xem `tools/bot.py`).
 - **Lỗi hay gặp:** `HEROES[number]` thiếu `- 1`; quên `str()` khi nối chữ.
 - **Hỏi lớp:** chép hộp khác gì dùng chung hộp? (kẻo mất máu là mất luôn trong bảng)
 

@@ -16,7 +16,7 @@ def draw_thing(image, x, y, size):
 
 
 def make_mob(x, y):
-    return {"image": "mob-slime", "x": x, "y": y, "hp": 2, "speed": 1}
+    return {"image": "mob-slime", "x": x, "y": y, "speed": 1}
 
 
 def far_edge(value):
@@ -74,6 +74,8 @@ def nearest():
 def make_shot(target):
     vx = target["x"] - hero["x"]
     vy = target["y"] - hero["y"]
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy}
 
 
@@ -160,6 +162,7 @@ def draw():
     draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
     draw_text("Máu: " + str(hero["hp"]), 60, 24)
     draw_text("Quái: " + str(crowd), 540, 24)
+    draw_text("Đạn chạm: " + str(hits), 300, 24)
     if game_over:
         draw_text("Thua rồi!", 300, 250, 48)
 

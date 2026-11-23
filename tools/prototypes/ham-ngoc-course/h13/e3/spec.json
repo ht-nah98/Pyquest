@@ -122,5 +122,9 @@
     "bấm đâu cũng tính",
     "chỉ xét mép trên",
     "chỉ bấm được thẻ đầu"
+  ],
+  "alts": [
+    "so >= và <=",
+    "ba chữ if"
   ]
 }

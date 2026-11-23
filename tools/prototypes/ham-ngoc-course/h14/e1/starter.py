@@ -5,6 +5,8 @@ hero = {"name": "Kiếm sĩ", "image": "hero-knight", "x": 300, "y": 300, "hp": 
 hero["reach"] = 400
 START_PICKS = 1
 START_SKILLS = [1, 8]
+bolt = {}
+flash = 0
 held = 0
 
 SKILLS = []
@@ -113,6 +115,8 @@ def make_shot(target):
     far = distance(target, hero) + 1
     vx = (target["x"] - hero["x"]) / far * 8
     vy = (target["y"] - hero["y"]) / far * 8
+    if vx == 0 and vy == 0:
+        vy = -8
     return {"x": hero["x"], "y": hero["y"], "vx": vx, "vy": vy, "live": True}
 
 
@@ -144,7 +148,16 @@ def blast(center, size, amount):
             hurt(mob, amount)
 
 
+def strike(mob, amount):
+    global bolt, flash
+    bolt = mob
+    flash = 10
+    hurt(mob, amount)
+
+
 def use_skills():
+    global flash
+    flash -= 1
     if len(mobs) == 0:
         return
     # Em viết tiếp ở đây (2)
@@ -333,10 +346,14 @@ def draw_play():
         draw_thing("item-xp", gem["x"], gem["y"], 1)
     for shot in shots:
         draw_thing("shot-spark", shot["x"], shot["y"], 1)
+    if bonus["ring"] > 0 and tick % 60 < 10:
+        draw_circle(hero["x"], hero["y"], 110, "#ff8a3c66")
     for mob in mobs:
         if mob["slow"] > 0:
             draw_circle(mob["x"], mob["y"], 18, "#7fd8ff")
         draw_thing(mob["image"], mob["x"], mob["y"], 2)
+    if flash > 0:
+        draw_line(bolt["x"], 0, bolt["x"], bolt["y"], "#ffe14d", 4)
     if safe % 10 < 5:
         draw_thing(hero["image"], hero["x"], hero["y"], 3)
     draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
@@ -357,7 +374,8 @@ def draw_skill(skill, x, y, size):
 
 def draw_cards():
     draw_rect(40, 80, 520, 460, "#101018")
-    draw_text("Chọn một thẻ", 300, 120, 40)
+    draw_text("Chọn một thẻ", 300, 115, 40)
+    draw_text("Bấm 1, 2, 3 để chọn", 300, 156, 20)
     for i in range(len(cards)):
         skill = cards[i]
         y = 180 + i * 120

@@ -12,7 +12,7 @@ def draw_thing(image, x, y, size):
 
 
 def make_mob(x, y):
-    return {"image": "mob-slime", "x": x, "y": y, "hp": 2, "speed": 1}
+    return {"image": "mob-slime", "x": x, "y": y, "speed": 1}
 
 
 def far_edge(value):
@@ -26,7 +26,7 @@ def spawn_mob():
 
 
 def start_game():
-    for i in range(6):
+    for i in range(1):
         mobs.append(make_mob(random_int(40, 560), 40))
 
 
@@ -87,7 +87,7 @@ def update():
     if game_over:
         return
     tick += 1
-    if tick % 50 == 0 and len(mobs) < 14:
+    if tick % 50 == 0 and len(mobs) < 1:
         spawn_mob()
     move_hero()
     move_mobs()

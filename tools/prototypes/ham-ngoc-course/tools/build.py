@@ -6,8 +6,11 @@ ex(...) makes one exercise:
   fills   what the child writes, one text per marker line "# Em viết tiếp ở đây"
   sol     [(old, new)]: edits after the fills (lines the child changes away from a marker)
   wrong   [(what is wrong, fills, sol)]: variants that must not pass
+Other correct solutions, which must pass too, are in alts.py.
 """
 import re
+
+from alts import ALTS
 
 MARK = "# Em viết tiếp ở đây"
 EXERCISES = []
@@ -61,6 +64,7 @@ def ex(id, title, task, walkthrough, hints, goals, base=None, prep=(), fills=(),
     variants = []
     for what, wrong_fills, wrong_sol in wrong:
         variants.append((what, edit(fill(starter, wrong_fills, id), wrong_sol, id + " wrong")))
+    others = [(what, edit(solution, changes, id + " alt")) for what, changes in ALTS.get(id, [])]
     for i, g in enumerate(goals):
         g["id"] = id + "-" + g.pop("key")
     spec = {"id": id, "title": title, "task": task, "mode": mode, "input": input, "walkthrough": walkthrough,
@@ -73,7 +77,7 @@ def ex(id, title, task, walkthrough, hints, goals, base=None, prep=(), fills=(),
     spec["goals"] = goals
     spec["new_idea"] = new
     spec["reorganised"] = reorganised
-    EXERCISES.append({"id": id, "spec": spec, "starter": starter, "solution": solution, "wrong": variants})
+    EXERCISES.append({"id": id, "spec": spec, "starter": starter, "solution": solution, "wrong": variants, "alts": others})
     if keep:
         STATE["code"] = solution
 

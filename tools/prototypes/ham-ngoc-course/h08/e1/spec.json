@@ -93,5 +93,9 @@
     "quên đặt lại wait",
     "quên thêm đạn vào danh sách",
     "quên trừ wait"
+  ],
+  "alts": [
+    "so < 1",
+    "kiểm trước rồi mới trừ"
   ]
 }

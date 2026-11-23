@@ -9,7 +9,7 @@
     "far = distance(target, hero) + 1. Cộng 1 để không bao giờ chia cho 0.",
     "vx = (target[\"x\"] - hero[\"x\"]) / far * 8. Nhớ dấu ngoặc tròn.",
     "vy = (target[\"y\"] - hero[\"y\"]) / far * 8",
-    "Chia cho far để đạn bay đều: quái xa hay gần thì đạn cũng nhanh như nhau.",
+    "Chia cho far để đạn bay đều. Quái ở đúng ngay chỗ em thì vx, vy đều là 0: hai dòng if có sẵn cho đạn bay thẳng lên.",
     "Bấm ▶ Chạy, rồi ⛶: đạn tự tìm con gần nhất."
   ],
   "hints": [
@@ -18,8 +18,15 @@
     "vx = (target[\"x\"] - hero[\"x\"]) / far * 8\nvy = (target[\"y\"] - hero[\"y\"]) / far * 8"
   ],
   "test": {
-    "frames": 200,
-    "taps": []
+    "frames": 330,
+    "taps": [],
+    "keys": [
+      {
+        "key": "up",
+        "from": 150,
+        "to": 245
+      }
+    ]
   },
   "goals": [
     {
@@ -44,12 +51,23 @@
       "id": "h08-e2-up"
     },
     {
+      "label": "Quái ở dưới thì đạn bay xuống",
+      "kind": "drew",
+      "sprite": "shot-spark",
+      "at": [
+        300,
+        1000
+      ],
+      "tolerance": 580,
+      "id": "h08-e2-down"
+    },
+    {
       "label": "Đạn bay đều, không nhảy vọt",
       "kind": "staysWithin",
       "sprite": "shot",
       "axis": "y",
-      "min": -1500,
-      "max": 2000,
+      "min": -2700,
+      "max": 3300,
       "id": "h08-e2-smooth"
     },
     {
@@ -57,12 +75,12 @@
       "kind": "varCompare",
       "name": "hits",
       "op": ">=",
-      "value": 8,
+      "value": 120,
       "id": "h08-e2-hit"
     }
   ],
   "new_idea": "hướng = (đích - mình) / khoảng cách × tốc độ",
-  "reorganised": "Thay fired bằng hits; thêm hit_mobs() đếm lần đạn chạm quái.",
+  "reorganised": "make_shot có sẵn luật: vx và vy đều 0 (quái ở đúng chỗ em) thì bắn thẳng lên. Thay fired bằng hits; thêm hit_mobs() đếm lần đạn chạm quái.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -104,5 +122,9 @@
     "bay ngược",
     "quên chia cho far",
     "quên vy"
+  ],
+  "alts": [
+    "nhân trước chia sau",
+    "đặt tên dx, dy"
   ]
 }

@@ -70,14 +70,14 @@
     },
     {
       "label": "Bốc được cả thẻ cuối bảng",
-      "kind": "drewText",
-      "text": "Mây Giông: sét đánh",
+      "kind": "drew",
+      "sprite": "skill-spark-3",
       "id": "h12-e2-random"
     },
     {
       "label": "Bốc được cả thẻ giữa bảng",
-      "kind": "drewText",
-      "text": "Đòn Buốt: đạn làm chậm",
+      "kind": "drew",
+      "sprite": "skill-ice-1",
       "id": "h12-e2-random2"
     }
   ],
@@ -113,6 +113,7 @@
     "pq_len",
     "pq_list",
     "pq_logic",
+    "pq_not",
     "pq_number",
     "pq_random",
     "pq_remove",
@@ -128,5 +129,10 @@
     "bốc xong không xóa",
     "luôn lấy 3 thẻ đầu",
     "lấy hết cả bảng"
+  ],
+  "alts": [
+    "while và not in",
+    "remove trước append",
+    "chép bằng số thứ tự, bốc từ cuối"
   ]
 }

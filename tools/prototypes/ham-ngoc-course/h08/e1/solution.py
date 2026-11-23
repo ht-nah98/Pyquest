@@ -16,7 +16,7 @@ def draw_thing(image, x, y, size):
 
 
 def make_mob(x, y):
-    return {"image": "mob-slime", "x": x, "y": y, "hp": 2, "speed": 1}
+    return {"image": "mob-slime", "x": x, "y": y, "speed": 1}
 
 
 def far_edge(value):
@@ -152,6 +152,7 @@ def draw():
     draw_text(hero["name"], hero["x"], hero["y"] - 36, 18)
     draw_text("Máu: " + str(hero["hp"]), 60, 24)
     draw_text("Quái: " + str(crowd), 540, 24)
+    draw_text("Đã bắn: " + str(fired), 300, 24)
     if game_over:
         draw_text("Thua rồi!", 300, 250, 48)
 

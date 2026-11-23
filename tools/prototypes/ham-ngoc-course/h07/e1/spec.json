@@ -40,7 +40,7 @@
       "kind": "varCompare",
       "name": "target_far",
       "op": "<=",
-      "value": 105,
+      "value": 120,
       "id": "h07-e1-near"
     },
     {
@@ -95,5 +95,10 @@
     "nhầm con xa nhất",
     "return trong vòng for",
     "luôn trả về con cuối"
+  ],
+  "alts": [
+    "so <=",
+    "nhớ cả khoảng cách",
+    "đi bằng số thứ tự, bắt đầu từ con cuối"
   ]
 }

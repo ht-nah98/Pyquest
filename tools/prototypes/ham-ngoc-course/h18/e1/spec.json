@@ -1,18 +1,18 @@
 {
   "id": "h18-e1",
   "title": "Quái mới, skill mới của em",
-  "task": "Chỉ thêm dòng vào bảng! (1) Skill \"Giày Gió: chạy nhanh\", branch common, icon 2, what speed, add 2. (2) MOBS[\"ghost\"]: hình mob-ghost, hp 10, speed 2, size 2, xp 2. (3) Một đợt trước trùm: mob ghost, lead golem, every 4, count 32, gap 22.",
+  "task": "Thêm 3 dòng bảng, rồi đổi START_SKILLS = [] thành [9] để thử. (1) Skill \"Giày Gió: chạy nhanh\", branch common, icon 2, what speed, add 2. (2) MOBS[\"ghost\"]: hình mob-ghost, hp 10, speed 2, size 2, xp 2. (3) Đợt trước trùm: mob ghost, lead golem, every 4, count 32, gap 22.",
   "mode": "game",
   "input": "typing",
   "walkthrough": [
     "Chỗ (1): SKILLS.append({\"name\": \"Giày Gió: chạy nhanh\", \"branch\": \"common\", \"icon\": 2, \"what\": \"speed\", \"add\": 2})",
     "Chỗ (2): MOBS[\"ghost\"] = {\"image\": \"mob-ghost\", \"hp\": 10, \"speed\": 2, \"size\": 2, \"xp\": 2}",
     "Chỗ (3): WAVES.append({\"mob\": \"ghost\", \"lead\": \"golem\", \"every\": 4, \"count\": 32, \"gap\": 22})",
-    "Ở đầu file, đổi START_SKILLS = [] thành [9]. START_WAVE = 3 có sẵn để thử ngay: đợt ma và skill mới.",
+    "Gần đầu file, đổi START_SKILLS = [] thành [9]: vào ván có sẵn Giày Gió (dòng thứ mười, đếm từ 0). START_WAVE = 3 có sẵn.",
     "Bấm ▶ Chạy. Xong thì em đổi số, đổi tên, thêm dòng của riêng em."
   ],
   "hints": [
-    "Không sửa dòng code nào khác.",
+    "Ngoài 3 dòng bảng và START_SKILLS = [9], em không sửa gì khác.",
     "what phải là một ngăn có trong bonus.",
     "SKILLS.append({\"name\": \"Giày Gió: chạy nhanh\", \"branch\": \"common\", \"icon\": 2, …"
   ],
@@ -117,17 +117,21 @@
     "pq_random",
     "pq_remove",
     "pq_return",
+    "pq_stop_music",
     "pq_str",
     "pq_text",
     "pq_var_get"
   ],
   "blocks_expected": {
     "code_text": [
-      "draw_image(path, effect[\"x\"] - 24, effect[\"y\"] - 24, effect[\"frame\"])"
+      "draw_image(path, effect[\"x\"], effect[\"y\"], effect[\"frame\"])"
     ]
   },
   "wrong": [
     "quên đợt ma",
     "what nhầm ngăn"
+  ],
+  "alts": [
+    "đặt tên khác"
   ]
 }

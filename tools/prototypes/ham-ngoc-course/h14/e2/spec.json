@@ -70,6 +70,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -104,5 +105,9 @@
     "đếm hết mọi skill",
     "return trong vòng lặp",
     "so với chữ branch"
+  ],
+  "alts": [
+    "đi bằng số thứ tự",
+    "gom vào danh sách"
   ]
 }

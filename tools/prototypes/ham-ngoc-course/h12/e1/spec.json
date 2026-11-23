@@ -27,41 +27,40 @@
       "id": "h12-e1-run"
     },
     {
-      "label": "Có Tay Chớp",
+      "label": "Tay Chớp cộng 5 vào fast",
       "kind": "drewText",
-      "text": "Tay Chớp: bắn nhanh",
+      "text": "fast +5",
       "id": "h12-e1-fast"
     },
     {
-      "label": "Có Tia Đôi",
+      "label": "Tia Đôi cộng 1 vào extra",
       "kind": "drewText",
-      "text": "Tia Đôi: thêm 1 viên",
+      "text": "extra +1",
       "id": "h12-e1-extra"
     },
     {
-      "label": "Có Mây Giông",
+      "label": "Mây Giông cộng 3 vào cloud",
       "kind": "drewText",
-      "text": "Mây Giông: sét đánh",
+      "text": "cloud +3",
       "id": "h12-e1-cloud"
     },
     {
-      "label": "Đủ 3 hình nhánh sét",
-      "kind": "drewCount",
-      "sprite": "skill-spark",
-      "min": 3,
-      "id": "h12-e1-icons"
-    },
-    {
-      "label": "Mây Giông dùng đúng hình số 3",
-      "kind": "drew",
-      "sprite": "skill-spark-3",
-      "id": "h12-e1-row"
-    },
-    {
-      "label": "Tay Chớp dùng đúng hình số 1",
+      "label": "Có hình sét số 1",
       "kind": "drew",
       "sprite": "skill-spark-1",
-      "id": "h12-e1-bolt"
+      "id": "h12-e1-icon1"
+    },
+    {
+      "label": "Có hình sét số 2",
+      "kind": "drew",
+      "sprite": "skill-spark-2",
+      "id": "h12-e1-icon2"
+    },
+    {
+      "label": "Có hình sét số 3",
+      "kind": "drew",
+      "sprite": "skill-spark-3",
+      "id": "h12-e1-icon3"
     }
   ],
   "new_idea": "dữ liệu tách khỏi code: thêm một dòng trong bảng là game có thêm một skill",
@@ -96,6 +95,7 @@
     "pq_len",
     "pq_list",
     "pq_logic",
+    "pq_not",
     "pq_number",
     "pq_random",
     "pq_return",
@@ -107,8 +107,13 @@
     "code_text": []
   },
   "wrong": [
-    "gõ nhầm tên",
+    "nhầm what của Tia Đôi",
+    "cộng nhầm số",
     "thiếu dòng Mây Giông",
     "nhầm hình"
+  ],
+  "alts": [
+    "thứ tự dòng khác",
+    "tên khác"
   ]
 }

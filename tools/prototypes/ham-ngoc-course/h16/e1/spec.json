@@ -10,6 +10,7 @@
     "Chỗ (2): for key in row: đi qua từng tên ngăn: \"name\", \"image\", \"hp\"…",
     "Thụt vào: hero[key] = row[key]. Hai dòng chép được mọi ngăn.",
     "Chỗ (3), đầu file: START_HERO = 2 để thử cung thủ.",
+    "Từ bài này quái trâu thật: nhớt 4 máu, dơi 3, golem 18, trùm 400 và đụng một cái mất 3 máu.",
     "Bấm ▶ Chạy: nhân vật là cung thủ, chạy nhanh hơn."
   ],
   "hints": [
@@ -95,6 +96,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -130,5 +132,8 @@
     "quên chép ngăn",
     "chọn nhầm người",
     "chỉ chép hình"
+  ],
+  "alts": [
+    "chép từng ngăn"
   ]
 }

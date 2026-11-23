@@ -98,7 +98,7 @@ def fuzz(code, seeds=10, frames=3000):
 def main():
     want = [a for a in sys.argv[1:] if a[0] == "h"]
     png = sys.argv[sys.argv.index("--png") + 1] if "--png" in sys.argv else None
-    totals = {"exercises": 0, "goals": 0, "starters": 0, "wrong": 0, "bad": 0}
+    totals = {"exercises": 0, "goals": 0, "starters": 0, "wrong": 0, "alts": 0, "bad": 0}
     for spec, files in load():
         if want and spec["id"][:3] not in want and spec["id"] not in want:
             continue
@@ -124,6 +124,11 @@ def main():
                     bad.append(name + " passes: " + spec["wrong"][int(name[5]) - 1])
                 if "-v" in sys.argv:
                     print("   ", name, m, r.error or "")
+            if name.startswith("alt"):
+                totals["alts"] += 1
+                r, m = grader.grade(code, spec, sol)
+                if m:
+                    bad.append(name + " misses " + ", ".join(m) + ": " + spec["alts"][int(name[3]) - 1])
         line = spec["id"] + " lines " + str(len(sol.splitlines())) + " goals " + str(len(spec["goals"]))
         line += " starter fails " + str(len(start_missed))
         if "-v" in sys.argv:

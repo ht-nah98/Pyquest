@@ -10,6 +10,7 @@
     "Chỗ (2): row là dòng của con đó trong bảng. Viết mob[\"hp\"] = row[\"hp\"]",
     "Làm y hệt cho \"speed\", \"size\" và \"xp\".",
     "Vì sao phải chép? Mỗi con cần hp riêng, nếu dùng chung hộp thì một con đau là cả bầy đau.",
+    "Nhớt giờ có 3 máu. Số trên đầu là máu, số trên ngọc là xp: đồ thử để em thấy bảng có tác dụng, Bài tập 3 bỏ đi.",
     "Bấm ▶ Chạy, rồi ⛶: dơi nhanh, golem to và trâu."
   ],
   "hints": [
@@ -18,7 +19,7 @@
     "size là cỡ vẽ, cũng là cỡ va chạm."
   ],
   "test": {
-    "frames": 360,
+    "frames": 600,
     "taps": [
       5
     ],
@@ -27,6 +28,121 @@
         "key": "1",
         "from": 10,
         "to": 10
+      },
+      {
+        "key": "1",
+        "from": 35,
+        "to": 35
+      },
+      {
+        "key": "1",
+        "from": 60,
+        "to": 60
+      },
+      {
+        "key": "1",
+        "from": 85,
+        "to": 85
+      },
+      {
+        "key": "1",
+        "from": 110,
+        "to": 110
+      },
+      {
+        "key": "1",
+        "from": 135,
+        "to": 135
+      },
+      {
+        "key": "1",
+        "from": 160,
+        "to": 160
+      },
+      {
+        "key": "1",
+        "from": 185,
+        "to": 185
+      },
+      {
+        "key": "1",
+        "from": 210,
+        "to": 210
+      },
+      {
+        "key": "1",
+        "from": 235,
+        "to": 235
+      },
+      {
+        "key": "1",
+        "from": 260,
+        "to": 260
+      },
+      {
+        "key": "1",
+        "from": 285,
+        "to": 285
+      },
+      {
+        "key": "1",
+        "from": 310,
+        "to": 310
+      },
+      {
+        "key": "1",
+        "from": 335,
+        "to": 335
+      },
+      {
+        "key": "1",
+        "from": 360,
+        "to": 360
+      },
+      {
+        "key": "1",
+        "from": 385,
+        "to": 385
+      },
+      {
+        "key": "1",
+        "from": 410,
+        "to": 410
+      },
+      {
+        "key": "1",
+        "from": 435,
+        "to": 435
+      },
+      {
+        "key": "1",
+        "from": 460,
+        "to": 460
+      },
+      {
+        "key": "1",
+        "from": 485,
+        "to": 485
+      },
+      {
+        "key": "1",
+        "from": 510,
+        "to": 510
+      },
+      {
+        "key": "1",
+        "from": 535,
+        "to": 535
+      },
+      {
+        "key": "1",
+        "from": 560,
+        "to": 560
+      },
+      {
+        "key": "1",
+        "from": 585,
+        "to": 585
       }
     ]
   },
@@ -58,36 +174,46 @@
       "id": "h15-e1-slime"
     },
     {
-      "label": "Dơi bay nhanh gấp đôi nhớt",
+      "label": "Dơi bay nhanh: đã vào sâu trong sân",
       "kind": "staysWithin",
       "sprite": "mob-bat",
       "axis": "x",
-      "min": 85,
+      "min": 50,
+      "max": 518,
       "frames": [
-        60,
-        66
+        40,
+        41
       ],
-      "id": "h15-e1-fast"
+      "id": "h15-e1-fastx"
     },
     {
-      "label": "Mỗi loại quái có máu riêng",
-      "kind": "varCompare",
-      "name": "kills",
-      "op": ">=",
-      "value": 5,
-      "id": "h15-e1-kill"
+      "label": "Dơi bay nhanh theo cả chiều dọc",
+      "kind": "staysWithin",
+      "sprite": "mob-bat",
+      "axis": "y",
+      "min": 50,
+      "max": 518,
+      "frames": [
+        40,
+        41
+      ],
+      "id": "h15-e1-fasty"
     },
     {
-      "label": "Golem cho nhiều ngọc nên lên cấp",
-      "kind": "varCompare",
-      "name": "level",
-      "op": ">=",
-      "value": 2,
-      "id": "h15-e1-level"
+      "label": "Golem có 8 máu",
+      "kind": "drewText",
+      "text": "8 máu",
+      "id": "h15-e1-tough"
+    },
+    {
+      "label": "Golem rơi ngọc +3",
+      "kind": "drewText",
+      "text": "+3",
+      "id": "h15-e1-gem"
     }
   ],
   "new_idea": "bảng tra theo tên: MOBS[name]; chép số từ bảng sang từng con",
-  "reorganised": "Sắp xếp lại lần 3: make_mob và spawn_mob nhận tên quái, quái ra cả bốn mép; va chạm theo size; ngọc mang xp của con quái; step_to và move_hero gom hai trục bằng for axis in [\"x\", \"y\"].",
+  "reorganised": "Nhớt từ 8 về 3 máu. Số máu và số xp tạm hiện trên quái và ngọc. Sắp xếp lại lần 3: make_mob và spawn_mob nhận tên quái, quái ra cả bốn mép; va chạm theo size; ngọc mang xp của con quái; step_to và move_hero gom hai trục bằng for axis in [\"x\", \"y\"]; gần hơn nửa bước thì step_to thôi không bước, để con nhanh không nhảy qua lại quanh em.",
   "toolbox": [
     "pq_abs",
     "pq_append",
@@ -102,6 +228,7 @@
     "pq_dict",
     "pq_draw_circle",
     "pq_draw_image_scale",
+    "pq_draw_line_width",
     "pq_draw_rect",
     "pq_draw_text",
     "pq_draw_text_size",
@@ -138,5 +265,10 @@
     "quên chép xp",
     "quên chép hp",
     "quên chép speed"
+  ],
+  "alts": [
+    "golem viết trước dơi",
+    "chép bằng for",
+    "chép theo thứ tự khác"
   ]
 }

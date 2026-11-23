@@ -32,12 +32,6 @@
       "id": "h11-e1-run"
     },
     {
-      "label": "Có màn chờ",
-      "kind": "drewText",
-      "text": "Bấm Space để vào hầm",
-      "id": "h11-e1-title"
-    },
-    {
       "label": "Chưa bấm thì game chưa chạy",
       "kind": "varCompare",
       "name": "tick",
@@ -105,5 +99,9 @@
   "wrong": [
     "lúc nào bấm Space cũng chơi lại",
     "thua rồi không chơi lại được"
+  ],
+  "alts": [
+    "viết đủ ba màn",
+    "hỏi khác play trước"
   ]
 }

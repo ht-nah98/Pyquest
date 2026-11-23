@@ -97,7 +97,7 @@
     }
   ],
   "new_idea": "so sánh từng trục; hàm nhận vào cả một dict",
-  "reorganised": "Thêm move_mobs() gọi step_to cho từng con, kèm lắc lư ngẫu nhiên (-1 tới 1).",
+  "reorganised": "Hộp quái thêm ngăn speed. Thêm move_mobs() gọi step_to cho từng con, kèm lắc lư ngẫu nhiên (-1 tới 1).",
   "toolbox": [
     "pq_append",
     "pq_arith",
@@ -132,5 +132,9 @@
     "quái chạy trốn theo chiều dọc",
     "quên đi lên",
     "quên sang trái"
+  ],
+  "alts": [
+    "elif cho chiều dọc",
+    "dọc trước, viết = thay -="
   ]
 }
