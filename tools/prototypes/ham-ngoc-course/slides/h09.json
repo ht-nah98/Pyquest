@@ -1,0 +1,125 @@
+{
+  "title": "Trúng thì biến mất",
+  "summary": "Giữ lại bằng danh sách mới: quái hết máu và đạn đã trúng thì không còn nữa.",
+  "unlocksRoadmap": [
+    "attack"
+  ],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h09-why",
+          "title": "Bầy quái không hề vơi",
+          "text": "Đạn bay tới rồi mà quái chưa hề hấn gì. Cần hai luật: trúng đạn thì mất máu, hết máu thì biến mất. Luật thứ hai mới là chỗ khó.",
+          "coachNotes": "Hỏi: biến mất trên sân nghĩa là làm gì với danh sách mobs? (không còn hộp đó trong danh sách, thì không ai vẽ nó nữa)."
+        },
+        {
+          "id": "h09-trap",
+          "title": "Đừng rút khi đang đi",
+          "text": "Đang đi dọc hàng mà rút một người ra, cả hàng phía sau dồn lên. Người kế tiếp lọt vào chỗ em vừa xem xong, em bước qua luôn mà không xem tới.",
+          "coachNotes": "Cho 5 bé xếp hàng cầm thẻ máu. Một bé đi dọc hàng, gặp thẻ 0 thì mời bạn đó ra và cả hàng dồn lên. Ai bị bỏ sót?"
+        },
+        {
+          "id": "h09-keep",
+          "title": "Chép những con muốn giữ",
+          "text": "Cách chắc ăn: lấy một danh sách rỗng alive. Đi qua từng con, con nào còn máu thì chép sang. Đi hết thì danh sách mới thay cho danh sách cũ.",
+          "coachNotes": "Ví dụ: dọn cặp bằng cách lấy cái cặp mới, chỉ bỏ vào những thứ còn dùng. alive nghĩa là còn sống."
+        },
+        {
+          "id": "h09-trace",
+          "title": "Dò tay",
+          "text": "Bốn con, máu là 2, 0, 1, 0.\nCon 1: giữ\nCon 2: không giữ, kills = 1\nCon 3: giữ\nCon 4: không giữ, kills = 2\nalive còn hai con.",
+          "coachNotes": "Hỏi: con nào nằm trong alive? (con 1 và con 3). Không ai bị bỏ sót vì hàng cũ đứng yên."
+        },
+        {
+          "id": "h09-quiz-keep",
+          "quiz": {
+            "question": "Máu cả bầy là 1, 0, 2, -1, 0. Chỉ giữ con có hp > 0. Còn lại mấy con?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "5"
+            ],
+            "answer": 1,
+            "explain": "Chỉ 1 và 2 lớn hơn 0. Máu bằng 0 hay âm đều là hết máu."
+          },
+          "coachNotes": "Máu âm có thật: hai viên trúng cùng một khung. Ai chọn 3 là đã giữ con -1."
+        },
+        {
+          "id": "h09-quiz-assign",
+          "quiz": {
+            "question": "Chép xong alive nhưng quên dòng mobs = alive. Chuyện gì xảy ra?",
+            "choices": [
+              "Cả bầy biến mất",
+              "Máy báo lỗi",
+              "Con hết máu vẫn còn, kills tăng mãi",
+              "Không có gì khác"
+            ],
+            "answer": 2,
+            "explain": "alive chỉ sống trong hàm rồi bị bỏ đi. mobs vẫn đủ con cũ, nên khung sau lại đếm chúng thêm lần nữa."
+          }
+        },
+        {
+          "id": "h09-pierce",
+          "title": "Viên đạn quá mạnh",
+          "text": "Viên đạn trúng rồi vẫn bay tiếp. Nó trừ máu ở mỗi khung còn chạm, nên con nhớt 2 máu chỉ chịu được 2 khung, rồi nó còn trúng cả con sau.",
+          "coachNotes": "Hỏi: một viên đạn nên trúng mấy con? Không có đáp án duy nhất: đạn xuyên cũng là một skill hay, nhưng bản đầu nên công bằng."
+        },
+        {
+          "id": "h09-flag",
+          "title": "live: lá cờ đúng / sai",
+          "text": "Mỗi viên đạn có ngăn live, lúc đầu là True. Trúng rồi thì ngăn đó thành False: viên này hết tác dụng. Lá cờ giúp máy nhớ chuyện đã xảy ra.",
+          "coachNotes": "Ví dụ: vé xem phim bị xé góc là đã dùng. Cờ chưa xóa viên đạn, chỉ đánh dấu; dọn sau."
+        },
+        {
+          "id": "h09-reach",
+          "title": "Tầm bắn",
+          "text": "Đạn trượt thì bay mãi ngoài sân, danh sách dài ra hoài, máy lo không xuể. hero có thêm ngăn reach là 400: viên nào còn cách em dưới 400 bước thì mới giữ.",
+          "coachNotes": "hero[\"reach\"] = 400 thêm một ngăn mới vào hộp đã có. Hỏi: viên cách em đúng 400 có được giữ không? (không, near là dưới 400)."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h09-pattern",
+          "title": "Một khuôn, hai chỗ",
+          "text": "Khuôn giữ lại: danh sách rỗng → đi qua → có giữ không? → chép → thay. Quái hỏi: còn máu không? Đạn hỏi: còn live và còn trong tầm không?",
+          "coachNotes": "Cho bé viết khuôn 5 bước ra giấy và giữ lại: Bài 10 (ngọc) và Bài 17 (hiệu ứng) còn dùng."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h09-code1",
+          "title": "Bài tập 1: remove_dead()",
+          "text": "hit_mobs() đã trừ máu quái giúp em. Em viết remove_dead() theo khuôn. Có thêm một nhánh else: con không được giữ thì đếm vào kills, hiện ở chữ Hạ.",
+          "coachNotes": "Lỗi hay gặp: mobs = alive thụt trong for (mất quái lung tung); giữ nhầm con hết máu. mobs và kills cần global vì cả biến được gán lại."
+        },
+        {
+          "id": "h09-code2",
+          "title": "Bài tập 2: đạn trúng là mất",
+          "text": "(1) Trúng thì hạ cờ live của viên đạn. (2) remove_shots() dùng lại khuôn, câu hỏi có hai phần nối bằng and. Giờ phải hai viên mới hạ được một con.",
+          "coachNotes": "Hỏi: nếu làm (1) mà quên (2) thì sao? (viên đã trúng vẫn bay trên sân nhưng không làm ai đau)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h09-try",
+          "title": "Vừa né vừa bắn",
+          "text": "Đứng im giữa sân xem cầm cự được bao lâu, rồi vừa chạy vừa bắn: hạ được mấy con? Đổi reach thành 150, rồi đổi hp của nhớt thành 4. Game khó lên ở chỗ nào?",
+          "coachNotes": "Phần Tự đánh trên lộ trình sáng lên. Khi reach nhỏ, nhân vật vẫn bắn con ở xa và đạn mất giữa đường: hỏi bé muốn sửa luật đó không. Thua thì tắt rồi chạy lại (Bài 11 mới có chơi lại). Chọn một bộ số cả lớp thấy vui, ghi lại. Bài sau: quái bị hạ sẽ rơi ngọc."
+        }
+      ]
+    }
+  ]
+}

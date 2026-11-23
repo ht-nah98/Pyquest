@@ -1,0 +1,358 @@
+{
+  "id": "h02",
+  "courseId": "ham-ngoc",
+  "order": 2,
+  "title": "Đi bốn hướng",
+  "draft": true,
+  "summary": "Phím mũi tên đổi x, y mỗi khung hình; chặn mép để không ra khỏi sân.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h02-flip",
+          "title": "Đi là đổi số mỗi khung",
+          "text": "Game vẽ lại khoảng 60 khung hình mỗi giây. Nhân vật không trượt đi đâu cả: mỗi khung nó được vẽ ở chỗ mới, lệch một chút. Kéo tốc độ lên xuống để thấy.",
+          "widget": {
+            "kind": "flipbook"
+          },
+          "coachNotes": "Nhắc lại sách lật ở Bay Qua Khe. Hỏi: quả bóng đỏ đang đi xuống, vậy y đang tăng hay giảm? (tăng)."
+        },
+        {
+          "id": "h02-hold",
+          "title": "Giữ phím",
+          "text": "key_pressed(\"right\") trả lời True ở mọi khung mà em còn giữ phím →. Nhả ra thì nó trả lời False. Vậy giữ phím là được đi liên tục, mỗi khung một bước.",
+          "coachNotes": "Khác Bay Qua Khe: ở đó key_pressed() không có gì trong ngoặc thì hỏi Space. Giờ viết tên phím trong ngoặc kép: left, right, up, down."
+        },
+        {
+          "id": "h02-axes",
+          "title": "Bốn phím, hai con số",
+          "text": "→ thì x tăng\n← thì x giảm\n↓ thì y tăng\n↑ thì y giảm\nGốc (0, 0) ở góc trên bên trái, nên đi xuống mới là y tăng.",
+          "coachNotes": "Trong Scratch, y tăng là đi lên, nên bé rất hay viết ngược. Cho cả lớp đứng dậy: cô thầy hô \"y cộng\", các bé chỉ tay xuống."
+        },
+        {
+          "id": "h02-trace",
+          "title": "Dò ba khung hình",
+          "text": "speed = 3, x = 300, em giữ phím →.\nKhung 1: x = 303\nKhung 2: x = 306\nKhung 3: x = 309\nx += speed là viết gọn của x = x + speed.",
+          "coachNotes": "Cho bé dò tiếp khung 4 và 5. Hỏi: giữ phím 1 giây thì đi được bao xa? (60 × 3 = 180 bước). Trừ cũng viết gọn được: x -= speed."
+        },
+        {
+          "id": "h02-quiz-up",
+          "quiz": {
+            "question": "y = 300, speed = 3. Em giữ phím ↑ trong 10 khung hình. y bằng mấy?",
+            "choices": [
+              "330",
+              "297",
+              "270",
+              "310"
+            ],
+            "answer": 2,
+            "explain": "Đi lên thì y giảm. Mỗi khung bớt 3, sau 10 khung bớt 30: 300 - 30 = 270."
+          },
+          "coachNotes": "330 là nhầm chiều. 297 là mới tính một khung."
+        },
+        {
+          "id": "h02-quiz-elif",
+          "quiz": {
+            "question": "Bốn phím viết bằng if, elif, elif, elif, hỏi → đầu tiên. Em giữ → và ↓ cùng lúc. Nhân vật đi thế nào?",
+            "choices": [
+              "Đi chéo",
+              "Chỉ đi xuống",
+              "Đứng yên",
+              "Chỉ đi sang phải"
+            ],
+            "answer": 3,
+            "explain": "elif chỉ được xét khi các điều kiện trên đều sai. → đã đúng nên ↓ bị bỏ qua. Bốn if riêng mới đi chéo được."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h02-edge",
+          "title": "Mép sân ở đâu?",
+          "text": "x, y là điểm giữa, nhân vật rộng 48 nên nửa người là 24. Muốn cả người nằm trong sân, điểm giữa chỉ được đi từ 24 tới 576, vì 600 - 24 = 576.",
+          "coachNotes": "Hoạt động giấy: đẩy hình vuông cạnh 48 mm vào mép tờ giấy, đo từ điểm giữa tới mép. Hỏi: vì sao không phải 0 và 600? (nửa người thò ra ngoài)."
+        },
+        {
+          "id": "h02-clamp",
+          "title": "Đặt lại đúng ranh giới",
+          "text": "Máy không có bức tường nào cả. Mình đi trước, rồi hỏi: có vượt ranh giới không? Vượt thì đặt lại đúng ranh giới. update() xong mới tới draw(), nên mắt không thấy lúc vượt.",
+          "coachNotes": "Ví dụ đời thường: thang máy quá tầng thì tự về đúng tầng trước khi mở cửa."
+        },
+        {
+          "id": "h02-quiz-clamp",
+          "quiz": {
+            "question": "x = 575, speed = 3, mép phải chặn ở 576. Giữ phím → thêm một khung hình. x bằng mấy?",
+            "choices": [
+              "578",
+              "576",
+              "575",
+              "600"
+            ],
+            "answer": 1,
+            "explain": "Đi trước: 575 + 3 = 578. 578 lớn hơn 576 nên được đặt lại thành 576."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h02-code1",
+          "title": "Bài tập 1: ba phím còn lại",
+          "text": "Phím → có sẵn. Kẻ bảng 4 dòng ra giấy: phím nào đổi x hay y, cộng hay trừ? Điền xong bảng rồi mới viết. Nhớ bốn chữ if thẳng hàng nhau.",
+          "coachNotes": "Lỗi hay gặp: lên xuống ngược; dùng elif; thụt lề if thứ hai vào trong if thứ nhất (khi đó phải giữ cả hai phím mới chạy)."
+        },
+        {
+          "id": "h02-code2",
+          "title": "Bài tập 2: bốn bức tường",
+          "text": "Viết bốn câu hỏi if ở cuối update(), sau phần đi. Mỗi mép một câu. Nghĩ thử: nếu đặt phần chặn lên trước phần đi thì sao?",
+          "coachNotes": "Trả lời: đang ở 576 mà giữ → thì sau khi chặn nó lại đi thêm 3, vẽ ra ở 579, thò khỏi sân. Lỗi hay gặp: chặn ở 600 thay vì 576."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h02-try",
+          "title": "Lái thử",
+          "text": "Bấm ⛶ rồi đi bằng phím mũi tên. Đẩy vào cả bốn mép, đi chéo vào góc. Rồi chỉnh speed thành 1, 5, 8. Số nào đi sướng tay mà vẫn điều khiển được?",
+          "coachNotes": "Cho mỗi bé chọn một số và nói lý do. Để ý: đi chéo thì mỗi khung cộng cả ngang lẫn dọc nên nhanh hơn đi thẳng. Bài sau: gom đồ của nhân vật vào một cái hộp."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h02-e1",
+      "title": "Đi bốn hướng",
+      "task": "Phím → đã chạy. Em viết tiếp trong update() cho 3 phím còn lại: \"left\" thì x bớt speed, \"up\" thì y bớt speed, \"down\" thì y thêm speed. Nhớ: y tăng là đi xuống.",
+      "input": "blocks",
+      "toolbox": [
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_clear",
+        "pq_def",
+        "pq_draw_image_scale",
+        "pq_draw_text_size",
+        "pq_global",
+        "pq_if",
+        "pq_import",
+        "pq_key_held",
+        "pq_number",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h02-e1-run"
+        },
+        {
+          "label": "Đi sang phải được",
+          "kind": "varCompare",
+          "name": "x",
+          "op": ">=",
+          "value": 330,
+          "when": "ever",
+          "id": "h02-e1-right"
+        },
+        {
+          "label": "Đi xuống được",
+          "kind": "varCompare",
+          "name": "y",
+          "op": ">=",
+          "value": 330,
+          "when": "ever",
+          "id": "h02-e1-down"
+        },
+        {
+          "label": "Đi sang trái được",
+          "kind": "varCompare",
+          "name": "x",
+          "op": "<=",
+          "value": 290,
+          "id": "h02-e1-left"
+        },
+        {
+          "label": "Đi lên được",
+          "kind": "varCompare",
+          "name": "y",
+          "op": "<=",
+          "value": 290,
+          "id": "h02-e1-up"
+        }
+      ],
+      "test": {
+        "frames": 160,
+        "taps": [],
+        "keys": [
+          {
+            "key": "right",
+            "from": 0,
+            "to": 29
+          },
+          {
+            "key": "down",
+            "from": 30,
+            "to": 49
+          },
+          {
+            "key": "left",
+            "from": 50,
+            "to": 99
+          },
+          {
+            "key": "up",
+            "from": 100,
+            "to": 159
+          }
+        ]
+      },
+      "walkthrough": [
+        "Trong update(), nhìn 2 dòng if của phím \"right\": em làm giống vậy cho 3 phím kia.",
+        "if key_pressed(\"left\"): rồi thụt vào x -= speed",
+        "if key_pressed(\"up\"): rồi thụt vào y -= speed",
+        "if key_pressed(\"down\"): rồi thụt vào y += speed",
+        "Dùng 4 chữ if riêng (không dùng elif) để giữ hai phím là đi chéo được.",
+        "Bấm ▶ Chạy: máy tự giữ phím. Rồi bấm ⛶ và đi bằng phím mũi tên."
+      ],
+      "hints": [
+        "Đi lên là y nhỏ đi.",
+        "if key_pressed(\"left\"):\n    x -= speed",
+        "Cả bốn chữ if thẳng hàng nhau."
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nx = 300\ny = 300\nspeed = 3\n\n\ndef update():\n    global x, y\n    if key_pressed(\"right\"):\n        x += speed\n    # Em viết tiếp ở đây\n    pass\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_image(\"images/deco-torch.png\", 100, 60, scale=3)\n    draw_image(\"images/deco-torch.png\", 452, 60, scale=3)\n    draw_image(\"images/hero-knight.png\", x - 24, y - 24, scale=3)\n    draw_text(\"Kiếm sĩ\", x, y - 36, 18)\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nx = 300\ny = 300\nspeed = 3\n\n\ndef update():\n    global x, y\n    if key_pressed(\"right\"):\n        x += speed\n    if key_pressed(\"left\"):\n        x -= speed\n    if key_pressed(\"up\"):\n        y -= speed\n    if key_pressed(\"down\"):\n        y += speed\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_image(\"images/deco-torch.png\", 100, 60, scale=3)\n    draw_image(\"images/deco-torch.png\", 452, 60, scale=3)\n    draw_image(\"images/hero-knight.png\", x - 24, y - 24, scale=3)\n    draw_text(\"Kiếm sĩ\", x, y - 36, 18)\n"
+      }
+    },
+    {
+      "id": "h02-e2",
+      "title": "Không đi ra ngoài sân",
+      "task": "Đi mãi thì nhân vật ra khỏi sân mất. Thêm 4 chữ if ở cuối update(): x nhỏ hơn 24 thì x = 24, x lớn hơn 576 thì x = 576. Với y cũng vậy.",
+      "input": "blocks",
+      "toolbox": [
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_draw_image_scale",
+        "pq_draw_text_size",
+        "pq_global",
+        "pq_if",
+        "pq_import",
+        "pq_key_held",
+        "pq_number",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h02-e2-run"
+        },
+        {
+          "label": "Không ra khỏi mép trái, phải",
+          "kind": "staysWithin",
+          "sprite": "hero",
+          "axis": "x",
+          "min": 0,
+          "max": 552,
+          "id": "h02-e2-x"
+        },
+        {
+          "label": "Không ra khỏi mép trên, dưới",
+          "kind": "staysWithin",
+          "sprite": "hero",
+          "axis": "y",
+          "min": 0,
+          "max": 552,
+          "id": "h02-e2-y"
+        },
+        {
+          "label": "Vẫn đi được tới sát mép",
+          "kind": "varCompare",
+          "name": "x",
+          "op": ">=",
+          "value": 570,
+          "when": "ever",
+          "id": "h02-e2-far"
+        },
+        {
+          "label": "Đi được về mép trên",
+          "kind": "varCompare",
+          "name": "y",
+          "op": "<=",
+          "value": 30,
+          "when": "ever",
+          "id": "h02-e2-near"
+        }
+      ],
+      "test": {
+        "frames": 400,
+        "taps": [],
+        "keys": [
+          {
+            "key": "right",
+            "from": 0,
+            "to": 120
+          },
+          {
+            "key": "down",
+            "from": 0,
+            "to": 120
+          },
+          {
+            "key": "left",
+            "from": 121,
+            "to": 399
+          },
+          {
+            "key": "up",
+            "from": 121,
+            "to": 399
+          }
+        ]
+      },
+      "walkthrough": [
+        "Cuối update(), thẳng hàng với các chữ if: if x < 24: rồi thụt vào x = 24",
+        "Vì sao 24? Nửa nhân vật rộng 24, nên giữa nhân vật không được gần mép hơn 24.",
+        "if x > 576: rồi thụt vào x = 576 (600 - 24 = 576).",
+        "Làm y hệt cho y: mép trên 24, mép dưới 576.",
+        "Bấm ▶ Chạy: máy đẩy nhân vật vào hai góc. Bấm ⛶ thử cả bốn mép."
+      ],
+      "hints": [
+        "Mỗi mép là một chữ if.",
+        "if x > 576:\n    x = 576",
+        "Mép trên: y < 24. Mép dưới: y > 576."
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nx = 300\ny = 300\nspeed = 3\n\n\ndef update():\n    global x, y\n    if key_pressed(\"right\"):\n        x += speed\n    if key_pressed(\"left\"):\n        x -= speed\n    if key_pressed(\"up\"):\n        y -= speed\n    if key_pressed(\"down\"):\n        y += speed\n    # Em viết tiếp ở đây\n    pass\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_image(\"images/deco-torch.png\", 100, 60, scale=3)\n    draw_image(\"images/deco-torch.png\", 452, 60, scale=3)\n    draw_image(\"images/hero-knight.png\", x - 24, y - 24, scale=3)\n    draw_text(\"Kiếm sĩ\", x, y - 36, 18)\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nx = 300\ny = 300\nspeed = 3\n\n\ndef update():\n    global x, y\n    if key_pressed(\"right\"):\n        x += speed\n    if key_pressed(\"left\"):\n        x -= speed\n    if key_pressed(\"up\"):\n        y -= speed\n    if key_pressed(\"down\"):\n        y += speed\n    if x < 24:\n        x = 24\n    if x > 576:\n        x = 576\n    if y < 24:\n        y = 24\n    if y > 576:\n        y = 576\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_image(\"images/deco-torch.png\", 100, 60, scale=3)\n    draw_image(\"images/deco-torch.png\", 452, 60, scale=3)\n    draw_image(\"images/hero-knight.png\", x - 24, y - 24, scale=3)\n    draw_text(\"Kiếm sĩ\", x, y - 36, 18)\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "move"
+  ],
+  "docsUnlocked": []
+}

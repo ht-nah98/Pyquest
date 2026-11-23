@@ -1,0 +1,133 @@
+{
+  "title": "Quái đuổi theo",
+  "summary": "So từng trục để biết bước về phía nào; quái ra đều đều ở mép xa em.",
+  "unlocksRoadmap": [
+    "mobs"
+  ],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h05-why",
+          "title": "Đuổi theo là làm gì?",
+          "text": "Quái không biết đường. Mỗi khung hình nó chỉ hỏi: em ở bên trái hay bên phải mình? Ở trên hay ở dưới? Rồi nhích một bước về phía đó.",
+          "coachNotes": "Trò chơi 5 phút: một bạn làm quái, một bạn làm nhân vật đứng trên sàn gạch. Mỗi tiếng vỗ tay, quái được bước một ô ngang và một ô dọc về phía bạn kia."
+        },
+        {
+          "id": "h05-axis",
+          "title": "So từng trục một",
+          "text": "Nhỏ hơn đích thì cộng, lớn hơn đích thì trừ, bằng nhau thì đứng yên. Làm với x trước, rồi làm với y. Hai trục tự lo việc của mình.",
+          "coachNotes": "Vẽ dấu cộng lên bảng, đích ở giữa. Đặt quái ở bốn phía, hỏi từng phía: cộng hay trừ, x hay y?"
+        },
+        {
+          "id": "h05-trace",
+          "title": "Dò vài khung",
+          "text": "Quái (100, 40), em (300, 300), speed = 1.\nKhung 1: (101, 41)\nKhung 2: (102, 42)\nKhung 3: (103, 43)\nCả hai trục đều nhích nên quái đi chéo.",
+          "coachNotes": "Bé dò tiếp khung 4, 5. Trong game còn thêm một chút lắc lư ngẫu nhiên (-1 tới 1), ở đây tạm bỏ qua cho dễ tính."
+        },
+        {
+          "id": "h05-straight",
+          "title": "Chéo rồi thẳng",
+          "text": "x cách em 200, y cách em 260. Sau 200 khung, x đã bằng 300 nên thôi nhích ngang, lúc đó y = 240. Quái đi thẳng xuống 60 khung nữa là tới.",
+          "coachNotes": "Vẽ đường đi lên giấy ô: một đoạn chéo rồi một đoạn thẳng. 260 khung là hơn 4 giây."
+        },
+        {
+          "id": "h05-quiz-step",
+          "quiz": {
+            "question": "Quái (290, 40), em (300, 300), speed = 1, không lắc lư. Sau 20 khung hình quái ở đâu?",
+            "choices": [
+              "(310, 60)",
+              "(300, 60)",
+              "(300, 50)",
+              "(290, 60)"
+            ],
+            "answer": 1,
+            "explain": "x nhích 10 khung là tới 300 rồi đứng yên. y nhích đủ 20 khung: 40 + 20 = 60."
+          },
+          "coachNotes": "(310, 60) là quên rằng tới đích thì trục đó dừng. (300, 50) là cho cả hai trục dừng cùng lúc."
+        },
+        {
+          "id": "h05-quiz-flip",
+          "quiz": {
+            "question": "Quái ở phía trên em. Em viết nhầm: thing[\"y\"] < target[\"y\"] thì thing[\"y\"] -= speed. Quái làm gì?",
+            "choices": [
+              "Chạy lên, càng lúc càng xa em",
+              "Đi xuống chỗ em",
+              "Đứng yên",
+              "Đi sang ngang"
+            ],
+            "answer": 0,
+            "explain": "Trừ y là đi lên. Quái đang ở trên mà còn đi lên thì nó đang chạy trốn em."
+          }
+        },
+        {
+          "id": "h05-names",
+          "title": "Viết cho mọi thứ biết đuổi",
+          "text": "step_to(thing, target, speed): thing là thứ đang đi, target là đích. Trong hàm chỉ dùng hai tên này, nên đưa con nào vào cũng chạy được.",
+          "coachNotes": "Hỏi: sau này còn thứ gì cần bay về phía em? (viên ngọc, ở Bài 10). Lỗi hay gặp: viết hero hoặc mob trong step_to."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h05-edge",
+          "title": "Ra ở mép xa cho công bằng",
+          "text": "Quái hiện ngay bên cạnh thì em né sao kịp. Luật: em ở nửa trên (y nhỏ hơn 300) thì quái ra ở mép dưới, y = 580. Còn lại thì ra ở mép trên, y = 20.",
+          "coachNotes": "Hỏi: đứng đúng y = 300 thì quái ra ở đâu? (300 không nhỏ hơn 300, nên là 20, mép trên)."
+        },
+        {
+          "id": "h05-beat",
+          "title": "Nhịp: tick % 50",
+          "text": "tick cộng 1 mỗi khung. tick % 50 là số dư khi chia cho 50, nó bằng 0 ở tick 50, 100, 150… Vậy cứ 50 khung có một nhịp, gần 1 giây.",
+          "coachNotes": "Nhắc % ở Bay Qua Khe (Bài 7, chẵn lẻ). Đếm to: 48, 49, 50 vỗ tay, 51… Giới hạn dưới 14 con để sân không nghẹt."
+        },
+        {
+          "id": "h05-quiz-beat",
+          "quiz": {
+            "question": "Lúc đầu có 6 con. Cứ 50 khung thêm 1 con, chưa con nào mất. Ngay sau tick 200 có mấy con?",
+            "choices": [
+              "4",
+              "9",
+              "10",
+              "14"
+            ],
+            "answer": 2,
+            "explain": "Nhịp rơi vào tick 50, 100, 150, 200: thêm 4 con. 6 + 4 = 10."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h05-code1",
+          "title": "Bài tập 1: dạy quái đuổi",
+          "text": "Một if cho \"đích ở bên phải\" đã có sẵn. Ghi dấu cộng hay trừ cho ba phía còn lại ra giấy, rồi mới viết. Quái chạy trốn nghĩa là có một dấu bị ngược.",
+          "coachNotes": "Bốn if riêng, không elif giữa x và y. move_mobs() có sẵn lắc lư để quái không chồng khít lên nhau."
+        },
+        {
+          "id": "h05-code2",
+          "title": "Bài tập 2: quái ra liên tục",
+          "text": "far_edge: gặp return là hàm trả lời và dừng luôn, nên dòng cuối chỉ chạy khi if sai. Trong update(), hai điều phải cùng đúng mới gọi spawn_mob(): nhớ chữ and.",
+          "coachNotes": "Hỏi: vì sao không cần else? (đúng thì đã return, không tới dòng dưới). Lỗi hay gặp: viết return 20 thụt trong if."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h05-try",
+          "title": "Dắt quái đi chơi",
+          "text": "Chạy vòng tròn: bầy quái kéo thành cái đuôi. Đứng sát mép trên, rồi sát mép dưới: quái mới ra ở đâu? Đổi speed của quái thành 2 hoặc 3: còn né kịp không?",
+          "coachNotes": "Hỏi: em đi 3, quái đi 1, vậy em nhanh gấp mấy? Game công bằng là quái phải chậm hơn em một chút. Bài sau: bị bắt kịp thì mất máu."
+        }
+      ]
+    }
+  ]
+}

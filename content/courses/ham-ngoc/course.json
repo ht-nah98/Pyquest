@@ -6,7 +6,25 @@
   "after": "bay-qua-khe",
   "howToPlay": "Đi bằng phím mũi tên hoặc W A S D, nhân vật tự đánh. Chọn nhân vật và thẻ bằng phím 1, 2, 3 hoặc bấm vào hình.",
   "lessonIds": [
-    "h00"
+    "h00",
+    "h01",
+    "h02",
+    "h03",
+    "h04",
+    "h05",
+    "h06",
+    "h07",
+    "h08",
+    "h09",
+    "h10",
+    "h11",
+    "h12",
+    "h13",
+    "h14",
+    "h15",
+    "h16",
+    "h17",
+    "h18"
   ],
   "roadmap": [
     {
@@ -79,6 +97,49 @@
       "title": "A. Bức tranh toàn cảnh",
       "lessonIds": [
         "h00"
+      ]
+    },
+    {
+      "title": "B. Nhân vật",
+      "lessonIds": [
+        "h01",
+        "h02",
+        "h03"
+      ]
+    },
+    {
+      "title": "C. Quái",
+      "lessonIds": [
+        "h04",
+        "h05",
+        "h06"
+      ]
+    },
+    {
+      "title": "D. Tự đánh",
+      "lessonIds": [
+        "h07",
+        "h08",
+        "h09"
+      ]
+    },
+    {
+      "title": "E. Lên cấp và skill",
+      "lessonIds": [
+        "h10",
+        "h11",
+        "h12",
+        "h13",
+        "h14"
+      ]
+    },
+    {
+      "title": "F. Vượt ải và ra mắt",
+      "lessonIds": [
+        "h15",
+        "h16",
+        "h17",
+        "h18"
       ]
     }
   ]

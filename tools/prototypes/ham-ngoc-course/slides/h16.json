@@ -1,0 +1,126 @@
+{
+  "title": "Chọn nhân vật",
+  "summary": "Ba nhân vật là ba dòng trong bảng, chọn ai thì chơi kiểu đó.",
+  "unlocksRoadmap": [],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h16-why",
+          "title": "Ba người, ba cách chơi",
+          "text": "Kiếm sĩ nhiều máu nhưng phải tới gần. Pháp sư ít máu hơn mà bắn xa hơn. Cung thủ chạy nhanh và bắn rất xa. Cùng một game, chơi ba kiểu khác nhau.",
+          "coachNotes": "Hỏi: em thích kiểu nào, vì sao? Trong game mẫu ba người đánh khác hẳn nhau; ở bản của em cả ba đều bắn, khác nhau ở máu, tốc độ, tầm và sức."
+        },
+        {
+          "id": "h16-table",
+          "title": "Đổi dòng là đổi người",
+          "text": "Máu, tốc độ, reach (tầm), power (sức) đều nằm trong hộp hero. Đổi nhân vật chỉ là chép một dòng khác của bảng HEROES vào hero. Không phải sửa chỗ nào khác.",
+          "coachNotes": "Hỏi lại: bảng nào em đã viết rồi? (SKILLS, MOBS, WAVES). Đây là lý do khóa này bắt em gom số vào hộp từ Bài 3."
+        },
+        {
+          "id": "h16-for",
+          "title": "for đi qua từng tên ngăn",
+          "text": "for trên danh sách cho em từng món. for trên một hộp (dict) cho em từng tên ngăn: \"name\", \"image\", \"hp\"… key nghĩa là chìa khóa, có tên ngăn thì mở được ngăn đó ở cả hai hộp.",
+          "coachNotes": "Hoạt động 4 phút: hai hộp giấy có ngăn ghi tên. Một bé đọc tên ngăn, một bé lấy số ở hộp này đặt sang đúng ngăn hộp kia."
+        },
+        {
+          "id": "h16-quiz-key",
+          "quiz": {
+            "question": "row là {\"hp\": 6, \"speed\": 4}. Trong vòng for key in row, key lần lượt là gì?",
+            "choices": [
+              "6 rồi 4",
+              "\"hp\" rồi \"speed\"",
+              "0 rồi 1"
+            ],
+            "answer": 1,
+            "explain": "for trên dict cho tên ngăn. Muốn lấy số trong ngăn thì viết row[key]."
+          }
+        },
+        {
+          "id": "h16-copy",
+          "title": "Chép hộp, đừng mượn hộp",
+          "text": "Nếu viết hero = row thì hero chính là dòng trong bảng. Em mất 2 máu là bảng cũng mất 2 máu, ván sau vào đã yếu sẵn. Chép từng ngăn thì bảng còn nguyên.",
+          "coachNotes": "Ví dụ: chép bài của bạn sang vở mình, khác với viết thẳng vào vở bạn. Nối với bầy quái ở Bài 15."
+        },
+        {
+          "id": "h16-quiz-share",
+          "quiz": {
+            "question": "Giả sử viết hero = row. Cung thủ 6 máu thua hết máu rồi chơi lại bằng cung thủ. Vào ván hai có mấy máu?",
+            "choices": [
+              "6",
+              "5",
+              "0"
+            ],
+            "answer": 2,
+            "explain": "hero và dòng trong bảng là một hộp. hp trong hộp đã về 0, nên ván hai vào với 0 máu."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h16-balance",
+          "title": "Cân cho công bằng",
+          "text": "Không ai mạnh hết mọi thứ: được cái này thì bớt cái kia. Kẻ bảng 3 nhân vật, 4 cột: máu, tốc độ, tầm, sức. Khoanh người mạnh nhất ở mỗi cột.",
+          "coachNotes": "5 phút. Kiếm sĩ 8, 3, 200, 3. Pháp sư 5, 3, 320, 3. Cung thủ 6, 4, 500, 2. Máu: Kiếm sĩ. Tốc độ và tầm: Cung thủ. Sức: Kiếm sĩ và Pháp sư bằng nhau. Hỏi: có người nào thiệt không?"
+        },
+        {
+          "id": "h16-quiz-golem",
+          "quiz": {
+            "question": "Golem có 18 máu. Cung thủ sức 2, chưa có skill nào. Cần mấy phát trúng mới hạ được?",
+            "choices": [
+              "6",
+              "8",
+              "9"
+            ],
+            "answer": 2,
+            "explain": "Mỗi phát trừ 2 máu: 18 / 2 = 9 phát. Kiếm sĩ sức 3 thì chỉ cần 6 phát."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "h16-real",
+          "title": "Từ bản thử sang bản thật",
+          "text": "Đồ thử đã về 0. Trùm giờ có 400 máu, đụng một cái mất 3 máu. Quái đông và trâu hơn. Em sẽ phải chọn skill khéo hơn mới qua được.",
+          "coachNotes": "Chỉ trong code: START_WAVE = 0, START_SKILLS = []; bảng MOBS, WAVES có số mới; chỉ bắn khi quái ở trong tầm hero[\"reach\"]; đạn mạnh theo hero[\"power\"]. Kiếm sĩ tầm 200 nên phải lại gần mới bắn."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h16-code1",
+          "title": "Bài tập 1: Bảng nhân vật",
+          "text": "Thêm Pháp sư và Cung thủ vào HEROES. Trong start_game, chép mọi ngăn của row sang hero bằng vòng for. START_HERO đang là 0 (Kiếm sĩ), muốn thử Cung thủ thì là số mấy?",
+          "coachNotes": "Lỗi hay gặp: chép mỗi image nên trông là cung thủ mà máu và tốc độ vẫn cũ. Đếm từ 0."
+        },
+        {
+          "id": "h16-code2",
+          "title": "Bài tập 2: Màn chọn nhân vật",
+          "text": "start_game(row) giờ nhận cả một dòng của bảng. picked_number() viết cho thẻ mà dùng lại y nguyên, vì ba hàng nằm đúng chỗ ba thẻ. Nhớ phím đếm từ 1, bảng đếm từ 0.",
+          "coachNotes": "Nói phần dọn: hero bắt đầu là hộp rỗng {}, START_HERO bỏ đi, make_mob cũng chép bằng vòng for, thua hay thắng thì Space về màn chọn. Lỗi hay gặp: quên str() khi nối số vào chữ."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h16-try",
+          "title": "Chơi đủ ba người",
+          "text": "Chơi mỗi người một ván, ghi lại tới đợt mấy. Với em, ai khó nhất? Đổi một số trong HEROES cho cân hơn rồi chơi lại, và hỏi bạn có thấy công bằng không.",
+          "coachNotes": "12 phút. Làm sau khi bài tập đạt (máy chấm đọc chữ Máu 8, tầm 200). Nhắc: thua ở đợt 2, 3 là bình thường, đây là bản thật. Ghi kết quả cả lớp lên bảng để so."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,341 @@
+{
+  "id": "h09",
+  "courseId": "ham-ngoc",
+  "order": 9,
+  "title": "Trúng thì biến mất",
+  "draft": true,
+  "summary": "Giữ lại bằng danh sách mới: quái hết máu và đạn đã trúng thì không còn nữa.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h09-why",
+          "title": "Bầy quái không hề vơi",
+          "text": "Đạn bay tới rồi mà quái chưa hề hấn gì. Cần hai luật: trúng đạn thì mất máu, hết máu thì biến mất. Luật thứ hai mới là chỗ khó.",
+          "coachNotes": "Hỏi: biến mất trên sân nghĩa là làm gì với danh sách mobs? (không còn hộp đó trong danh sách, thì không ai vẽ nó nữa)."
+        },
+        {
+          "id": "h09-trap",
+          "title": "Đừng rút khi đang đi",
+          "text": "Đang đi dọc hàng mà rút một người ra, cả hàng phía sau dồn lên. Người kế tiếp lọt vào chỗ em vừa xem xong, em bước qua luôn mà không xem tới.",
+          "coachNotes": "Cho 5 bé xếp hàng cầm thẻ máu. Một bé đi dọc hàng, gặp thẻ 0 thì mời bạn đó ra và cả hàng dồn lên. Ai bị bỏ sót?"
+        },
+        {
+          "id": "h09-keep",
+          "title": "Chép những con muốn giữ",
+          "text": "Cách chắc ăn: lấy một danh sách rỗng alive. Đi qua từng con, con nào còn máu thì chép sang. Đi hết thì danh sách mới thay cho danh sách cũ.",
+          "coachNotes": "Ví dụ: dọn cặp bằng cách lấy cái cặp mới, chỉ bỏ vào những thứ còn dùng. alive nghĩa là còn sống."
+        },
+        {
+          "id": "h09-trace",
+          "title": "Dò tay",
+          "text": "Bốn con, máu là 2, 0, 1, 0.\nCon 1: giữ\nCon 2: không giữ, kills = 1\nCon 3: giữ\nCon 4: không giữ, kills = 2\nalive còn hai con.",
+          "coachNotes": "Hỏi: con nào nằm trong alive? (con 1 và con 3). Không ai bị bỏ sót vì hàng cũ đứng yên."
+        },
+        {
+          "id": "h09-quiz-keep",
+          "quiz": {
+            "question": "Máu cả bầy là 1, 0, 2, -1, 0. Chỉ giữ con có hp > 0. Còn lại mấy con?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "5"
+            ],
+            "answer": 1,
+            "explain": "Chỉ 1 và 2 lớn hơn 0. Máu bằng 0 hay âm đều là hết máu."
+          },
+          "coachNotes": "Máu âm có thật: hai viên trúng cùng một khung. Ai chọn 3 là đã giữ con -1."
+        },
+        {
+          "id": "h09-quiz-assign",
+          "quiz": {
+            "question": "Chép xong alive nhưng quên dòng mobs = alive. Chuyện gì xảy ra?",
+            "choices": [
+              "Cả bầy biến mất",
+              "Máy báo lỗi",
+              "Con hết máu vẫn còn, kills tăng mãi",
+              "Không có gì khác"
+            ],
+            "answer": 2,
+            "explain": "alive chỉ sống trong hàm rồi bị bỏ đi. mobs vẫn đủ con cũ, nên khung sau lại đếm chúng thêm lần nữa."
+          }
+        },
+        {
+          "id": "h09-pierce",
+          "title": "Viên đạn quá mạnh",
+          "text": "Viên đạn trúng rồi vẫn bay tiếp. Nó trừ máu ở mỗi khung còn chạm, nên con nhớt 2 máu chỉ chịu được 2 khung, rồi nó còn trúng cả con sau.",
+          "coachNotes": "Hỏi: một viên đạn nên trúng mấy con? Không có đáp án duy nhất: đạn xuyên cũng là một skill hay, nhưng bản đầu nên công bằng."
+        },
+        {
+          "id": "h09-flag",
+          "title": "live: lá cờ đúng / sai",
+          "text": "Mỗi viên đạn có ngăn live, lúc đầu là True. Trúng rồi thì ngăn đó thành False: viên này hết tác dụng. Lá cờ giúp máy nhớ chuyện đã xảy ra.",
+          "coachNotes": "Ví dụ: vé xem phim bị xé góc là đã dùng. Cờ chưa xóa viên đạn, chỉ đánh dấu; dọn sau."
+        },
+        {
+          "id": "h09-reach",
+          "title": "Tầm bắn",
+          "text": "Đạn trượt thì bay mãi ngoài sân, danh sách dài ra hoài, máy lo không xuể. hero có thêm ngăn reach là 400: viên nào còn cách em dưới 400 bước thì mới giữ.",
+          "coachNotes": "hero[\"reach\"] = 400 thêm một ngăn mới vào hộp đã có. Hỏi: viên cách em đúng 400 có được giữ không? (không, near là dưới 400)."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h09-pattern",
+          "title": "Một khuôn, hai chỗ",
+          "text": "Khuôn giữ lại: danh sách rỗng → đi qua → có giữ không? → chép → thay. Quái hỏi: còn máu không? Đạn hỏi: còn live và còn trong tầm không?",
+          "coachNotes": "Cho bé viết khuôn 5 bước ra giấy và giữ lại: Bài 10 (ngọc) và Bài 17 (hiệu ứng) còn dùng."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h09-code1",
+          "title": "Bài tập 1: remove_dead()",
+          "text": "hit_mobs() đã trừ máu quái giúp em. Em viết remove_dead() theo khuôn. Có thêm một nhánh else: con không được giữ thì đếm vào kills, hiện ở chữ Hạ.",
+          "coachNotes": "Lỗi hay gặp: mobs = alive thụt trong for (mất quái lung tung); giữ nhầm con hết máu. mobs và kills cần global vì cả biến được gán lại."
+        },
+        {
+          "id": "h09-code2",
+          "title": "Bài tập 2: đạn trúng là mất",
+          "text": "(1) Trúng thì hạ cờ live của viên đạn. (2) remove_shots() dùng lại khuôn, câu hỏi có hai phần nối bằng and. Giờ phải hai viên mới hạ được một con.",
+          "coachNotes": "Hỏi: nếu làm (1) mà quên (2) thì sao? (viên đã trúng vẫn bay trên sân nhưng không làm ai đau)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h09-try",
+          "title": "Vừa né vừa bắn",
+          "text": "Đứng im giữa sân xem cầm cự được bao lâu, rồi vừa chạy vừa bắn: hạ được mấy con? Đổi reach thành 150, rồi đổi hp của nhớt thành 4. Game khó lên ở chỗ nào?",
+          "coachNotes": "Phần Tự đánh trên lộ trình sáng lên. Khi reach nhỏ, nhân vật vẫn bắn con ở xa và đạn mất giữa đường: hỏi bé muốn sửa luật đó không. Thua thì tắt rồi chạy lại (Bài 11 mới có chơi lại). Chọn một bộ số cả lớp thấy vui, ghi lại. Bài sau: quái bị hạ sẽ rơi ngọc."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h09-e1",
+      "title": "Hết máu thì biến mất",
+      "task": "Đạn chạm là quái mất máu. Em viết remove_dead(): tạo danh sách mới alive; con nào còn máu thì append vào alive, con nào hết máu thì cộng 1 vào kills. Cuối cùng mobs = alive.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h09-e1-run"
+        },
+        {
+          "label": "Hạ được quái",
+          "kind": "varCompare",
+          "name": "kills",
+          "op": ">=",
+          "value": 5,
+          "id": "h09-e1-kill"
+        },
+        {
+          "label": "Mỗi con chỉ đếm một lần",
+          "kind": "varCompare",
+          "name": "kills",
+          "op": "<=",
+          "value": 16,
+          "id": "h09-e1-once"
+        },
+        {
+          "label": "Quái hạ rồi thì biến mất",
+          "kind": "varCompare",
+          "name": "crowd",
+          "op": "<=",
+          "value": 10,
+          "id": "h09-e1-gone"
+        },
+        {
+          "label": "Quái còn máu thì vẫn ở lại",
+          "kind": "drewCount",
+          "sprite": "mob",
+          "min": 6,
+          "id": "h09-e1-keep"
+        }
+      ],
+      "test": {
+        "frames": 400,
+        "taps": []
+      },
+      "walkthrough": [
+        "Trong remove_dead(), xóa pass. Dòng đầu: alive = []",
+        "for mob in mobs: rồi thụt vào if mob[\"hp\"] > 0:",
+        "Thụt thêm: alive.append(mob): con này còn máu nên được giữ lại.",
+        "else: rồi thụt vào kills += 1",
+        "Hết vòng for, thụt lề ngang chữ for: mobs = alive",
+        "Bấm ▶ Chạy, rồi ⛶: chữ Hạ tăng lên, quái biến mất."
+      ],
+      "hints": [
+        "Không xóa khi đang đi qua danh sách: mình chép những con muốn giữ sang danh sách mới.",
+        "if mob[\"hp\"] > 0:\n    alive.append(mob)\nelse:\n    kills += 1",
+        "mobs = alive nằm ngoài vòng for."
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30):\n                mob[\"hp\"] -= 1\n\n\ndef remove_dead():\n    global mobs, kills\n    # Em viết tiếp ở đây\n    pass\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_dead()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30):\n                mob[\"hp\"] -= 1\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n    mobs = alive\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_dead()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    },
+    {
+      "id": "h09-e2",
+      "title": "Đạn trúng là mất",
+      "task": "Giờ một viên đạn xuyên qua cả bầy. (1) Khi trúng: thêm dòng shot[\"live\"] = False. (2) Viết remove_shots(): giữ lại những viên còn live và near hero dưới hero[\"reach\"] (tầm bắn) bằng danh sách mới kept.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h09-e2-run"
+        },
+        {
+          "label": "Vẫn hạ được quái",
+          "kind": "varCompare",
+          "name": "kills",
+          "op": ">=",
+          "value": 2,
+          "id": "h09-e2-kill"
+        },
+        {
+          "label": "Một viên chỉ trúng một lần",
+          "kind": "varCompare",
+          "name": "kills",
+          "op": "<=",
+          "value": 9,
+          "id": "h09-e2-one"
+        },
+        {
+          "label": "Đạn trúng hay bay quá tầm thì mất",
+          "kind": "varCompare",
+          "name": "flying",
+          "op": "<=",
+          "value": 6,
+          "id": "h09-e2-few"
+        },
+        {
+          "label": "Đạn chưa trúng thì vẫn bay",
+          "kind": "varCompare",
+          "name": "flying",
+          "op": ">=",
+          "value": 1,
+          "when": "ever",
+          "id": "h09-e2-some"
+        }
+      ],
+      "test": {
+        "frames": 400,
+        "taps": []
+      },
+      "walkthrough": [
+        "Chỗ (1), ngay dưới mob[\"hp\"] -= 1: shot[\"live\"] = False",
+        "Viên đã trúng thì không được trúng nữa: chữ if đã có sẵn and shot[\"live\"].",
+        "Chỗ (2): kept = [] rồi for shot in shots:",
+        "Thụt vào: if shot[\"live\"] and near(shot, hero, hero[\"reach\"]): rồi thụt thêm kept.append(shot)",
+        "Cuối cùng, ngang chữ for: shots = kept",
+        "Bấm ▶ Chạy: giờ phải trúng 2 viên mới hạ được một con."
+      ],
+      "hints": [
+        "Giống remove_dead ở bài tập 1, chỉ khác điều kiện giữ lại.",
+        "if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n    kept.append(shot)",
+        "shots = kept nằm ngoài vòng for."
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\nflying = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                # Em viết tiếp ở đây (1)\n                pass\n\n\ndef remove_shots():\n    global shots, flying\n    # Em viết tiếp ở đây (2)\n    flying = len(shots)\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n    mobs = alive\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\nflying = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots, flying\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n    flying = len(shots)\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n    mobs = alive\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "attack"
+  ],
+  "docsUnlocked": []
+}

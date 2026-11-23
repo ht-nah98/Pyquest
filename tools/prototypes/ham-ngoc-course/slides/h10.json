@@ -1,0 +1,133 @@
+{
+  "title": "Ngọc kinh nghiệm",
+  "summary": "Quái thua thì rơi ngọc, ngọc bay về em, đủ ngọc thì lên cấp.",
+  "unlocksRoadmap": [
+    "xp"
+  ],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h10-why",
+          "title": "Hạ quái để làm gì?",
+          "text": "Bây giờ hạ quái chỉ làm số Hạ tăng lên. Game vui hơn khi có phần thưởng nhìn thấy được và phải đi lấy. Quái thua sẽ rơi một viên ngọc ngay chỗ nó đứng.",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "3 phút. Cho một bé chơi game mẫu, cả lớp nhìn ngọc và thanh dưới đáy. Hỏi: ngọc rơi ở đâu? Đứng xa có lấy được không? Lúc nào thanh đầy? Game mẫu có nhiều thứ hơn, hôm nay chỉ nhìn ngọc."
+        },
+        {
+          "id": "h10-box",
+          "title": "Một viên ngọc là một hộp",
+          "text": "Ngọc chỉ cần nhớ x và y, nên mỗi viên là một hộp nhỏ. Mọi viên nằm trong danh sách gems (những viên ngọc). Vậy là game của em có ba danh sách: mobs, shots và gems.",
+          "coachNotes": "Trên giấy: vẽ 3 con quái có tọa độ, gạch con thứ hai. Bé viết hộp ngọc sẽ được thêm. Lỗi hay gặp: lấy x, y của hero, ngọc rơi ngay dưới chân em nên nhặt liền."
+        },
+        {
+          "id": "h10-quiz-where",
+          "quiz": {
+            "question": "Quái ở (120, 80) vừa thua, em đứng ở (300, 300). Hộp nào được thêm vào gems?",
+            "choices": [
+              "{\"x\": 300, \"y\": 300}",
+              "{\"x\": 120, \"y\": 80}",
+              "{\"x\": 180, \"y\": 220}"
+            ],
+            "answer": 1,
+            "explain": "Ngọc rơi ở chỗ con quái vừa thua, nên lấy x và y của con quái."
+          }
+        },
+        {
+          "id": "h10-kept",
+          "title": "Nhặt ngọc cũng là giữ lại",
+          "text": "Nhớ Bài 9 không? Muốn bỏ bớt thì làm danh sách mới tên kept (giữ lại). Viên em chạm tới thì cộng vào xp và không chép sang. Viên còn lại thì chép sang. xp là viết tắt của kinh nghiệm.",
+          "coachNotes": "Hoạt động 4 phút: 5 mẩu giấy là 5 viên ngọc, một cái rổ ghi kept. Bé đi qua từng viên: gần thì vạch một nét vào xp, xa thì bỏ vào rổ. Hỏi: nếu viên đã nhặt vẫn bỏ vào rổ thì sao? (khung nào cũng cộng, xp tăng vù vù)."
+        },
+        {
+          "id": "h10-magnet",
+          "title": "Nam châm hút ngọc",
+          "text": "Đi nhặt từng viên thì mệt. Ngọc gần em hơn 150 sẽ tự bước về em, mỗi khung 6 bước. Gần hơn 40 thì coi như đã nhặt. Khoảng cách vẫn là dx + dy như Bài 6.",
+          "coachNotes": "Vẽ em ở giữa, hai vùng 150 và 40. Cho lớp dò một viên ở bên phải, cách 100: sau 5 khung còn 70, sau 10 khung còn 40 (chưa nhỏ hơn 40), khung 11 thì nhặt được."
+        },
+        {
+          "id": "h10-quiz-magnet",
+          "quiz": {
+            "question": "Em ở (300, 300), viên ngọc ở (380, 380). near(gem, hero, 150) trả lời gì?",
+            "choices": [
+              "True, vì 80 nhỏ hơn 150",
+              "False, vì 380 lớn hơn 150",
+              "False, vì 80 + 80 = 160"
+            ],
+            "answer": 2,
+            "explain": "distance cộng cả hai chiều: 80 + 80 = 160. 160 không nhỏ hơn 150 nên ngọc chưa bay."
+          }
+        },
+        {
+          "id": "h10-bar",
+          "title": "Thanh dài theo phần đã có",
+          "text": "Thanh đầy rộng 600, bằng cả sân. Có 3 ngọc, cần 4 ngọc thì thanh dài 600 * 3 / 4 = 450. need() nghĩa là cần: hàm này trả về số ngọc cần để lên cấp.",
+          "coachNotes": "Ví dụ: hình cục pin điện thoại, có 75% thì tô ba phần tư. Hỏi: có 2, cần 4 thì thanh dài mấy? (300). Có 0 thì sao? (0, không thấy thanh)."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h10-need",
+          "title": "Cấp càng cao càng khó lên",
+          "text": "Lên từ cấp 1 cần 4 ngọc, cấp 2 cần 6, cấp 3 cần 8. Công thức là 2 + level * 2 (level là cấp). Em kẻ bảng ra giấy và điền tiếp tới cấp 6.",
+          "coachNotes": "5 phút. Đáp án: cấp 4 cần 10, cấp 5 cần 12, cấp 6 cần 14. Hỏi: nếu cấp nào cũng cần 4 viên thì cuối game sẽ ra sao? (lên cấp liên tục, hết hồi hộp)."
+        },
+        {
+          "id": "h10-quiz-level",
+          "quiz": {
+            "question": "level = 1, xp = 5, need() là 2 + level * 2. Trừ need() trước, rồi mới cộng level. Kết quả là gì?",
+            "choices": [
+              "level 2, xp 1",
+              "level 2, xp -1",
+              "level 2, xp 0"
+            ],
+            "answer": 0,
+            "explain": "Lúc trừ, need() là 4: 5 - 4 = 1, dư 1 viên thì giữ. Cộng level trước thì need() thành 6, xp bị âm."
+          },
+          "coachNotes": "Cho lớp làm cả hai thứ tự trên bảng rồi so. Đây là lỗi hay gặp nhất của Bài tập 3."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h10-code1",
+          "title": "Bài tập 1: Rơi và nhặt",
+          "text": "Ở remove_dead(), chỗ con quái hết máu, thêm một hộp vào gems. Rồi viết take_gems() (nhặt ngọc) theo khuôn giữ lại. Chạy thử: số Ngọc phải tăng từng viên một.",
+          "coachNotes": "15 phút. Bé bí thì đặt remove_dead() và take_gems() cạnh nhau: cùng một khuôn. Lỗi hay gặp: quên dòng gán gems ở cuối, hoặc thụt dòng đó vào trong vòng for."
+        },
+        {
+          "id": "h10-code2",
+          "title": "Bài tập 2: Nam châm và thanh",
+          "text": "step_to viết cho quái, nhưng ngọc cũng có x và y nên dùng lại được. Em chỉ cần nghĩ: ai bước, bước về phía ai, mỗi khung mấy bước? Rồi vẽ thanh xanh chồng lên thanh tối có sẵn.",
+          "coachNotes": "Hỏi trước khi code: nếu viết ngược hai hộp trong step_to thì ai chạy? (nhân vật bị kéo về phía ngọc)."
+        },
+        {
+          "id": "h10-code3",
+          "title": "Bài tập 3: Lên cấp",
+          "text": "Viết check_level(): đủ ngọc thì trừ phần đã dùng, giữ phần dư, rồi lên một cấp. Trừ trước, cộng sau. Nhớ đổi need() theo công thức em vừa điền bảng.",
+          "coachNotes": "Hỏi: vì sao không đặt xp = 0? (mất viên dư của em, hơi oan)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h10-try",
+          "title": "Chơi thử tới cấp 4",
+          "text": "Chơi toàn màn hình. Đứng yên thì nhặt được mấy viên, chạy đi nhặt thì mấy viên? Đổi thử 150 thành 300, hoặc 2 + level * 2 thành 3 + level * 4. Game dễ hơn hay khó hơn?",
+          "coachNotes": "10 phút. Cho mỗi bé đổi một số rồi nói cảm giác. Nhắc: đổi một số mỗi lần thì mới biết số nào gây ra khác biệt."
+        }
+      ]
+    }
+  ]
+}

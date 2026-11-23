@@ -1,0 +1,133 @@
+{
+  "title": "Chọn thẻ",
+  "summary": "Chọn thẻ bằng phím 1, 2, 3 hoặc bấm chuột. Bấm một lần, được một thẻ.",
+  "unlocksRoadmap": [],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h13-why",
+          "title": "Thấy thẻ mà chưa lấy được",
+          "text": "Màn thẻ đã có ba thẻ, nhưng chưa có cách chọn. Hôm nay em làm hai cách: bấm phím 1, 2, 3, và bấm thẳng vào thẻ bằng chuột hoặc ngón tay.",
+          "coachNotes": "Hỏi: vì sao nên có cả hai cách? (laptop có phím, iPad thì chạm)."
+        },
+        {
+          "id": "h13-index",
+          "title": "Phím đếm từ 1, danh sách đếm từ 0",
+          "text": "Thẻ trên cùng ghi số 1, nhưng trong danh sách nó là cards[0]. Vì vậy lấy thẻ thì viết cards[number - 1]. Còn number = 0 nghĩa là chưa bấm gì.",
+          "coachNotes": "Vẽ ba thẻ, bên trái ghi phím 1 2 3, bên phải ghi ngăn 0 1 2. Hỏi: phím nào ứng với cards[1]? (phím 2)."
+        },
+        {
+          "id": "h13-quiz-index",
+          "quiz": {
+            "question": "Em bấm phím 3. Máy phải lấy thẻ nào?",
+            "choices": [
+              "cards[3]",
+              "cards[2]",
+              "cards[1]"
+            ],
+            "answer": 1,
+            "explain": "3 - 1 = 2. cards chỉ có ngăn 0, 1, 2, nên đòi cards[3] là máy báo lỗi."
+          }
+        },
+        {
+          "id": "h13-hold",
+          "title": "Một lần bấm là mấy khung?",
+          "text": "Bấm nhanh cũng mất cỡ một phần mười giây, tức là khoảng 6 khung hình. Khung nào update() cũng hỏi phím, và cả 6 lần đều thấy phím đang bấm. Thế là mất mấy thẻ liền!",
+          "coachNotes": "Hỏi: có 3 lượt chọn, bấm phím 1 một cái thì còn mấy lượt? (hết cả 3). Giữ nửa giây là khoảng 30 khung."
+        },
+        {
+          "id": "h13-bell",
+          "title": "Chuông cửa chỉ reo một tiếng",
+          "text": "Giữ nút chuông cửa thì chuông chỉ reo lúc vừa bấm. Muốn biết vừa bấm, ta so khung này với khung trước. Biến held (đang giữ) nhớ số của khung trước.",
+          "coachNotes": "Dò trên bảng: giữ phím 2 trong 3 khung rồi thả. number: 2, 2, 2, 0. held trước khi so: 0, 2, 2, 2. fresh: 2, 0, 0, 0. Hoạt động: bé giơ số, bé bên cạnh nhớ số lần trước rồi nói mới hay cũ."
+        },
+        {
+          "id": "h13-quiz-held",
+          "quiz": {
+            "question": "5 khung liền, number là 0, 1, 1, 0, 1. held lúc đầu là 0. picked_number() trả về 1 mấy lần?",
+            "choices": [
+              "1 lần",
+              "2 lần",
+              "3 lần"
+            ],
+            "answer": 1,
+            "explain": "Khung 2 và khung 5 là vừa bấm. Khung 3 number bằng held nên không tính."
+          },
+          "coachNotes": "Nếu bé chọn 3: em đang đếm mọi khung có bấm. Cho bé kẻ bảng 3 cột number, held, fresh."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h13-rows",
+          "title": "Thẻ nằm ở đâu trên sân?",
+          "text": "Thẻ số i bắt đầu ở y = 180 + i * 120 và cao 100. Vẽ ba thẻ ra giấy, ghi y của mép trên và mép dưới từng thẻ. Giữa hai thẻ có khe hở không?",
+          "coachNotes": "5 phút. Đáp án: thẻ 0 từ 180 tới 280, thẻ 1 từ 300 tới 400, thẻ 2 từ 420 tới 520. Khe 280 tới 300 và 400 tới 420. Chỉ xét y, vì thẻ rộng gần hết sân."
+        },
+        {
+          "id": "h13-quiz-gap",
+          "quiz": {
+            "question": "Em bấm chuột ở y = 290. Thẻ nào được chọn?",
+            "choices": [
+              "Thẻ 1 (trên cùng)",
+              "Thẻ 2 (ở giữa)",
+              "Không thẻ nào, đó là khe"
+            ],
+            "answer": 2,
+            "explain": "Thẻ trên kết thúc ở 280, thẻ giữa bắt đầu ở 300. 290 nằm ở khe giữa hai thẻ."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "h13-prep",
+          "title": "Mấy tên mới trong code",
+          "text": "picks là còn được chọn mấy thẻ. owned (đang có) là danh sách thẻ đã lấy. take_card() cất thẻ vào owned rồi bớt một lượt. START_PICKS = 3: vào hầm chọn ba thẻ để thử.",
+          "coachNotes": "Chỉ trong code: check_cards và clashes đã bỏ, game lại mở ở màn chờ. Nói trước: thẻ lấy rồi hiện hình nhỏ ở góc dưới, nhưng chưa có tác dụng. Bài 14 mới có."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h13-code1",
+          "title": "Bài tập 1: Chọn bằng phím",
+          "text": "Trong picked_number() (số đã chọn), mỗi phím một chữ if. Không bấm gì thì number vẫn là 0. Nếu bấm một cái mà lấy luôn ba thẻ thì em không sai đâu: Bài tập 2 sẽ sửa.",
+          "coachNotes": "Tên phím là chữ nên có ngoặc kép, number là số nên không. Hỏi: vì sao không cần elif ở đây?"
+        },
+        {
+          "id": "h13-code2",
+          "title": "Bài tập 2: Bấm mới tính",
+          "text": "fresh là số vừa bấm. Giống khung trước thì fresh là 0. So xong mới nhớ lại vào held. Nghĩ thử: nếu nhớ trước rồi mới so thì chuyện gì xảy ra?",
+          "coachNotes": "Đáp: lúc nào number cũng bằng held, không bấm được thẻ nào. Cho bé thử thật rồi sửa lại."
+        },
+        {
+          "id": "h13-code3",
+          "title": "Bài tập 3: Chọn bằng chuột",
+          "text": "clicked() chỉ đúng một khung lúc vừa bấm, nên không cần held. Đi qua ba thẻ, hỏi mouse_y() (chuột ở y nào) có nằm giữa hai mép không. Thẻ i thì fresh là mấy?",
+          "coachNotes": "Nối với inside ở Bài 10 Bay Qua Khe. Lỗi hay gặp: chỉ xét mép trên, bấm thẻ dưới cùng cũng trúng hết."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h13-try",
+          "title": "Thử làm khó game của em",
+          "text": "Giữ phím 1 thật lâu: được mấy thẻ? Bấm vào khe, bấm ra ngoài bảng: có bị tính không? Rồi đổi START_PICKS thành 1 hoặc 5 và chơi lại.",
+          "coachNotes": "6 phút. Đổi máy cho bạn phá thử: ai tìm được cách lấy hai thẻ bằng một lần bấm? Trên iPad thì chạm vào thẻ."
+        }
+      ]
+    }
+  ]
+}

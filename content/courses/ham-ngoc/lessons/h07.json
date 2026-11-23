@@ -1,0 +1,225 @@
+{
+  "id": "h07",
+  "courseId": "ham-ngoc",
+  "order": 7,
+  "title": "Con nào gần nhất?",
+  "draft": true,
+  "summary": "Tìm nhỏ nhất trong danh sách: giữ kỷ lục, gặp con gần hơn thì thay.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h07-why",
+          "title": "Ngắm con nào?",
+          "text": "Sắp tới nhân vật sẽ tự đánh. Nhưng sân có cả chục con, đánh con nào trước? Con gần nhất nguy hiểm nhất, nên mình dạy máy tìm con gần nhất.",
+          "coachNotes": "Hỏi: còn cách chọn nào khác? (con yếu nhất, con to nhất…). Mỗi cách là một kiểu chơi khác nhau."
+        },
+        {
+          "id": "h07-two",
+          "title": "Máy chỉ so hai số một lần",
+          "text": "Mắt em liếc một cái là biết con nào gần. Máy thì mỗi lần chỉ so được hai con số. Nó phải đi qua từng con và nhớ con gần nhất đã gặp.",
+          "coachNotes": "Trò chơi: bịt mắt một bé, chỉ cho nghe từng số một, hỏi số nhỏ nhất. Bé phải nhớ gì trong đầu? (số nhỏ nhất tới lúc này)."
+        },
+        {
+          "id": "h07-record",
+          "title": "Giữ kỷ lục",
+          "text": "Giống tìm người chạy nhanh nhất: người đầu tiên tạm giữ kỷ lục. Ai nhanh hơn thì thành kỷ lục mới. Xem hết mọi người, ai đang giữ là nhanh nhất.",
+          "coachNotes": "Phát thẻ số (giây chạy) cho 5 bé xếp hàng; một bé cầm chữ \"best\" đi dọc hàng, trao chữ cho ai có số nhỏ hơn. Dùng thẻ số, đừng so chiều cao hay điểm thật của các bé."
+        },
+        {
+          "id": "h07-trace",
+          "title": "Dò tay",
+          "text": "Đường tới em: A 220, B 90, C 140, D 60.\nBắt đầu: best là A.\nB: 90 < 220? Có, best là B.\nC: 140 < 90? Không.\nD: 60 < 90? Có, best là D.",
+          "coachNotes": "Máy cũng so A với chính A: 220 < 220 là sai nên không đổi gì. Hỏi: nếu hai con xa bằng nhau thì best giữ con nào? (con gặp trước)."
+        },
+        {
+          "id": "h07-quiz-changes",
+          "quiz": {
+            "question": "Đường tới em lần lượt là 150, 200, 80, 120, 70. Bắt đầu best là con đầu. best đổi sang con khác mấy lần?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "answer": 1,
+            "explain": "150 → 80 là một lần, 80 → 70 là lần hai. 200 và 120 đều không nhỏ hơn kỷ lục lúc đó."
+          }
+        },
+        {
+          "id": "h07-quiz-nearest",
+          "quiz": {
+            "question": "Em (300, 300). A (100, 300), B (380, 250), C (300, 150). Con nào gần nhất?",
+            "choices": [
+              "A",
+              "B",
+              "C"
+            ],
+            "answer": 1,
+            "explain": "A cách 200. B cách 80 + 50 = 130. C cách 150. Nhỏ nhất là 130. Phải cộng cả hai trục mới biết."
+          }
+        },
+        {
+          "id": "h07-return",
+          "title": "return đặt ở đâu?",
+          "text": "return làm hàm dừng ngay. Nếu return best nằm trong vòng for, hàm dừng ở con đầu tiên, chưa kịp xem con nào khác. Xem hết hàng rồi mới trả lời.",
+          "coachNotes": "Diễn lại trò xếp hàng: bạn cầm chữ best xem người đầu rồi hét \"xong!\". Có đúng không?"
+        },
+        {
+          "id": "h07-quiz-return",
+          "quiz": {
+            "question": "return best lỡ thụt vào trong for, thẳng hàng với chữ if. nearest() trả về con nào?",
+            "choices": [
+              "Con gần nhất",
+              "Con cuối danh sách",
+              "Luôn là con đầu danh sách",
+              "Không trả về con nào"
+            ],
+            "answer": 2,
+            "explain": "Vòng đầu so con đầu với chính nó, không đổi gì, rồi gặp return là dừng hàm."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h07-start",
+          "title": "Vì sao bắt đầu từ mobs[0]?",
+          "text": "Phải có sẵn một con để so lần đầu. mobs[0] là con đầu danh sách, chắc chắn là con có thật. Nhưng danh sách rỗng thì không có mobs[0], Python sẽ báo lỗi.",
+          "coachNotes": "Hỏi: bắt đầu best là một số bịa ra như 0 thì sao? (không con nào gần hơn 0). Ở bài này chưa có con nào biến mất nên danh sách không rỗng; Bài 9 sẽ hỏi len(mobs) > 0 trước."
+        },
+        {
+          "id": "h07-line",
+          "title": "Vạch trắng để kiểm tra",
+          "text": "draw_line nối hai điểm bằng một đoạn thẳng. draw() đã có sẵn vạch trắng nối em với con mà nearest() chọn. Đúng hay sai, em nhìn là biết.",
+          "coachNotes": "Người làm game hay vẽ thêm thứ chỉ để kiểm tra, xong thì bỏ. Bài 8 sẽ bỏ vạch này."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h07-code",
+          "title": "Viết nearest()",
+          "text": "nearest() đang luôn trả về con đầu. Viết theo cách giữ kỷ lục: tạm chọn, đi qua từng con, so bằng distance của Bài 6, gần hơn thì nhớ con mới. Cuối cùng mới trả lời.",
+          "coachNotes": "Chạy code khởi đầu trước: vạch trắng dính vào một con dù con khác gần hơn. Lỗi hay gặp: best = mob[\"x\"] (nhớ số thay vì nhớ cả con), return trong for."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h07-try",
+          "title": "Vạch có chỉ đúng không?",
+          "text": "Đi vòng quanh bầy quái: vạch có nhảy sang con khác khi con đó gần hơn không? Đổi < thành > xem vạch chỉ con nào, rồi đổi lại. Thử màu vạch khác nữa.",
+          "coachNotes": "Đổi thành > là ra con xa nhất: cùng một khuôn, chỉ khác dấu so sánh. Bài sau: bỏ vạch, bắn thật."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h07-e1",
+      "title": "Con nào gần nhất?",
+      "task": "nearest() phải trả về con quái gần em nhất. Cách làm: coi mobs[0] là gần nhất, đi qua từng con, con nào gần hơn best thì best = con đó. Cuối cùng return best. Vạch trắng sẽ nối em với con gần nhất.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_line_width",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h07-e1-run"
+        },
+        {
+          "label": "Vạch chỉ đúng con gần nhất",
+          "kind": "varCompare",
+          "name": "target_far",
+          "op": "<=",
+          "value": 105,
+          "id": "h07-e1-near"
+        },
+        {
+          "label": "Có gọi distance để so sánh",
+          "kind": "called",
+          "name": "distance",
+          "min": 20,
+          "id": "h07-e1-called"
+        }
+      ],
+      "test": {
+        "frames": 150,
+        "taps": [],
+        "keys": [
+          {
+            "key": "right",
+            "from": 0,
+            "to": 80
+          }
+        ]
+      },
+      "walkthrough": [
+        "Tìm def nearest(): giờ nó luôn trả về mobs[0]. Xóa dòng return đó.",
+        "best = mobs[0]: tạm coi con đầu tiên là gần nhất.",
+        "for mob in mobs: rồi thụt vào if distance(mob, hero) < distance(best, hero):",
+        "Thụt thêm: best = mob (tìm được con gần hơn thì nhớ con mới).",
+        "Hết vòng for, thụt lề ngang chữ for: return best",
+        "Bấm ▶ Chạy, rồi ⛶: em đi đâu, vạch trắng cũng chỉ con gần nhất."
+      ],
+      "hints": [
+        "Giống tìm bạn thấp nhất lớp: so từng bạn với bạn đang giữ kỷ lục.",
+        "Dấu < nghĩa là gần hơn.",
+        "return best nằm ngoài vòng for, đừng thụt vào trong.",
+        "if distance(mob, hero) < distance(best, hero):\n    best = mob"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\ntarget_far = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    # Em viết tiếp ở đây\n    return mobs[0]\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over, target_far\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    target_far = distance(nearest(), hero)\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    target = nearest()\n    draw_line(hero[\"x\"], hero[\"y\"], target[\"x\"], target[\"y\"], \"#ffffff\", 2)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\ntarget_far = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over, target_far\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    target_far = distance(nearest(), hero)\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    target = nearest()\n    draw_line(hero[\"x\"], hero[\"y\"], target[\"x\"], target[\"y\"], \"#ffffff\", 2)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
+}

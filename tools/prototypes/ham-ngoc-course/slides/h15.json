@@ -1,0 +1,137 @@
+{
+  "title": "Đợt quái và trùm",
+  "summary": "Nhiều loại quái, từng đợt quái, và trùm cuối để thắng game.",
+  "unlocksRoadmap": [
+    "stages"
+  ],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h15-why",
+          "title": "Game cần có đích",
+          "text": "Hiện giờ chỉ có nhớt, ra hoài không hết, và em không bao giờ thắng. Hôm nay có nhiều loại quái, quái ra từng đợt, đợt cuối có trùm. Hạ hết là thắng!",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "3 phút với game mẫu: hỏi các ải khác nhau chỗ nào, làm sao biết sắp hết ải. Game mẫu dài hơn bản của em, chỉ lấy ý tưởng."
+        },
+        {
+          "id": "h15-mobs",
+          "title": "Bảng tra theo tên",
+          "text": "MOBS là một hộp lớn, mỗi ngăn là một loại quái. MOBS[\"bat\"] là dòng của dơi. Giống tra từ điển: hỏi tên là ra ngay, không cần nhớ nó đứng thứ mấy.",
+          "coachNotes": "So với SKILLS: SKILLS là danh sách, hỏi bằng số thứ tự; MOBS là dict, hỏi bằng tên. bat là dơi, slime là nhớt, golem là người đá."
+        },
+        {
+          "id": "h15-copy",
+          "title": "Chép mẫu, đừng dùng chung",
+          "text": "MOBS[\"golem\"] là bản mẫu. Mỗi con ra sân phải có hp riêng, nên make_mob chép từng số từ mẫu sang một hộp mới. Dùng chung một hộp thì một con đau là cả bầy đau.",
+          "coachNotes": "Ví dụ: phiếu bài tập photo cho cả lớp. Bạn này viết vào phiếu mình, phiếu bạn khác không đổi. Nếu cả lớp chung một tờ thì sao?"
+        },
+        {
+          "id": "h15-quiz-copy",
+          "quiz": {
+            "question": "Hai con golem, mỗi con một hộp riêng, chép hp 8 từ bảng. Con thứ nhất mất 3 máu. Con thứ hai còn mấy?",
+            "choices": [
+              "5",
+              "8",
+              "11"
+            ],
+            "answer": 1,
+            "explain": "Hai hộp riêng nên con thứ hai vẫn còn 8. Nếu dùng chung một hộp thì cả hai cùng còn 5."
+          }
+        },
+        {
+          "id": "h15-waves",
+          "title": "Mỗi dòng WAVES là một đợt",
+          "text": "mob là quái thường, lead là quái dẫn đầu, count là cả đợt có mấy con, gap là mấy khung ra một con. every là cứ mấy con thì có một con dẫn đầu.",
+          "coachNotes": "Đọc to dòng đợt 1 bằng tiếng Việt: nhớt, dơi dẫn đầu, cứ 3 con một con dơi, cả đợt 3 con, cứ 40 khung ra một con."
+        },
+        {
+          "id": "h15-left",
+          "title": "left đếm ngược số con chờ ra",
+          "text": "left là còn mấy con chưa ra, mỗi con ra thì bớt 1. Con nào ra lúc left chia hết cho every thì là quái dẫn đầu. Chia hết nghĩa là left % every == 0.",
+          "coachNotes": "Hoạt động 4 phút, đợt 1: count 3, every 3. left = 3 thì dơi, left = 2 thì nhớt, left = 1 thì nhớt. Hỏi: every bằng count nghĩa là gì? (chỉ một con dẫn đầu, ra trước nhất: cách làm trùm)."
+        },
+        {
+          "id": "h15-quiz-left",
+          "quiz": {
+            "question": "Đợt có count 12, every 2, mob \"slime\", lead \"bat\". Hai con đầu tiên ra là gì?",
+            "choices": [
+              "Dơi rồi nhớt",
+              "Nhớt rồi dơi",
+              "Dơi rồi dơi"
+            ],
+            "answer": 0,
+            "explain": "left là 12, chia hết cho 2: dơi. Rồi left là 11, không chia hết: nhớt."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h15-next",
+          "title": "Khi nào sang đợt mới?",
+          "text": "Phải đủ hai điều: không còn con nào chờ ra, và trên sân không còn con nào. Thiếu một điều thì chưa sang. Hết đợt cuối thì screen thành \"win\" (thắng).",
+          "coachNotes": "Cho bé vẽ sơ đồ: còn chờ ra? có thì tới giờ mới cho ra; không thì hỏi tiếp: sân trống? Lỗi hay gặp: viết else nên vừa ra hết là sang đợt, dù quái còn đầy sân."
+        },
+        {
+          "id": "h15-quiz-next",
+          "quiz": {
+            "question": "left = 0, trên sân còn 2 con dơi. run_wave() nên làm gì?",
+            "choices": [
+              "Sang đợt mới",
+              "Cho ra thêm quái",
+              "Chưa làm gì, chờ em hạ nốt"
+            ],
+            "answer": 2,
+            "explain": "Hết con chờ ra rồi, nhưng sân chưa trống nên len(mobs) == 0 còn sai. Phải hạ hết mới sang đợt."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "h15-moved",
+          "title": "Code vừa được dọn",
+          "text": "make_mob và spawn_mob giờ nhận tên quái. Va chạm tính theo size: con to dễ trúng và dễ đụng hơn. Ngọc mang xp của con quái. for axis in [\"x\", \"y\"] gom code hai trục làm một.",
+          "coachNotes": "5 phút. axis là trục. Cho bé so move_hero cũ và mới: 8 dòng chặn mép còn 5 dòng. Hỏi: con size 3 thì chạm em ở khoảng cách nào? (16 + 10 * 3 = 46)."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h15-code1",
+          "title": "Bài tập 1: Bảng quái",
+          "text": "Thêm dơi và golem vào MOBS. Rồi trong make_mob, chép nốt các ngăn từ row. Quên ngăn nào thì con quái dùng số tạm của nhớt, ví dụ golem chỉ có 3 máu.",
+          "coachNotes": "Lỗi hay gặp: quên xp nên golem vẫn chỉ cho 1 ngọc. START_SKILLS = [0, 6] là đồ thử."
+        },
+        {
+          "id": "h15-code2",
+          "title": "Bài tập 2 và 3: Đợt và trùm",
+          "text": "Bài tập 2: viết run_wave() theo hai điều em vừa nghĩ. Bài tập 3: trùm chỉ là một dòng trong MOBS và một dòng trong WAVES. Muốn vào thẳng đợt 4 thì START_WAVE là mấy, khi đợt đếm từ 0?",
+          "coachNotes": "Giữ thứ tự: hỏi left trước, hỏi sân trống sau. Trùm 12 máu là đồ thử cho nhanh, Bài 16 đổi thành trùm thật. Con to (size hơn 4) có thanh máu đỏ."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h15-try",
+          "title": "Chơi từ đợt 1",
+          "text": "Bài tập đạt rồi thì đổi START_WAVE về 0, START_SKILLS về [] và chơi cả game. Đợt nào khó quá? Đổi một số trong WAVES: count ít đi, hoặc gap lớn lên, rồi chơi lại.",
+          "coachNotes": "12 phút. Qua mỗi đợt được cộng 1 máu. Hỏi: gap nhỏ thì khó hơn hay dễ hơn? (quái ra dồn dập hơn). Mỗi lần chỉ đổi một số."
+        }
+      ]
+    }
+  ]
+}

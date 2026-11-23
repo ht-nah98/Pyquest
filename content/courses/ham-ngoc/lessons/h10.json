@@ -1,0 +1,441 @@
+{
+  "id": "h10",
+  "courseId": "ham-ngoc",
+  "order": 10,
+  "title": "Ngọc kinh nghiệm",
+  "draft": true,
+  "summary": "Quái thua thì rơi ngọc, ngọc bay về em, đủ ngọc thì lên cấp.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h10-why",
+          "title": "Hạ quái để làm gì?",
+          "text": "Bây giờ hạ quái chỉ làm số Hạ tăng lên. Game vui hơn khi có phần thưởng nhìn thấy được và phải đi lấy. Quái thua sẽ rơi một viên ngọc ngay chỗ nó đứng.",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "3 phút. Cho một bé chơi game mẫu, cả lớp nhìn ngọc và thanh dưới đáy. Hỏi: ngọc rơi ở đâu? Đứng xa có lấy được không? Lúc nào thanh đầy? Game mẫu có nhiều thứ hơn, hôm nay chỉ nhìn ngọc."
+        },
+        {
+          "id": "h10-box",
+          "title": "Một viên ngọc là một hộp",
+          "text": "Ngọc chỉ cần nhớ x và y, nên mỗi viên là một hộp nhỏ. Mọi viên nằm trong danh sách gems (những viên ngọc). Vậy là game của em có ba danh sách: mobs, shots và gems.",
+          "coachNotes": "Trên giấy: vẽ 3 con quái có tọa độ, gạch con thứ hai. Bé viết hộp ngọc sẽ được thêm. Lỗi hay gặp: lấy x, y của hero, ngọc rơi ngay dưới chân em nên nhặt liền."
+        },
+        {
+          "id": "h10-quiz-where",
+          "quiz": {
+            "question": "Quái ở (120, 80) vừa thua, em đứng ở (300, 300). Hộp nào được thêm vào gems?",
+            "choices": [
+              "{\"x\": 300, \"y\": 300}",
+              "{\"x\": 120, \"y\": 80}",
+              "{\"x\": 180, \"y\": 220}"
+            ],
+            "answer": 1,
+            "explain": "Ngọc rơi ở chỗ con quái vừa thua, nên lấy x và y của con quái."
+          }
+        },
+        {
+          "id": "h10-kept",
+          "title": "Nhặt ngọc cũng là giữ lại",
+          "text": "Nhớ Bài 9 không? Muốn bỏ bớt thì làm danh sách mới tên kept (giữ lại). Viên em chạm tới thì cộng vào xp và không chép sang. Viên còn lại thì chép sang. xp là viết tắt của kinh nghiệm.",
+          "coachNotes": "Hoạt động 4 phút: 5 mẩu giấy là 5 viên ngọc, một cái rổ ghi kept. Bé đi qua từng viên: gần thì vạch một nét vào xp, xa thì bỏ vào rổ. Hỏi: nếu viên đã nhặt vẫn bỏ vào rổ thì sao? (khung nào cũng cộng, xp tăng vù vù)."
+        },
+        {
+          "id": "h10-magnet",
+          "title": "Nam châm hút ngọc",
+          "text": "Đi nhặt từng viên thì mệt. Ngọc gần em hơn 150 sẽ tự bước về em, mỗi khung 6 bước. Gần hơn 40 thì coi như đã nhặt. Khoảng cách vẫn là dx + dy như Bài 6.",
+          "coachNotes": "Vẽ em ở giữa, hai vùng 150 và 40. Cho lớp dò một viên ở bên phải, cách 100: sau 5 khung còn 70, sau 10 khung còn 40 (chưa nhỏ hơn 40), khung 11 thì nhặt được."
+        },
+        {
+          "id": "h10-quiz-magnet",
+          "quiz": {
+            "question": "Em ở (300, 300), viên ngọc ở (380, 380). near(gem, hero, 150) trả lời gì?",
+            "choices": [
+              "True, vì 80 nhỏ hơn 150",
+              "False, vì 380 lớn hơn 150",
+              "False, vì 80 + 80 = 160"
+            ],
+            "answer": 2,
+            "explain": "distance cộng cả hai chiều: 80 + 80 = 160. 160 không nhỏ hơn 150 nên ngọc chưa bay."
+          }
+        },
+        {
+          "id": "h10-bar",
+          "title": "Thanh dài theo phần đã có",
+          "text": "Thanh đầy rộng 600, bằng cả sân. Có 3 ngọc, cần 4 ngọc thì thanh dài 600 * 3 / 4 = 450. need() nghĩa là cần: hàm này trả về số ngọc cần để lên cấp.",
+          "coachNotes": "Ví dụ: hình cục pin điện thoại, có 75% thì tô ba phần tư. Hỏi: có 2, cần 4 thì thanh dài mấy? (300). Có 0 thì sao? (0, không thấy thanh)."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h10-need",
+          "title": "Cấp càng cao càng khó lên",
+          "text": "Lên từ cấp 1 cần 4 ngọc, cấp 2 cần 6, cấp 3 cần 8. Công thức là 2 + level * 2 (level là cấp). Em kẻ bảng ra giấy và điền tiếp tới cấp 6.",
+          "coachNotes": "5 phút. Đáp án: cấp 4 cần 10, cấp 5 cần 12, cấp 6 cần 14. Hỏi: nếu cấp nào cũng cần 4 viên thì cuối game sẽ ra sao? (lên cấp liên tục, hết hồi hộp)."
+        },
+        {
+          "id": "h10-quiz-level",
+          "quiz": {
+            "question": "level = 1, xp = 5, need() là 2 + level * 2. Trừ need() trước, rồi mới cộng level. Kết quả là gì?",
+            "choices": [
+              "level 2, xp 1",
+              "level 2, xp -1",
+              "level 2, xp 0"
+            ],
+            "answer": 0,
+            "explain": "Lúc trừ, need() là 4: 5 - 4 = 1, dư 1 viên thì giữ. Cộng level trước thì need() thành 6, xp bị âm."
+          },
+          "coachNotes": "Cho lớp làm cả hai thứ tự trên bảng rồi so. Đây là lỗi hay gặp nhất của Bài tập 3."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h10-code1",
+          "title": "Bài tập 1: Rơi và nhặt",
+          "text": "Ở remove_dead(), chỗ con quái hết máu, thêm một hộp vào gems. Rồi viết take_gems() (nhặt ngọc) theo khuôn giữ lại. Chạy thử: số Ngọc phải tăng từng viên một.",
+          "coachNotes": "15 phút. Bé bí thì đặt remove_dead() và take_gems() cạnh nhau: cùng một khuôn. Lỗi hay gặp: quên dòng gán gems ở cuối, hoặc thụt dòng đó vào trong vòng for."
+        },
+        {
+          "id": "h10-code2",
+          "title": "Bài tập 2: Nam châm và thanh",
+          "text": "step_to viết cho quái, nhưng ngọc cũng có x và y nên dùng lại được. Em chỉ cần nghĩ: ai bước, bước về phía ai, mỗi khung mấy bước? Rồi vẽ thanh xanh chồng lên thanh tối có sẵn.",
+          "coachNotes": "Hỏi trước khi code: nếu viết ngược hai hộp trong step_to thì ai chạy? (nhân vật bị kéo về phía ngọc)."
+        },
+        {
+          "id": "h10-code3",
+          "title": "Bài tập 3: Lên cấp",
+          "text": "Viết check_level(): đủ ngọc thì trừ phần đã dùng, giữ phần dư, rồi lên một cấp. Trừ trước, cộng sau. Nhớ đổi need() theo công thức em vừa điền bảng.",
+          "coachNotes": "Hỏi: vì sao không đặt xp = 0? (mất viên dư của em, hơi oan)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h10-try",
+          "title": "Chơi thử tới cấp 4",
+          "text": "Chơi toàn màn hình. Đứng yên thì nhặt được mấy viên, chạy đi nhặt thì mấy viên? Đổi thử 150 thành 300, hoặc 2 + level * 2 thành 3 + level * 4. Game dễ hơn hay khó hơn?",
+          "coachNotes": "10 phút. Cho mỗi bé đổi một số rồi nói cảm giác. Nhắc: đổi một số mỗi lần thì mới biết số nào gây ra khác biệt."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h10-e1",
+      "title": "Rơi ngọc, nhặt ngọc",
+      "task": "(1) Trong remove_dead(), quái hết máu thì thêm vào gems một hộp có x, y của con quái. (2) Viết take_gems(): viên nào near hero dưới 40 thì xp cộng 1, viên còn lại giữ trong kept.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h10-e1-run"
+        },
+        {
+          "label": "Quái rơi ngọc",
+          "kind": "drewCount",
+          "sprite": "item-xp",
+          "min": 1,
+          "id": "h10-e1-drop"
+        },
+        {
+          "label": "Nhặt được ngọc",
+          "kind": "varCompare",
+          "name": "xp",
+          "op": ">=",
+          "value": 2,
+          "id": "h10-e1-take"
+        },
+        {
+          "label": "Mỗi viên chỉ tính một lần",
+          "kind": "varCompare",
+          "name": "xp",
+          "op": "<=",
+          "value": 12,
+          "id": "h10-e1-once"
+        }
+      ],
+      "test": {
+        "frames": 420,
+        "taps": [],
+        "keys": [
+          {
+            "key": "up",
+            "from": 330,
+            "to": 360
+          },
+          {
+            "key": "left",
+            "from": 340,
+            "to": 380
+          }
+        ]
+      },
+      "walkthrough": [
+        "Chỗ (1), ngay dưới kills += 1: gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})",
+        "Chỗ (2): kept = [] rồi for gem in gems:",
+        "Thụt vào: if near(gem, hero, 40): rồi xp += 1",
+        "else: rồi kept.append(gem): viên chưa nhặt thì giữ lại.",
+        "Cuối cùng, ngang chữ for: gems = kept",
+        "Bấm ▶ Chạy: máy tự đi nhặt. Rồi ⛶ để em nhặt."
+      ],
+      "hints": [
+        "Nhặt ngọc cũng là giữ lại bằng danh sách mới, giống Bài 9.",
+        "gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})",
+        "if near(gem, hero, 40):\n    xp += 1\nelse:\n    kept.append(gem)"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\ngems = []\nxp = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            # Em viết tiếp ở đây (1)\n            pass\n    mobs = alive\n\n\ndef take_gems():\n    global gems, xp\n    # Em viết tiếp ở đây (2)\n    pass\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_text(\"Ngọc: \" + str(xp), 180, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\ngems = []\nxp = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n    mobs = alive\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_text(\"Ngọc: \" + str(xp), 180, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    },
+    {
+      "id": "h10-e2",
+      "title": "Nam châm và thanh kinh nghiệm",
+      "task": "(1) Đầu vòng for trong take_gems(): nếu near(gem, hero, 150) thì gem bước về phía hero, mỗi bước 6. Dùng lại step_to nhé. (2) Trong draw(): vẽ thanh xanh ở (0, 590), rộng 600 * xp / need(), cao 10, màu \"#2fc9a8\".",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_rect",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h10-e2-run"
+        },
+        {
+          "label": "Ngọc tự bay về em",
+          "kind": "varCompare",
+          "name": "xp",
+          "op": ">=",
+          "value": 3,
+          "id": "h10-e2-fly"
+        },
+        {
+          "label": "Có thanh kinh nghiệm",
+          "kind": "drewRects",
+          "min": 2,
+          "at": [
+            0,
+            590
+          ],
+          "id": "h10-e2-bar"
+        }
+      ],
+      "test": {
+        "frames": 300,
+        "taps": []
+      },
+      "walkthrough": [
+        "Chỗ (1), trong vòng for gem: if near(gem, hero, 150): rồi thụt vào step_to(gem, hero, 6)",
+        "step_to viết cho quái mà ngọc cũng dùng được, vì ngọc cũng có x, y.",
+        "Chỗ (2): draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")",
+        "need() trả về số ngọc cần để lên cấp. Nhặt một nửa thì thanh dài một nửa.",
+        "Bấm ▶ Chạy, rồi ⛶: ngọc tự bay về em."
+      ],
+      "hints": [
+        "Chỗ (1) chỉ 2 dòng.",
+        "step_to(gem, hero, 6)",
+        "draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\ngems = []\nxp = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n    mobs = alive\n\n\ndef need():\n    return 10\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        # Em viết tiếp ở đây (1)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    # Em viết tiếp ở đây (2)\n    draw_text(\"Ngọc: \" + str(xp), 180, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\ngems = []\nxp = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n    mobs = alive\n\n\ndef need():\n    return 10\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Ngọc: \" + str(xp), 180, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    },
+    {
+      "id": "h10-e3",
+      "title": "Lên cấp",
+      "task": "Viết check_level(): nếu xp >= need() thì xp bớt need() và level cộng 1. Nhớ đổi need() thành return 2 + level * 2: cấp càng cao càng cần nhiều ngọc.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_rect",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h10-e3-run"
+        },
+        {
+          "label": "Lên được cấp 2",
+          "kind": "varCompare",
+          "name": "level",
+          "op": ">=",
+          "value": 2,
+          "id": "h10-e3-level"
+        },
+        {
+          "label": "Không lên cấp quá nhanh",
+          "kind": "varCompare",
+          "name": "level",
+          "op": "<=",
+          "value": 3,
+          "id": "h10-e3-slow"
+        },
+        {
+          "label": "Lên cấp thì dùng hết ngọc của cấp đó",
+          "kind": "varCompare",
+          "name": "xp",
+          "op": "<=",
+          "value": 7,
+          "id": "h10-e3-spend"
+        },
+        {
+          "label": "Cấp 2 hiện trên màn hình",
+          "kind": "drewText",
+          "text": "Cấp 2",
+          "id": "h10-e3-text"
+        }
+      ],
+      "test": {
+        "frames": 420,
+        "taps": []
+      },
+      "walkthrough": [
+        "Trong check_level(), xóa pass: if xp >= need():",
+        "Thụt vào: xp -= need() trước, rồi level += 1",
+        "Phải trừ trước: cộng level trước thì need() đổi mất rồi.",
+        "Trong need(): đổi return 10 thành return 2 + level * 2",
+        "Bấm ▶ Chạy: chữ Cấp 2 hiện ra khi nhặt đủ 4 viên."
+      ],
+      "hints": [
+        "Dư ngọc thì giữ lại, đừng đặt xp = 0.",
+        "if xp >= need():\n    xp -= need()\n    level += 1",
+        "return 2 + level * 2"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\ngems = []\nxp = 0\nlevel = 1\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n    mobs = alive\n\n\ndef need():\n    return 10\n\n\ndef check_level():\n    global xp, level\n    # Em viết tiếp ở đây\n    pass\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\nshots = []\nwait = 0\nkills = 0\ngems = []\nxp = 0\nlevel = 1\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        wait = 30\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                mob[\"hp\"] -= 1\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n    mobs = alive\n\n\ndef need():\n    return 2 + level * 2\n\n\ndef check_level():\n    global xp, level\n    if xp >= need():\n        xp -= need()\n        level += 1\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    shoot()\n    move_shots()\n    hit_mobs()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "xp"
+  ],
+  "docsUnlocked": []
+}

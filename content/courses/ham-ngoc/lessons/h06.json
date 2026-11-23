@@ -1,0 +1,328 @@
+{
+  "id": "h06",
+  "courseId": "ham-ngoc",
+  "order": 6,
+  "title": "Chạm là mất máu",
+  "draft": true,
+  "summary": "Đo khoảng cách để biết chạm, rồi cho em một giây bất tử để chạy.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h06-why",
+          "title": "Máy không thấy chạm",
+          "text": "Mắt em thấy quái đụng vào mình. Máy chỉ thấy các con số x, y. Phải đổi câu \"chạm chưa?\" thành câu hỏi về số: hai bên cách nhau bao xa?",
+          "coachNotes": "Hỏi: ở Bay Qua Khe em hỏi chim đụng cột bằng cách nào? (hai hình chữ nhật). Lần này đo khoảng cách cho gọn."
+        },
+        {
+          "id": "h06-walk",
+          "title": "Đo bằng bước đi",
+          "text": "Đếm bước ngang cộng bước dọc, như đi trên bàn cờ mà không đi chéo. Em (300, 300), quái (320, 310): ngang 20, dọc 10, vậy khoảng cách là 30.",
+          "coachNotes": "Hoạt động giấy: chấm hai điểm trên giấy ô, đếm bước. Đường chim bay sẽ ngắn hơn (khoảng 22) nhưng cần phép tính khó hơn; cách đếm này đủ dùng cho game."
+        },
+        {
+          "id": "h06-abs",
+          "title": "abs: bỏ dấu trừ",
+          "text": "Quái ở bên trái em: 280 - 300 = -20. Khoảng cách không thể âm! abs(-20) là 20, abs(20) cũng là 20. abs là bỏ dấu trừ đi.",
+          "coachNotes": "Hỏi: từ nhà em tới trường 2 km, từ trường về nhà là -2 km à? Lỗi hay gặp: quên abs, quái ở bên trái bị tính là \"rất gần\" vì số âm nhỏ hơn 36."
+        },
+        {
+          "id": "h06-near",
+          "title": "Dưới 36 là chạm",
+          "text": "near(a, b, 36) trả lời True khi khoảng cách dưới 36. Nửa người em 24, nửa con nhớt 16, cộng lại là 40. Mình lấy 36, nhỏ hơn một chút cho công bằng.",
+          "coachNotes": "Giống chừa mép 8 điểm ở Bay Qua Khe: phải chạm thật rõ mới tính."
+        },
+        {
+          "id": "h06-quiz-near",
+          "quiz": {
+            "question": "Em (300, 300), quái (285, 320). Khoảng cách bằng mấy? Có chạm (dưới 36) không?",
+            "choices": [
+              "5, có chạm",
+              "15, có chạm",
+              "35, có chạm",
+              "35, không chạm"
+            ],
+            "answer": 2,
+            "explain": "Ngang 15, dọc 20, cộng lại 35. 35 nhỏ hơn 36 nên là chạm."
+          },
+          "coachNotes": "5 là quên abs (-15 + 20). 15 là chỉ đo một trục."
+        },
+        {
+          "id": "h06-problem",
+          "title": "Chạm một cái là thua?",
+          "text": "Quái dính vào em thì khung nào cũng chạm, mà mỗi giây có khoảng 60 khung. Với 5 máu, chỉ một con quái cũng lấy sạch trong 5 khung hình!",
+          "coachNotes": "5 khung chưa tới một phần mười giây. Bài tập 1 cố ý để như vậy cho bé thấy vấn đề, bài tập 2 sửa."
+        },
+        {
+          "id": "h06-safe",
+          "title": "Đồng hồ bất tử",
+          "text": "safe là đồng hồ đếm ngược. Bị chạm thì lên dây: safe = 60. Mỗi khung safe bớt 1. Còn lớn hơn 0 thì không mất máu. 60 khung là khoảng 1 giây để chạy.",
+          "coachNotes": "Cho lớp đếm ngược thật 60, 59, 58… thật nhanh. Hỏi: nếu quên bớt 1 thì sao? (bất tử mãi mãi)."
+        },
+        {
+          "id": "h06-trace",
+          "title": "Dò đồng hồ",
+          "text": "Khung bị chạm: máu 5 còn 4, safe = 60.\nKhung sau: safe = 59, không xét chạm.\n…\nKhung thứ 60: safe = 0, vẫn chưa xét.\nKhung thứ 61: lại xét chạm.",
+          "coachNotes": "Mỗi khung chỉ làm một trong hai việc: hoặc bớt safe, hoặc xét chạm. Vì vậy hai lần mất máu cách nhau 61 khung."
+        },
+        {
+          "id": "h06-quiz-safe",
+          "quiz": {
+            "question": "safe = 2 và quái vẫn dính vào em. Sau 3 khung hình nữa, em mất mấy máu?",
+            "choices": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ],
+            "answer": 1,
+            "explain": "Khung 1: safe còn 1. Khung 2: còn 0. Khung 3: hết bất tử, bị chạm nên mất 1 máu."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h06-blink",
+          "title": "Báo cho người chơi biết",
+          "text": "Đang bất tử mà không báo thì người chơi tưởng game hỏng. Nên nhân vật nhấp nháy: 5 khung ẩn, 5 khung hiện. draw() có sẵn: safe % 10 < 5 thì mới vẽ.",
+          "coachNotes": "Dò cùng lớp: safe 59 thì dư 9, ẩn. 54 thì dư 4, hiện. Hết bất tử: 0 dư 0, hiện luôn."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h06-code1",
+          "title": "Bài tập 1: đo và trừ máu",
+          "text": "Viết distance: đo ngang, đo dọc, trả về tổng. Rồi trong check_hits() hỏi từng con quái bằng near. Chạy thấy máu tụt vèo là đúng rồi đó, bài tập 2 sẽ sửa.",
+          "coachNotes": "Lỗi hay gặp: chỉ đo một trục (quái cùng cột, xa tít vẫn làm em đau); để dòng trừ máu ngoài if."
+        },
+        {
+          "id": "h06-code2",
+          "title": "Bài tập 2: một giây bất tử",
+          "text": "(1) Đầu hàm: đang bất tử thì bớt safe rồi thôi. (2) Lúc bị chạm: lên dây đồng hồ rồi return, để hai con chạm cùng lúc cũng chỉ mất 1 máu.",
+          "coachNotes": "Hỏi: safe là một biến thường nên cần global, còn hero[\"hp\"] thì không. Vì sao? (Bài 3: chỉ đổi một ngăn)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h06-try",
+          "title": "Chịu được bao lâu?",
+          "text": "Đứng im cho quái chạm: từ lúc mất máu đầu tiên tới lúc thua là mấy giây? Rồi vừa chạy vừa né xem lâu hơn bao nhiêu. Đổi safe = 60 thành 30 và 120: số nào vừa?",
+          "coachNotes": "Đứng im thì khoảng 4 giây: 4 lần chờ, mỗi lần 61 khung. Cho bé bấm giờ rồi so với phép tính. Thua rồi thì tắt và chạy lại, Bài 11 mới có màn chơi lại. Bài sau: dạy nhân vật tìm con quái gần nhất."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h06-e1",
+      "title": "Gần bao nhiêu là chạm?",
+      "task": "(1) distance(a, b) trả về đường đi ngang cộng đường đi dọc giữa hai hộp, dùng abs để không bị số âm. (2) Trong check_hits(): con quái nào near hero dưới 36 thì hero[\"hp\"] bớt 1.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_import",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h06-e1-run"
+        },
+        {
+          "label": "Chưa chạm thì chưa mất máu",
+          "kind": "drewText",
+          "text": "Máu: 5",
+          "id": "h06-e1-full"
+        },
+        {
+          "label": "Bị chạm nhiều thì thua",
+          "kind": "varEquals",
+          "name": "game_over",
+          "value": true,
+          "id": "h06-e1-over"
+        },
+        {
+          "label": "Quái tới sát mới mất máu",
+          "kind": "varCompare",
+          "name": "tick",
+          "op": ">=",
+          "value": 205,
+          "id": "h06-e1-late"
+        },
+        {
+          "label": "Chạm là mất máu ngay",
+          "kind": "varCompare",
+          "name": "tick",
+          "op": "<=",
+          "value": 260,
+          "id": "h06-e1-soon"
+        }
+      ],
+      "test": {
+        "frames": 400,
+        "taps": []
+      },
+      "walkthrough": [
+        "Chỗ (1): dx = abs(a[\"x\"] - b[\"x\"]). abs(-5) là 5: bỏ dấu trừ đi.",
+        "dy = abs(a[\"y\"] - b[\"y\"]), rồi return dx + dy thay cho return 0.",
+        "Chỗ (2): for mob in mobs: rồi thụt vào if near(mob, hero, 36):",
+        "Thụt thêm: hero[\"hp\"] -= 1",
+        "Bấm ▶ Chạy: quái chạm tới thì máu tụt rất nhanh. Bài tập 2 sẽ sửa chuyện đó."
+      ],
+      "hints": [
+        "Nhớ xóa dòng return 0.",
+        "dx = abs(a[\"x\"] - b[\"x\"])\ndy = abs(a[\"y\"] - b[\"y\"])\nreturn dx + dy",
+        "for mob in mobs:\n    if near(mob, hero, 36):\n        hero[\"hp\"] -= 1"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    # Em viết tiếp ở đây (1)\n    return 0\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef check_hits():\n    # Em viết tiếp ở đây (2)\n    pass\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef check_hits():\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    },
+    {
+      "id": "h06-e2",
+      "title": "Bất tử một chút",
+      "task": "Một lần chạm mà mất sạch máu thì chán quá. safe đếm số khung em còn bất tử. (1) Nếu safe > 0: safe bớt 1 rồi return. (2) Khi bị chạm: máu bớt 1 và safe = 60, rồi return để chỉ một con làm em đau.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_import",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h06-e2-run"
+        },
+        {
+          "label": "Chạm lần đầu chỉ mất 1 máu",
+          "kind": "drewText",
+          "text": "Máu: 4",
+          "id": "h06-e2-one"
+        },
+        {
+          "label": "Hết bất tử lại mất máu",
+          "kind": "drewText",
+          "text": "Máu: 2",
+          "id": "h06-e2-two"
+        },
+        {
+          "label": "Không thua ngay lập tức",
+          "kind": "varEquals",
+          "name": "game_over",
+          "value": false,
+          "id": "h06-e2-alive"
+        },
+        {
+          "label": "Có lúc đang bất tử",
+          "kind": "varCompare",
+          "name": "safe",
+          "op": ">=",
+          "value": 30,
+          "when": "ever",
+          "id": "h06-e2-blink"
+        }
+      ],
+      "test": {
+        "frames": 400,
+        "taps": []
+      },
+      "walkthrough": [
+        "Chỗ (1), đầu check_hits(): if safe > 0: rồi thụt vào safe -= 1 và return",
+        "return ở đây nghĩa là: đang bất tử thì thôi, không xét chạm nữa.",
+        "Chỗ (2), ngay dưới hero[\"hp\"] -= 1, cùng thụt lề: safe = 60 rồi return",
+        "60 khung là khoảng 1 giây. Phần nhấp nháy khi bất tử đã có sẵn trong draw().",
+        "Bấm ▶ Chạy, rồi ⛶: bị chạm thì em nhấp nháy và có 1 giây để chạy."
+      ],
+      "hints": [
+        "safe đếm ngược từ 60 về 0.",
+        "if safe > 0:\n    safe -= 1\n    return",
+        "hero[\"hp\"] -= 1\nsafe = 60\nreturn"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef check_hits():\n    global safe\n    # Em viết tiếp ở đây (1)\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            # Em viết tiếp ở đây (2)\n            pass\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\ngame_over = False\nsafe = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd, game_over\n    if game_over:\n        return\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        game_over = True\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n    if game_over:\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n\n\nstart_game()\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "health"
+  ],
+  "docsUnlocked": []
+}

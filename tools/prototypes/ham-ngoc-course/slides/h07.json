@@ -1,0 +1,123 @@
+{
+  "title": "Con nào gần nhất?",
+  "summary": "Tìm nhỏ nhất trong danh sách: giữ kỷ lục, gặp con gần hơn thì thay.",
+  "unlocksRoadmap": [],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h07-why",
+          "title": "Ngắm con nào?",
+          "text": "Sắp tới nhân vật sẽ tự đánh. Nhưng sân có cả chục con, đánh con nào trước? Con gần nhất nguy hiểm nhất, nên mình dạy máy tìm con gần nhất.",
+          "coachNotes": "Hỏi: còn cách chọn nào khác? (con yếu nhất, con to nhất…). Mỗi cách là một kiểu chơi khác nhau."
+        },
+        {
+          "id": "h07-two",
+          "title": "Máy chỉ so hai số một lần",
+          "text": "Mắt em liếc một cái là biết con nào gần. Máy thì mỗi lần chỉ so được hai con số. Nó phải đi qua từng con và nhớ con gần nhất đã gặp.",
+          "coachNotes": "Trò chơi: bịt mắt một bé, chỉ cho nghe từng số một, hỏi số nhỏ nhất. Bé phải nhớ gì trong đầu? (số nhỏ nhất tới lúc này)."
+        },
+        {
+          "id": "h07-record",
+          "title": "Giữ kỷ lục",
+          "text": "Giống tìm người chạy nhanh nhất: người đầu tiên tạm giữ kỷ lục. Ai nhanh hơn thì thành kỷ lục mới. Xem hết mọi người, ai đang giữ là nhanh nhất.",
+          "coachNotes": "Phát thẻ số (giây chạy) cho 5 bé xếp hàng; một bé cầm chữ \"best\" đi dọc hàng, trao chữ cho ai có số nhỏ hơn. Dùng thẻ số, đừng so chiều cao hay điểm thật của các bé."
+        },
+        {
+          "id": "h07-trace",
+          "title": "Dò tay",
+          "text": "Đường tới em: A 220, B 90, C 140, D 60.\nBắt đầu: best là A.\nB: 90 < 220? Có, best là B.\nC: 140 < 90? Không.\nD: 60 < 90? Có, best là D.",
+          "coachNotes": "Máy cũng so A với chính A: 220 < 220 là sai nên không đổi gì. Hỏi: nếu hai con xa bằng nhau thì best giữ con nào? (con gặp trước)."
+        },
+        {
+          "id": "h07-quiz-changes",
+          "quiz": {
+            "question": "Đường tới em lần lượt là 150, 200, 80, 120, 70. Bắt đầu best là con đầu. best đổi sang con khác mấy lần?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "answer": 1,
+            "explain": "150 → 80 là một lần, 80 → 70 là lần hai. 200 và 120 đều không nhỏ hơn kỷ lục lúc đó."
+          }
+        },
+        {
+          "id": "h07-quiz-nearest",
+          "quiz": {
+            "question": "Em (300, 300). A (100, 300), B (380, 250), C (300, 150). Con nào gần nhất?",
+            "choices": [
+              "A",
+              "B",
+              "C"
+            ],
+            "answer": 1,
+            "explain": "A cách 200. B cách 80 + 50 = 130. C cách 150. Nhỏ nhất là 130. Phải cộng cả hai trục mới biết."
+          }
+        },
+        {
+          "id": "h07-return",
+          "title": "return đặt ở đâu?",
+          "text": "return làm hàm dừng ngay. Nếu return best nằm trong vòng for, hàm dừng ở con đầu tiên, chưa kịp xem con nào khác. Xem hết hàng rồi mới trả lời.",
+          "coachNotes": "Diễn lại trò xếp hàng: bạn cầm chữ best xem người đầu rồi hét \"xong!\". Có đúng không?"
+        },
+        {
+          "id": "h07-quiz-return",
+          "quiz": {
+            "question": "return best lỡ thụt vào trong for, thẳng hàng với chữ if. nearest() trả về con nào?",
+            "choices": [
+              "Con gần nhất",
+              "Con cuối danh sách",
+              "Luôn là con đầu danh sách",
+              "Không trả về con nào"
+            ],
+            "answer": 2,
+            "explain": "Vòng đầu so con đầu với chính nó, không đổi gì, rồi gặp return là dừng hàm."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h07-start",
+          "title": "Vì sao bắt đầu từ mobs[0]?",
+          "text": "Phải có sẵn một con để so lần đầu. mobs[0] là con đầu danh sách, chắc chắn là con có thật. Nhưng danh sách rỗng thì không có mobs[0], Python sẽ báo lỗi.",
+          "coachNotes": "Hỏi: bắt đầu best là một số bịa ra như 0 thì sao? (không con nào gần hơn 0). Ở bài này chưa có con nào biến mất nên danh sách không rỗng; Bài 9 sẽ hỏi len(mobs) > 0 trước."
+        },
+        {
+          "id": "h07-line",
+          "title": "Vạch trắng để kiểm tra",
+          "text": "draw_line nối hai điểm bằng một đoạn thẳng. draw() đã có sẵn vạch trắng nối em với con mà nearest() chọn. Đúng hay sai, em nhìn là biết.",
+          "coachNotes": "Người làm game hay vẽ thêm thứ chỉ để kiểm tra, xong thì bỏ. Bài 8 sẽ bỏ vạch này."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h07-code",
+          "title": "Viết nearest()",
+          "text": "nearest() đang luôn trả về con đầu. Viết theo cách giữ kỷ lục: tạm chọn, đi qua từng con, so bằng distance của Bài 6, gần hơn thì nhớ con mới. Cuối cùng mới trả lời.",
+          "coachNotes": "Chạy code khởi đầu trước: vạch trắng dính vào một con dù con khác gần hơn. Lỗi hay gặp: best = mob[\"x\"] (nhớ số thay vì nhớ cả con), return trong for."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h07-try",
+          "title": "Vạch có chỉ đúng không?",
+          "text": "Đi vòng quanh bầy quái: vạch có nhảy sang con khác khi con đó gần hơn không? Đổi < thành > xem vạch chỉ con nào, rồi đổi lại. Thử màu vạch khác nữa.",
+          "coachNotes": "Đổi thành > là ra con xa nhất: cùng một khuôn, chỉ khác dấu so sánh. Bài sau: bỏ vạch, bắn thật."
+        }
+      ]
+    }
+  ]
+}

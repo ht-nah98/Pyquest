@@ -1,0 +1,380 @@
+{
+  "id": "h05",
+  "courseId": "ham-ngoc",
+  "order": 5,
+  "title": "Quái đuổi theo",
+  "draft": true,
+  "summary": "So từng trục để biết bước về phía nào; quái ra đều đều ở mép xa em.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h05-why",
+          "title": "Đuổi theo là làm gì?",
+          "text": "Quái không biết đường. Mỗi khung hình nó chỉ hỏi: em ở bên trái hay bên phải mình? Ở trên hay ở dưới? Rồi nhích một bước về phía đó.",
+          "coachNotes": "Trò chơi 5 phút: một bạn làm quái, một bạn làm nhân vật đứng trên sàn gạch. Mỗi tiếng vỗ tay, quái được bước một ô ngang và một ô dọc về phía bạn kia."
+        },
+        {
+          "id": "h05-axis",
+          "title": "So từng trục một",
+          "text": "Nhỏ hơn đích thì cộng, lớn hơn đích thì trừ, bằng nhau thì đứng yên. Làm với x trước, rồi làm với y. Hai trục tự lo việc của mình.",
+          "coachNotes": "Vẽ dấu cộng lên bảng, đích ở giữa. Đặt quái ở bốn phía, hỏi từng phía: cộng hay trừ, x hay y?"
+        },
+        {
+          "id": "h05-trace",
+          "title": "Dò vài khung",
+          "text": "Quái (100, 40), em (300, 300), speed = 1.\nKhung 1: (101, 41)\nKhung 2: (102, 42)\nKhung 3: (103, 43)\nCả hai trục đều nhích nên quái đi chéo.",
+          "coachNotes": "Bé dò tiếp khung 4, 5. Trong game còn thêm một chút lắc lư ngẫu nhiên (-1 tới 1), ở đây tạm bỏ qua cho dễ tính."
+        },
+        {
+          "id": "h05-straight",
+          "title": "Chéo rồi thẳng",
+          "text": "x cách em 200, y cách em 260. Sau 200 khung, x đã bằng 300 nên thôi nhích ngang, lúc đó y = 240. Quái đi thẳng xuống 60 khung nữa là tới.",
+          "coachNotes": "Vẽ đường đi lên giấy ô: một đoạn chéo rồi một đoạn thẳng. 260 khung là hơn 4 giây."
+        },
+        {
+          "id": "h05-quiz-step",
+          "quiz": {
+            "question": "Quái (290, 40), em (300, 300), speed = 1, không lắc lư. Sau 20 khung hình quái ở đâu?",
+            "choices": [
+              "(310, 60)",
+              "(300, 60)",
+              "(300, 50)",
+              "(290, 60)"
+            ],
+            "answer": 1,
+            "explain": "x nhích 10 khung là tới 300 rồi đứng yên. y nhích đủ 20 khung: 40 + 20 = 60."
+          },
+          "coachNotes": "(310, 60) là quên rằng tới đích thì trục đó dừng. (300, 50) là cho cả hai trục dừng cùng lúc."
+        },
+        {
+          "id": "h05-quiz-flip",
+          "quiz": {
+            "question": "Quái ở phía trên em. Em viết nhầm: thing[\"y\"] < target[\"y\"] thì thing[\"y\"] -= speed. Quái làm gì?",
+            "choices": [
+              "Chạy lên, càng lúc càng xa em",
+              "Đi xuống chỗ em",
+              "Đứng yên",
+              "Đi sang ngang"
+            ],
+            "answer": 0,
+            "explain": "Trừ y là đi lên. Quái đang ở trên mà còn đi lên thì nó đang chạy trốn em."
+          }
+        },
+        {
+          "id": "h05-names",
+          "title": "Viết cho mọi thứ biết đuổi",
+          "text": "step_to(thing, target, speed): thing là thứ đang đi, target là đích. Trong hàm chỉ dùng hai tên này, nên đưa con nào vào cũng chạy được.",
+          "coachNotes": "Hỏi: sau này còn thứ gì cần bay về phía em? (viên ngọc, ở Bài 10). Lỗi hay gặp: viết hero hoặc mob trong step_to."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h05-edge",
+          "title": "Ra ở mép xa cho công bằng",
+          "text": "Quái hiện ngay bên cạnh thì em né sao kịp. Luật: em ở nửa trên (y nhỏ hơn 300) thì quái ra ở mép dưới, y = 580. Còn lại thì ra ở mép trên, y = 20.",
+          "coachNotes": "Hỏi: đứng đúng y = 300 thì quái ra ở đâu? (300 không nhỏ hơn 300, nên là 20, mép trên)."
+        },
+        {
+          "id": "h05-beat",
+          "title": "Nhịp: tick % 50",
+          "text": "tick cộng 1 mỗi khung. tick % 50 là số dư khi chia cho 50, nó bằng 0 ở tick 50, 100, 150… Vậy cứ 50 khung có một nhịp, gần 1 giây.",
+          "coachNotes": "Nhắc % ở Bay Qua Khe (Bài 7, chẵn lẻ). Đếm to: 48, 49, 50 vỗ tay, 51… Giới hạn dưới 14 con để sân không nghẹt."
+        },
+        {
+          "id": "h05-quiz-beat",
+          "quiz": {
+            "question": "Lúc đầu có 6 con. Cứ 50 khung thêm 1 con, chưa con nào mất. Ngay sau tick 200 có mấy con?",
+            "choices": [
+              "4",
+              "9",
+              "10",
+              "14"
+            ],
+            "answer": 2,
+            "explain": "Nhịp rơi vào tick 50, 100, 150, 200: thêm 4 con. 6 + 4 = 10."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h05-code1",
+          "title": "Bài tập 1: dạy quái đuổi",
+          "text": "Một if cho \"đích ở bên phải\" đã có sẵn. Ghi dấu cộng hay trừ cho ba phía còn lại ra giấy, rồi mới viết. Quái chạy trốn nghĩa là có một dấu bị ngược.",
+          "coachNotes": "Bốn if riêng, không elif giữa x và y. move_mobs() có sẵn lắc lư để quái không chồng khít lên nhau."
+        },
+        {
+          "id": "h05-code2",
+          "title": "Bài tập 2: quái ra liên tục",
+          "text": "far_edge: gặp return là hàm trả lời và dừng luôn, nên dòng cuối chỉ chạy khi if sai. Trong update(), hai điều phải cùng đúng mới gọi spawn_mob(): nhớ chữ and.",
+          "coachNotes": "Hỏi: vì sao không cần else? (đúng thì đã return, không tới dòng dưới). Lỗi hay gặp: viết return 20 thụt trong if."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h05-try",
+          "title": "Dắt quái đi chơi",
+          "text": "Chạy vòng tròn: bầy quái kéo thành cái đuôi. Đứng sát mép trên, rồi sát mép dưới: quái mới ra ở đâu? Đổi speed của quái thành 2 hoặc 3: còn né kịp không?",
+          "coachNotes": "Hỏi: em đi 3, quái đi 1, vậy em nhanh gấp mấy? Game công bằng là quái phải chậm hơn em một chút. Bài sau: bị bắt kịp thì mất máu."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h05-e1",
+      "title": "Quái đuổi theo em",
+      "task": "step_to(thing, target, speed) cho thing bước một bước về phía target. Đã có: ở bên trái thì sang phải. Em viết 3 chữ if còn lại: ở bên phải thì sang trái, ở trên thì đi xuống, ở dưới thì đi lên.",
+      "input": "typing",
+      "toolbox": [
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_if",
+        "pq_import",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_list",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h05-e1-run"
+        },
+        {
+          "label": "Quái sang trái tới chỗ em",
+          "kind": "staysWithin",
+          "sprite": "mob",
+          "axis": "x",
+          "min": 80,
+          "max": 122,
+          "frames": [
+            280,
+            290
+          ],
+          "id": "h05-e1-x"
+        },
+        {
+          "label": "Quái đi xuống tới chỗ em",
+          "kind": "staysWithin",
+          "sprite": "mob",
+          "axis": "y",
+          "min": 264,
+          "max": 304,
+          "frames": [
+            280,
+            290
+          ],
+          "id": "h05-e1-y"
+        },
+        {
+          "label": "Em chạy sang phải, quái theo",
+          "kind": "staysWithin",
+          "sprite": "mob",
+          "axis": "x",
+          "min": 290,
+          "max": 340,
+          "frames": [
+            585,
+            599
+          ],
+          "id": "h05-e1-right"
+        },
+        {
+          "label": "Em chạy lên, quái theo",
+          "kind": "staysWithin",
+          "sprite": "mob",
+          "axis": "y",
+          "min": 50,
+          "max": 96,
+          "frames": [
+            585,
+            599
+          ],
+          "id": "h05-e1-up"
+        }
+      ],
+      "test": {
+        "frames": 600,
+        "taps": [],
+        "keys": [
+          {
+            "key": "left",
+            "from": 0,
+            "to": 60
+          },
+          {
+            "key": "right",
+            "from": 300,
+            "to": 370
+          },
+          {
+            "key": "up",
+            "from": 300,
+            "to": 369
+          }
+        ]
+      },
+      "walkthrough": [
+        "Tìm def step_to(thing, target, speed): thing là con đang đi, target là chỗ muốn tới.",
+        "if thing[\"x\"] > target[\"x\"]: rồi thụt vào thing[\"x\"] -= speed",
+        "Với y: nhỏ hơn thì cộng speed, lớn hơn thì trừ speed.",
+        "move_mobs() có sẵn: nó gọi step_to cho từng con, thêm một chút lắc lư để quái không chồng khít lên nhau.",
+        "Bấm ▶ Chạy rồi ⛶: em chạy đâu, quái theo đó."
+      ],
+      "hints": [
+        "Mỗi trục 2 chữ if: nhỏ hơn thì cộng, lớn hơn thì trừ.",
+        "Nhớ dùng thing và target, đừng viết mob hay hero trong step_to.",
+        "if thing[\"y\"] < target[\"y\"]:\n    thing[\"y\"] += speed"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    # Em viết tiếp ở đây\n    pass\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    move_hero()\n    move_mobs()\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    move_hero()\n    move_mobs()\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n\n\nstart_game()\n"
+      }
+    },
+    {
+      "id": "h05-e2",
+      "title": "Quái ra liên tục",
+      "task": "far_edge(value) trả về mép sân ở xa em: value nhỏ hơn 300 thì trả về 580, còn lại trả về 20. Rồi trong update(): cứ 50 khung hình, nếu có ít hơn 14 con thì gọi spawn_mob().",
+      "input": "typing",
+      "toolbox": [
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_import",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h05-e2-run"
+        },
+        {
+          "label": "Quái đông dần lên 14 con",
+          "kind": "drewCount",
+          "sprite": "mob",
+          "min": 14,
+          "id": "h05-e2-more"
+        },
+        {
+          "label": "Em ở trên thì quái ra ở mép dưới",
+          "kind": "drew",
+          "sprite": "mob-slime",
+          "at": [
+            284,
+            800
+          ],
+          "tolerance": 300,
+          "id": "h05-e2-far"
+        },
+        {
+          "label": "Có gọi far_edge",
+          "kind": "called",
+          "name": "far_edge",
+          "min": 5,
+          "id": "h05-e2-edge"
+        },
+        {
+          "label": "Không quá 14 con",
+          "kind": "varCompare",
+          "name": "crowd",
+          "op": "<=",
+          "value": 14,
+          "id": "h05-e2-limit"
+        }
+      ],
+      "test": {
+        "frames": 600,
+        "taps": [],
+        "keys": [
+          {
+            "key": "up",
+            "from": 0,
+            "to": 599
+          }
+        ]
+      },
+      "walkthrough": [
+        "Chỗ (1): if value < 300: rồi thụt vào return 580. Dòng cuối, ngoài if: return 20",
+        "Vì sao mép xa? Để quái không hiện ra ngay sát em, như vậy mới công bằng.",
+        "Chỗ (2): tick % 50 == 0 nghĩa là cứ 50 khung thì đúng một lần.",
+        "if tick % 50 == 0 and len(mobs) < 14: rồi thụt vào spawn_mob()",
+        "Bấm ▶ Chạy, rồi ⛶: đứng gần mép trên thì quái ra ở mép dưới."
+      ],
+      "hints": [
+        "Hàm gặp return là xong, không chạy dòng dưới nữa.",
+        "if value < 300:\n    return 580\nreturn 20",
+        "if tick % 50 == 0 and len(mobs) < 14:\n    spawn_mob()"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    # Em viết tiếp ở đây (1)\n    return 300\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd\n    tick += 1\n    # Em viết tiếp ở đây (2)\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\ntick = 0\ncrowd = 0\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        step_to(mob, hero, mob[\"speed\"])\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update():\n    global tick, crowd\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    crowd = len(mobs)\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(crowd), 540, 24)\n\n\nstart_game()\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "mobs"
+  ],
+  "docsUnlocked": []
+}

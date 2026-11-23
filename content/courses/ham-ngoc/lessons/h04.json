@@ -1,0 +1,283 @@
+{
+  "id": "h04",
+  "courseId": "ham-ngoc",
+  "order": 4,
+  "title": "Cả bầy quái",
+  "draft": true,
+  "summary": "Mỗi con quái là một hộp, cả bầy là một danh sách hộp; một vòng for lo hết.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h04-why",
+          "title": "Mười con, mười biến?",
+          "text": "Một con quái là một hộp. Mười con thì viết mob1, mob2… mob10 sao? Mà lúc chơi quái còn thêm bớt liên tục. Cần một thứ dài ra được: danh sách.",
+          "coachNotes": "Hỏi: ở Bay Qua Khe em đã dùng danh sách để giữ gì? (các cột). Giờ mỗi phần tử không phải một số mà là một hộp."
+        },
+        {
+          "id": "h04-list",
+          "title": "Danh sách các hộp",
+          "text": "mobs là danh sách, mỗi phần tử là một dict. Giống một dãy tủ: cả dãy là mobs, mỗi cái tủ là một con quái, trong tủ có các ngăn image, x, y.",
+          "coachNotes": "Dùng tủ giấy của Bài 3: mỗi bé làm một tờ cho một con quái, dán các tờ thành một hàng trên bảng."
+        },
+        {
+          "id": "h04-for",
+          "title": "Đi qua từng con",
+          "text": "for mob in mobs: mỗi vòng, mob là một cái hộp. Vòng 1 là con đầu, vòng 2 là con thứ hai… Trong vòng, mob[\"x\"] là x của con đang xét.",
+          "coachNotes": "Cho một bé đi dọc hàng tủ giấy, tới tờ nào thì đọc to ô x của tờ đó. mob (một con) khác mobs (cả bầy): lỗi gõ hay gặp."
+        },
+        {
+          "id": "h04-trace",
+          "title": "Dò tay từng vòng",
+          "text": "mobs có nhớt x 100, dơi x 300, nấm x 500.\nVòng 1: mob[\"x\"] là 100\nVòng 2: mob[\"x\"] là 300\nVòng 3: mob[\"x\"] là 500\nThêm con thứ tư thì tự có vòng 4.",
+          "coachNotes": "Hỏi: thêm 50 con thì phải sửa mấy dòng trong vòng for? (không dòng nào)."
+        },
+        {
+          "id": "h04-quiz-count",
+          "quiz": {
+            "question": "mobs có 3 con. Em append thêm 2 con, rồi mới chạy for mob in mobs để vẽ. Vẽ ra mấy con?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "5"
+            ],
+            "answer": 3,
+            "explain": "append thêm vào cuối danh sách: 3 + 2 = 5 phần tử. Vòng for đi qua đủ 5."
+          }
+        },
+        {
+          "id": "h04-quiz-late",
+          "quiz": {
+            "question": "Code chạy một lần: mobs có 3 con, vòng for vẽ xong cả bầy, rồi mới append con thứ tư. Trên sân có mấy con?",
+            "choices": [
+              "4",
+              "3",
+              "1"
+            ],
+            "answer": 1,
+            "explain": "Máy đi từ trên xuống. Lúc vẽ, danh sách mới có 3 con; thêm sau thì không ai vẽ con đó nữa."
+          }
+        },
+        {
+          "id": "h04-factory",
+          "title": "Máy đúc quái",
+          "text": "make_mob(x, y) trả về một hộp mới: con nhớt đứng ở (x, y) em đưa, hp 2, speed 1. Giống khuôn bánh: một cái khuôn, mỗi lần ép ra một cái bánh riêng.",
+          "coachNotes": "Nhắc return ở Bay Qua Khe (Bài 10): hàm tính ra rồi trả lời. Lần này câu trả lời là cả một hộp."
+        },
+        {
+          "id": "h04-shared",
+          "title": "Vì sao phải hộp mới?",
+          "text": "Nếu cả bầy xài chung một hộp, dời một con là cả bầy dời theo, vì thật ra chỉ có một con. Mỗi con một hộp thì con nào sống đời con đó.",
+          "coachNotes": "Hai bé cùng cầm một tờ giấy: một bé sửa số thì bé kia thấy số cũng đổi. Rồi phát cho mỗi bé một tờ riêng."
+        },
+        {
+          "id": "h04-quiz-own",
+          "quiz": {
+            "question": "a = make_mob(100, 40) và b = make_mob(200, 40). Chạy a[\"x\"] += 5. Giờ b[\"x\"] bằng mấy?",
+            "choices": [
+              "105",
+              "200",
+              "205"
+            ],
+            "answer": 1,
+            "explain": "Mỗi lần gọi make_mob là một hộp mới. Đổi hộp a không đụng gì tới hộp b."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h04-place",
+          "title": "Bầy đầu tiên đứng đâu?",
+          "text": "6 con nhớt đứng ở y = 40, sát đầu sân, xa em ở (300, 300). x bốc ngẫu nhiên từ 40 tới 560. Quái vẽ to gấp 2, nửa người 16, nên nằm trọn trong sân.",
+          "coachNotes": "Hỏi: 16 × 2 = 32, nửa là mấy? (16). x = 40 thì mép trái của quái ở 24, chưa chạm mép sân. Nếu quái hiện ngay sát em thì có công bằng không?"
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h04-code1",
+          "title": "Bài tập 1: vẽ cả bầy",
+          "text": "Thêm ma và golem vào danh sách, rồi một vòng for vẽ cả bầy. Trước khi gõ, nghĩ xem: vì sao dòng vẽ phải thụt vào trong for?",
+          "coachNotes": "Không thụt vào thì Python báo lỗi hoặc chỉ vẽ con cuối cùng. Vẽ to gấp 4: 16 × 4 = 64, draw_thing tự lùi 8 × 4 = 32."
+        },
+        {
+          "id": "h04-code2",
+          "title": "Bài tập 2: hai việc khác nhau",
+          "text": "start_game() nhét quái vào danh sách, chạy một lần lúc đầu. draw() lấy quái ra vẽ, chạy mỗi khung. Nhét và vẽ là hai việc, ở hai chỗ.",
+          "coachNotes": "Hỏi: nếu lỡ để vòng nhét 6 con vào draw() thì sau 1 giây có mấy con? (60 × 6 = 360, sân đặc quái). start_game() được gọi ở dòng cuối file."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h04-try",
+          "title": "Đông hơn nữa",
+          "text": "Đổi range(6) thành range(20): bầy đông lên mà code vẽ vẫn vậy. Đổi \"mob-slime\" trong make_mob thành \"mob-bat\" hoặc \"mob-mushroom\". Em thích bầy nào?",
+          "coachNotes": "Thử thách: đổi hp trong make_mob có thấy gì khác chưa? (chưa, vì chưa code nào đọc hp của quái; tới Bài 9). Bài sau: bầy quái biết đuổi theo em."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h04-e1",
+      "title": "Danh sách các hộp",
+      "task": "mobs là danh sách, mỗi phần tử là một hộp dict. Em thêm 2 con nữa: mob-ghost ở (200, 400) và mob-golem ở (400, 400). Rồi dùng for mob in mobs để vẽ cả bầy bằng draw_thing, to gấp 4.",
+      "input": "blocks",
+      "toolbox": [
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_clear",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_for_each",
+        "pq_import",
+        "pq_key_get",
+        "pq_list",
+        "pq_number",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h04-e1-run"
+        },
+        {
+          "label": "draw_thing chạy cho 5 con khác nhau",
+          "kind": "called",
+          "name": "draw_thing",
+          "min": 5,
+          "distinct": true,
+          "id": "h04-e1-five"
+        },
+        {
+          "label": "Giống hình mẫu",
+          "kind": "matches",
+          "id": "h04-e1-same"
+        }
+      ],
+      "walkthrough": [
+        "Nhìn 3 dòng mobs.append(...) có sẵn: em viết thêm 2 dòng y như vậy.",
+        "mobs.append({\"image\": \"mob-ghost\", \"x\": 200, \"y\": 400}) rồi một dòng cho mob-golem ở 400, 400.",
+        "for mob in mobs: lấy lần lượt từng hộp, cất vào mob.",
+        "Thụt vào: draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 4)",
+        "Bấm ▶ Chạy, bấm 👀 để so với hình mẫu."
+      ],
+      "hints": [
+        "append thêm một hộp vào cuối danh sách.",
+        "Trong vòng for, mob là một hộp: mob[\"x\"] là x của con đó.",
+        "for mob in mobs:\n    draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 4)"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nmobs = []\nmobs.append({\"image\": \"mob-slime\", \"x\": 100, \"y\": 200})\nmobs.append({\"image\": \"mob-bat\", \"x\": 300, \"y\": 200})\nmobs.append({\"image\": \"mob-mushroom\", \"x\": 500, \"y\": 200})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\nclear(\"#2b2438\")\n# Em viết tiếp ở đây\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nmobs = []\nmobs.append({\"image\": \"mob-slime\", \"x\": 100, \"y\": 200})\nmobs.append({\"image\": \"mob-bat\", \"x\": 300, \"y\": 200})\nmobs.append({\"image\": \"mob-mushroom\", \"x\": 500, \"y\": 200})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\nclear(\"#2b2438\")\nmobs.append({\"image\": \"mob-ghost\", \"x\": 200, \"y\": 400})\nmobs.append({\"image\": \"mob-golem\", \"x\": 400, \"y\": 400})\nfor mob in mobs:\n    draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 4)\n"
+      }
+    },
+    {
+      "id": "h04-e2",
+      "title": "Cả bầy trong hầm",
+      "task": "make_mob(x, y) trả về một hộp quái. (1) Trong start_game(): lặp 6 lần, thêm vào mobs một con ở x ngẫu nhiên từ 40 tới 560, y = 40. (2) Trong draw(): vẽ từng con bằng draw_thing, to gấp 2.",
+      "input": "typing",
+      "toolbox": [
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_clear",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_image_scale",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_if",
+        "pq_import",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_list",
+        "pq_number",
+        "pq_random",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h04-e2-run"
+        },
+        {
+          "label": "Có 6 con quái",
+          "kind": "drewCount",
+          "sprite": "mob",
+          "min": 6,
+          "id": "h04-e2-count"
+        },
+        {
+          "label": "Mỗi con một chỗ",
+          "kind": "distinctCount",
+          "sprite": "mob",
+          "axis": "x",
+          "min": 4,
+          "id": "h04-e2-spread"
+        },
+        {
+          "label": "Quái ở trên đầu sân",
+          "kind": "staysWithin",
+          "sprite": "mob",
+          "axis": "y",
+          "min": 20,
+          "max": 28,
+          "id": "h04-e2-top"
+        }
+      ],
+      "test": {
+        "frames": 5,
+        "taps": []
+      },
+      "walkthrough": [
+        "Chỗ (1): for i in range(6): rồi thụt vào mobs.append(make_mob(random_int(40, 560), 40))",
+        "make_mob(...) trả về một hộp mới, append cất hộp đó vào danh sách.",
+        "Chỗ (2): for mob in mobs: rồi thụt vào draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)",
+        "Bấm ▶ Chạy: 6 con nhớt xếp hàng trên đầu sân."
+      ],
+      "hints": [
+        "(1) thêm vào danh sách, (2) vẽ từ danh sách: hai việc khác nhau.",
+        "for i in range(6):\n    mobs.append(make_mob(random_int(40, 560), 40))",
+        "for mob in mobs:\n    draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef start_game():\n    # Em viết tiếp ở đây (1)\n    pass\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef update():\n    move_hero()\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    # Em viết tiếp ở đây (2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n\n\nstart_game()\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nmobs = []\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1}\n\n\ndef start_game():\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef update():\n    move_hero()\n\n\ndef draw():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for mob in mobs:\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n\n\nstart_game()\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
+}

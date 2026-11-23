@@ -1,0 +1,479 @@
+{
+  "id": "h14",
+  "courseId": "ham-ngoc",
+  "order": 14,
+  "title": "Phối hợp",
+  "draft": true,
+  "summary": "Skill có tác dụng thật, và hai skill cùng nhánh mở phối hợp.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h14-why",
+          "title": "Thẻ chưa làm gì cả",
+          "text": "Tới giờ em chọn thẻ nhưng đạn vẫn vậy, quái vẫn vậy. Hôm nay mỗi skill có tác dụng thật. Rồi các skill cùng nhánh còn giúp nhau, gọi là phối hợp.",
+          "coachNotes": "Bài dài nhất khóa: chia 2 buổi. Buổi 1: tới hết Bài tập 1. Buổi 2: đếm nhánh và phối hợp. Hỏi: lấy Đốm Lửa thì em mong điều gì xảy ra?"
+        },
+        {
+          "id": "h14-bonus",
+          "title": "bonus: sổ ghi sức mạnh",
+          "text": "bonus nghĩa là phần cộng thêm. Nó là một hộp nhiều ngăn: power, ring, slow… Lúc đầu ngăn nào cũng là 0. Lấy skill nào thì cộng add của skill đó vào đúng ngăn.",
+          "coachNotes": "Trên giấy: kẻ sổ 9 ngăn power, ring, boom, slow, frost, armor, fast, extra, cloud. Mỗi bé bốc 3 thẻ rồi cộng vào sổ. Trong code còn ngăn speed, chưa skill nào dùng, chờ Bài 18."
+        },
+        {
+          "id": "h14-key",
+          "title": "Thẻ tự chỉ đường",
+          "text": "skill[\"what\"] cho em tên ngăn, ví dụ \"ring\". Đặt tên đó vào ngoặc vuông của bonus là tới đúng ngăn bonus[\"ring\"]. Thẻ nào cũng tự chỉ đường, nên không cần 9 chữ if.",
+          "coachNotes": "Ví dụ phong bì: người đưa thư đọc địa chỉ ghi trên phong bì, không cần nhớ nhà từng người. Hỏi: thêm skill thứ 10 thì dòng cộng này có phải sửa không? (không)."
+        },
+        {
+          "id": "h14-quiz-bonus",
+          "quiz": {
+            "question": "Em lấy Đốm Lửa (power, 1), Tay Chớp (fast, 5), rồi Đốm Lửa nữa. bonus[\"power\"] là mấy?",
+            "choices": [
+              "1",
+              "2",
+              "7"
+            ],
+            "answer": 1,
+            "explain": "Hai Đốm Lửa cùng cộng vào ngăn power: 1 + 1 = 2. Tay Chớp cộng vào ngăn fast, là ngăn khác."
+          }
+        },
+        {
+          "id": "h14-read",
+          "title": "Có người ghi thì phải có người đọc",
+          "text": "Ghi vào sổ thôi chưa đủ. Chỗ nào cần sức mạnh thì phải đọc sổ. Trước đây đạn trừ 1 máu, giờ trừ 1 + bonus[\"power\"]. Chưa có Đốm Lửa thì ngăn là 0, đạn vẫn trừ 1.",
+          "coachNotes": "Hỏi: Tay Chớp cộng 5 vào fast, cứ mấy khung bắn một lần? (30 - 5 = 25). Áo Băng cộng 40: bất tử mấy khung? (60 + 40 = 100)."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h14-combos",
+          "title": "Ba nhánh, ba phối hợp",
+          "text": "Có từ 2 skill cùng nhánh là mở phối hợp. Lò Than (Lửa): đạn trúng thì nổ lan. Thấu Xương (Băng): quái đang chậm thì đau hơn. Bão Sét: cứ 90 khung, sét đánh gần như cả sân.",
+          "coachNotes": "Buổi 2 bắt đầu ở đây. Game mẫu có nhiều phối hợp hơn; bản của em có 3, mỗi nhánh một cái. Hai thẻ giống hệt nhau cũng tính là 2. Hỏi: phối hợp nào hợp lúc quái đông? Lúc gặp một con to?"
+        },
+        {
+          "id": "h14-count",
+          "title": "Đếm có điều kiện",
+          "text": "Muốn biết có mấy skill Lửa, em đi qua từng thẻ trong owned và chỉ cộng khi branch đúng nhánh đang hỏi. Giống đếm trong lớp có mấy bạn mặc áo đỏ: gặp áo đỏ mới cộng 1.",
+          "coachNotes": "Hoạt động 3 phút: đếm thật trong lớp, ngón tay là total. Hỏi: nếu hô kết quả ngay khi gặp bạn đầu tiên thì sao? (đó là lỗi return nằm trong vòng for)."
+        },
+        {
+          "id": "h14-quiz-count",
+          "quiz": {
+            "question": "owned: Đốm Lửa, Nổ Tung, Áo Băng, Tay Chớp, Đốm Lửa. count_branch(\"fire\") trả về mấy?",
+            "choices": [
+              "5",
+              "2",
+              "3"
+            ],
+            "answer": 2,
+            "explain": "Đốm Lửa, Nổ Tung và Đốm Lửa thứ hai đều có branch là fire: 3 thẻ. Thẻ giống nhau vẫn đếm đủ."
+          }
+        },
+        {
+          "id": "h14-quiz-ice",
+          "quiz": {
+            "question": "Quái 8 máu đang bị chậm. Em chỉ có phối hợp Thấu Xương (đau thêm 3), power là 0. Trúng một phát, quái còn mấy máu?",
+            "choices": [
+              "4",
+              "5",
+              "7"
+            ],
+            "answer": 0,
+            "explain": "Đạn trừ 1, đang chậm nên thêm 3: 1 + 3 = 4. Vậy 8 - 4 = 4."
+          },
+          "coachNotes": "Dò tiếp: phát thứ hai mà vẫn đang chậm thì còn 0, quái thua. Không có phối hợp thì cần 8 phát."
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "h14-hurt",
+          "title": "Dọn code 1: một cửa cho mọi đòn",
+          "text": "Trước đây chỗ bắn trúng tự trừ máu quái. Giờ nhiều thứ làm quái đau, nên tất cả gọi chung hurt(mob, amount): hurt là làm đau, amount là bao nhiêu. Luật mới chỉ sửa ở một chỗ.",
+          "coachNotes": "Hỏi: Thấu Xương sửa trong hurt thì những đòn nào được lợi? (đạn, Vòng Lửa, sét, nổ: tất cả). Đó là lý do dọn code trước khi thêm."
+        },
+        {
+          "id": "h14-blast",
+          "title": "Dọn code 2: nổ và skill tự ra đòn",
+          "text": "blast (nổ) gọi hurt với mọi con ở gần một chỗ. use_skills() chạy mỗi khung, dành cho skill tự ra đòn. take_card gọi add_skill, hàm cất thẻ và ghi sổ. Quái có thêm ngăn slow (bị chậm).",
+          "coachNotes": "Chỉ trong code: blast(center, size, amount) là quanh ai, rộng bao nhiêu, đau bao nhiêu. Quái bị chậm có vòng xanh phía sau và đi nửa tốc độ. update_play gọi use_skills sau hit_mobs."
+        },
+        {
+          "id": "h14-hunt",
+          "title": "Đi tìm 5 chỗ đọc bonus",
+          "text": "5 hàm đã đọc bonus sẵn: shoot, hit_mobs, remove_dead, check_hits, move_mobs. Em tìm từng hàm, ghi ra giấy: hàm đó đọc ngăn nào, để làm gì?",
+          "coachNotes": "10 phút, theo cặp. Đáp án: shoot đọc extra và fast; hit_mobs đọc power và slow; remove_dead đọc boom; check_hits đọc armor; move_mobs đọc frost. Còn ring và cloud là phần em viết trong use_skills."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h14-code1",
+          "title": "Buổi 1: Bài tập 1",
+          "text": "Ghi vào đúng ngăn của bonus, rồi viết use_skills() cho Vòng Lửa và Mây Giông. Ngăn lớn hơn 0 mới ra đòn. tick % 60 == 0 là khoảng mỗi giây một lần, Mây Giông thì lệch nửa giây.",
+          "coachNotes": "START_SKILLS = [1, 8] là đồ thử: cho sẵn skill số 1 và số 8 (đếm từ 0: Vòng Lửa, Mây Giông). Lỗi hay gặp: ghi luôn \"power\" nên mọi skill cộng nhầm ngăn. Quái mất máu không hiện số, hãy nhìn số Hạ."
+        },
+        {
+          "id": "h14-code2",
+          "title": "Buổi 2: Bài tập 2 và 3",
+          "text": "Bài tập 2 viết count_branch. Bài tập 3 viết has_combo (có phối hợp không), trả về True hoặc False. Mỗi phối hợp hỏi has_combo trước khi ra đòn. Quái có 8 máu để em thấy rõ khác biệt.",
+          "coachNotes": "Lỗi hay gặp: so với chữ \"branch\" thay vì biến branch; return thụt trong vòng for. Bài tập 3 có 4 chỗ: làm chỗ (1) xong chạy thử xem tên phối hợp hiện dưới sân rồi mới làm tiếp. START_SKILLS cho sẵn 2 skill mỗi nhánh."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h14-try",
+          "title": "Một nhánh hay trộn?",
+          "text": "Đổi START_SKILLS thành [0, 1], rồi [0, 3]. Kiểu nào mở phối hợp ngay? Chơi mỗi kiểu một ván, so số Hạ. Sau đó đổi một số add trong bảng SKILLS và chơi lại.",
+          "coachNotes": "10 phút. [0, 1] là hai skill Lửa nên có Lò Than; [0, 3] là Lửa và Băng nên chưa, trừ khi thẻ em chọn thêm cùng nhánh. Không có đáp án đúng duy nhất cho câu nhánh nào mạnh hơn."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h14-e1",
+      "title": "Skill có tác dụng thật",
+      "task": "bonus giữ tổng sức mạnh của các skill. (1) Trong add_skill: cộng skill[\"add\"] vào bonus[skill[\"what\"]]. (2) Trong use_skills: có \"ring\" thì cứ 60 khung blast quanh hero; có \"cloud\" thì khi tick % 60 == 30 hurt một con ngẫu nhiên.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_clicked",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_circle",
+        "pq_draw_image_scale",
+        "pq_draw_rect",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_chain",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_mouse_y",
+        "pq_number",
+        "pq_random",
+        "pq_remove",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h14-e1-run"
+        },
+        {
+          "label": "Vòng Lửa có đốt",
+          "kind": "called",
+          "name": "blast",
+          "min": 3,
+          "id": "h14-e1-blast"
+        },
+        {
+          "label": "Sét giúp hạ quái nhanh hơn",
+          "kind": "varCompare",
+          "name": "kills",
+          "op": ">=",
+          "value": 6,
+          "id": "h14-e1-kills"
+        }
+      ],
+      "test": {
+        "frames": 240,
+        "taps": [
+          5
+        ],
+        "keys": [
+          {
+            "key": "1",
+            "from": 10,
+            "to": 10
+          }
+        ]
+      },
+      "walkthrough": [
+        "Chỗ (1), dưới owned.append(skill): bonus[skill[\"what\"]] += skill[\"add\"]",
+        "skill[\"what\"] là tên ngăn. Vòng Lửa có what là \"ring\" nên ngăn bonus[\"ring\"] lớn lên.",
+        "Chỗ (2): if bonus[\"ring\"] > 0 and tick % 60 == 0: rồi blast(hero, 130, bonus[\"ring\"])",
+        "if bonus[\"cloud\"] > 0 and tick % 60 == 30:",
+        "Thụt vào: hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])",
+        "Các skill khác chỉ cần đọc bonus ở đúng chỗ, code đã có sẵn: em tìm thử xem.",
+        "START_SKILLS = [1, 8] cho em sẵn Vòng Lửa và Mây Giông để thử."
+      ],
+      "hints": [
+        "Một dòng chỗ (1) đủ cho mọi skill trong bảng.",
+        "bonus[skill[\"what\"]] += skill[\"add\"]",
+        "blast(hero, 130, bonus[\"ring\"])",
+        "hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nSTART_HP = 5\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nSTART_PICKS = 1\nSTART_SKILLS = [1, 8]\nheld = 0\n\nSKILLS = []\nSKILLS.append({\"name\": \"Đốm Lửa: đạn mạnh hơn\", \"branch\": \"fire\", \"icon\": 1, \"what\": \"power\", \"add\": 1})\nSKILLS.append({\"name\": \"Vòng Lửa: đốt quái gần\", \"branch\": \"fire\", \"icon\": 2, \"what\": \"ring\", \"add\": 2})\nSKILLS.append({\"name\": \"Nổ Tung: quái thua nổ\", \"branch\": \"fire\", \"icon\": 4, \"what\": \"boom\", \"add\": 2})\nSKILLS.append({\"name\": \"Đòn Buốt: đạn làm chậm\", \"branch\": \"ice\", \"icon\": 1, \"what\": \"slow\", \"add\": 60})\nSKILLS.append({\"name\": \"Vòng Sương: tỏa lạnh\", \"branch\": \"ice\", \"icon\": 4, \"what\": \"frost\", \"add\": 80})\nSKILLS.append({\"name\": \"Áo Băng: bất tử lâu\", \"branch\": \"ice\", \"icon\": 3, \"what\": \"armor\", \"add\": 40})\nSKILLS.append({\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5})\nSKILLS.append({\"name\": \"Tia Đôi: thêm 1 viên\", \"branch\": \"spark\", \"icon\": 2, \"what\": \"extra\", \"add\": 1})\nSKILLS.append({\"name\": \"Mây Giông: sét đánh\", \"branch\": \"spark\", \"icon\": 3, \"what\": \"cloud\", \"add\": 3})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1, \"slow\": 0}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef add_skill(skill):\n    owned.append(skill)\n    # Em viết tiếp ở đây (1)\n    pass\n\n\ndef start_game():\n    global mobs, shots, gems, owned, bonus, picks, tick, safe, wait, kills, xp, level, screen\n    hero[\"x\"] = 300\n    hero[\"y\"] = 300\n    hero[\"hp\"] = START_HP\n    mobs = []\n    shots = []\n    gems = []\n    tick = 0\n    safe = 0\n    wait = 0\n    kills = 0\n    xp = 0\n    level = 1\n    owned = []\n    bonus = {\"power\": 0, \"ring\": 0, \"boom\": 0, \"slow\": 0, \"frost\": 0, \"armor\": 0}\n    bonus[\"fast\"] = 0\n    bonus[\"extra\"] = 0\n    bonus[\"cloud\"] = 0\n    bonus[\"speed\"] = 0\n    for number in START_SKILLS:\n        add_skill(SKILLS[number])\n    picks = START_PICKS\n    deal_cards()\n    screen = \"cards\"\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        for i in range(bonus[\"extra\"]):\n            shots.append(make_shot(mobs[random_int(0, len(mobs) - 1)]))\n        wait = 30 - bonus[\"fast\"]\n        if wait < 8:\n            wait = 8\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hurt(mob, amount):\n    mob[\"hp\"] -= amount\n\n\ndef blast(center, size, amount):\n    for mob in mobs:\n        if near(mob, center, size):\n            hurt(mob, amount)\n\n\ndef use_skills():\n    if len(mobs) == 0:\n        return\n    # Em viết tiếp ở đây (2)\n    pass\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                hurt(mob, 1 + bonus[\"power\"])\n                mob[\"slow\"] += bonus[\"slow\"]\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n            if bonus[\"boom\"] > 0:\n                blast(mob, 90, bonus[\"boom\"])\n    mobs = alive\n\n\ndef need():\n    return 2 + level * 2\n\n\ndef deal_cards():\n    global cards\n    cards = []\n    pool = []\n    for skill in SKILLS:\n        pool.append(skill)\n    for i in range(3):\n        pick = pool[random_int(0, len(pool) - 1)]\n        cards.append(pick)\n        pool.remove(pick)\n\n\ndef picked_number():\n    global held\n    number = 0\n    if key_pressed(\"1\"):\n        number = 1\n    if key_pressed(\"2\"):\n        number = 2\n    if key_pressed(\"3\"):\n        number = 3\n    fresh = number\n    if number == held:\n        fresh = 0\n    held = number\n    if clicked():\n        for i in range(3):\n            if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:\n                fresh = i + 1\n    return fresh\n\n\ndef take_card(skill):\n    global picks, screen\n    add_skill(skill)\n    picks -= 1\n    deal_cards()\n    if picks <= 0:\n        screen = \"play\"\n\n\ndef check_level():\n    global xp, level, screen, picks\n    if xp >= need():\n        xp -= need()\n        level += 1\n        picks += 1\n        deal_cards()\n        screen = \"cards\"\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60 + bonus[\"armor\"]\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        speed = mob[\"speed\"]\n        if near(mob, hero, bonus[\"frost\"]):\n            mob[\"slow\"] += 2\n        if mob[\"slow\"] > 0:\n            mob[\"slow\"] -= 1\n            speed = speed / 2\n        step_to(mob, hero, speed)\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update_play():\n    global tick, screen\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    shoot()\n    move_shots()\n    hit_mobs()\n    use_skills()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        screen = \"over\"\n\n\ndef update():\n    number = picked_number()\n    if screen == \"play\":\n        update_play()\n    elif screen == \"cards\":\n        if number > 0:\n            take_card(cards[number - 1])\n    elif key_pressed(\"space\"):\n        start_game()\n\n\ndef draw_title():\n    clear(\"#2b2438\")\n    draw_text(\"HẦM NGỌC\", 300, 220, 64)\n    draw_thing(hero[\"image\"], 300, 320, 5)\n    draw_text(\"Bấm Space để vào hầm\", 300, 430)\n\n\ndef draw_play():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        if mob[\"slow\"] > 0:\n            draw_circle(mob[\"x\"], mob[\"y\"], 18, \"#7fd8ff\")\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(len(mobs)), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    for i in range(len(owned)):\n        skill = owned[i]\n        draw_skill(skill, 20 + i * 20, 570, 1)\n\n\ndef draw_skill(skill, x, y, size):\n    draw_thing(\"skill-\" + skill[\"branch\"] + \"-\" + str(skill[\"icon\"]), x, y, size)\n\n\ndef draw_cards():\n    draw_rect(40, 80, 520, 460, \"#101018\")\n    draw_text(\"Chọn một thẻ\", 300, 120, 40)\n    for i in range(len(cards)):\n        skill = cards[i]\n        y = 180 + i * 120\n        draw_rect(60, y, 480, 100, \"#33334a\")\n        draw_skill(skill, 110, y + 50, 4)\n        draw_text(str(i + 1), 76, y + 20)\n        draw_text(skill[\"name\"], 340, y + 50)\n\n\ndef draw():\n    if screen == \"title\":\n        draw_title()\n    else:\n        draw_play()\n    if screen == \"cards\":\n        draw_cards()\n    if screen == \"over\":\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n        draw_text(\"Bấm Space để chơi lại\", 300, 320)\n\n\nstart_game()\nscreen = \"title\"\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nSTART_HP = 5\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nSTART_PICKS = 1\nSTART_SKILLS = [1, 8]\nheld = 0\n\nSKILLS = []\nSKILLS.append({\"name\": \"Đốm Lửa: đạn mạnh hơn\", \"branch\": \"fire\", \"icon\": 1, \"what\": \"power\", \"add\": 1})\nSKILLS.append({\"name\": \"Vòng Lửa: đốt quái gần\", \"branch\": \"fire\", \"icon\": 2, \"what\": \"ring\", \"add\": 2})\nSKILLS.append({\"name\": \"Nổ Tung: quái thua nổ\", \"branch\": \"fire\", \"icon\": 4, \"what\": \"boom\", \"add\": 2})\nSKILLS.append({\"name\": \"Đòn Buốt: đạn làm chậm\", \"branch\": \"ice\", \"icon\": 1, \"what\": \"slow\", \"add\": 60})\nSKILLS.append({\"name\": \"Vòng Sương: tỏa lạnh\", \"branch\": \"ice\", \"icon\": 4, \"what\": \"frost\", \"add\": 80})\nSKILLS.append({\"name\": \"Áo Băng: bất tử lâu\", \"branch\": \"ice\", \"icon\": 3, \"what\": \"armor\", \"add\": 40})\nSKILLS.append({\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5})\nSKILLS.append({\"name\": \"Tia Đôi: thêm 1 viên\", \"branch\": \"spark\", \"icon\": 2, \"what\": \"extra\", \"add\": 1})\nSKILLS.append({\"name\": \"Mây Giông: sét đánh\", \"branch\": \"spark\", \"icon\": 3, \"what\": \"cloud\", \"add\": 3})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1, \"slow\": 0}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef add_skill(skill):\n    owned.append(skill)\n    bonus[skill[\"what\"]] += skill[\"add\"]\n\n\ndef start_game():\n    global mobs, shots, gems, owned, bonus, picks, tick, safe, wait, kills, xp, level, screen\n    hero[\"x\"] = 300\n    hero[\"y\"] = 300\n    hero[\"hp\"] = START_HP\n    mobs = []\n    shots = []\n    gems = []\n    tick = 0\n    safe = 0\n    wait = 0\n    kills = 0\n    xp = 0\n    level = 1\n    owned = []\n    bonus = {\"power\": 0, \"ring\": 0, \"boom\": 0, \"slow\": 0, \"frost\": 0, \"armor\": 0}\n    bonus[\"fast\"] = 0\n    bonus[\"extra\"] = 0\n    bonus[\"cloud\"] = 0\n    bonus[\"speed\"] = 0\n    for number in START_SKILLS:\n        add_skill(SKILLS[number])\n    picks = START_PICKS\n    deal_cards()\n    screen = \"cards\"\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        for i in range(bonus[\"extra\"]):\n            shots.append(make_shot(mobs[random_int(0, len(mobs) - 1)]))\n        wait = 30 - bonus[\"fast\"]\n        if wait < 8:\n            wait = 8\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hurt(mob, amount):\n    mob[\"hp\"] -= amount\n\n\ndef blast(center, size, amount):\n    for mob in mobs:\n        if near(mob, center, size):\n            hurt(mob, amount)\n\n\ndef use_skills():\n    if len(mobs) == 0:\n        return\n    if bonus[\"ring\"] > 0 and tick % 60 == 0:\n        blast(hero, 130, bonus[\"ring\"])\n    if bonus[\"cloud\"] > 0 and tick % 60 == 30:\n        hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                hurt(mob, 1 + bonus[\"power\"])\n                mob[\"slow\"] += bonus[\"slow\"]\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n            if bonus[\"boom\"] > 0:\n                blast(mob, 90, bonus[\"boom\"])\n    mobs = alive\n\n\ndef need():\n    return 2 + level * 2\n\n\ndef deal_cards():\n    global cards\n    cards = []\n    pool = []\n    for skill in SKILLS:\n        pool.append(skill)\n    for i in range(3):\n        pick = pool[random_int(0, len(pool) - 1)]\n        cards.append(pick)\n        pool.remove(pick)\n\n\ndef picked_number():\n    global held\n    number = 0\n    if key_pressed(\"1\"):\n        number = 1\n    if key_pressed(\"2\"):\n        number = 2\n    if key_pressed(\"3\"):\n        number = 3\n    fresh = number\n    if number == held:\n        fresh = 0\n    held = number\n    if clicked():\n        for i in range(3):\n            if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:\n                fresh = i + 1\n    return fresh\n\n\ndef take_card(skill):\n    global picks, screen\n    add_skill(skill)\n    picks -= 1\n    deal_cards()\n    if picks <= 0:\n        screen = \"play\"\n\n\ndef check_level():\n    global xp, level, screen, picks\n    if xp >= need():\n        xp -= need()\n        level += 1\n        picks += 1\n        deal_cards()\n        screen = \"cards\"\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60 + bonus[\"armor\"]\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        speed = mob[\"speed\"]\n        if near(mob, hero, bonus[\"frost\"]):\n            mob[\"slow\"] += 2\n        if mob[\"slow\"] > 0:\n            mob[\"slow\"] -= 1\n            speed = speed / 2\n        step_to(mob, hero, speed)\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update_play():\n    global tick, screen\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    shoot()\n    move_shots()\n    hit_mobs()\n    use_skills()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        screen = \"over\"\n\n\ndef update():\n    number = picked_number()\n    if screen == \"play\":\n        update_play()\n    elif screen == \"cards\":\n        if number > 0:\n            take_card(cards[number - 1])\n    elif key_pressed(\"space\"):\n        start_game()\n\n\ndef draw_title():\n    clear(\"#2b2438\")\n    draw_text(\"HẦM NGỌC\", 300, 220, 64)\n    draw_thing(hero[\"image\"], 300, 320, 5)\n    draw_text(\"Bấm Space để vào hầm\", 300, 430)\n\n\ndef draw_play():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        if mob[\"slow\"] > 0:\n            draw_circle(mob[\"x\"], mob[\"y\"], 18, \"#7fd8ff\")\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(len(mobs)), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    for i in range(len(owned)):\n        skill = owned[i]\n        draw_skill(skill, 20 + i * 20, 570, 1)\n\n\ndef draw_skill(skill, x, y, size):\n    draw_thing(\"skill-\" + skill[\"branch\"] + \"-\" + str(skill[\"icon\"]), x, y, size)\n\n\ndef draw_cards():\n    draw_rect(40, 80, 520, 460, \"#101018\")\n    draw_text(\"Chọn một thẻ\", 300, 120, 40)\n    for i in range(len(cards)):\n        skill = cards[i]\n        y = 180 + i * 120\n        draw_rect(60, y, 480, 100, \"#33334a\")\n        draw_skill(skill, 110, y + 50, 4)\n        draw_text(str(i + 1), 76, y + 20)\n        draw_text(skill[\"name\"], 340, y + 50)\n\n\ndef draw():\n    if screen == \"title\":\n        draw_title()\n    else:\n        draw_play()\n    if screen == \"cards\":\n        draw_cards()\n    if screen == \"over\":\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n        draw_text(\"Bấm Space để chơi lại\", 300, 320)\n\n\nstart_game()\nscreen = \"title\"\n"
+      }
+    },
+    {
+      "id": "h14-e2",
+      "title": "Đếm skill theo nhánh",
+      "task": "count_branch(branch) đếm trong owned có mấy skill thuộc nhánh đó. Tạo total = 0; đi qua từng skill, skill nào có skill[\"branch\"] == branch thì total cộng 1; cuối cùng return total.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_clicked",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_circle",
+        "pq_draw_image_scale",
+        "pq_draw_rect",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_chain",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_mouse_y",
+        "pq_number",
+        "pq_random",
+        "pq_remove",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h14-e2-run"
+        },
+        {
+          "label": "Đếm đúng nhánh Lửa",
+          "kind": "drewText",
+          "text": "Lửa 2",
+          "id": "h14-e2-fire"
+        },
+        {
+          "label": "Đếm đúng nhánh Băng",
+          "kind": "drewText",
+          "text": "Băng 0",
+          "id": "h14-e2-ice"
+        },
+        {
+          "label": "Đếm đúng nhánh Sét",
+          "kind": "drewText",
+          "text": "Sét 1",
+          "id": "h14-e2-spark"
+        }
+      ],
+      "test": {
+        "frames": 60,
+        "taps": [
+          5
+        ],
+        "keys": [
+          {
+            "key": "1",
+            "from": 40,
+            "to": 40
+          }
+        ]
+      },
+      "walkthrough": [
+        "Trong count_branch, thay dòng return 0: total = 0",
+        "for skill in owned: rồi thụt vào if skill[\"branch\"] == branch:",
+        "Thụt thêm: total += 1",
+        "Ngoài vòng for: return total",
+        "Bấm ▶ Chạy: dưới sân hiện Lửa 2, Băng 0, Sét 1 ngay lúc vào ván."
+      ],
+      "hints": [
+        "branch là tham số: gọi count_branch(\"fire\") thì branch là \"fire\".",
+        "if skill[\"branch\"] == branch:\n    total += 1",
+        "return total nằm ngang với chữ for."
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nSTART_HP = 5\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nSTART_PICKS = 1\nSTART_SKILLS = [0, 1, 6]\nheld = 0\n\nSKILLS = []\nSKILLS.append({\"name\": \"Đốm Lửa: đạn mạnh hơn\", \"branch\": \"fire\", \"icon\": 1, \"what\": \"power\", \"add\": 1})\nSKILLS.append({\"name\": \"Vòng Lửa: đốt quái gần\", \"branch\": \"fire\", \"icon\": 2, \"what\": \"ring\", \"add\": 2})\nSKILLS.append({\"name\": \"Nổ Tung: quái thua nổ\", \"branch\": \"fire\", \"icon\": 4, \"what\": \"boom\", \"add\": 2})\nSKILLS.append({\"name\": \"Đòn Buốt: đạn làm chậm\", \"branch\": \"ice\", \"icon\": 1, \"what\": \"slow\", \"add\": 60})\nSKILLS.append({\"name\": \"Vòng Sương: tỏa lạnh\", \"branch\": \"ice\", \"icon\": 4, \"what\": \"frost\", \"add\": 80})\nSKILLS.append({\"name\": \"Áo Băng: bất tử lâu\", \"branch\": \"ice\", \"icon\": 3, \"what\": \"armor\", \"add\": 40})\nSKILLS.append({\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5})\nSKILLS.append({\"name\": \"Tia Đôi: thêm 1 viên\", \"branch\": \"spark\", \"icon\": 2, \"what\": \"extra\", \"add\": 1})\nSKILLS.append({\"name\": \"Mây Giông: sét đánh\", \"branch\": \"spark\", \"icon\": 3, \"what\": \"cloud\", \"add\": 3})\nBRANCHES = []\nBRANCHES.append({\"branch\": \"fire\", \"name\": \"Lửa\"})\nBRANCHES.append({\"branch\": \"ice\", \"name\": \"Băng\"})\nBRANCHES.append({\"branch\": \"spark\", \"name\": \"Sét\"})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1, \"slow\": 0}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef add_skill(skill):\n    owned.append(skill)\n    bonus[skill[\"what\"]] += skill[\"add\"]\n\n\ndef count_branch(branch):\n    # Em viết tiếp ở đây\n    return 0\n\n\ndef start_game():\n    global mobs, shots, gems, owned, bonus, picks, tick, safe, wait, kills, xp, level, screen\n    hero[\"x\"] = 300\n    hero[\"y\"] = 300\n    hero[\"hp\"] = START_HP\n    mobs = []\n    shots = []\n    gems = []\n    tick = 0\n    safe = 0\n    wait = 0\n    kills = 0\n    xp = 0\n    level = 1\n    owned = []\n    bonus = {\"power\": 0, \"ring\": 0, \"boom\": 0, \"slow\": 0, \"frost\": 0, \"armor\": 0}\n    bonus[\"fast\"] = 0\n    bonus[\"extra\"] = 0\n    bonus[\"cloud\"] = 0\n    bonus[\"speed\"] = 0\n    for number in START_SKILLS:\n        add_skill(SKILLS[number])\n    picks = START_PICKS\n    deal_cards()\n    screen = \"cards\"\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        for i in range(bonus[\"extra\"]):\n            shots.append(make_shot(mobs[random_int(0, len(mobs) - 1)]))\n        wait = 30 - bonus[\"fast\"]\n        if wait < 8:\n            wait = 8\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hurt(mob, amount):\n    mob[\"hp\"] -= amount\n\n\ndef blast(center, size, amount):\n    for mob in mobs:\n        if near(mob, center, size):\n            hurt(mob, amount)\n\n\ndef use_skills():\n    if len(mobs) == 0:\n        return\n    if bonus[\"ring\"] > 0 and tick % 60 == 0:\n        blast(hero, 130, bonus[\"ring\"])\n    if bonus[\"cloud\"] > 0 and tick % 60 == 30:\n        hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                hurt(mob, 1 + bonus[\"power\"])\n                mob[\"slow\"] += bonus[\"slow\"]\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n            if bonus[\"boom\"] > 0:\n                blast(mob, 90, bonus[\"boom\"])\n    mobs = alive\n\n\ndef need():\n    return 2 + level * 2\n\n\ndef deal_cards():\n    global cards\n    cards = []\n    pool = []\n    for skill in SKILLS:\n        pool.append(skill)\n    for i in range(3):\n        pick = pool[random_int(0, len(pool) - 1)]\n        cards.append(pick)\n        pool.remove(pick)\n\n\ndef picked_number():\n    global held\n    number = 0\n    if key_pressed(\"1\"):\n        number = 1\n    if key_pressed(\"2\"):\n        number = 2\n    if key_pressed(\"3\"):\n        number = 3\n    fresh = number\n    if number == held:\n        fresh = 0\n    held = number\n    if clicked():\n        for i in range(3):\n            if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:\n                fresh = i + 1\n    return fresh\n\n\ndef take_card(skill):\n    global picks, screen\n    add_skill(skill)\n    picks -= 1\n    deal_cards()\n    if picks <= 0:\n        screen = \"play\"\n\n\ndef check_level():\n    global xp, level, screen, picks\n    if xp >= need():\n        xp -= need()\n        level += 1\n        picks += 1\n        deal_cards()\n        screen = \"cards\"\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60 + bonus[\"armor\"]\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        speed = mob[\"speed\"]\n        if near(mob, hero, bonus[\"frost\"]):\n            mob[\"slow\"] += 2\n        if mob[\"slow\"] > 0:\n            mob[\"slow\"] -= 1\n            speed = speed / 2\n        step_to(mob, hero, speed)\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update_play():\n    global tick, screen\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    shoot()\n    move_shots()\n    hit_mobs()\n    use_skills()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        screen = \"over\"\n\n\ndef update():\n    number = picked_number()\n    if screen == \"play\":\n        update_play()\n    elif screen == \"cards\":\n        if number > 0:\n            take_card(cards[number - 1])\n    elif key_pressed(\"space\"):\n        start_game()\n\n\ndef draw_title():\n    clear(\"#2b2438\")\n    draw_text(\"HẦM NGỌC\", 300, 220, 64)\n    draw_thing(hero[\"image\"], 300, 320, 5)\n    draw_text(\"Bấm Space để vào hầm\", 300, 430)\n\n\ndef draw_play():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        if mob[\"slow\"] > 0:\n            draw_circle(mob[\"x\"], mob[\"y\"], 18, \"#7fd8ff\")\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(len(mobs)), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    for i in range(len(BRANCHES)):\n        row = BRANCHES[i]\n        text = row[\"name\"] + \" \" + str(count_branch(row[\"branch\"]))\n        draw_text(text, 400 + i * 80, 570, 20)\n    for i in range(len(owned)):\n        skill = owned[i]\n        draw_skill(skill, 20 + i * 20, 570, 1)\n\n\ndef draw_skill(skill, x, y, size):\n    draw_thing(\"skill-\" + skill[\"branch\"] + \"-\" + str(skill[\"icon\"]), x, y, size)\n\n\ndef draw_cards():\n    draw_rect(40, 80, 520, 460, \"#101018\")\n    draw_text(\"Chọn một thẻ\", 300, 120, 40)\n    for i in range(len(cards)):\n        skill = cards[i]\n        y = 180 + i * 120\n        draw_rect(60, y, 480, 100, \"#33334a\")\n        draw_skill(skill, 110, y + 50, 4)\n        draw_text(str(i + 1), 76, y + 20)\n        draw_text(skill[\"name\"], 340, y + 50)\n\n\ndef draw():\n    if screen == \"title\":\n        draw_title()\n    else:\n        draw_play()\n    if screen == \"cards\":\n        draw_cards()\n    if screen == \"over\":\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n        draw_text(\"Bấm Space để chơi lại\", 300, 320)\n\n\nstart_game()\nscreen = \"title\"\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nSTART_HP = 5\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nSTART_PICKS = 1\nSTART_SKILLS = [0, 1, 6]\nheld = 0\n\nSKILLS = []\nSKILLS.append({\"name\": \"Đốm Lửa: đạn mạnh hơn\", \"branch\": \"fire\", \"icon\": 1, \"what\": \"power\", \"add\": 1})\nSKILLS.append({\"name\": \"Vòng Lửa: đốt quái gần\", \"branch\": \"fire\", \"icon\": 2, \"what\": \"ring\", \"add\": 2})\nSKILLS.append({\"name\": \"Nổ Tung: quái thua nổ\", \"branch\": \"fire\", \"icon\": 4, \"what\": \"boom\", \"add\": 2})\nSKILLS.append({\"name\": \"Đòn Buốt: đạn làm chậm\", \"branch\": \"ice\", \"icon\": 1, \"what\": \"slow\", \"add\": 60})\nSKILLS.append({\"name\": \"Vòng Sương: tỏa lạnh\", \"branch\": \"ice\", \"icon\": 4, \"what\": \"frost\", \"add\": 80})\nSKILLS.append({\"name\": \"Áo Băng: bất tử lâu\", \"branch\": \"ice\", \"icon\": 3, \"what\": \"armor\", \"add\": 40})\nSKILLS.append({\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5})\nSKILLS.append({\"name\": \"Tia Đôi: thêm 1 viên\", \"branch\": \"spark\", \"icon\": 2, \"what\": \"extra\", \"add\": 1})\nSKILLS.append({\"name\": \"Mây Giông: sét đánh\", \"branch\": \"spark\", \"icon\": 3, \"what\": \"cloud\", \"add\": 3})\nBRANCHES = []\nBRANCHES.append({\"branch\": \"fire\", \"name\": \"Lửa\"})\nBRANCHES.append({\"branch\": \"ice\", \"name\": \"Băng\"})\nBRANCHES.append({\"branch\": \"spark\", \"name\": \"Sét\"})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 2, \"speed\": 1, \"slow\": 0}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef add_skill(skill):\n    owned.append(skill)\n    bonus[skill[\"what\"]] += skill[\"add\"]\n\n\ndef count_branch(branch):\n    total = 0\n    for skill in owned:\n        if skill[\"branch\"] == branch:\n            total += 1\n    return total\n\n\ndef start_game():\n    global mobs, shots, gems, owned, bonus, picks, tick, safe, wait, kills, xp, level, screen\n    hero[\"x\"] = 300\n    hero[\"y\"] = 300\n    hero[\"hp\"] = START_HP\n    mobs = []\n    shots = []\n    gems = []\n    tick = 0\n    safe = 0\n    wait = 0\n    kills = 0\n    xp = 0\n    level = 1\n    owned = []\n    bonus = {\"power\": 0, \"ring\": 0, \"boom\": 0, \"slow\": 0, \"frost\": 0, \"armor\": 0}\n    bonus[\"fast\"] = 0\n    bonus[\"extra\"] = 0\n    bonus[\"cloud\"] = 0\n    bonus[\"speed\"] = 0\n    for number in START_SKILLS:\n        add_skill(SKILLS[number])\n    picks = START_PICKS\n    deal_cards()\n    screen = \"cards\"\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        for i in range(bonus[\"extra\"]):\n            shots.append(make_shot(mobs[random_int(0, len(mobs) - 1)]))\n        wait = 30 - bonus[\"fast\"]\n        if wait < 8:\n            wait = 8\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hurt(mob, amount):\n    mob[\"hp\"] -= amount\n\n\ndef blast(center, size, amount):\n    for mob in mobs:\n        if near(mob, center, size):\n            hurt(mob, amount)\n\n\ndef use_skills():\n    if len(mobs) == 0:\n        return\n    if bonus[\"ring\"] > 0 and tick % 60 == 0:\n        blast(hero, 130, bonus[\"ring\"])\n    if bonus[\"cloud\"] > 0 and tick % 60 == 30:\n        hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                hurt(mob, 1 + bonus[\"power\"])\n                mob[\"slow\"] += bonus[\"slow\"]\n                shot[\"live\"] = False\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n            if bonus[\"boom\"] > 0:\n                blast(mob, 90, bonus[\"boom\"])\n    mobs = alive\n\n\ndef need():\n    return 2 + level * 2\n\n\ndef deal_cards():\n    global cards\n    cards = []\n    pool = []\n    for skill in SKILLS:\n        pool.append(skill)\n    for i in range(3):\n        pick = pool[random_int(0, len(pool) - 1)]\n        cards.append(pick)\n        pool.remove(pick)\n\n\ndef picked_number():\n    global held\n    number = 0\n    if key_pressed(\"1\"):\n        number = 1\n    if key_pressed(\"2\"):\n        number = 2\n    if key_pressed(\"3\"):\n        number = 3\n    fresh = number\n    if number == held:\n        fresh = 0\n    held = number\n    if clicked():\n        for i in range(3):\n            if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:\n                fresh = i + 1\n    return fresh\n\n\ndef take_card(skill):\n    global picks, screen\n    add_skill(skill)\n    picks -= 1\n    deal_cards()\n    if picks <= 0:\n        screen = \"play\"\n\n\ndef check_level():\n    global xp, level, screen, picks\n    if xp >= need():\n        xp -= need()\n        level += 1\n        picks += 1\n        deal_cards()\n        screen = \"cards\"\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60 + bonus[\"armor\"]\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        speed = mob[\"speed\"]\n        if near(mob, hero, bonus[\"frost\"]):\n            mob[\"slow\"] += 2\n        if mob[\"slow\"] > 0:\n            mob[\"slow\"] -= 1\n            speed = speed / 2\n        step_to(mob, hero, speed)\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update_play():\n    global tick, screen\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    shoot()\n    move_shots()\n    hit_mobs()\n    use_skills()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        screen = \"over\"\n\n\ndef update():\n    number = picked_number()\n    if screen == \"play\":\n        update_play()\n    elif screen == \"cards\":\n        if number > 0:\n            take_card(cards[number - 1])\n    elif key_pressed(\"space\"):\n        start_game()\n\n\ndef draw_title():\n    clear(\"#2b2438\")\n    draw_text(\"HẦM NGỌC\", 300, 220, 64)\n    draw_thing(hero[\"image\"], 300, 320, 5)\n    draw_text(\"Bấm Space để vào hầm\", 300, 430)\n\n\ndef draw_play():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        if mob[\"slow\"] > 0:\n            draw_circle(mob[\"x\"], mob[\"y\"], 18, \"#7fd8ff\")\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(len(mobs)), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    for i in range(len(BRANCHES)):\n        row = BRANCHES[i]\n        text = row[\"name\"] + \" \" + str(count_branch(row[\"branch\"]))\n        draw_text(text, 400 + i * 80, 570, 20)\n    for i in range(len(owned)):\n        skill = owned[i]\n        draw_skill(skill, 20 + i * 20, 570, 1)\n\n\ndef draw_skill(skill, x, y, size):\n    draw_thing(\"skill-\" + skill[\"branch\"] + \"-\" + str(skill[\"icon\"]), x, y, size)\n\n\ndef draw_cards():\n    draw_rect(40, 80, 520, 460, \"#101018\")\n    draw_text(\"Chọn một thẻ\", 300, 120, 40)\n    for i in range(len(cards)):\n        skill = cards[i]\n        y = 180 + i * 120\n        draw_rect(60, y, 480, 100, \"#33334a\")\n        draw_skill(skill, 110, y + 50, 4)\n        draw_text(str(i + 1), 76, y + 20)\n        draw_text(skill[\"name\"], 340, y + 50)\n\n\ndef draw():\n    if screen == \"title\":\n        draw_title()\n    else:\n        draw_play()\n    if screen == \"cards\":\n        draw_cards()\n    if screen == \"over\":\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n        draw_text(\"Bấm Space để chơi lại\", 300, 320)\n\n\nstart_game()\nscreen = \"title\"\n"
+      }
+    },
+    {
+      "id": "h14-e3",
+      "title": "Phối hợp",
+      "task": "Từ 2 skill cùng nhánh là có phối hợp. (1) has_combo trả về count_branch(branch) >= 2. (2) Băng: quái đang chậm thì đau thêm 3. (3) Sét: cứ 90 khung, blast cả sân 2 máu. (4) Lửa: đạn trúng thì blast quanh viên đạn 1 máu.",
+      "input": "typing",
+      "toolbox": [
+        "pq_abs",
+        "pq_append",
+        "pq_arith",
+        "pq_assign",
+        "pq_aug",
+        "pq_bool",
+        "pq_clear",
+        "pq_clicked",
+        "pq_compare",
+        "pq_def",
+        "pq_dict",
+        "pq_draw_circle",
+        "pq_draw_image_scale",
+        "pq_draw_rect",
+        "pq_draw_text",
+        "pq_draw_text_size",
+        "pq_for",
+        "pq_for_each",
+        "pq_global",
+        "pq_if",
+        "pq_if_chain",
+        "pq_if_else",
+        "pq_import",
+        "pq_index",
+        "pq_key_aug",
+        "pq_key_get",
+        "pq_key_held",
+        "pq_key_set",
+        "pq_len",
+        "pq_list",
+        "pq_logic",
+        "pq_mouse_y",
+        "pq_number",
+        "pq_random",
+        "pq_remove",
+        "pq_return",
+        "pq_str",
+        "pq_text",
+        "pq_var_get"
+      ],
+      "mode": "game",
+      "goals": [
+        {
+          "label": "Chạy không lỗi",
+          "kind": "noError",
+          "id": "h14-e3-run"
+        },
+        {
+          "label": "Mở được Lò Than",
+          "kind": "drewText",
+          "text": "Lò Than",
+          "id": "h14-e3-fire"
+        },
+        {
+          "label": "Mở được Thấu Xương",
+          "kind": "drewText",
+          "text": "Thấu Xương",
+          "id": "h14-e3-ice"
+        },
+        {
+          "label": "Mở được Bão Sét",
+          "kind": "drewText",
+          "text": "Bão Sét",
+          "id": "h14-e3-spark"
+        },
+        {
+          "label": "Phối hợp làm em mạnh hơn hẳn",
+          "kind": "varCompare",
+          "name": "kills",
+          "op": ">=",
+          "value": 4,
+          "id": "h14-e3-kills"
+        }
+      ],
+      "test": {
+        "frames": 112,
+        "taps": [
+          5
+        ],
+        "keys": [
+          {
+            "key": "1",
+            "from": 10,
+            "to": 10
+          }
+        ]
+      },
+      "walkthrough": [
+        "Chỗ (1): return count_branch(branch) >= 2 (trả về True hoặc False).",
+        "Chỗ (2), đầu hurt(): if has_combo(\"ice\") and mob[\"slow\"] > 0: rồi amount += 3",
+        "Chỗ (3): if has_combo(\"spark\") and tick % 90 == 0: rồi blast(hero, 900, 2). 900 là trùm cả sân.",
+        "Chỗ (4), khi đạn trúng: if has_combo(\"fire\"): rồi blast(shot, 90, 1)",
+        "Bấm ▶ Chạy: tên 3 phối hợp hiện dưới sân.",
+        "Chơi thử: đi theo 1 nhánh hay trộn 3 nhánh thì mạnh hơn?"
+      ],
+      "hints": [
+        "return count_branch(branch) >= 2",
+        "if has_combo(\"ice\") and mob[\"slow\"] > 0:\n    amount += 3",
+        "if has_combo(\"spark\") and tick % 90 == 0:\n    blast(hero, 900, 2)",
+        "if has_combo(\"fire\"):\n    blast(shot, 90, 1)"
+      ],
+      "main": "main.py",
+      "starter": {
+        "main.py": "from pyquest import *\n\nSTART_HP = 5\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nSTART_PICKS = 1\nSTART_SKILLS = [0, 2, 3, 5, 6, 8]\nheld = 0\n\nSKILLS = []\nSKILLS.append({\"name\": \"Đốm Lửa: đạn mạnh hơn\", \"branch\": \"fire\", \"icon\": 1, \"what\": \"power\", \"add\": 1})\nSKILLS.append({\"name\": \"Vòng Lửa: đốt quái gần\", \"branch\": \"fire\", \"icon\": 2, \"what\": \"ring\", \"add\": 2})\nSKILLS.append({\"name\": \"Nổ Tung: quái thua nổ\", \"branch\": \"fire\", \"icon\": 4, \"what\": \"boom\", \"add\": 2})\nSKILLS.append({\"name\": \"Đòn Buốt: đạn làm chậm\", \"branch\": \"ice\", \"icon\": 1, \"what\": \"slow\", \"add\": 60})\nSKILLS.append({\"name\": \"Vòng Sương: tỏa lạnh\", \"branch\": \"ice\", \"icon\": 4, \"what\": \"frost\", \"add\": 80})\nSKILLS.append({\"name\": \"Áo Băng: bất tử lâu\", \"branch\": \"ice\", \"icon\": 3, \"what\": \"armor\", \"add\": 40})\nSKILLS.append({\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5})\nSKILLS.append({\"name\": \"Tia Đôi: thêm 1 viên\", \"branch\": \"spark\", \"icon\": 2, \"what\": \"extra\", \"add\": 1})\nSKILLS.append({\"name\": \"Mây Giông: sét đánh\", \"branch\": \"spark\", \"icon\": 3, \"what\": \"cloud\", \"add\": 3})\nBRANCHES = []\nBRANCHES.append({\"branch\": \"fire\", \"name\": \"Lửa\", \"combo\": \"Lò Than\"})\nBRANCHES.append({\"branch\": \"ice\", \"name\": \"Băng\", \"combo\": \"Thấu Xương\"})\nBRANCHES.append({\"branch\": \"spark\", \"name\": \"Sét\", \"combo\": \"Bão Sét\"})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 8, \"speed\": 1, \"slow\": 0}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef add_skill(skill):\n    owned.append(skill)\n    bonus[skill[\"what\"]] += skill[\"add\"]\n\n\ndef count_branch(branch):\n    total = 0\n    for skill in owned:\n        if skill[\"branch\"] == branch:\n            total += 1\n    return total\n\n\ndef has_combo(branch):\n    # Em viết tiếp ở đây (1)\n    return False\n\n\ndef start_game():\n    global mobs, shots, gems, owned, bonus, picks, tick, safe, wait, kills, xp, level, screen\n    hero[\"x\"] = 300\n    hero[\"y\"] = 300\n    hero[\"hp\"] = START_HP\n    mobs = []\n    shots = []\n    gems = []\n    tick = 0\n    safe = 0\n    wait = 0\n    kills = 0\n    xp = 0\n    level = 1\n    owned = []\n    bonus = {\"power\": 0, \"ring\": 0, \"boom\": 0, \"slow\": 0, \"frost\": 0, \"armor\": 0}\n    bonus[\"fast\"] = 0\n    bonus[\"extra\"] = 0\n    bonus[\"cloud\"] = 0\n    bonus[\"speed\"] = 0\n    for number in START_SKILLS:\n        add_skill(SKILLS[number])\n    picks = START_PICKS\n    deal_cards()\n    screen = \"cards\"\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        for i in range(bonus[\"extra\"]):\n            shots.append(make_shot(mobs[random_int(0, len(mobs) - 1)]))\n        wait = 30 - bonus[\"fast\"]\n        if wait < 8:\n            wait = 8\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hurt(mob, amount):\n    # Em viết tiếp ở đây (2)\n    mob[\"hp\"] -= amount\n\n\ndef blast(center, size, amount):\n    for mob in mobs:\n        if near(mob, center, size):\n            hurt(mob, amount)\n\n\ndef use_skills():\n    if len(mobs) == 0:\n        return\n    if bonus[\"ring\"] > 0 and tick % 60 == 0:\n        blast(hero, 130, bonus[\"ring\"])\n    if bonus[\"cloud\"] > 0 and tick % 60 == 30:\n        hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])\n    # Em viết tiếp ở đây (3)\n    pass\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                hurt(mob, 1 + bonus[\"power\"])\n                mob[\"slow\"] += bonus[\"slow\"]\n                shot[\"live\"] = False\n                # Em viết tiếp ở đây (4)\n                pass\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n            if bonus[\"boom\"] > 0:\n                blast(mob, 90, bonus[\"boom\"])\n    mobs = alive\n\n\ndef need():\n    return 2 + level * 2\n\n\ndef deal_cards():\n    global cards\n    cards = []\n    pool = []\n    for skill in SKILLS:\n        pool.append(skill)\n    for i in range(3):\n        pick = pool[random_int(0, len(pool) - 1)]\n        cards.append(pick)\n        pool.remove(pick)\n\n\ndef picked_number():\n    global held\n    number = 0\n    if key_pressed(\"1\"):\n        number = 1\n    if key_pressed(\"2\"):\n        number = 2\n    if key_pressed(\"3\"):\n        number = 3\n    fresh = number\n    if number == held:\n        fresh = 0\n    held = number\n    if clicked():\n        for i in range(3):\n            if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:\n                fresh = i + 1\n    return fresh\n\n\ndef take_card(skill):\n    global picks, screen\n    add_skill(skill)\n    picks -= 1\n    deal_cards()\n    if picks <= 0:\n        screen = \"play\"\n\n\ndef check_level():\n    global xp, level, screen, picks\n    if xp >= need():\n        xp -= need()\n        level += 1\n        picks += 1\n        deal_cards()\n        screen = \"cards\"\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60 + bonus[\"armor\"]\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        speed = mob[\"speed\"]\n        if near(mob, hero, bonus[\"frost\"]):\n            mob[\"slow\"] += 2\n        if mob[\"slow\"] > 0:\n            mob[\"slow\"] -= 1\n            speed = speed / 2\n        step_to(mob, hero, speed)\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update_play():\n    global tick, screen\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    shoot()\n    move_shots()\n    hit_mobs()\n    use_skills()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        screen = \"over\"\n\n\ndef update():\n    number = picked_number()\n    if screen == \"play\":\n        update_play()\n    elif screen == \"cards\":\n        if number > 0:\n            take_card(cards[number - 1])\n    elif key_pressed(\"space\"):\n        start_game()\n\n\ndef draw_title():\n    clear(\"#2b2438\")\n    draw_text(\"HẦM NGỌC\", 300, 220, 64)\n    draw_thing(hero[\"image\"], 300, 320, 5)\n    draw_text(\"Bấm Space để vào hầm\", 300, 430)\n\n\ndef draw_play():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        if mob[\"slow\"] > 0:\n            draw_circle(mob[\"x\"], mob[\"y\"], 18, \"#7fd8ff\")\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(len(mobs)), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    for i in range(len(BRANCHES)):\n        row = BRANCHES[i]\n        text = row[\"name\"] + \" \" + str(count_branch(row[\"branch\"]))\n        if has_combo(row[\"branch\"]):\n            text = row[\"combo\"]\n        draw_text(text, 400 + i * 80, 570, 20)\n    for i in range(len(owned)):\n        skill = owned[i]\n        draw_skill(skill, 20 + i * 20, 570, 1)\n\n\ndef draw_skill(skill, x, y, size):\n    draw_thing(\"skill-\" + skill[\"branch\"] + \"-\" + str(skill[\"icon\"]), x, y, size)\n\n\ndef draw_cards():\n    draw_rect(40, 80, 520, 460, \"#101018\")\n    draw_text(\"Chọn một thẻ\", 300, 120, 40)\n    for i in range(len(cards)):\n        skill = cards[i]\n        y = 180 + i * 120\n        draw_rect(60, y, 480, 100, \"#33334a\")\n        draw_skill(skill, 110, y + 50, 4)\n        draw_text(str(i + 1), 76, y + 20)\n        draw_text(skill[\"name\"], 340, y + 50)\n\n\ndef draw():\n    if screen == \"title\":\n        draw_title()\n    else:\n        draw_play()\n    if screen == \"cards\":\n        draw_cards()\n    if screen == \"over\":\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n        draw_text(\"Bấm Space để chơi lại\", 300, 320)\n\n\nstart_game()\nscreen = \"title\"\n"
+      },
+      "solution": {
+        "main.py": "from pyquest import *\n\nSTART_HP = 5\nhero = {\"name\": \"Kiếm sĩ\", \"image\": \"hero-knight\", \"x\": 300, \"y\": 300, \"hp\": 5, \"speed\": 3}\nhero[\"reach\"] = 400\nSTART_PICKS = 1\nSTART_SKILLS = [0, 2, 3, 5, 6, 8]\nheld = 0\n\nSKILLS = []\nSKILLS.append({\"name\": \"Đốm Lửa: đạn mạnh hơn\", \"branch\": \"fire\", \"icon\": 1, \"what\": \"power\", \"add\": 1})\nSKILLS.append({\"name\": \"Vòng Lửa: đốt quái gần\", \"branch\": \"fire\", \"icon\": 2, \"what\": \"ring\", \"add\": 2})\nSKILLS.append({\"name\": \"Nổ Tung: quái thua nổ\", \"branch\": \"fire\", \"icon\": 4, \"what\": \"boom\", \"add\": 2})\nSKILLS.append({\"name\": \"Đòn Buốt: đạn làm chậm\", \"branch\": \"ice\", \"icon\": 1, \"what\": \"slow\", \"add\": 60})\nSKILLS.append({\"name\": \"Vòng Sương: tỏa lạnh\", \"branch\": \"ice\", \"icon\": 4, \"what\": \"frost\", \"add\": 80})\nSKILLS.append({\"name\": \"Áo Băng: bất tử lâu\", \"branch\": \"ice\", \"icon\": 3, \"what\": \"armor\", \"add\": 40})\nSKILLS.append({\"name\": \"Tay Chớp: bắn nhanh\", \"branch\": \"spark\", \"icon\": 1, \"what\": \"fast\", \"add\": 5})\nSKILLS.append({\"name\": \"Tia Đôi: thêm 1 viên\", \"branch\": \"spark\", \"icon\": 2, \"what\": \"extra\", \"add\": 1})\nSKILLS.append({\"name\": \"Mây Giông: sét đánh\", \"branch\": \"spark\", \"icon\": 3, \"what\": \"cloud\", \"add\": 3})\nBRANCHES = []\nBRANCHES.append({\"branch\": \"fire\", \"name\": \"Lửa\", \"combo\": \"Lò Than\"})\nBRANCHES.append({\"branch\": \"ice\", \"name\": \"Băng\", \"combo\": \"Thấu Xương\"})\nBRANCHES.append({\"branch\": \"spark\", \"name\": \"Sét\", \"combo\": \"Bão Sét\"})\n\n\ndef draw_thing(image, x, y, size):\n    draw_image(\"images/\" + image + \".png\", x - 8 * size, y - 8 * size, scale=size)\n\n\ndef make_mob(x, y):\n    return {\"image\": \"mob-slime\", \"x\": x, \"y\": y, \"hp\": 8, \"speed\": 1, \"slow\": 0}\n\n\ndef far_edge(value):\n    if value < 300:\n        return 580\n    return 20\n\n\ndef spawn_mob():\n    mobs.append(make_mob(random_int(20, 580), far_edge(hero[\"y\"])))\n\n\ndef add_skill(skill):\n    owned.append(skill)\n    bonus[skill[\"what\"]] += skill[\"add\"]\n\n\ndef count_branch(branch):\n    total = 0\n    for skill in owned:\n        if skill[\"branch\"] == branch:\n            total += 1\n    return total\n\n\ndef has_combo(branch):\n    return count_branch(branch) >= 2\n\n\ndef start_game():\n    global mobs, shots, gems, owned, bonus, picks, tick, safe, wait, kills, xp, level, screen\n    hero[\"x\"] = 300\n    hero[\"y\"] = 300\n    hero[\"hp\"] = START_HP\n    mobs = []\n    shots = []\n    gems = []\n    tick = 0\n    safe = 0\n    wait = 0\n    kills = 0\n    xp = 0\n    level = 1\n    owned = []\n    bonus = {\"power\": 0, \"ring\": 0, \"boom\": 0, \"slow\": 0, \"frost\": 0, \"armor\": 0}\n    bonus[\"fast\"] = 0\n    bonus[\"extra\"] = 0\n    bonus[\"cloud\"] = 0\n    bonus[\"speed\"] = 0\n    for number in START_SKILLS:\n        add_skill(SKILLS[number])\n    picks = START_PICKS\n    deal_cards()\n    screen = \"cards\"\n    for i in range(6):\n        mobs.append(make_mob(random_int(40, 560), 40))\n\n\ndef move_hero():\n    if key_pressed(\"right\"):\n        hero[\"x\"] += hero[\"speed\"]\n    if key_pressed(\"left\"):\n        hero[\"x\"] -= hero[\"speed\"]\n    if hero[\"x\"] < 24:\n        hero[\"x\"] = 24\n    if hero[\"x\"] > 576:\n        hero[\"x\"] = 576\n    if key_pressed(\"up\"):\n        hero[\"y\"] -= hero[\"speed\"]\n    if key_pressed(\"down\"):\n        hero[\"y\"] += hero[\"speed\"]\n    if hero[\"y\"] < 24:\n        hero[\"y\"] = 24\n    if hero[\"y\"] > 576:\n        hero[\"y\"] = 576\n\n\ndef distance(a, b):\n    dx = abs(a[\"x\"] - b[\"x\"])\n    dy = abs(a[\"y\"] - b[\"y\"])\n    return dx + dy\n\n\ndef near(a, b, size):\n    return distance(a, b) < size\n\n\ndef nearest():\n    best = mobs[0]\n    for mob in mobs:\n        if distance(mob, hero) < distance(best, hero):\n            best = mob\n    return best\n\n\ndef make_shot(target):\n    far = distance(target, hero) + 1\n    vx = (target[\"x\"] - hero[\"x\"]) / far * 8\n    vy = (target[\"y\"] - hero[\"y\"]) / far * 8\n    return {\"x\": hero[\"x\"], \"y\": hero[\"y\"], \"vx\": vx, \"vy\": vy, \"live\": True}\n\n\ndef shoot():\n    global wait\n    wait -= 1\n    if wait <= 0 and len(mobs) > 0:\n        shots.append(make_shot(nearest()))\n        for i in range(bonus[\"extra\"]):\n            shots.append(make_shot(mobs[random_int(0, len(mobs) - 1)]))\n        wait = 30 - bonus[\"fast\"]\n        if wait < 8:\n            wait = 8\n\n\ndef move_shots():\n    for shot in shots:\n        shot[\"x\"] += shot[\"vx\"]\n        shot[\"y\"] += shot[\"vy\"]\n\n\ndef hurt(mob, amount):\n    if has_combo(\"ice\") and mob[\"slow\"] > 0:\n        amount += 3\n    mob[\"hp\"] -= amount\n\n\ndef blast(center, size, amount):\n    for mob in mobs:\n        if near(mob, center, size):\n            hurt(mob, amount)\n\n\ndef use_skills():\n    if len(mobs) == 0:\n        return\n    if bonus[\"ring\"] > 0 and tick % 60 == 0:\n        blast(hero, 130, bonus[\"ring\"])\n    if bonus[\"cloud\"] > 0 and tick % 60 == 30:\n        hurt(mobs[random_int(0, len(mobs) - 1)], bonus[\"cloud\"])\n    if has_combo(\"spark\") and tick % 90 == 0:\n        blast(hero, 900, 2)\n\n\ndef hit_mobs():\n    for shot in shots:\n        for mob in mobs:\n            if near(shot, mob, 30) and shot[\"live\"]:\n                hurt(mob, 1 + bonus[\"power\"])\n                mob[\"slow\"] += bonus[\"slow\"]\n                shot[\"live\"] = False\n                if has_combo(\"fire\"):\n                    blast(shot, 90, 1)\n\n\ndef remove_shots():\n    global shots\n    kept = []\n    for shot in shots:\n        if shot[\"live\"] and near(shot, hero, hero[\"reach\"]):\n            kept.append(shot)\n    shots = kept\n\n\ndef remove_dead():\n    global mobs, kills\n    alive = []\n    for mob in mobs:\n        if mob[\"hp\"] > 0:\n            alive.append(mob)\n        else:\n            kills += 1\n            gems.append({\"x\": mob[\"x\"], \"y\": mob[\"y\"]})\n            if bonus[\"boom\"] > 0:\n                blast(mob, 90, bonus[\"boom\"])\n    mobs = alive\n\n\ndef need():\n    return 2 + level * 2\n\n\ndef deal_cards():\n    global cards\n    cards = []\n    pool = []\n    for skill in SKILLS:\n        pool.append(skill)\n    for i in range(3):\n        pick = pool[random_int(0, len(pool) - 1)]\n        cards.append(pick)\n        pool.remove(pick)\n\n\ndef picked_number():\n    global held\n    number = 0\n    if key_pressed(\"1\"):\n        number = 1\n    if key_pressed(\"2\"):\n        number = 2\n    if key_pressed(\"3\"):\n        number = 3\n    fresh = number\n    if number == held:\n        fresh = 0\n    held = number\n    if clicked():\n        for i in range(3):\n            if mouse_y() > 180 + i * 120 and mouse_y() < 280 + i * 120:\n                fresh = i + 1\n    return fresh\n\n\ndef take_card(skill):\n    global picks, screen\n    add_skill(skill)\n    picks -= 1\n    deal_cards()\n    if picks <= 0:\n        screen = \"play\"\n\n\ndef check_level():\n    global xp, level, screen, picks\n    if xp >= need():\n        xp -= need()\n        level += 1\n        picks += 1\n        deal_cards()\n        screen = \"cards\"\n\n\ndef take_gems():\n    global gems, xp\n    kept = []\n    for gem in gems:\n        if near(gem, hero, 150):\n            step_to(gem, hero, 6)\n        if near(gem, hero, 40):\n            xp += 1\n        else:\n            kept.append(gem)\n    gems = kept\n\n\ndef check_hits():\n    global safe\n    if safe > 0:\n        safe -= 1\n        return\n    for mob in mobs:\n        if near(mob, hero, 36):\n            hero[\"hp\"] -= 1\n            safe = 60 + bonus[\"armor\"]\n            return\n\n\ndef step_to(thing, target, speed):\n    if thing[\"x\"] < target[\"x\"]:\n        thing[\"x\"] += speed\n    if thing[\"x\"] > target[\"x\"]:\n        thing[\"x\"] -= speed\n    if thing[\"y\"] < target[\"y\"]:\n        thing[\"y\"] += speed\n    if thing[\"y\"] > target[\"y\"]:\n        thing[\"y\"] -= speed\n\n\ndef move_mobs():\n    for mob in mobs:\n        speed = mob[\"speed\"]\n        if near(mob, hero, bonus[\"frost\"]):\n            mob[\"slow\"] += 2\n        if mob[\"slow\"] > 0:\n            mob[\"slow\"] -= 1\n            speed = speed / 2\n        step_to(mob, hero, speed)\n        mob[\"x\"] += random_int(-1, 1)\n        mob[\"y\"] += random_int(-1, 1)\n\n\ndef update_play():\n    global tick, screen\n    tick += 1\n    if tick % 50 == 0 and len(mobs) < 14:\n        spawn_mob()\n    move_hero()\n    move_mobs()\n    shoot()\n    move_shots()\n    hit_mobs()\n    use_skills()\n    remove_shots()\n    remove_dead()\n    take_gems()\n    check_level()\n    check_hits()\n    if hero[\"hp\"] <= 0:\n        screen = \"over\"\n\n\ndef update():\n    number = picked_number()\n    if screen == \"play\":\n        update_play()\n    elif screen == \"cards\":\n        if number > 0:\n            take_card(cards[number - 1])\n    elif key_pressed(\"space\"):\n        start_game()\n\n\ndef draw_title():\n    clear(\"#2b2438\")\n    draw_text(\"HẦM NGỌC\", 300, 220, 64)\n    draw_thing(hero[\"image\"], 300, 320, 5)\n    draw_text(\"Bấm Space để vào hầm\", 300, 430)\n\n\ndef draw_play():\n    clear(\"#2b2438\")\n    draw_thing(\"deco-torch\", 124, 84, 3)\n    draw_thing(\"deco-torch\", 476, 84, 3)\n    for gem in gems:\n        draw_thing(\"item-xp\", gem[\"x\"], gem[\"y\"], 1)\n    for shot in shots:\n        draw_thing(\"shot-spark\", shot[\"x\"], shot[\"y\"], 1)\n    for mob in mobs:\n        if mob[\"slow\"] > 0:\n            draw_circle(mob[\"x\"], mob[\"y\"], 18, \"#7fd8ff\")\n        draw_thing(mob[\"image\"], mob[\"x\"], mob[\"y\"], 2)\n    if safe % 10 < 5:\n        draw_thing(hero[\"image\"], hero[\"x\"], hero[\"y\"], 3)\n    draw_text(hero[\"name\"], hero[\"x\"], hero[\"y\"] - 36, 18)\n    draw_text(\"Máu: \" + str(hero[\"hp\"]), 60, 24)\n    draw_text(\"Quái: \" + str(len(mobs)), 540, 24)\n    draw_text(\"Hạ: \" + str(kills), 300, 24)\n    draw_rect(0, 588, 600, 12, \"#33334a\")\n    draw_rect(0, 590, 600 * xp / need(), 10, \"#2fc9a8\")\n    draw_text(\"Cấp \" + str(level), 180, 24)\n    for i in range(len(BRANCHES)):\n        row = BRANCHES[i]\n        text = row[\"name\"] + \" \" + str(count_branch(row[\"branch\"]))\n        if has_combo(row[\"branch\"]):\n            text = row[\"combo\"]\n        draw_text(text, 400 + i * 80, 570, 20)\n    for i in range(len(owned)):\n        skill = owned[i]\n        draw_skill(skill, 20 + i * 20, 570, 1)\n\n\ndef draw_skill(skill, x, y, size):\n    draw_thing(\"skill-\" + skill[\"branch\"] + \"-\" + str(skill[\"icon\"]), x, y, size)\n\n\ndef draw_cards():\n    draw_rect(40, 80, 520, 460, \"#101018\")\n    draw_text(\"Chọn một thẻ\", 300, 120, 40)\n    for i in range(len(cards)):\n        skill = cards[i]\n        y = 180 + i * 120\n        draw_rect(60, y, 480, 100, \"#33334a\")\n        draw_skill(skill, 110, y + 50, 4)\n        draw_text(str(i + 1), 76, y + 20)\n        draw_text(skill[\"name\"], 340, y + 50)\n\n\ndef draw():\n    if screen == \"title\":\n        draw_title()\n    else:\n        draw_play()\n    if screen == \"cards\":\n        draw_cards()\n    if screen == \"over\":\n        draw_text(\"Thua rồi!\", 300, 250, 48)\n        draw_text(\"Bấm Space để chơi lại\", 300, 320)\n\n\nstart_game()\nscreen = \"title\"\n"
+      }
+    }
+  ],
+  "unlocksRoadmap": [
+    "skills",
+    "combos"
+  ],
+  "docsUnlocked": []
+}

@@ -1,0 +1,138 @@
+{
+  "title": "Game có nhiều màn hình",
+  "summary": "Màn chờ, màn chơi, màn lên cấp, màn thua. Đổi màn là dừng được game.",
+  "unlocksRoadmap": [
+    "level-up"
+  ],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h11-why",
+          "title": "Game đang thiếu gì?",
+          "text": "Hiện giờ bấm Chạy là quái ùa tới, thua rồi phải bấm Chạy lại. Game thật có màn chờ cho em chuẩn bị, có màn thua để chơi lại, và đứng yên khi em lên cấp.",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "3 phút. Cho bé chơi game mẫu và kể tên các màn đã thấy. Game mẫu có nhiều màn hơn, bản của em hôm nay có 4 màn."
+        },
+        {
+          "id": "h11-tv",
+          "title": "Giống kênh tivi",
+          "text": "Tivi lúc nào cũng ở đúng một kênh. Game cũng vậy: biến screen (màn hình) giữ tên màn đang mở. \"title\" là màn chờ, \"play\" là đang chơi, \"cards\" là lên cấp, \"over\" là thua.",
+          "coachNotes": "Nhắc lại state ở Bài 24 Bay Qua Khe. Hỏi: một biến screen có lúc nào vừa là play vừa là over không? (không, mỗi lúc một chữ)."
+        },
+        {
+          "id": "h11-update",
+          "title": "Mỗi khung, máy hỏi screen",
+          "text": "update() nhìn screen rồi mới quyết định làm gì. Đang \"play\" thì gọi update_play(). Không phải \"play\" thì không ai gọi update_play(), nên quái, đạn, ngọc đều đứng yên.",
+          "coachNotes": "Hoạt động 3 phút: một bé làm update(), một bé làm quái. HLV giơ giấy play hoặc cards. Giấy play: update() vỗ tay, quái bước một bước. Giấy cards: không vỗ, quái đứng. Dừng game không cần lệnh đặc biệt."
+        },
+        {
+          "id": "h11-elif",
+          "title": "Vì sao dùng elif?",
+          "text": "elif là: câu trên sai thì mới hỏi câu này. Đang chơi mà bấm Space thì câu đầu đã đúng, máy không hỏi tới Space nữa. Nhờ vậy em không bị chơi lại từ đầu.",
+          "coachNotes": "Lỗi hay gặp: viết hai chữ if rời nhau. Khi đó đang chơi mà chạm Space là mất ván."
+        },
+        {
+          "id": "h11-quiz-elif",
+          "quiz": {
+            "question": "screen là \"play\", em lỡ bấm Space. update() hỏi \"play\" trước, rồi mới elif Space. Điều gì xảy ra?",
+            "choices": [
+              "Ván mới bắt đầu, mất hết điểm",
+              "Game chạy tiếp bình thường",
+              "Game đứng lại chờ em"
+            ],
+            "answer": 1,
+            "explain": "Câu đầu đã đúng nên máy chạy update_play() và bỏ qua mọi nhánh elif bên dưới."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h11-map",
+          "title": "Vẽ bản đồ các màn",
+          "text": "Vẽ 4 ô: title, play, cards, over. Nối bằng mũi tên, trên mũi tên ghi việc làm đổi màn: bấm Space, lên cấp, hết máu. Màn nào cũng phải có đường đi tiếp.",
+          "coachNotes": "7 phút. Đáp án: title → play (Space); play → cards (lên cấp); cards → play (Space); play → over (hết máu); over → play (Space, ván mới). Treo bản đồ lên để lát nữa chơi thử theo."
+        },
+        {
+          "id": "h11-quiz-map",
+          "quiz": {
+            "question": "Từ màn chờ: bấm Space, lên cấp, bấm Space, hết máu, bấm Space. Giờ screen là gì?",
+            "choices": [
+              "\"title\"",
+              "\"over\"",
+              "\"play\"",
+              "\"cards\""
+            ],
+            "answer": 2,
+            "explain": "title → play → cards → play → over → play. Đây là ván thứ hai."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "h11-moved",
+          "title": "Code vừa được dọn",
+          "text": "game_over đã đổi thành screen. update cũ giờ tên là update_play, draw cũ tên là draw_play, còn draw_title vẽ màn chờ. Em tìm đủ ba hàm này trong code trước khi viết nhé.",
+          "coachNotes": "3 phút, bé tự cuộn code và chỉ tay. Nói rõ vì sao dọn: một hàm một việc, đổi màn chỉ là gọi hàm khác. Không có gì mất đi, chỉ đổi tên và đổi chỗ."
+        },
+        {
+          "id": "h11-start",
+          "title": "start_game(): làm lại từ đầu",
+          "text": "Muốn chơi lại thì mọi số phải về lúc đầu: quái, đạn, ngọc, máu, cấp. Tất cả đặt trong start_game(), gọi một lần là có ván mới sạch sẽ. Vì thế đầu file ngắn hẳn đi.",
+          "coachNotes": "Chỉ dòng global dài: start_game đặt lại các biến này nên phải khai báo. Cuối file gọi start_game() để có đủ biến, rồi đổi screen về title để hiện màn chờ."
+        },
+        {
+          "id": "h11-quiz-start",
+          "quiz": {
+            "question": "Giả sử start_game() quên đặt lại hero[\"hp\"]. Em thua rồi bấm Space. Ván hai sẽ thế nào?",
+            "choices": [
+              "Máu đầy như mới",
+              "Thua ngay, vì máu vẫn là 0",
+              "Quái biến mất hết"
+            ],
+            "answer": 1,
+            "explain": "Hộp hero vẫn giữ hp = 0 của ván trước, nên update_play() thấy hết máu và chuyển sang màn thua."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h11-code1",
+          "title": "Bài tập 1: Chờ, chơi, thua, chơi lại",
+          "text": "START_HP = 1 là đồ thử: chỉ 1 máu để thua thật nhanh. Người làm game thật cũng đặt đồ thử như vậy. Em viết update(): đang chơi thì chạy game, còn lại thì Space mới vào ván.",
+          "coachNotes": "Hỏi: vì sao không sửa máu thành 0? (vào là thua luôn, không thử được màn chơi). Nhắc so sánh bằng hai dấu =."
+        },
+        {
+          "id": "h11-code2",
+          "title": "Bài tập 2: Lên cấp thì dừng",
+          "text": "Lúc lên cấp, em chỉ đổi screen sang màn chọn thẻ. Quái tự đứng im, vì sao nhỉ? Rồi ở màn đó, Space đưa em về màn chơi. Máu đã đổi lại 5.",
+          "coachNotes": "Hỏi: ở màn cards, nếu gọi start_game() thay vì đổi screen thì sao? (thành ván mới, mất cấp). Màn thẻ còn trống, Bài 12 và 13 mới có thẻ."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h11-try",
+          "title": "Đi hết bản đồ",
+          "text": "Chơi qua đủ 4 màn theo bản đồ giấy. Lúc lên cấp, nhìn kỹ xem có con quái nào nhúc nhích không? Sau đó đổi START_HP hoặc chữ ở màn chờ thành câu của em.",
+          "coachNotes": "8 phút. Nếu bé giữ Space lúc lên cấp thì màn cards trôi qua ngay: key_pressed đúng suốt lúc giữ. Ghi lại, Bài 13 có cách xử lý. Bài tập đạt rồi hãy đổi chữ ở màn chờ."
+        }
+      ]
+    }
+  ]
+}

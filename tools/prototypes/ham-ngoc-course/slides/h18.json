@@ -1,0 +1,134 @@
+{
+  "title": "Ra mắt",
+  "summary": "Thêm quái và skill của em, tháo đồ thử, chơi chéo rồi ra mắt game.",
+  "unlocksRoadmap": [
+    "launch"
+  ],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h18-data",
+          "title": "Thêm nội dung mà không thêm code",
+          "text": "Quái mới, skill mới, đợt mới đều chỉ là dòng mới trong bảng. Code đọc bảng nên tự biết dùng. Đó là quả ngọt của những lần em dọn code từ đầu khóa.",
+          "coachNotes": "Hỏi: thêm một con ma thì phải đụng những bảng nào? (MOBS để có con ma, WAVES để nó ra sân)."
+        },
+        {
+          "id": "h18-what",
+          "title": "Cẩn thận với cái tên",
+          "text": "what của skill phải là một ngăn có sẵn trong bonus. Gõ \"sped\" thay vì \"speed\" thì máy báo KeyError: không có ngăn tên đó. Đọc lỗi, sửa tên là xong.",
+          "coachNotes": "Cho cả lớp cố tình gõ sai một lần để thấy lỗi. bonus có 10 ngăn: power, ring, boom, slow, frost, armor, fast, extra, cloud, speed. Ngăn speed có từ Bài 14, giờ mới dùng. mob và lead trong WAVES cũng phải đúng tên trong MOBS."
+        },
+        {
+          "id": "h18-quiz-speed",
+          "quiz": {
+            "question": "Cung thủ có speed 4, lấy Giày Gió hai lần, mỗi lần bonus speed cộng 2. Mỗi khung đi mấy bước?",
+            "choices": [
+              "4",
+              "6",
+              "8"
+            ],
+            "answer": 2,
+            "explain": "Hai Giày Gió là 2 + 2 = 4. Tốc độ là 4 của cung thủ cộng 4 của bonus, bằng 8."
+          }
+        },
+        {
+          "id": "h18-record",
+          "title": "Kỷ lục nhớ qua nhiều ván",
+          "text": "record (kỷ lục) là số quái nhiều nhất em từng hạ. Hết ván mới so: ván này hơn thì thay. record không đặt lại trong start_game, vì nó phải nhớ qua nhiều ván.",
+          "coachNotes": "Nối với Bài 7: tìm con gần nhất cũng là giữ kỷ lục. Hỏi: nếu đặt record = 0 trong start_game thì sao? (kỷ lục mất mỗi ván). Bấm Chạy lại từ đầu thì kỷ lục cũng về 0."
+        },
+        {
+          "id": "h18-quiz-record",
+          "quiz": {
+            "question": "record bắt đầu từ 0. Ba ván em hạ 12, 9, 20 quái. Sau mỗi ván, record là bao nhiêu?",
+            "choices": [
+              "12, 9, 20",
+              "12, 12, 20",
+              "12, 21, 41"
+            ],
+            "answer": 1,
+            "explain": "9 không hơn 12 nên vẫn giữ 12. 20 hơn 12 nên thay. Kỷ lục là lớn nhất, không phải cộng dồn."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h18-own",
+          "title": "Dòng của riêng em",
+          "text": "Lấy lại tờ giấy skill ở Bài 12, hoặc nghĩ một con quái dùng hình mob-mushroom (nấm). Viết đủ các ngăn của một dòng. Nó khó hơn hay dễ hơn những dòng đang có?",
+          "coachNotes": "8 phút. Skill của bé phải chọn what trong 10 ngăn có sẵn, và icon là hình có trong kho (skill-fire-1 tới 4, ice, spark, common). Dòng này thêm sau khi bài tập đã đạt."
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "h18-remove",
+          "title": "Tháo đồ thử",
+          "text": "Đồ thử giúp em thử nhanh. Nhưng người chơi thật không nên vào thẳng đợt 4 với skill cho sẵn. Trước khi ra mắt, đưa START_WAVE và START_SKILLS về như chưa cho gì.",
+          "coachNotes": "Nói: thợ xây xong nhà thì tháo giàn giáo. START_PICKS = 1 giữ lại vì đó là luật chơi: vào hầm được chọn 1 thẻ."
+        },
+        {
+          "id": "h18-quiz-wave",
+          "quiz": {
+            "question": "Game có 5 đợt. Em quên đưa START_WAVE = 3 về 0. Bạn vào ván mới sẽ thấy chữ gì?",
+            "choices": [
+              "Đợt 1/5",
+              "Đợt 3/5",
+              "Đợt 4/5"
+            ],
+            "answer": 2,
+            "explain": "Đợt đếm từ 0 nên số 3 là đợt thứ tư. Màn hình viết wave + 1, tức là 4/5."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h18-code1",
+          "title": "Bài tập 1: Quái mới, skill mới",
+          "text": "Chỉ thêm dòng vào bảng, không sửa code khác: một skill, một con ma, một đợt trước trùm. Đặt START_SKILLS để có sẵn Giày Gió mà thử. Giày Gió là dòng thứ mười thì số mấy?",
+          "coachNotes": "Đáp: số 9 vì đếm từ 0. Dòng đợt ma phải nằm trước dòng đợt trùm, vì các đợt chạy theo thứ tự trong WAVES. START_WAVE = 3 đã có sẵn để thử ngay đợt ma."
+        },
+        {
+          "id": "h18-code2",
+          "title": "Bài tập 2 và 3: Kỷ lục, ký tên",
+          "text": "Bài tập 2: giữ kỷ lục trong finish(result), hàm chạy khi hết ván, dù thắng hay thua. Bài tập 3: tháo đồ thử và ký tên dưới màn chọn nhân vật. Nhớ str() khi nối số với chữ.",
+          "coachNotes": "finish gom việc chung của thắng và thua: đổi màn, xét kỷ lục, tắt nhạc. Máy chấm đọc đúng câu Em làm game này!, bé đạt rồi hãy đổi thành biệt danh của mình (không ghi tên thật)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h18-swap",
+          "title": "Đổi máy và chơi",
+          "text": "Chơi game của bạn 10 phút, rồi viết 3 dòng: một điều hay, một điều muốn sửa, con số nào trong bảng nên đổi. Nói điều mình thấy, không chê người.",
+          "coachNotes": "Chia cặp. Ví dụ góp ý có ích: mình thua ở đợt 3 vì dơi ra dồn dập, thử gap 30 xem. Người làm game chỉ nhìn và ghi, chưa giải thích vội."
+        },
+        {
+          "id": "h18-fix",
+          "title": "Sửa theo góp ý, đặt tên",
+          "text": "Chọn một góp ý, đổi một số trong bảng rồi nhờ bạn chơi lại: có hơn không? Sau đó đặt tên game, thay chữ HẦM NGỌC ở màn chọn bằng tên của em.",
+          "coachNotes": "15 phút. Sửa từng thứ một. Mỗi bé đọc tên game và một câu giới thiệu ngắn. Lỗi chưa kịp sửa thì ghi vào danh sách, game thật cũng có danh sách như vậy."
+        },
+        {
+          "id": "h18-done",
+          "title": "Em đã làm ra một game vượt ải",
+          "text": "Từ một nhân vật đứng yên tới ba nhân vật, đàn quái, skill, phối hợp và trùm. Em hiểu từng phần vì tự tay xây. Game còn chỗ để sửa, và em biết cách sửa. Hãy tự hào nhé!",
+          "coachNotes": "Mở lại lộ trình: 12 phần. Mỗi bé kể phần mình thích nhất và phần khó nhất. Gợi ý cho ai muốn làm tiếp: thêm quái nấm, thêm đợt, đổi hình trùm."
+        }
+      ]
+    }
+  ]
+}

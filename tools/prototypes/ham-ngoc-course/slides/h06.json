@@ -1,0 +1,125 @@
+{
+  "title": "Chạm là mất máu",
+  "summary": "Đo khoảng cách để biết chạm, rồi cho em một giây bất tử để chạy.",
+  "unlocksRoadmap": [
+    "health"
+  ],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h06-why",
+          "title": "Máy không thấy chạm",
+          "text": "Mắt em thấy quái đụng vào mình. Máy chỉ thấy các con số x, y. Phải đổi câu \"chạm chưa?\" thành câu hỏi về số: hai bên cách nhau bao xa?",
+          "coachNotes": "Hỏi: ở Bay Qua Khe em hỏi chim đụng cột bằng cách nào? (hai hình chữ nhật). Lần này đo khoảng cách cho gọn."
+        },
+        {
+          "id": "h06-walk",
+          "title": "Đo bằng bước đi",
+          "text": "Đếm bước ngang cộng bước dọc, như đi trên bàn cờ mà không đi chéo. Em (300, 300), quái (320, 310): ngang 20, dọc 10, vậy khoảng cách là 30.",
+          "coachNotes": "Hoạt động giấy: chấm hai điểm trên giấy ô, đếm bước. Đường chim bay sẽ ngắn hơn (khoảng 22) nhưng cần phép tính khó hơn; cách đếm này đủ dùng cho game."
+        },
+        {
+          "id": "h06-abs",
+          "title": "abs: bỏ dấu trừ",
+          "text": "Quái ở bên trái em: 280 - 300 = -20. Khoảng cách không thể âm! abs(-20) là 20, abs(20) cũng là 20. abs là bỏ dấu trừ đi.",
+          "coachNotes": "Hỏi: từ nhà em tới trường 2 km, từ trường về nhà là -2 km à? Lỗi hay gặp: quên abs, quái ở bên trái bị tính là \"rất gần\" vì số âm nhỏ hơn 36."
+        },
+        {
+          "id": "h06-near",
+          "title": "Dưới 36 là chạm",
+          "text": "near(a, b, 36) trả lời True khi khoảng cách dưới 36. Nửa người em 24, nửa con nhớt 16, cộng lại là 40. Mình lấy 36, nhỏ hơn một chút cho công bằng.",
+          "coachNotes": "Giống chừa mép 8 điểm ở Bay Qua Khe: phải chạm thật rõ mới tính."
+        },
+        {
+          "id": "h06-quiz-near",
+          "quiz": {
+            "question": "Em (300, 300), quái (285, 320). Khoảng cách bằng mấy? Có chạm (dưới 36) không?",
+            "choices": [
+              "5, có chạm",
+              "15, có chạm",
+              "35, có chạm",
+              "35, không chạm"
+            ],
+            "answer": 2,
+            "explain": "Ngang 15, dọc 20, cộng lại 35. 35 nhỏ hơn 36 nên là chạm."
+          },
+          "coachNotes": "5 là quên abs (-15 + 20). 15 là chỉ đo một trục."
+        },
+        {
+          "id": "h06-problem",
+          "title": "Chạm một cái là thua?",
+          "text": "Quái dính vào em thì khung nào cũng chạm, mà mỗi giây có khoảng 60 khung. Với 5 máu, chỉ một con quái cũng lấy sạch trong 5 khung hình!",
+          "coachNotes": "5 khung chưa tới một phần mười giây. Bài tập 1 cố ý để như vậy cho bé thấy vấn đề, bài tập 2 sửa."
+        },
+        {
+          "id": "h06-safe",
+          "title": "Đồng hồ bất tử",
+          "text": "safe là đồng hồ đếm ngược. Bị chạm thì lên dây: safe = 60. Mỗi khung safe bớt 1. Còn lớn hơn 0 thì không mất máu. 60 khung là khoảng 1 giây để chạy.",
+          "coachNotes": "Cho lớp đếm ngược thật 60, 59, 58… thật nhanh. Hỏi: nếu quên bớt 1 thì sao? (bất tử mãi mãi)."
+        },
+        {
+          "id": "h06-trace",
+          "title": "Dò đồng hồ",
+          "text": "Khung bị chạm: máu 5 còn 4, safe = 60.\nKhung sau: safe = 59, không xét chạm.\n…\nKhung thứ 60: safe = 0, vẫn chưa xét.\nKhung thứ 61: lại xét chạm.",
+          "coachNotes": "Mỗi khung chỉ làm một trong hai việc: hoặc bớt safe, hoặc xét chạm. Vì vậy hai lần mất máu cách nhau 61 khung."
+        },
+        {
+          "id": "h06-quiz-safe",
+          "quiz": {
+            "question": "safe = 2 và quái vẫn dính vào em. Sau 3 khung hình nữa, em mất mấy máu?",
+            "choices": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ],
+            "answer": 1,
+            "explain": "Khung 1: safe còn 1. Khung 2: còn 0. Khung 3: hết bất tử, bị chạm nên mất 1 máu."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h06-blink",
+          "title": "Báo cho người chơi biết",
+          "text": "Đang bất tử mà không báo thì người chơi tưởng game hỏng. Nên nhân vật nhấp nháy: 5 khung ẩn, 5 khung hiện. draw() có sẵn: safe % 10 < 5 thì mới vẽ.",
+          "coachNotes": "Dò cùng lớp: safe 59 thì dư 9, ẩn. 54 thì dư 4, hiện. Hết bất tử: 0 dư 0, hiện luôn."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h06-code1",
+          "title": "Bài tập 1: đo và trừ máu",
+          "text": "Viết distance: đo ngang, đo dọc, trả về tổng. Rồi trong check_hits() hỏi từng con quái bằng near. Chạy thấy máu tụt vèo là đúng rồi đó, bài tập 2 sẽ sửa.",
+          "coachNotes": "Lỗi hay gặp: chỉ đo một trục (quái cùng cột, xa tít vẫn làm em đau); để dòng trừ máu ngoài if."
+        },
+        {
+          "id": "h06-code2",
+          "title": "Bài tập 2: một giây bất tử",
+          "text": "(1) Đầu hàm: đang bất tử thì bớt safe rồi thôi. (2) Lúc bị chạm: lên dây đồng hồ rồi return, để hai con chạm cùng lúc cũng chỉ mất 1 máu.",
+          "coachNotes": "Hỏi: safe là một biến thường nên cần global, còn hero[\"hp\"] thì không. Vì sao? (Bài 3: chỉ đổi một ngăn)."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h06-try",
+          "title": "Chịu được bao lâu?",
+          "text": "Đứng im cho quái chạm: từ lúc mất máu đầu tiên tới lúc thua là mấy giây? Rồi vừa chạy vừa né xem lâu hơn bao nhiêu. Đổi safe = 60 thành 30 và 120: số nào vừa?",
+          "coachNotes": "Đứng im thì khoảng 4 giây: 4 lần chờ, mỗi lần 61 khung. Cho bé bấm giờ rồi so với phép tính. Thua rồi thì tắt và chạy lại, Bài 11 mới có màn chơi lại. Bài sau: dạy nhân vật tìm con quái gần nhất."
+        }
+      ]
+    }
+  ]
+}

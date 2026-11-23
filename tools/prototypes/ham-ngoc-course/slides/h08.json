@@ -1,0 +1,135 @@
+{
+  "title": "Tự bắn",
+  "summary": "Danh sách đạn, đồng hồ giữa hai lần bắn và phép tính hướng bay.",
+  "unlocksRoadmap": [],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h08-look",
+          "title": "Nhìn game mẫu bắn",
+          "text": "Chọn Pháp sư hoặc Cung thủ rồi đứng im nhìn đạn: bao lâu có một viên? Bay về phía nào? Bay rồi có đổi hướng không?",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "5 phút. Ghi ba câu trả lời lên bảng: có nhịp, bay về con gần nhất, bay thẳng. Kiếm sĩ trong game mẫu thì chém; trong bản của em, kiếm sĩ bắn tia sáng."
+        },
+        {
+          "id": "h08-shots",
+          "title": "Đạn cũng là hộp",
+          "text": "Mỗi viên đạn là một dict: x, y và hai số vx, vy. Mỗi khung, x cộng thêm vx, y cộng thêm vy. Cả đám đạn là danh sách shots, y như bầy quái.",
+          "coachNotes": "v là velocity: tốc độ có hướng. vx dương thì sang phải, vy dương thì xuống dưới. Hỏi: vx = 0, vy = -7 thì bay đi đâu? (thẳng lên)."
+        },
+        {
+          "id": "h08-wait",
+          "title": "Đồng hồ giữa hai phát",
+          "text": "wait là đồng hồ đếm ngược, giống safe ở Bài 6. Mỗi khung bớt 1. Hết giờ thì bắn một viên và lên dây lại 30. 30 khung là nửa giây, mỗi giây 2 viên.",
+          "coachNotes": "Hỏi: muốn bắn nhanh gấp đôi thì lên dây lại bao nhiêu? (15)."
+        },
+        {
+          "id": "h08-quiz-wait",
+          "quiz": {
+            "question": "wait bắt đầu bằng 0, mỗi lần bắn đặt lại 30. Viên đầu bay ra ở khung 1. Viên thứ hai ở khung mấy?",
+            "choices": [
+              "2",
+              "30",
+              "31",
+              "60"
+            ],
+            "answer": 2,
+            "explain": "Sau khung 1, wait = 30. Mỗi khung bớt 1, qua 30 khung nữa thì hết: 1 + 30 = 31."
+          }
+        },
+        {
+          "id": "h08-quiz-rain",
+          "quiz": {
+            "question": "Em quên dòng đặt lại wait = 30. Sau 60 khung hình có bao nhiêu viên đã bắn?",
+            "choices": [
+              "1",
+              "2",
+              "30",
+              "60"
+            ],
+            "answer": 3,
+            "explain": "wait tụt xuống dưới 0 và ở đó mãi, nên khung nào cũng bắn: 60 khung, 60 viên."
+          },
+          "coachNotes": "Cho bé thử thật: đạn ra thành một vệt liền. Đây là lỗi hay gặp nhất của bài tập 1."
+        },
+        {
+          "id": "h08-minus",
+          "title": "Hướng là một phép trừ",
+          "text": "Lấy đích trừ mình. Trục x: ra số dương thì đích ở bên phải, số âm thì ở bên trái. Trục y: dương thì đích ở dưới, âm thì ở trên.",
+          "coachNotes": "Chỉ từng con quái trên bảng, hỏi dấu của hai phép trừ. Viết ngược (mình trừ đích) thì đạn bay ra sau lưng."
+        },
+        {
+          "id": "h08-divide",
+          "title": "Vì sao phải chia?",
+          "text": "Quái cách 300 bước thì phép trừ ra 300: bay một phát hết nửa sân! Chia cho cả đường đi, chỉ còn phần của một bước. Nhân 8: mỗi khung đi gần 8 bước, xa hay gần cũng vậy.",
+          "coachNotes": "Đếm bước kiểu bàn cờ (ngang + dọc) như Bài 6. Ví dụ đời thường: biết cả quãng đường, muốn mỗi lần chỉ đi một đoạn bằng nhau."
+        },
+        {
+          "id": "h08-trace",
+          "title": "Dò bằng số",
+          "text": "Em (300, 300), quái (375, 276).\nNgang 75, dọc -24.\nfar = 75 + 24 + 1 = 100\nvx = 75 / 100 * 8 = 6\nvy = -24 / 100 * 8 = -1.92\nĐạn sang phải nhiều, lên một ít.",
+          "coachNotes": "Cho bé cộng tiếp: sau 5 khung đạn ở đâu? (330, 290.4). Vẽ lên giấy ô, thấy đạn đi về phía quái."
+        },
+        {
+          "id": "h08-quiz-dir",
+          "quiz": {
+            "question": "Em (300, 300), quái (250, 349). far = 50 + 49 + 1 = 100. vx = (đích - mình) / far * 8 bằng mấy?",
+            "choices": [
+              "4",
+              "-4",
+              "-50",
+              "-0.5"
+            ],
+            "answer": 1,
+            "explain": "250 - 300 = -50. -50 / 100 = -0.5. Nhân 8 là -4: quái ở bên trái nên vx âm."
+          },
+          "coachNotes": "4 là trừ ngược. -50 là quên chia. -0.5 là quên nhân 8."
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h08-plus1",
+          "title": "Vì sao cộng 1?",
+          "text": "Quái đứng đúng chỗ em thì đường đi là 0. Chia cho 0 thì Python báo lỗi và game dừng. Cộng 1 thì far không bao giờ bằng 0. Quái ở xa thì thêm 1 gần như không ảnh hưởng gì.",
+          "coachNotes": "Hỏi: cho 8 cái kẹo chia 0 bạn thì mỗi bạn mấy cái? Câu hỏi không có nghĩa, máy cũng chịu."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h08-code1",
+          "title": "Bài tập 1: bắn theo nhịp",
+          "text": "shoot() chạy mỗi khung. Ghi ra giấy ba việc phải làm khi tới lượt: thêm đạn vào shots, đếm fired, lên dây đồng hồ. Đạn tạm bay thẳng lên.",
+          "coachNotes": "Xem số fired ở ô biến dưới sân sau khi chạy: khoảng 7 sau 200 khung. wait, fired cần global vì bị gán lại."
+        },
+        {
+          "id": "h08-code2",
+          "title": "Bài tập 2: bắn đúng hướng",
+          "text": "Thay hai số cố định bằng phép tính hướng. Phép trừ phải có ngoặc tròn bao quanh, để máy trừ xong rồi mới chia và nhân.",
+          "coachNotes": "Hỏi: không có ngoặc thì máy làm phép nào trước? (chia, nhân trước, trừ sau). Quái trúng đạn chưa mất máu, chỉ đếm hits ở ô biến; Bài 9 mới làm."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h08-try",
+          "title": "Xạ thủ tập sự",
+          "text": "Vừa chạy vừa xem đạn tìm con gần nhất. Viên đã bắn bay thẳng, nên quái dời chỗ thì có thể trượt. Chỉnh 30 (nhịp bắn), rồi chỉnh 8 (tốc độ đạn), mỗi lần một số thôi.",
+          "coachNotes": "Vì sao mỗi lần chỉ đổi một số? Để biết số nào làm game khác đi. Đứng im lâu, quái chồng ngay lên em: phép trừ ra 0 nên đạn nằm im tại chỗ. Hỏi lớp vì sao. Đạn nào cũng xuyên qua và bay mãi: bài sau xử lý."
+        }
+      ]
+    }
+  ]
+}

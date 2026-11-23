@@ -1,0 +1,128 @@
+{
+  "title": "Nhân vật vào hầm",
+  "summary": "Phóng to ảnh pixel bằng scale và đặt nhân vật đúng giữa sân 600 × 600.",
+  "unlocksRoadmap": [],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h01-look",
+          "title": "Chỉ nhìn nhân vật thôi",
+          "text": "Mở lại game mẫu, chọn một nhân vật. Lần này em chưa cần thắng. Nhìn kỹ: nhân vật to cỡ nào so với sân? Quanh nó có những gì?",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "5 phút. Bấm vào sân trước rồi mới dùng phím. Hỏi: so với cả sân, nhân vật cao bằng mấy phần? Cho các bé ước lượng, chưa cần đúng."
+        },
+        {
+          "id": "h01-pixel",
+          "title": "Ảnh pixel nhỏ xíu",
+          "text": "Ảnh kiếm sĩ chỉ rộng 16 điểm và cao 16 điểm. Sân rộng 600 điểm, nên phải xếp hơn 37 kiếm sĩ mới kín một hàng. Để nguyên thì nhìn không rõ.",
+          "coachNotes": "Hỏi: 600 chia 16 được bao nhiêu? (37,5). Có thể vẽ bằng tay một hình 16 × 16 trên giấy kẻ ô để thấy nó ít điểm thế nào."
+        },
+        {
+          "id": "h01-scale",
+          "title": "scale: phóng to mấy lần",
+          "text": "scale=3 là phóng to gấp 3: mỗi điểm màu thành một ô 3 × 3. Ảnh 16 × 16 thành 48 × 48. Không viết scale thì ảnh giữ nguyên cỡ.",
+          "coachNotes": "Hoạt động giấy 5 phút: tô một hình 4 × 4 ô, rồi vẽ lại với mỗi ô thành 3 × 3 ô. scale viết sau cùng, có tên và dấu bằng: nhờ có tên nên đọc là hiểu ngay."
+        },
+        {
+          "id": "h01-corner",
+          "title": "Máy dán ảnh theo góc",
+          "text": "draw_image đặt góc trên bên trái của ảnh vào chỗ (x, y) em viết. Còn em thì hay nghĩ tới điểm giữa. Góc và giữa là hai điểm khác nhau.",
+          "coachNotes": "Ghim một góc tờ giấy lên bảng, rồi hỏi: điểm giữa tờ giấy đang ở đâu so với cái ghim? (lệch sang phải và xuống dưới)."
+        },
+        {
+          "id": "h01-half",
+          "title": "Từ giữa lùi ra góc",
+          "text": "Ảnh đã phóng to rộng 48, nửa ảnh là 24. Muốn điểm giữa ở 300, góc phải lùi lại 24: 300 - 24 = 276. Chiều ngang lùi sang trái, chiều dọc lùi lên trên.",
+          "coachNotes": "Cho bé cắt hình vuông cạnh 48 mm, chấm điểm giữa, đặt điểm giữa lên vạch 300 vẽ sẵn rồi đo xem góc ở vạch nào. Lỗi hay gặp: lùi cả 48 thay vì nửa ảnh."
+        },
+        {
+          "id": "h01-quiz-scale",
+          "quiz": {
+            "question": "Ảnh rộng 16, vẽ với scale=5. Muốn giữa ảnh ở x = 300 thì góc ảnh ở x bằng mấy?",
+            "choices": [
+              "300",
+              "276",
+              "260",
+              "220"
+            ],
+            "answer": 2,
+            "explain": "Ảnh rộng 16 × 5 = 80, nửa ảnh là 40. Góc ở 300 - 40 = 260."
+          },
+          "coachNotes": "276 là đáp án của scale=3. 220 là lùi cả ảnh thay vì nửa ảnh. Hỏi bé chọn số nào và vì sao."
+        },
+        {
+          "id": "h01-quiz-torch",
+          "quiz": {
+            "question": "Đuốc 16 × 16 vẽ ở (100, 60) với scale=3. Giữa ngọn đuốc ở đâu?",
+            "choices": [
+              "(100, 60)",
+              "(124, 84)",
+              "(76, 36)",
+              "(148, 108)"
+            ],
+            "answer": 1,
+            "explain": "(100, 60) là góc trên bên trái. Đi thêm nửa ảnh là 24: sang phải được 124, xuống dưới được 84."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h01-rule",
+          "title": "Luật của game mình",
+          "text": "Từ bài này, x, y luôn là điểm giữa nhân vật. Lúc vẽ mới trừ nửa ảnh. Sau này quái đuổi, chạm, bắn đều đo từ giữa tới giữa, nên nhớ điểm giữa là gọn nhất.",
+          "coachNotes": "Viết luật này lên bảng và để nguyên tới hết khóa: \"x, y = điểm giữa\". Hỏi: nếu nhớ góc ảnh thì lúc đổi scale chuyện gì xảy ra?"
+        },
+        {
+          "id": "h01-quiz-wrong",
+          "quiz": {
+            "question": "x = 300, y = 300. Em lỡ vẽ ảnh 48 × 48 ở x, y thay vì x - 24, y - 24. Nhân vật ở đâu?",
+            "choices": [
+              "Vẫn đúng giữa sân",
+              "Lệch sang phải và xuống dưới",
+              "Lệch sang trái và lên trên",
+              "Máy báo lỗi"
+            ],
+            "answer": 1,
+            "explain": "Góc ảnh nằm ở (300, 300), nên cả ảnh nằm bên phải và bên dưới điểm giữa sân."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h01-code1",
+          "title": "Bài tập 1: to gấp ba",
+          "text": "Kiếm sĩ đang bé xíu. Thêm scale rồi tính chỗ đặt góc để giữa ảnh rơi đúng (300, 300). Em tự tính ra giấy trước nhé. Xong thì treo hai ngọn đuốc.",
+          "coachNotes": "Lỗi hay gặp: quên dấu phẩy trước scale, hoặc viết scale 3 thiếu dấu bằng. Bấm 👀 để so hình mẫu. clear(\"#2b2438\") là màu tím than viết bằng mã màu."
+        },
+        {
+          "id": "h01-code2",
+          "title": "Bài tập 2: vẽ theo x, y",
+          "text": "Giờ code vẽ theo biến x, y. Ảnh neo ở góc nên phải trừ nửa ảnh. draw_text thì neo ở giữa dòng chữ, nên chữ tự cân; em chỉ cần đưa tên lên trên đầu.",
+          "coachNotes": "Hỏi: lên trên thì y cộng hay trừ? (trừ, vì y tăng là đi xuống). Ảnh cao tới y - 24, chữ cỡ 18 nên tên đặt ở y - 36 là vừa khít trên đầu."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h01-try",
+          "title": "Thử và chỉnh",
+          "text": "Đổi x thành 100 rồi chạy: ảnh và tên có đi cùng nhau không? Đổi hero-knight thành hero-mage, đổi luôn tên. Thử scale=5: còn đứng giữa không? Vì sao?",
+          "coachNotes": "scale=5 thì số 24 phải thành 40, hai con số đi cùng nhau. Đừng nói trước, để bé tự thấy nhân vật lệch. Bài 3 sẽ để máy tự tính số này. Bài sau: cho nhân vật đi."
+        }
+      ]
+    }
+  ]
+}

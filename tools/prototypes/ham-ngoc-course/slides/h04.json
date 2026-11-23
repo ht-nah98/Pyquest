@@ -1,0 +1,128 @@
+{
+  "title": "Cả bầy quái",
+  "summary": "Mỗi con quái là một hộp, cả bầy là một danh sách hộp; một vòng for lo hết.",
+  "unlocksRoadmap": [],
+  "docsUnlocked": [],
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h04-why",
+          "title": "Mười con, mười biến?",
+          "text": "Một con quái là một hộp. Mười con thì viết mob1, mob2… mob10 sao? Mà lúc chơi quái còn thêm bớt liên tục. Cần một thứ dài ra được: danh sách.",
+          "coachNotes": "Hỏi: ở Bay Qua Khe em đã dùng danh sách để giữ gì? (các cột). Giờ mỗi phần tử không phải một số mà là một hộp."
+        },
+        {
+          "id": "h04-list",
+          "title": "Danh sách các hộp",
+          "text": "mobs là danh sách, mỗi phần tử là một dict. Giống một dãy tủ: cả dãy là mobs, mỗi cái tủ là một con quái, trong tủ có các ngăn image, x, y.",
+          "coachNotes": "Dùng tủ giấy của Bài 3: mỗi bé làm một tờ cho một con quái, dán các tờ thành một hàng trên bảng."
+        },
+        {
+          "id": "h04-for",
+          "title": "Đi qua từng con",
+          "text": "for mob in mobs: mỗi vòng, mob là một cái hộp. Vòng 1 là con đầu, vòng 2 là con thứ hai… Trong vòng, mob[\"x\"] là x của con đang xét.",
+          "coachNotes": "Cho một bé đi dọc hàng tủ giấy, tới tờ nào thì đọc to ô x của tờ đó. mob (một con) khác mobs (cả bầy): lỗi gõ hay gặp."
+        },
+        {
+          "id": "h04-trace",
+          "title": "Dò tay từng vòng",
+          "text": "mobs có nhớt x 100, dơi x 300, nấm x 500.\nVòng 1: mob[\"x\"] là 100\nVòng 2: mob[\"x\"] là 300\nVòng 3: mob[\"x\"] là 500\nThêm con thứ tư thì tự có vòng 4.",
+          "coachNotes": "Hỏi: thêm 50 con thì phải sửa mấy dòng trong vòng for? (không dòng nào)."
+        },
+        {
+          "id": "h04-quiz-count",
+          "quiz": {
+            "question": "mobs có 3 con. Em append thêm 2 con, rồi mới chạy for mob in mobs để vẽ. Vẽ ra mấy con?",
+            "choices": [
+              "1",
+              "2",
+              "3",
+              "5"
+            ],
+            "answer": 3,
+            "explain": "append thêm vào cuối danh sách: 3 + 2 = 5 phần tử. Vòng for đi qua đủ 5."
+          }
+        },
+        {
+          "id": "h04-quiz-late",
+          "quiz": {
+            "question": "Code chạy một lần: mobs có 3 con, vòng for vẽ xong cả bầy, rồi mới append con thứ tư. Trên sân có mấy con?",
+            "choices": [
+              "4",
+              "3",
+              "1"
+            ],
+            "answer": 1,
+            "explain": "Máy đi từ trên xuống. Lúc vẽ, danh sách mới có 3 con; thêm sau thì không ai vẽ con đó nữa."
+          }
+        },
+        {
+          "id": "h04-factory",
+          "title": "Máy đúc quái",
+          "text": "make_mob(x, y) trả về một hộp mới: con nhớt đứng ở (x, y) em đưa, hp 2, speed 1. Giống khuôn bánh: một cái khuôn, mỗi lần ép ra một cái bánh riêng.",
+          "coachNotes": "Nhắc return ở Bay Qua Khe (Bài 10): hàm tính ra rồi trả lời. Lần này câu trả lời là cả một hộp."
+        },
+        {
+          "id": "h04-shared",
+          "title": "Vì sao phải hộp mới?",
+          "text": "Nếu cả bầy xài chung một hộp, dời một con là cả bầy dời theo, vì thật ra chỉ có một con. Mỗi con một hộp thì con nào sống đời con đó.",
+          "coachNotes": "Hai bé cùng cầm một tờ giấy: một bé sửa số thì bé kia thấy số cũng đổi. Rồi phát cho mỗi bé một tờ riêng."
+        },
+        {
+          "id": "h04-quiz-own",
+          "quiz": {
+            "question": "a = make_mob(100, 40) và b = make_mob(200, 40). Chạy a[\"x\"] += 5. Giờ b[\"x\"] bằng mấy?",
+            "choices": [
+              "105",
+              "200",
+              "205"
+            ],
+            "answer": 1,
+            "explain": "Mỗi lần gọi make_mob là một hộp mới. Đổi hộp a không đụng gì tới hộp b."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h04-place",
+          "title": "Bầy đầu tiên đứng đâu?",
+          "text": "6 con nhớt đứng ở y = 40, sát đầu sân, xa em ở (300, 300). x bốc ngẫu nhiên từ 40 tới 560. Quái vẽ to gấp 2, nửa người 16, nên nằm trọn trong sân.",
+          "coachNotes": "Hỏi: 16 × 2 = 32, nửa là mấy? (16). x = 40 thì mép trái của quái ở 24, chưa chạm mép sân. Nếu quái hiện ngay sát em thì có công bằng không?"
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h04-code1",
+          "title": "Bài tập 1: vẽ cả bầy",
+          "text": "Thêm ma và golem vào danh sách, rồi một vòng for vẽ cả bầy. Trước khi gõ, nghĩ xem: vì sao dòng vẽ phải thụt vào trong for?",
+          "coachNotes": "Không thụt vào thì Python báo lỗi hoặc chỉ vẽ con cuối cùng. Vẽ to gấp 4: 16 × 4 = 64, draw_thing tự lùi 8 × 4 = 32."
+        },
+        {
+          "id": "h04-code2",
+          "title": "Bài tập 2: hai việc khác nhau",
+          "text": "start_game() nhét quái vào danh sách, chạy một lần lúc đầu. draw() lấy quái ra vẽ, chạy mỗi khung. Nhét và vẽ là hai việc, ở hai chỗ.",
+          "coachNotes": "Hỏi: nếu lỡ để vòng nhét 6 con vào draw() thì sau 1 giây có mấy con? (60 × 6 = 360, sân đặc quái). start_game() được gọi ở dòng cuối file."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h04-try",
+          "title": "Đông hơn nữa",
+          "text": "Đổi range(6) thành range(20): bầy đông lên mà code vẽ vẫn vậy. Đổi \"mob-slime\" trong make_mob thành \"mob-bat\" hoặc \"mob-mushroom\". Em thích bầy nào?",
+          "coachNotes": "Thử thách: đổi hp trong make_mob có thấy gì khác chưa? (chưa, vì chưa code nào đọc hp của quái; tới Bài 9). Bài sau: bầy quái biết đuổi theo em."
+        }
+      ]
+    }
+  ]
+}
