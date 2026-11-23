@@ -52,3 +52,15 @@ thua); **dữ liệu khác code**: bảng skill là dữ liệu, thêm skill kh�
 4. **Học sau Bay Qua Khe.**
 
 Còn phải hỏi HLV: tên game, cỡ sân, đề cương bài, cách chọn thẻ trên iPad.
+
+## 5. Điều khoản Krea (đọc 23/11, không phải tư vấn pháp lý)
+
+Nguồn: krea.ai/krea-2-licensing (22/06/2026), krea.ai/krea-2-use-policy (18/11/2026).
+
+- §5.3: Krea không nhận quyền sở hữu hình sinh ra; người sinh chịu trách nhiệm về hình.
+- §2.3: dùng **thương mại** được khi tổng doanh thu 12 tháng dưới 1 triệu USD. Văn bản không có mục riêng cho dùng miễn phí.
+- Không thấy điều khoản cấm phân phối lại hình, cũng không bắt ghi công hình.
+- Chính sách dùng: không vi phạm quyền bên thứ ba; không nói dối rằng hình do người vẽ.
+- Chưa rõ: người chỉ dùng hình (không tải mô hình) có bị ràng buộc không; chưa đọc Krea Terms of Use cho bản chạy trên web.
+
+**Cách mình làm:** ghi nguồn và "AI sinh" trong manifest và tệp ghi công; chỉ lấy vài chục hình; HLV xem lại hình lần nữa.
