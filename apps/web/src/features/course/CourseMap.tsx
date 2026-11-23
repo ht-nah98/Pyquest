@@ -1,4 +1,4 @@
-import { isOpenLesson, type Lesson } from '@pyquest/content-schema';
+import type { LessonHead } from '@pyquest/content-schema';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useSession } from '../../app/session';
@@ -29,7 +29,7 @@ export function CourseMap() {
   if (course === undefined) return <p className="p-8">Không tìm thấy khóa này.</p>;
   const role = profile?.role ?? 'student';
   const lit = litRoadmap(course.lessons, states);
-  const status = (l: Lesson) => lessonStatus(course.lessons, l.id, states, role);
+  const status = (l: LessonHead) => lessonStatus(course.lessons, l.id, states, role);
   const next = course.lessons.find((l) => status(l) === 'open');
   const done = course.lessons.filter((l) => status(l) === 'done').length;
   const parts = course.parts ?? [{ title: 'Các bài', lessonIds: course.lessonIds }];
@@ -78,8 +78,7 @@ export function CourseMap() {
                   if (l === undefined) return null;
                   const st = status(l);
                   const canOpen = st === 'open' || st === 'done';
-                  const draft = isOpenLesson(l) && l.draft === true;
-                  const summary = isOpenLesson(l) ? l.summary : undefined;
+                  const draft = l.draft === true;
                   const card = (
                     <Panel
                       className={`flex h-full items-start gap-3 p-4 ${st === 'open' ? 'bg-white' : ''} ${canOpen ? 'hover:bg-brand-soft' : 'opacity-55'}`}
@@ -89,8 +88,8 @@ export function CourseMap() {
                       </span>
                       <span className="flex min-w-0 flex-1 flex-col">
                         <span className="font-display text-lg font-extrabold">{l.title}</span>
-                        {summary !== undefined && (
-                          <span className="text-sm text-ink-soft">{summary}</span>
+                        {l.summary !== undefined && (
+                          <span className="text-sm text-ink-soft">{l.summary}</span>
                         )}
                         {draft && <DraftTag className="mt-1" />}
                         {st === 'hidden' && !draft && (

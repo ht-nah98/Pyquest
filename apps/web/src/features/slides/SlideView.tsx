@@ -73,7 +73,7 @@ export function SlideView({
         )}
         {slide.widget?.kind === 'sampleGame' && (
           <SampleGame
-            source={ctx.course.sampleGame ?? ''}
+            source={catalog.sampleGame(ctx.course.id) ?? ''}
             stage={catalog.stageOf(ctx.course.id)}
             howToPlay={ctx.course.howToPlay}
           />

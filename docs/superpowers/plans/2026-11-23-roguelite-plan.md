@@ -23,9 +23,12 @@ Thiết kế: `../specs/2026-11-23-roguelite-design.md`. **Phiên mới: đọc 
 - Chưa xong thì bé không thấy (AGENTS.md §9.5). Không gộp `main`, không push khi HLV chưa bảo.
 - Mỗi chặng một commit, chỉ commit khi bộ kiểm của chặng đó xanh.
 
+## Đã lên mạng (24/11)
+- `4396ff4` gộp vào `main` theo lời HLV ("đẩy main luôn"), CI và deploy xanh. Khóa vẫn là **bản nháp**.
+- Tách mỗi khóa một gói tải (ADR 0012): gói chính 820 → 679 kB gzip, bé không tải khóa nháp.
+
 ## Chờ HLV quyết
-1. Đưa bản sửa đồng bộ (`0ec06e1` và sau đó) lên mạng sớm: sửa các lỗi có thể làm mất bài đang có trên bản chạy thật.
+1. Chơi thử, đọc lại chữ, dạy thử, rồi bỏ `draft` từng bài (AI không tự làm).
 2. Code bé có nối từ bài này sang bài sau không (hiện mỗi bài tập bắt đầu từ code mẫu).
 3. "Các bước" in sẵn bao nhiêu code.
 4. Tên game, độ khó (Kiếm sĩ khó với bé mới), iPad trong game của bé cần bàn phím rời.
-5. Tách mỗi khóa thành gói tải riêng (gói đầu 674 → 820 kB gzip).

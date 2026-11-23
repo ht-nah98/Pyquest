@@ -49,6 +49,9 @@ tools/content-check ──▶ runtime + checker trên Node: chạy lời giải 
 
 ## Nhiều khóa (ADR 0011)
 
+Bài của mỗi khóa là **một gói tải riêng** (ADR 0012): trong gói chính chỉ có đầu bài (`LessonHead`); `catalog.openLesson` và
+`catalog.sampleGame` có sau `catalog.load(courseId)`. Trang đọc chúng phải nằm trong `NeedCourse` (cổng `NeedApproved` đã có).
+
 `catalog.courses()` trả mọi khóa, khóa sau nằm dưới khóa `after` của nó. Trang hỏi `seesCourse` / `opensLesson`
 (`content/access.ts`) trước khi hiện; mọi route `/c/…`, `/l/…` qua cổng `NeedApproved`. Route mới của khóa hay bài phải dùng
 `courseGuard`. 📘 Thư viện theo mã bài (`libraryFor` trong `content/courses.ts`), không theo số thứ tự.

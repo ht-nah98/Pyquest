@@ -64,6 +64,7 @@ vi.mock('../coach/coachApi', () => ({
 }));
 
 const MESSAGE = /Có trục trặc khi chạy/;
+await catalog.load('bay-qua-khe');
 const game = catalog.openLesson('l17')?.exercises?.find((e) => e.mode === 'game')?.id ?? '';
 const script = catalog.openLesson('l01')?.exercises?.find((e) => e.mode === 'script')?.id ?? '';
 

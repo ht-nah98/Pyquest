@@ -1,17 +1,23 @@
 import {
   CourseSchema,
+  isOpenLesson,
+  LessonHeadSchema,
   parseLesson,
   type Course,
-  type Lesson,
+  type LessonHead,
   type LibraryEntry,
+  type OpenLesson,
 } from '@pyquest/content-schema';
 
 /** The part of a course the rules below need. */
 export type CourseLinks = Pick<Course, 'id' | 'after' | 'draft'> & {
-  lessons: readonly Pick<Lesson, 'id' | 'order'>[];
+  lessons: readonly Pick<LessonHead, 'id' | 'order'>[];
 };
 
-export type CatalogCourse = Course & { lessons: Lesson[]; sampleGame?: string };
+export type CatalogCourse = Course & { lessons: LessonHead[] };
+
+/** What is downloaded when somebody enters the course: its open lessons, and its sample game (ADR 0012). */
+export type CourseBody = { lessons: Map<string, OpenLesson>; sampleGame: string | undefined };
 
 type ContentFiles<T> = Readonly<Record<string, T>>;
 
@@ -19,40 +25,58 @@ const dirOf = (path: string) => /courses\/([^/]+)\//.exec(path)?.[1] ?? '';
 const isDraft = (json: unknown) => (json as { draft?: unknown } | null)?.draft === true;
 
 /**
- * Every course with its lessons. Something broken in a draft must not blank the whole app: a broken draft
+ * Every course with the heads of its lessons. Something broken in a draft must not blank the whole app: a broken draft
  * lesson, or the whole draft course, is left out. Broken content that is no draft still throws, and
  * content:check reports both.
  */
 export function readCourses(
   courseFiles: ContentFiles<unknown>,
-  lessonFiles: ContentFiles<unknown>,
-  sampleGames: ContentFiles<string>,
+  headFiles: ContentFiles<unknown>,
 ): Map<string, CatalogCourse> {
   const courses = new Map<string, CatalogCourse>();
   for (const [path, json] of Object.entries(courseFiles)) {
     const dir = dirOf(path);
     try {
       const course = CourseSchema.parse(json);
-      const lessons: Lesson[] = [];
-      for (const [lessonPath, lessonJson] of Object.entries(lessonFiles)) {
+      const lessons: LessonHead[] = [];
+      for (const [lessonPath, lessonJson] of Object.entries(headFiles)) {
         if (dirOf(lessonPath) !== dir) continue;
         try {
-          lessons.push(parseLesson(lessonJson));
+          lessons.push(LessonHeadSchema.parse(lessonJson));
         } catch (e) {
           if (course.draft === true || !isDraft(lessonJson)) throw e;
         }
       }
-      const sample = Object.entries(sampleGames).find(([p]) => dirOf(p) === dir)?.[1];
       courses.set(course.id, {
         ...course,
         lessons: lessons.sort((a, b) => a.order - b.order),
-        ...(sample === undefined ? {} : { sampleGame: sample }),
       });
     } catch (e) {
       if (!isDraft(json)) throw e;
     }
   }
   return courses;
+}
+
+/**
+ * The lessons of one course, whole. A broken draft lesson is left out (its page says it is not open yet), as in
+ * readCourses; a broken lesson that is no draft throws.
+ */
+export function readBody(
+  courseDraft: boolean,
+  lessonJsons: readonly unknown[],
+  sampleGame: string | undefined,
+): CourseBody {
+  const lessons = new Map<string, OpenLesson>();
+  for (const json of lessonJsons) {
+    try {
+      const lesson = parseLesson(json);
+      if (isOpenLesson(lesson)) lessons.set(lesson.id, lesson);
+    } catch (e) {
+      if (!courseDraft && !isDraft(json)) throw e;
+    }
+  }
+  return { lessons, sampleGame };
 }
 
 /** Courses as the list shows them: one that comes after another sits below it (Bay Qua Khe first). */

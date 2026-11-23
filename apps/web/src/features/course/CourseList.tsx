@@ -18,6 +18,12 @@ export function CourseList() {
         setDrawings(drawingsOf(m).length);
       });
   }, [store, profile]);
+  // Fetched while the child looks at the list, so a course opens at once. Entering it tries again if this fails.
+  const role = profile?.role ?? 'student';
+  useEffect(() => {
+    for (const c of catalog.courses())
+      if (seesCourse(c, role)) catalog.load(c.id).catch(() => undefined);
+  }, [role]);
   return (
     <>
       <TopBar title="Các khóa học" />
@@ -32,7 +38,7 @@ export function CourseList() {
         )}
         {catalog
           .courses()
-          .filter((c) => seesCourse(c, profile?.role ?? 'student'))
+          .filter((c) => seesCourse(c, role))
           .map((c) => (
             <Link key={c.id} to={`/c/${c.id}`} data-testid={`course-${c.id}`}>
               <Panel className="h-full p-5 hover:bg-brand-soft">

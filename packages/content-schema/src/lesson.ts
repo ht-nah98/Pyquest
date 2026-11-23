@@ -169,6 +169,21 @@ const HiddenLessonSchema = z.object({
   hidden: z.literal(true),
 });
 
+/** What the course list, the course map and the coach's grids need of a lesson (ADR 0012). */
+export const LessonHeadSchema = z.object({
+  id: z.string().min(1),
+  courseId: z.string().min(1),
+  order: z.int().nonnegative(),
+  title: z.string().min(1).max(60),
+  hidden: z.boolean().optional(),
+  draft: z.boolean().optional(),
+  summary: z.string().min(1).max(120).optional(),
+  unlocksRoadmap: z.array(z.string()),
+  exercises: z.array(z.object({ id: z.string().min(1), title: z.string().min(1).max(60) })),
+});
+
+export type LessonHead = z.infer<typeof LessonHeadSchema>;
+
 export const LessonSchema = z.union([HiddenLessonSchema, OpenLessonSchema]);
 
 export type OpenLesson = z.infer<typeof OpenLessonSchema>;

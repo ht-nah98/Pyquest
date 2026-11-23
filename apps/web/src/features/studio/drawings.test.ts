@@ -64,7 +64,17 @@ describe('drawings in the progress store', () => {
   });
 
   test('studio rows do not change course progress or the coach summary', () => {
-    const lessons = [{ id: 'l00', courseId: 'c', order: 0, title: 'A', hidden: true as const }];
+    const lessons = [
+      {
+        id: 'l00',
+        courseId: 'c',
+        order: 0,
+        title: 'A',
+        hidden: true,
+        unlocksRoadmap: [],
+        exercises: [],
+      },
+    ];
     const states = new Map([
       [rowOf('x'), { ...emptyLessonState(), done: true, studio: { title: 'T', createdAt: 1 } }],
     ]);

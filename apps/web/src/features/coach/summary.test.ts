@@ -1,10 +1,10 @@
-import type { Lesson } from '@pyquest/content-schema';
+import type { LessonHead } from '@pyquest/content-schema';
 import { describe, expect, test } from 'vitest';
 import { emptyLessonState } from '../../storage/store';
 import { cellOf, currentLesson, isIn } from './summary';
 
 const lesson = (id: string, ex: string[]) =>
-  ({ id, exercises: ex.map((e) => ({ id: e })) }) as unknown as Lesson;
+  ({ id, exercises: ex.map((e) => ({ id: e })) }) as unknown as LessonHead;
 
 describe('coach summary', () => {
   test('counts the exercises a child finished in a lesson', () => {

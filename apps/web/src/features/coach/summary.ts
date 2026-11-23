@@ -1,15 +1,11 @@
-import type { Course, Lesson } from '@pyquest/content-schema';
+import type { Course, LessonHead } from '@pyquest/content-schema';
 import type { LessonState } from '../../storage/store';
 
 /** How far a child is in one lesson, for the coach's grid. */
 export type Cell = { done: number; total: number; finished: boolean; started: boolean };
 
-/** The exercises of a lesson (a hidden lesson has none). */
-export const exercisesOf = (lesson: Lesson) =>
-  'exercises' in lesson ? (lesson.exercises ?? []) : [];
-
-export function cellOf(lesson: Lesson, state: LessonState | undefined): Cell {
-  const ids = exercisesOf(lesson).map((e) => e.id);
+export function cellOf(lesson: LessonHead, state: LessonState | undefined): Cell {
+  const ids = lesson.exercises.map((e) => e.id);
   const done = ids.filter((id) => state?.exercisesDone?.includes(id) === true).length;
   return {
     done,
@@ -21,7 +17,7 @@ export function cellOf(lesson: Lesson, state: LessonState | undefined): Cell {
 
 /** A child is in a course once they opened one of its lessons; everybody is in a course that is the first one. */
 export function isIn(
-  course: Pick<Course, 'after'> & { lessons: readonly Lesson[] },
+  course: Pick<Course, 'after'> & { lessons: readonly LessonHead[] },
   states: ReadonlyMap<string, LessonState>,
 ): boolean {
   return course.after === undefined || course.lessons.some((l) => states.has(l.id));
@@ -29,9 +25,9 @@ export function isIn(
 
 /** The lesson a child is on: the first one not finished, after the last one they touched. */
 export function currentLesson(
-  lessons: readonly Lesson[],
+  lessons: readonly LessonHead[],
   states: ReadonlyMap<string, LessonState>,
-): Lesson | undefined {
+): LessonHead | undefined {
   let last = -1;
   lessons.forEach((l, i) => {
     if (states.has(l.id)) last = i;

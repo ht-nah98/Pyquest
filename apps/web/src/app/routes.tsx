@@ -16,6 +16,7 @@ import { CoachNotesWindow } from '../features/slides/CoachNotesWindow';
 import { LessonSlides } from '../features/slides/LessonSlides';
 import { StudioEditor } from '../features/studio/StudioEditor';
 import { StudioList } from '../features/studio/StudioList';
+import { NeedCourse } from './NeedCourse';
 import { useSession } from './session';
 
 function NeedProfile({ children }: { children: ReactNode }) {
@@ -36,10 +37,15 @@ function NeedApproved({ children }: { children: ReactNode }) {
   const course =
     lessonId === undefined ? catalog.course(courseId ?? '') : catalog.courseOf(lessonId);
   // An unknown course or lesson: the page itself says so.
+  if (course === undefined) return children;
   const ok =
-    course === undefined ||
-    (lessonId === undefined ? seesCourse(course, role) : opensLesson(course, lessonId, role));
-  return ok ? children : <Navigate to="/courses" replace />;
+    lessonId === undefined ? seesCourse(course, role) : opensLesson(course, lessonId, role);
+  if (!ok) return <Navigate to="/courses" replace />;
+  return (
+    <NeedCourse key={course.id} courseId={course.id}>
+      {children}
+    </NeedCourse>
+  );
 }
 
 const courseGuard = (el: ReactNode) => guard(<NeedApproved>{el}</NeedApproved>);
@@ -51,6 +57,17 @@ function NeedCoach({ children }: { children: ReactNode }) {
 }
 
 const coachOnly = (el: ReactNode) => <NeedCoach>{el}</NeedCoach>;
+
+/** A child's code in one lesson: the coach's page needs that lesson's course too. */
+function NeedLessonCourse({ children }: { children: ReactNode }) {
+  const course = catalog.courseOf(useParams()['lessonId'] ?? '');
+  if (course === undefined) return children;
+  return (
+    <NeedCourse key={course.id} courseId={course.id}>
+      {children}
+    </NeedCourse>
+  );
+}
 
 /** With Supabase, '/' is sign-in; without it, the on-device profile picker (spec 2026-11-05 §6). */
 function Home() {
@@ -90,7 +107,14 @@ export const router = createBrowserRouter(
     { path: '/studio/:drawingId', element: guard(<StudioEditor />) },
     { path: '/coach', element: coachOnly(<CoachHome />) },
     { path: '/coach/s/:userId', element: coachOnly(<CoachStudent />) },
-    { path: '/coach/s/:userId/l/:lessonId', element: coachOnly(<CoachCode />) },
+    {
+      path: '/coach/s/:userId/l/:lessonId',
+      element: coachOnly(
+        <NeedLessonCourse>
+          <CoachCode />
+        </NeedLessonCourse>,
+      ),
+    },
     { path: '/coach/s/:userId/studio/:drawingId', element: coachOnly(<CoachCode />) },
     ...devRoutes,
     // On GitHub Pages the app lives under /Pyquest/ (vite `base`); locally under /.

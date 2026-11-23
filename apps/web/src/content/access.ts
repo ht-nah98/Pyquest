@@ -1,4 +1,3 @@
-import { isOpenLesson } from '@pyquest/content-schema';
 import type { Role } from '../storage/store';
 import type { CatalogCourse } from './catalog';
 
@@ -11,8 +10,5 @@ export function seesCourse(course: CatalogCourse, role: Role): boolean {
 export function opensLesson(course: CatalogCourse, lessonId: string, role: Role): boolean {
   if (role === 'coach') return true;
   const lesson = course.lessons.find((l) => l.id === lessonId);
-  return (
-    seesCourse(course, role) &&
-    !(lesson !== undefined && isOpenLesson(lesson) && lesson.draft === true)
-  );
+  return seesCourse(course, role) && lesson?.draft !== true;
 }

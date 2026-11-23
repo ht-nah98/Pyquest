@@ -1,10 +1,13 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
-import { describe, expect, test, vi } from 'vitest';
+import { beforeAll, describe, expect, test, vi } from 'vitest';
 import { SessionProvider } from '../../app/session';
+import { catalog } from '../../content/catalog';
 import { DexieStore } from '../../storage/dexieStore';
 import type { Profile } from '../../storage/store';
 import { LessonSlides } from './LessonSlides';
+
+beforeAll(() => catalog.load('bay-qua-khe'));
 
 let n = 0;
 

@@ -4,7 +4,6 @@ import {
   StudioSchema,
   type LibraryEntry,
   type Studio,
-  isOpenLesson,
   type Asset,
   type OpenLesson,
 } from '@pyquest/content-schema';
@@ -12,9 +11,11 @@ import { DEFAULT_STAGE, type StageSize } from '@pyquest/runtime';
 import {
   inCourseOrder,
   libraryFor,
+  readBody,
   readCourses,
   studioLibrary,
   type CatalogCourse,
+  type CourseBody,
 } from './courses';
 
 // Vite fixes this list at start-up: a new file in content/ needs `npm run dev` restarted (AGENTS.md §9.3).
@@ -22,12 +23,16 @@ const courseFiles = import.meta.glob<unknown>('@content/courses/*/course.json', 
   eager: true,
   import: 'default',
 });
-const lessonFiles = import.meta.glob<unknown>('@content/courses/*/lessons/*.json', {
+const headFiles = import.meta.glob<unknown>('@content/courses/*/lessons/*.json', {
   eager: true,
+  query: '?head',
+  import: 'default',
+});
+// Not eager: a course is downloaded when somebody enters it (catalog.load, ADR 0012).
+const lessonFiles = import.meta.glob<unknown>('@content/courses/*/lessons/*.json', {
   import: 'default',
 });
 const sampleGames = import.meta.glob<string>('@content/courses/*/sample-game/main.py', {
-  eager: true,
   query: '?raw',
   import: 'default',
 });
@@ -52,7 +57,7 @@ const assetUrls = import.meta.glob<string>('@content/assets/library/*.png', {
 export type { CatalogCourse };
 
 function build() {
-  const courses = readCourses(courseFiles, lessonFiles, sampleGames);
+  const courses = readCourses(courseFiles, headFiles);
   const manifest = AssetManifestSchema.parse(Object.values(manifestFile)[0] ?? { assets: [] });
   const urls = new Map<string, string>();
   for (const [path, url] of Object.entries(assetUrls)) urls.set(path.split('/').pop() ?? '', url);
@@ -74,6 +79,24 @@ function build() {
 
 const data = build();
 
+const bodies = new Map<string, CourseBody>();
+const loading = new Map<string, Promise<void>>();
+
+const filesOf = <T>(files: Record<string, () => Promise<T>>, courseId: string) =>
+  Object.entries(files)
+    .filter(([path]) => path.includes(`/courses/${courseId}/`))
+    .map(([, file]) => file());
+
+async function loadBody(course: CatalogCourse): Promise<void> {
+  const [lessons, games] = await Promise.all([
+    Promise.all(filesOf(lessonFiles, course.id)),
+    Promise.all(filesOf(sampleGames, course.id)),
+  ]);
+  // Found by folder name: a folder not named after its course id must not look like an empty course.
+  if (lessons.length === 0) throw new Error(`content/courses/${course.id}/ has no lessons`);
+  bodies.set(course.id, readBody(course.draft === true, lessons, games[0]));
+}
+
 export const catalog = {
   /** Every course, drafts too (the pages ask seesCourse), in the order children take them. */
   courses(): CatalogCourse[] {
@@ -82,13 +105,29 @@ export const catalog = {
   course(id: string): CatalogCourse | undefined {
     return data.courses.get(id);
   },
-  /** An open (not hidden) lesson, or undefined. */
+  /**
+   * Downloads a course's lessons and sample game, once; an unknown course has nothing to download. It rejects
+   * when the download fails, and the next call tries again.
+   */
+  load(courseId: string): Promise<void> {
+    const course = data.courses.get(courseId);
+    if (course === undefined || bodies.has(courseId)) return Promise.resolve();
+    const now = loading.get(courseId);
+    if (now !== undefined) return now;
+    const started = loadBody(course).finally(() => loading.delete(courseId));
+    loading.set(courseId, started);
+    return started;
+  },
+  isLoaded(courseId: string): boolean {
+    return bodies.has(courseId);
+  },
+  /** An open (not hidden) lesson, or undefined. Its course must be loaded (NeedCourse in app/routes.tsx). */
   openLesson(id: string): OpenLesson | undefined {
-    for (const c of data.courses.values()) {
-      const l = c.lessons.find((x) => x.id === id);
-      if (l !== undefined) return isOpenLesson(l) ? l : undefined;
-    }
-    return undefined;
+    return bodies.get(this.courseOf(id)?.id ?? '')?.lessons.get(id);
+  },
+  /** The sample game's code; its course must be loaded. */
+  sampleGame(courseId: string): string | undefined {
+    return bodies.get(courseId)?.sampleGame;
   },
   courseOf(lessonId: string): CatalogCourse | undefined {
     return [...data.courses.values()].find((c) => c.lessons.some((l) => l.id === lessonId));

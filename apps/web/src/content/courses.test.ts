@@ -1,9 +1,17 @@
 import type { LibraryEntry } from '@pyquest/content-schema';
 import { librarySource } from '@pyquest/runtime';
-import { describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'vitest';
 import { opensLesson, seesCourse } from './access';
 import { catalog } from './catalog';
-import { inCourseOrder, libraryFor, readCourses, studioLibrary, type CourseLinks } from './courses';
+import { headOf } from './lessonHead';
+import {
+  inCourseOrder,
+  libraryFor,
+  readBody,
+  readCourses,
+  studioLibrary,
+  type CourseLinks,
+} from './courses';
 
 const course = (id: string, lessonIds: string[], after?: string): CourseLinks => ({
   id,
@@ -109,8 +117,7 @@ describe('readCourses', () => {
   const read = (courses: object, lessons: object) => [
     ...readCourses(
       courses as Record<string, unknown>,
-      lessons as Record<string, unknown>,
-      {},
+      Object.fromEntries(Object.entries(lessons).map(([path, json]) => [path, headOf(json)])),
     ).values(),
   ];
 
@@ -140,6 +147,52 @@ describe('readCourses', () => {
   });
 });
 
+test('a hidden lesson shows nothing of what is already written in it', () => {
+  const half = {
+    id: 'a00',
+    courseId: 'a',
+    order: 0,
+    title: 'Bài',
+    hidden: true,
+    summary: '',
+    unlocksRoadmap: ['bird'],
+    exercises: [{ id: 'a00-e1', title: '' }],
+  };
+  expect(headOf(half)).toEqual({
+    id: 'a00',
+    courseId: 'a',
+    order: 0,
+    title: 'Bài',
+    hidden: true,
+    unlocksRoadmap: [],
+    exercises: [],
+  });
+});
+
+test('a head keeps broken values for readCourses to judge', () => {
+  expect(headOf(null)).toBeNull();
+  expect(headOf('text')).toBe('text');
+  expect(headOf({ id: 'a00', title: 5, exercises: [null] })).toMatchObject({
+    title: 5,
+    exercises: [{ id: undefined }],
+  });
+});
+
+describe('readBody', () => {
+  const ok = { id: 'a00', courseId: 'a', order: 0, title: 'Bài', hidden: true };
+  const broken = { id: 'a01', title: 5 };
+
+  test('a hidden lesson does not open; the sample game comes along', () => {
+    expect(readBody(false, [ok], 'x = 1')).toEqual({ lessons: new Map(), sampleGame: 'x = 1' });
+  });
+
+  test('broken drafts are left out, anything else broken fails loudly', () => {
+    expect(readBody(true, [ok, broken], undefined).lessons.size).toBe(0);
+    expect(readBody(false, [{ ...broken, draft: true }], undefined).lessons.size).toBe(0);
+    expect(() => readBody(false, [broken], undefined)).toThrow();
+  });
+});
+
 describe('📘 Thư viện tells the truth', () => {
   test('every command shows all its parameters, or … where some are left out', () => {
     for (const e of catalog.library()) {
@@ -161,6 +214,28 @@ describe('📘 Thư viện tells the truth', () => {
 });
 
 describe('the real courses', () => {
+  beforeAll(async () => {
+    await Promise.all(catalog.courses().map((c) => catalog.load(c.id)));
+  });
+
+  test('the head of every lesson says the same as the lesson', () => {
+    for (const c of catalog.courses()) {
+      expect(c.lessons.length).toBeGreaterThan(0);
+      for (const head of c.lessons) {
+        const l = catalog.openLesson(head.id);
+        if (head.hidden === true) {
+          expect(l).toBeUndefined();
+          continue;
+        }
+        // A broken draft is left out of the body on purpose; content:check reports it.
+        if (l === undefined && (head.draft === true || c.draft === true)) continue;
+        expect(l && { ...l, exercises: l.exercises ?? [] }).toMatchObject(head);
+        expect(head.exercises.length).toBe(l?.exercises?.length ?? 0);
+        expect(Object.keys(head)).not.toContain('steps');
+      }
+    }
+  });
+
   test('the studio lists exactly the commands a child may know', () => {
     expect(catalog.library('studio').map((e) => e.name)).toEqual(
       catalog
@@ -179,7 +254,7 @@ describe('the real courses', () => {
     expect(catalog.course('ham-ngoc')).toMatchObject({ draft: true, after: 'bay-qua-khe' });
     expect(catalog.lessonStage('h00')).toEqual({ width: 600, height: 600 });
     expect(catalog.lessonStage('l00')).toEqual({ width: 400, height: 600 });
-    expect(catalog.course('ham-ngoc')?.sampleGame).toContain('def update');
+    expect(catalog.sampleGame('ham-ngoc')).toContain('def update');
   });
 
   test('every Bay Qua Khe lesson lists what it listed before: its own course up to its order', () => {

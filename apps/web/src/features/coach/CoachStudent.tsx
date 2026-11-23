@@ -8,7 +8,6 @@ import { Panel } from '../../ui/Panel';
 import { TopBar } from '../../ui/TopBar';
 import { lessonsOf, listStudents, manage, type Student } from './coachApi';
 import { randomPin } from './CoachHome';
-import { exercisesOf } from './summary';
 import { drawingsOf } from '../studio/drawings';
 
 const when = (ms: number) =>
@@ -91,7 +90,7 @@ export function CoachStudent() {
                     <span className="w-64 shrink-0">
                       <b>Bài {l.order}</b> · {l.title} {row?.state.done === true && '✅'}
                     </span>
-                    {exercisesOf(l).map((e, i) => (
+                    {l.exercises.map((e, i) => (
                       <Link
                         key={e.id}
                         to={`/coach/s/${userId}/l/${l.id}?ex=${e.id}`}

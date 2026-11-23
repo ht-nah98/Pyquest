@@ -1,26 +1,24 @@
-import type { Lesson } from '@pyquest/content-schema';
+import type { LessonHead } from '@pyquest/content-schema';
 import { describe, expect, test } from 'vitest';
 import { emptyLessonState, type LessonState } from '../../storage/store';
 import { litRoadmap, lessonStatus } from './progress';
 
-const open = (id: string, order: number, unlocks: string[] = []): Lesson => ({
+const open = (id: string, order: number, unlocks: string[] = []): LessonHead => ({
   id,
   courseId: 'c',
   order,
   title: id,
-  steps: [
-    { kind: 'understand', slides: [{ id: `${id}-a` }] },
-    { kind: 'playtest', slides: [{ id: `${id}-b` }] },
-  ],
   unlocksRoadmap: unlocks,
-  docsUnlocked: [],
+  exercises: [],
 });
-const hidden = (id: string, order: number): Lesson => ({
+const hidden = (id: string, order: number): LessonHead => ({
   id,
   courseId: 'c',
   order,
   title: id,
   hidden: true,
+  unlocksRoadmap: [],
+  exercises: [],
 });
 const done = (): LessonState => ({ ...emptyLessonState(), done: true });
 
@@ -53,7 +51,7 @@ describe('lessonStatus', () => {
 });
 
 test('a draft lesson is hidden from children but open for the coach', () => {
-  const draft: Lesson = { ...(open('l01', 1) as object), draft: true } as Lesson;
+  const draft: LessonHead = { ...open('l01', 1), draft: true };
   const list = [open('l00', 0), draft];
   const s = new Map([['l00', done()]]);
   expect(lessonStatus(list, 'l01', s, 'student')).toBe('hidden');
