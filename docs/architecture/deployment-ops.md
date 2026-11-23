@@ -48,6 +48,9 @@ laptop, còn màn chiếu chỉ hiện slide).
 - Địa chỉ cho bé: **https://ht-nah98.github.io/Pyquest/**. Job `deploy` trong `ci.yml` build với `PQ_BASE=/Pyquest/`
   và hai biến repo `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (`gh variable list`), rồi đẩy lên Pages. Chỉ deploy khi job
   `check` xanh.
+- **Deploy đỏ mà `check` xanh** (24/11: GitHub báo "No artifacts named github-pages" dù artifact đã có): web vẫn là bản cũ. Bấm
+  *Re-run* không cứu được (artifact trùng tên, deploy từ chối): push một commit mới để có run sạch. Xong thì so tên tệp `index-*.js`
+  trên web với bản build.
 - Supabase project `pyquest` (ref `zawqbiyipqqqtnhjsiwd`). Đổi schema: thêm tệp vào `supabase/migrations/`, rồi
   `npx supabase db push --remote` (cần `npx supabase login` một lần, HLV tự gõ trong terminal riêng). Đổi Edge Function:
   `npx supabase functions deploy students --use-api`. Sau mỗi lần đổi schema: `npx supabase db advisors --remote` phải rỗng.
