@@ -21,4 +21,11 @@ describe('catalog', () => {
     expect(catalog.assetUrl('bird')).toBeDefined();
     expect(catalog.asset('bird')?.frames).toBe(3);
   });
+
+  test('the drawing studio: a 600 × 600 stage, a starter and some challenges', () => {
+    const studio = catalog.studio();
+    expect(studio?.stage).toEqual({ width: 600, height: 600 });
+    expect(studio?.starter).toContain('draw_circle');
+    expect(studio?.challenges.length).toBeGreaterThanOrEqual(5);
+  });
 });

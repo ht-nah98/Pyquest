@@ -1,0 +1,81 @@
+{
+  "stage": { "width": 600, "height": 600 },
+  "starter": "from pyquest import *\n\nclear(\"white\")\ndraw_circle(300, 300, 100, \"orange\")\n",
+  "toolbox": [
+    "pq_import",
+    "pq_clear",
+    "pq_draw_rect",
+    "pq_draw_circle",
+    "pq_draw_line",
+    "pq_draw_line_width",
+    "pq_draw_triangle",
+    "pq_draw_text",
+    "pq_draw_text_size",
+    "pq_draw_image",
+    "pq_print",
+    "pq_number",
+    "pq_text",
+    "pq_str",
+    "pq_assign",
+    "pq_aug",
+    "pq_var_get",
+    "pq_arith",
+    "pq_random",
+    "pq_for",
+    "pq_for_range",
+    "pq_for_each",
+    "pq_while",
+    "pq_if",
+    "pq_if_else",
+    "pq_if_chain",
+    "pq_compare",
+    "pq_logic",
+    "pq_not",
+    "pq_bool",
+    "pq_def",
+    "pq_return",
+    "pq_list",
+    "pq_append",
+    "pq_index",
+    "pq_index_set",
+    "pq_len"
+  ],
+  "challenges": [
+    {
+      "id": "ngoi-nha",
+      "title": "🏠 Ngôi nhà",
+      "task": "Vẽ một ngôi nhà: thân nhà là hình chữ nhật, mái là tam giác. Thêm cửa ra vào và cửa sổ.",
+      "hint": "Đáy của mái nằm ngay mép trên thân nhà: hai số y bằng nhau."
+    },
+    {
+      "id": "mat-troi-may",
+      "title": "☀️ Mặt trời và mây",
+      "task": "Tô nền xanh da trời, vẽ mặt trời ở góc trên và vài đám mây trắng.",
+      "hint": "Một đám mây là 3, 4 hình tròn trắng chồng lên nhau, tâm cách nhau chừng 40."
+    },
+    {
+      "id": "cau-vong",
+      "title": "🌈 Cầu vồng",
+      "task": "Vẽ cầu vồng bằng các hình tròn cùng tâm, mỗi vòng một màu. Hình to vẽ trước, hình nhỏ vẽ sau.",
+      "hint": "Cuối cùng vẽ một hình chữ nhật màu nền che nửa dưới, chỉ còn lại cái vòm."
+    },
+    {
+      "id": "hang-rao",
+      "title": "🪵 Hàng rào",
+      "task": "Dùng vòng lặp for vẽ một hàng rào gỗ: nhiều cọc giống nhau, cách đều nhau.",
+      "hint": "Trong vòng lặp, x của cọc là i * 60. Đổi 60 thành số khác xem hàng rào thưa hay dày."
+    },
+    {
+      "id": "bau-troi-sao",
+      "title": "✨ Bầu trời sao",
+      "task": "Tô nền đen, rồi dùng for và random_int rải 100 ngôi sao nhỏ ở những chỗ bất kỳ.",
+      "hint": "Mỗi vòng lặp lấy x = random_int(0, 600), y = random_int(0, 600) rồi vẽ hình tròn bán kính 2."
+    },
+    {
+      "id": "den-long",
+      "title": "🏮 Đèn lồng Hội An",
+      "task": "Vẽ một dây đèn lồng nhiều màu trên trời đêm. Mỗi đèn có dây treo, thân tròn và tua ở dưới.",
+      "hint": "Viết hàm def den_long(x, mau) vẽ một cái đèn, rồi gọi nó nhiều lần với x khác nhau."
+    }
+  ]
+}

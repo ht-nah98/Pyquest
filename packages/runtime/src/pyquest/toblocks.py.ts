@@ -10,7 +10,10 @@ _OPS = {ast.Add: "+", ast.Sub: "-", ast.Mult: "*", ast.Div: "/", ast.Mod: "%"}
 _DEFS = {}
 _CALLS = {"print": ("pq_print", ["VALUE"]), "clear": ("pq_clear", ["COLOR"]),
           "draw_rect": ("pq_draw_rect", ["X", "Y", "W", "H", "COLOR"]),
-          "draw_image": ("pq_draw_image", ["PATH", "X", "Y"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"])}
+          "draw_image": ("pq_draw_image", ["PATH", "X", "Y"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"]),
+          "draw_circle": ("pq_draw_circle", ["X", "Y", "R", "COLOR"]),
+          "draw_line": ("pq_draw_line", ["X1", "Y1", "X2", "Y2", "COLOR"]),
+          "draw_triangle": ("pq_draw_triangle", ["X1", "Y1", "X2", "Y2", "X3", "Y3", "COLOR"])}
 _SOUNDS = ${JSON.stringify(SOUNDS)}
 _MUSIC = ${JSON.stringify(MUSIC)}
 _CMP = {ast.Eq: "==", ast.NotEq: "!=", ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", ast.GtE: ">="}
@@ -230,6 +233,9 @@ def _stmt(ctx, node):
         if call.func.id == "draw_text" and not call.keywords and len(call.args) == 4:
             return {"type": "pq_draw_text_size",
                     "inputs": {n: _expr(src, a) for n, a in zip(["TEXT", "X", "Y", "SIZE"], call.args)}}
+        if call.func.id == "draw_line" and not call.keywords and len(call.args) == 6:
+            return {"type": "pq_draw_line_width",
+                    "inputs": {n: _expr(src, a) for n, a in zip(["X1", "Y1", "X2", "Y2", "COLOR", "WIDTH"], call.args)}}
         # Sounds: a block only for a name on the list; a typo stays raw so Python can say which name was meant.
         named = (len(call.args) == 1 and not call.keywords and isinstance(call.args[0], ast.Constant)
                  and isinstance(call.args[0].value, str))

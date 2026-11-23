@@ -1,5 +1,4 @@
-import type { DrawEvent } from '@pyquest/runtime';
-import { STAGE_HEIGHT, STAGE_WIDTH } from '@pyquest/runtime';
+import type { DrawEvent, StageSize } from '@pyquest/runtime';
 import { catalog } from '../content/catalog';
 
 const images = new Map<string, HTMLImageElement>();
@@ -32,27 +31,53 @@ export function preloadSprites(): Promise<void> {
 export const DEFAULT_SKY = '#bfe3f2';
 
 /** Clears the canvas to the empty stage (sky blue, like a fresh sheet). */
-export function resetStage(ctx: CanvasRenderingContext2D): void {
-  // The backing store matches the screen (Stage sizes it); draw in 400 × 600 stage units.
-  const k = ctx.canvas.width / STAGE_WIDTH;
+export function resetStage(ctx: CanvasRenderingContext2D, size: StageSize): void {
+  // The backing store matches the screen (Stage sizes it); draw in stage units (e.g. 400 × 600).
+  const k = ctx.canvas.width / size.width;
   ctx.setTransform(k, 0, 0, k, 0, 0);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
   ctx.fillStyle = DEFAULT_SKY;
-  ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
+  ctx.fillRect(0, 0, size.width, size.height);
 }
 
-/** Draws one event in stage coordinates (400 × 600, y down). 'say' and 'frame' are not drawn here. */
-export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent): void {
+/** Draws one event in stage coordinates (origin top-left, y down). 'say' and 'frame' are not drawn here. */
+export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent, size: StageSize): void {
   switch (e.t) {
     case 'clear':
       ctx.fillStyle = e.color;
-      ctx.fillRect(0, 0, STAGE_WIDTH, STAGE_HEIGHT);
+      ctx.fillRect(0, 0, size.width, size.height);
       return;
     case 'rect':
       ctx.fillStyle = e.color;
       ctx.fillRect(e.x, e.y, e.w, e.h);
       return;
+    case 'circle':
+      ctx.fillStyle = e.color;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, Math.max(0, e.r), 0, Math.PI * 2);
+      ctx.fill();
+      return;
+    case 'line':
+      ctx.strokeStyle = e.color;
+      ctx.lineWidth = e.width;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(e.x1, e.y1);
+      ctx.lineTo(e.x2, e.y2);
+      ctx.stroke();
+      return;
+    case 'polygon': {
+      const [first, ...rest] = e.points;
+      if (first === undefined) return;
+      ctx.fillStyle = e.color;
+      ctx.beginPath();
+      ctx.moveTo(first[0], first[1]);
+      for (const [x, y] of rest) ctx.lineTo(x, y);
+      ctx.closePath();
+      ctx.fill();
+      return;
+    }
     case 'text':
       ctx.font = `${String(e.size)}px VT323, monospace`;
       ctx.textAlign = 'center';

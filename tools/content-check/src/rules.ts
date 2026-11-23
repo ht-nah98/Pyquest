@@ -11,13 +11,14 @@ import {
   AssetManifestSchema,
   CourseSchema,
   LibraryRefSchema,
+  StudioSchema,
   isOpenLesson,
   parseLesson,
   type Exercise,
   type Lesson,
   type OpenLesson,
 } from '@pyquest/content-schema';
-import type { BlockNode, PyRunner, RunResult } from '@pyquest/runtime';
+import type { BlockNode, PyRunner, RunResult, StageSize } from '@pyquest/runtime';
 
 export type ContentInput = {
   courses: {
@@ -33,6 +34,8 @@ export type ContentInput = {
   strayFiles: string[];
   /** content/reference/pyquest.json (📘 Thư viện). */
   library?: unknown;
+  /** content/studio/studio.json (🎨 Xưởng vẽ). */
+  studio?: unknown;
 };
 
 const SEED = 1;
@@ -54,12 +57,13 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
     if (!lib.success) err('reference/pyquest.json', lib.error.message);
     else
       for (const e of lib.data.entries)
-        if (!allLessonIds.has(e.lesson))
+        if (e.lesson !== undefined && !allLessonIds.has(e.lesson))
           err('reference/pyquest.json', `${e.name}: unknown lesson ${e.lesson}`);
   }
 
   const manifest = AssetManifestSchema.safeParse(input.manifest);
   if (manifest.success) py.setAssets(manifest.data.assets.map((a) => a.id));
+  if (input.studio !== undefined) await checkStudio(input.studio, py, err);
   const assetIds = new Set<string>();
   if (!manifest.success) err('assets/library/manifest.json', manifest.error.message);
   else {
@@ -78,6 +82,8 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
       continue;
     }
     const roadmapIds = new Set(course.data.roadmap.map((r) => r.id));
+    // Grading runs use the course's stage, like the page does (ADR 0009); absent = 400 × 600.
+    const stage = course.data.stage;
 
     const lessons: Lesson[] = [];
     for (const { file, json } of c.lessons) {
@@ -115,11 +121,12 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
         input,
         py,
         err,
+        stage,
       });
     }
 
     if (c.sampleGame !== undefined) {
-      const failure = await runSampleGame(c.sampleGame, py);
+      const failure = await runSampleGame(c.sampleGame, py, stage);
       if (failure !== null) err(`${c.dir}/sample-game/main.py`, `sample game fails: ${failure}`);
     }
   }
@@ -132,6 +139,7 @@ type Ctx = {
   input: ContentInput;
   py: PyRunner;
   err: (where: string, msg: string) => void;
+  stage: StageSize | undefined;
 };
 
 async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Promise<void> {
@@ -147,6 +155,44 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
     }
   }
   for (const ex of lesson.exercises ?? []) await checkExercise(ex, `${where}/${ex.id}`, ctx);
+}
+
+/**
+ * Rule 12: the drawing studio (spec 2026-11-23 §6) offers real blocks, and its starter is a drawing that
+ * runs on the studio's stage and that the block editor keeps exactly as written.
+ */
+async function checkStudio(
+  json: unknown,
+  py: PyRunner,
+  err: (where: string, msg: string) => void,
+): Promise<void> {
+  const where = 'studio/studio.json';
+  const parsed = StudioSchema.safeParse(json);
+  if (!parsed.success) {
+    err(where, parsed.error.message);
+    return;
+  }
+  const studio = parsed.data;
+  const known: readonly string[] = BLOCK_TYPES;
+  for (const id of studio.toolbox)
+    if (!known.includes(id)) err(where, `unknown toolbox block "${id}"`);
+  registerBlocks();
+  const tree = py.parseBlocks(studio.starter);
+  const back = tree.ok ? toPython(treeToState(tree.statements)) : null;
+  if (back === null || back.trimEnd() !== studio.starter.trimEnd()) {
+    err(where, 'starter code does not survive the blocks round trip');
+  }
+  if (tree.ok) {
+    const missing = [...blockTypes(tree.statements)].filter((t) => !studio.toolbox.includes(t));
+    if (missing.length > 0)
+      err(where, `toolbox lacks blocks the starter uses: ${missing.join(', ')}`);
+  }
+  const run = await py.runScript({ 'main.py': studio.starter }, 'main.py', {
+    seed: SEED,
+    maxEvents: 5000,
+    stage: studio.stage,
+  });
+  if (run.error !== undefined) err(where, `starter fails: ${run.error.raw}`);
 }
 
 /** Code text, blank lines and call blocks are never in a toolbox list: they come from the code itself. */
@@ -201,13 +247,13 @@ async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<v
     ctx.err(where, `toolbox lacks blocks the code uses: ${missing.join(', ')}`);
   }
 
-  const solution = await gradeFiles(ctx.py, code, code.solution);
+  const solution = await gradeFiles(ctx.py, code, code.solution, ctx.stage);
   const failed = solution.goals.filter((g) => !g.ok);
   if (failed.length > 0) {
     const why = solution.run.error === undefined ? '' : ` (${solution.run.error.raw})`;
     ctx.err(where, `solution misses goals ${failed.map((g) => g.id).join(', ')}${why}`);
   }
-  const starter = await gradeFiles(ctx.py, code, code.starter);
+  const starter = await gradeFiles(ctx.py, code, code.starter, ctx.stage);
   if (starter.goals.every((g) => g.ok)) {
     ctx.err(where, 'starter already passes every goal; the exercise would finish itself');
   }
@@ -221,23 +267,32 @@ async function gradeFiles(
   py: PyRunner,
   code: Exercise,
   files: Record<string, string>,
+  stage: StageSize | undefined,
 ): Promise<{ run: RunResult; goals: GoalResult[] }> {
-  const run = await runLesson(py, code.mode, files, code.main, code.test);
+  const run = await runLesson(py, code.mode, files, code.main, code.test, stage);
   const shift = needsShiftedRun(code.goals);
   const moved =
     shift === undefined ? undefined : shiftSource(files[code.main] ?? '', shift.var, shift.by);
   const shifted =
     moved === undefined
       ? undefined
-      : await runLesson(py, code.mode, { ...files, [code.main]: moved }, code.main, code.test);
+      : await runLesson(
+          py,
+          code.mode,
+          { ...files, [code.main]: moved },
+          code.main,
+          code.test,
+          stage,
+        );
   const expected = needsExpected(code.goals)
-    ? await runLesson(py, code.mode, code.solution, code.main, code.test)
+    ? await runLesson(py, code.mode, code.solution, code.main, code.test, stage)
     : undefined;
   return {
     run,
     goals: checkGoals(code.goals, run, {
       ...(shifted === undefined ? {} : { shifted }),
       ...(expected === undefined ? {} : { expected }),
+      ...(stage === undefined ? {} : { stage }),
     }),
   };
 }
@@ -248,17 +303,29 @@ async function runLesson(
   files: Record<string, string>,
   main: string,
   test: { frames: number; taps: number[] } = { frames: 90, taps: [] },
+  stage?: StageSize,
 ): Promise<RunResult> {
-  if (mode === 'script') return py.runScript(files, main, { seed: SEED, maxEvents: 5000 });
+  const size = stage === undefined ? {} : { stage };
+  if (mode === 'script') return py.runScript(files, main, { seed: SEED, maxEvents: 5000, ...size });
   return runGameTest(
-    { start: () => py.startGame(files, main, { seed: SEED }), step: (input) => py.step(input) },
+    {
+      start: () => py.startGame(files, main, { seed: SEED, ...size }),
+      step: (input) => py.step(input),
+    },
     test,
   );
 }
 
 /** Plays 300 frames, tapping now and then, so ready → play → over → ready all run. */
-async function runSampleGame(source: string, py: PyRunner): Promise<string | null> {
-  const start = await py.startGame({ 'main.py': source }, 'main.py', { seed: SEED });
+async function runSampleGame(
+  source: string,
+  py: PyRunner,
+  stage: StageSize | undefined,
+): Promise<string | null> {
+  const start = await py.startGame({ 'main.py': source }, 'main.py', {
+    seed: SEED,
+    ...(stage === undefined ? {} : { stage }),
+  });
   if (start.error !== undefined) return start.error.raw;
   for (let f = 0; f < GAME_FRAMES; f++) {
     const r = py.step({ keys: [], tapped: f % 18 === 0 });

@@ -395,3 +395,72 @@ describe('sound blocks', () => {
     expect(tree.statements[0]?.type).toBe('pq_raw');
   });
 });
+
+describe('coordinate drawing blocks (ADR 0009)', () => {
+  const first = (src: string) => {
+    const tree = py.parseBlocks(src);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    return tree.statements[0];
+  };
+
+  test.each([
+    ['draw_circle(300, 200, 50, "gold")', 'pq_draw_circle'],
+    ['draw_circle(x + 10, y, r * 2, color)', 'pq_draw_circle'],
+    ['draw_line(0, 0, 600, 600, "black")', 'pq_draw_line'],
+    ['draw_line(0, 300, WIDTH, 300, "blue", 8)', 'pq_draw_line_width'],
+    ['draw_triangle(150, 450, 300, 150, 450, 450, "purple")', 'pq_draw_triangle'],
+    ['for i in range(5):\n    draw_circle(300, 300, 200 - i * 40, "red")', 'pq_for'],
+  ])('%j is a real block (%s) and survives the round trip', (source, type) => {
+    const tree = py.parseBlocks(source);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    expect(tree.statements[0]?.type).toBe(type);
+    expect(JSON.stringify(tree.statements)).not.toContain('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('the line block with a width keeps its six values in order', () => {
+    expect(Object.keys(first('draw_line(1, 2, 3, 4, "red", 5)')?.inputs ?? {})).toEqual([
+      'X1',
+      'Y1',
+      'X2',
+      'Y2',
+      'COLOR',
+      'WIDTH',
+    ]);
+  });
+
+  test.each([
+    'draw_polygon([(0, 0), (100, 0), (50, 80)], "teal")',
+    'draw_circle(300, 300, 50)',
+    'draw_line(0, 0, 10, 10)',
+    'draw_circle(300, 300, r=50, color="red")',
+  ])('%j stays code text and comes back exactly as typed', (source) => {
+    expect(first(source)?.type).toBe('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('the toolbox puts the new blocks under Vẽ, ready to run on a 600 × 600 stage', () => {
+    const tb = toolboxFor([
+      'pq_draw_circle',
+      'pq_draw_line',
+      'pq_draw_line_width',
+      'pq_draw_triangle',
+    ]);
+    if (tb.kind !== 'categoryToolbox') throw new Error('categories');
+    expect(tb.contents.map((c) => c.name)).toEqual(['Vẽ']);
+    const blocks = tb.contents[0]?.contents ?? [];
+    expect(blocks.map((b) => b.type)).toEqual([
+      'pq_draw_circle',
+      'pq_draw_line',
+      'pq_draw_line_width',
+      'pq_draw_triangle',
+    ]);
+    for (const b of blocks) {
+      const state = { blocks: { languageVersion: 0, blocks: [{ ...b, x: 0, y: 0 }] } };
+      expect(toPython(state)).toMatch(/^draw_\w+\(\d+, \d+, .*"\w+".*\)\n$/);
+    }
+    expect(
+      toPython({ blocks: { languageVersion: 0, blocks: [{ ...blocks[0], x: 0, y: 0 }] } }),
+    ).toBe('draw_circle(300, 300, 100, "orange")\n');
+  });
+});

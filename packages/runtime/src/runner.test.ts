@@ -274,3 +274,98 @@ describe('sounds and music (play_sound, play_music, stop_music)', () => {
     for (const m of MUSIC) expect((await run(`play_music("${m}")`)).error).toBeUndefined();
   });
 });
+
+describe('coordinate drawing (draw_circle, draw_line, draw_triangle, draw_polygon)', () => {
+  test('each command records its event, with defaults', async () => {
+    const r = await run(
+      'draw_circle(300, 200, 50)\ndraw_line(0, 0, 600, 600)\ndraw_line(1, 2, 3, 4, "red", 8)\n' +
+        'draw_triangle(100, 400, 200, 250, 300, 400)\ndraw_polygon([(0, 0), [10, 0], (5, 8)], "teal")',
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.events).toEqual([
+      { t: 'circle', x: 300, y: 200, r: 50, color: 'orange' },
+      { t: 'line', x1: 0, y1: 0, x2: 600, y2: 600, color: 'black', width: 3 },
+      { t: 'line', x1: 1, y1: 2, x2: 3, y2: 4, color: 'red', width: 8 },
+      {
+        t: 'polygon',
+        points: [
+          [100, 400],
+          [200, 250],
+          [300, 400],
+        ],
+        color: 'purple',
+      },
+      {
+        t: 'polygon',
+        points: [
+          [0, 0],
+          [10, 0],
+          [5, 8],
+        ],
+        color: 'teal',
+      },
+    ]);
+  });
+
+  test.each([
+    ['draw_circle(1, 2, -5)', 'Bán kính'],
+    ['draw_circle(1, "a", 5)', 'y phải là một số'],
+    ['draw_line(0, 0, 10, 10, "red", 0)', 'Độ dày'],
+    ['draw_polygon([(0, 0), (1, 1)])', 'ít nhất 3 góc'],
+    ['draw_polygon([(0, 0), (1, 1), 5])', 'cặp số'],
+    ['draw_polygon([(0, 0), (1, 1), (2, "b")])', 'phải là một số'],
+    ['draw_polygon(5)', 'danh sách'],
+    ['draw_triangle(0, 0, 1, 1, 2, "z")', 'y3 phải là một số'],
+  ])('%s is a short Vietnamese error', async (code, words) => {
+    const r = await run(code);
+    expect(r.error?.line).toBe(2);
+    expect(r.error?.messageVi).toContain(words);
+  });
+
+  test("a shape drawn inside the child's function knows which call drew it", async () => {
+    const r = await run(
+      'def sun(x):\n    draw_circle(x, 80, 40, "gold")\n    draw_triangle(x, 0, x, 1, 0, 1)\nsun(300)',
+    );
+    expect(r.events.map((e) => e.t !== 'frame' && e.by)).toEqual([0, 0]);
+  });
+});
+
+describe('stage size per run (ADR 0009)', () => {
+  const SIZE = 'from pyquest import *\nprint(WIDTH, HEIGHT)\n';
+  const said = (r: { events: { t: string; text?: string }[] }) =>
+    r.events.filter((e) => e.t === 'say').map((e) => e.text);
+
+  test('WIDTH and HEIGHT follow the run’s stage, and go back to 400 × 600 without one', async () => {
+    const opts = { seed: 1, maxEvents: 100 };
+    const square = { ...opts, stage: { width: 600, height: 600 } };
+    expect(said(await py.runScript({ 'main.py': SIZE }, 'main.py', square))).toEqual(['600 600']);
+    expect(said(await py.runScript({ 'main.py': SIZE }, 'main.py', opts))).toEqual(['400 600']);
+    expect(said(await py.runScript({ 'main.py': SIZE }, 'main.py', square))).toEqual(['600 600']);
+  });
+
+  test("the child's second file and import pyquest see the same size", async () => {
+    const files = {
+      'main.py':
+        'from pyquest import *\nimport pyquest\nimport size\nprint(size.W, pyquest.HEIGHT)\n',
+      'size.py': 'from pyquest import *\nW = WIDTH\n',
+    };
+    const r = await py.runScript(files, 'main.py', {
+      seed: 1,
+      maxEvents: 100,
+      stage: { width: 600, height: 500 },
+    });
+    expect(said(r)).toEqual(['600 500']);
+  });
+
+  test('a game sees its stage size in update() on every frame', async () => {
+    const code =
+      IMPORT + 'def update():\n    pass\ndef draw():\n    draw_circle(WIDTH / 2, HEIGHT / 2, 10)';
+    await py.startGame({ 'main.py': code }, 'main.py', {
+      seed: 1,
+      stage: { width: 600, height: 600 },
+    });
+    expect(py.step({ keys: [], tapped: false }).events[0]).toMatchObject({ x: 300, y: 300 });
+    await py.startGame({ 'main.py': code }, 'main.py', { seed: 1 });
+    expect(py.step({ keys: [], tapped: false }).events[0]).toMatchObject({ x: 200, y: 300 });
+  });
+});

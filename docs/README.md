@@ -12,6 +12,7 @@ Mỗi chủ đề có **một** tài liệu là nguồn chuẩn. Hai tài liệu
 | Chạy cho lớp (LAN), Pyodide | `architecture/deployment-ops.md` | |
 | GitHub, CI, deploy | `architecture/deployment-ops.md` mục "GitHub và CI" | `.github/workflows/ci.yml` |
 | Âm thanh (play_sound, nhạc, 🔇) | `adr/0007-sound-made-by-the-page.md` | |
+| Cỡ sân theo khóa, lệnh vẽ tọa độ (draw_circle…) | `adr/0009-stage-size-per-course-and-drawing-commands.md` | nghiên cứu `superpowers/specs/2026-11-23-drawing-research.md` |
 | Bài tập: kéo khối và gõ code song song | `adr/0008-every-exercise-has-blocks.md` | sửa một phần ADR 0005 |
 | Tài khoản, đồng bộ, màn HLV | `adr/0006-supabase-accounts-and-sync.md` | spec `superpowers/specs/2026-11-05-supabase-accounts-design.md` |
 | Thuật ngữ Việt ↔ code | `glossary.md` | |

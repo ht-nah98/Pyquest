@@ -6,6 +6,18 @@ export type Profile = { id: string; nickname: string; avatar: string; role: Role
 /** A child's work on one exercise of the code step. */
 export type ExerciseWork = { files: Record<string, string>; workspace?: object };
 
+/**
+ * A drawing of the 🎨 Xưởng vẽ: the row's lessonId is `studio:<id>`, its code is `files['main.py']` and
+ * `workspace`. `deleted` is a tombstone, so a delete reaches the child's other devices.
+ */
+export type StudioMeta = {
+  title: string;
+  createdAt: number;
+  /** When the child last changed the code or the name (ms), for the list of drawings. */
+  changedAt?: number;
+  deleted?: boolean;
+};
+
 /** Everything we keep about one child in one lesson. No personal data (AGENTS.md §3 rule 8). */
 export type LessonState = {
   stepIndex: number;
@@ -27,6 +39,8 @@ export type LessonState = {
   picks?: Record<string, string>;
   done: boolean;
   doneSteps: StepKind[];
+  /** Only on `studio:` rows (a drawing, not a lesson). */
+  studio?: StudioMeta;
 };
 
 export const emptyLessonState = (): LessonState => ({

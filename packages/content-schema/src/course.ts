@@ -13,6 +13,13 @@ export const CourseSchema = z
         icon: z.string().optional(),
       }),
     ),
+    /** The stage size of every lesson in this course; absent = 400 × 600 (Bay Qua Khe). ADR 0009. */
+    stage: z
+      .object({
+        width: z.number().int().min(100).max(1200),
+        height: z.number().int().min(100).max(1200),
+      })
+      .optional(),
     /** Sections of the course map (A. Bức tranh toàn cảnh, B. Dựng sân khấu…). */
     parts: z
       .array(

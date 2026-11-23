@@ -12,6 +12,8 @@ import { CodeScreen } from '../features/code/CodeScreen';
 import { PlayScreen } from '../features/code/PlayScreen';
 import { CoachNotesWindow } from '../features/slides/CoachNotesWindow';
 import { LessonSlides } from '../features/slides/LessonSlides';
+import { StudioEditor } from '../features/studio/StudioEditor';
+import { StudioList } from '../features/studio/StudioList';
 import { useSession } from './session';
 
 function NeedProfile({ children }: { children: ReactNode }) {
@@ -47,9 +49,12 @@ export const router = createBrowserRouter(
     { path: '/l/:lessonId/notes', element: guard(<CoachNotesWindow />) },
     { path: '/l/:lessonId/code', element: guard(<CodeScreen />) },
     { path: '/l/:lessonId/play', element: guard(<PlayScreen />) },
+    { path: '/studio', element: guard(<StudioList />) },
+    { path: '/studio/:drawingId', element: guard(<StudioEditor />) },
     { path: '/coach', element: coachOnly(<CoachHome />) },
     { path: '/coach/s/:userId', element: coachOnly(<CoachStudent />) },
     { path: '/coach/s/:userId/l/:lessonId', element: coachOnly(<CoachCode />) },
+    { path: '/coach/s/:userId/studio/:drawingId', element: coachOnly(<CoachCode />) },
     // On GitHub Pages the app lives under /Pyquest/ (vite `base`); locally under /.
   ],
   { basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/' },

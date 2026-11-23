@@ -159,8 +159,8 @@ class _Bubbles:
             self.buf = ""
 
 
-def _run_module(files, main, seed, max_events, max_lines):
-    pyquest._reset(seed, max_events)
+def _run_module(files, main, seed, max_events, max_lines, width, height):
+    pyquest._reset(seed, max_events, width, height)
     user_files = _write_files(files)
     path = os.path.join(PROJECT, main)
     g = _module_globals(main)
@@ -185,13 +185,13 @@ def _result(g, err, stopped):
     return json.dumps(out)
 
 
-def run_script(files_json, main, seed, max_events, max_lines):
-    g, _, err, stopped = _run_module(json.loads(files_json), main, seed, max_events, max_lines)
+def run_script(files_json, main, seed, max_events, max_lines, width, height):
+    g, _, err, stopped = _run_module(json.loads(files_json), main, seed, max_events, max_lines, width, height)
     return _result(g, err, stopped)
 
 
-def start_game(files_json, main, seed, max_lines):
-    g, user_files, err, stopped = _run_module(json.loads(files_json), main, seed, 100000, max_lines)
+def start_game(files_json, main, seed, max_lines, width, height):
+    g, user_files, err, stopped = _run_module(json.loads(files_json), main, seed, 100000, max_lines, width, height)
     if err is None and not stopped and not callable(g.get("update")):
         err = {"type": "PyQuestError", "msg": "missing update", "line": None}
     _game["globals"] = None if err else g

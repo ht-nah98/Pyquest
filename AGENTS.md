@@ -66,6 +66,7 @@ packages/blocks/          khối Blockly, khối → Python, Python → khối (
 packages/checker/         chấm mục tiêu bài (hàm thuần)
 supabase/                 migration SQL + Edge Function `students` (tạo bé, đặt PIN); config.toml của CLI
 content/courses/          nội dung các khóa (JSON) + game mẫu
+content/studio/           🎨 Xưởng vẽ: cỡ sân, code của tranh mới, khối, 💡 Thử thách (JSON)
 content/assets/library/   kho hình đã làm sạch + manifest.json
 assets/prompts/           prompt sinh ảnh (AI viết, HLV sinh)
 assets/raw/               ảnh gốc HLV sinh, trước khi làm sạch

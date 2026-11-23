@@ -50,3 +50,24 @@ export async function expectNoPageScroll(page: Page): Promise<void> {
 export async function framesOf(page: Page, testId: string): Promise<number> {
   return Number(await page.getByTestId(testId).getAttribute('data-frames'));
 }
+
+/** Where a stage point is on the page: through the canvas scaling and its letterbox bars. */
+export async function pagePoint(page: Page, x: number, y: number, w = 400, h = 600) {
+  const box = await page.locator('[data-testid="code-screen"] [data-testid="stage"]').boundingBox();
+  if (box === null) throw new Error('no stage');
+  const k = Math.min(box.width / w, box.height / h);
+  return {
+    x: box.x + (box.width - w * k) / 2 + x * k,
+    y: box.y + (box.height - h * k) / 2 + y * k,
+  };
+}
+
+/** The pointer readout, read from its attributes once it shows (AGENTS.md §9.8). */
+export async function readout(page: Page) {
+  const badge = page.getByTestId('stage-pointer');
+  await expect(badge).toBeVisible();
+  return {
+    x: Number(await badge.getAttribute('data-x')),
+    y: Number(await badge.getAttribute('data-y')),
+  };
+}

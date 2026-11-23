@@ -24,6 +24,7 @@ export function PlayScreen() {
   const code = all.find((e) => e.id === exId) ?? all[0];
   const { state } = useLessonState(lessonId);
   const stage = useRef<StageHandle>(null);
+  const size = catalog.lessonStage(lessonId);
   const box = useRef<HTMLDivElement>(null);
   const [round, setRound] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -59,9 +60,9 @@ export function PlayScreen() {
   useEffect(() => {
     if (state === null || code === undefined) return;
     const files = workOf(state, all, code).files;
-    if (code.mode === 'game') void loop.start(files, code.main);
+    if (code.mode === 'game') void loop.start(files, code.main, size);
     else
-      void python.run(files, code.main).then((r) => {
+      void python.run(files, code.main, { stage: size }).then((r) => {
         if (r.error !== undefined) setError(r.error.messageVi);
         return stage.current?.replay(r.events);
       });
@@ -81,7 +82,7 @@ export function PlayScreen() {
         loop.press('space', false);
       }}
     >
-      <Stage ref={stage} className="h-full w-full p-2" testId="play-stage" />
+      <Stage ref={stage} className="h-full w-full p-2" testId="play-stage" size={size} />
       <div
         className="absolute right-3 top-3 z-10 flex gap-2"
         onPointerDown={(e) => {

@@ -1,5 +1,12 @@
 import { describe, expect, test } from 'vitest';
-import { AssetSchema, CourseSchema, isOpenLesson, LibraryRefSchema, parseLesson } from './index';
+import {
+  AssetSchema,
+  CourseSchema,
+  isOpenLesson,
+  LibraryRefSchema,
+  parseLesson,
+  StudioSchema,
+} from './index';
 
 /** The first exercise of a test lesson, to change one field. */
 const ex = (l: Record<string, unknown>) => (l['exercises'] as Record<string, unknown>[])[0];
@@ -204,6 +211,21 @@ describe('walkthrough and the library reference', () => {
     expect(() => LibraryRefSchema.parse({ entries: [noWhy] })).toThrow();
     expect(() => LibraryRefSchema.parse({ entries: [{ name: 'x' }] })).toThrow();
   });
+
+  test('a command no lesson teaches yet may leave out its lesson (ADR 0009)', () => {
+    const ok = LibraryRefSchema.parse({
+      entries: [
+        {
+          name: 'draw_circle',
+          signature: 'draw_circle(x, y, bán kính, màu)',
+          vi: 'Tô một hình tròn.',
+          why: 'Ghép hình tròn từ ô vuông thì rất lâu.',
+          example: 'draw_circle(300, 300, 100, "gold")',
+        },
+      ],
+    });
+    expect(ok.entries[0]?.lesson).toBeUndefined();
+  });
 });
 
 describe('CourseSchema and AssetSchema', () => {
@@ -216,6 +238,7 @@ describe('CourseSchema and AssetSchema', () => {
       roadmap: [{ id: 'stage', label: 'Sân khấu' }],
     });
     expect(course.lessonIds).toEqual(['l00', 'l01']);
+    expect(course.stage).toBeUndefined();
     const asset = AssetSchema.parse({
       id: 'bird',
       group: 'bird',
@@ -226,5 +249,44 @@ describe('CourseSchema and AssetSchema', () => {
       credit: 'placeholder',
     });
     expect(asset.frames).toBe(3);
+  });
+
+  test('a course may set its stage size; odd sizes are refused (ADR 0009)', () => {
+    const base = {
+      id: 'hoa-si-code',
+      title: 'Họa sĩ Code',
+      summary: 'Vẽ tranh bằng code.',
+      lessonIds: ['d00'],
+      roadmap: [{ id: 'stage', label: 'Sân khấu' }],
+    };
+    expect(CourseSchema.parse({ ...base, stage: { width: 600, height: 600 } }).stage).toEqual({
+      width: 600,
+      height: 600,
+    });
+    expect(() => CourseSchema.parse({ ...base, stage: { width: 600.5, height: 600 } })).toThrow();
+    expect(() => CourseSchema.parse({ ...base, stage: { width: 0, height: 600 } })).toThrow();
+  });
+
+  test('the drawing studio: stage, starter, toolbox and challenges; long or duplicate challenges are refused', () => {
+    const challenge = {
+      id: 'nha',
+      title: 'Ngôi nhà',
+      task: 'Vẽ một ngôi nhà.',
+      hint: 'Mái là tam giác.',
+    };
+    const studio = {
+      stage: { width: 600, height: 600 },
+      starter: 'from pyquest import *\n',
+      toolbox: ['pq_import'],
+      challenges: [challenge],
+    };
+    expect(StudioSchema.parse(studio).challenges).toHaveLength(1);
+    expect(() =>
+      StudioSchema.parse({ ...studio, challenges: [{ ...challenge, title: 'x'.repeat(41) }] }),
+    ).toThrow();
+    expect(() => StudioSchema.parse({ ...studio, challenges: [challenge, challenge] })).toThrow(
+      /duplicate/,
+    );
+    expect(() => StudioSchema.parse({ ...studio, toolbox: [] })).toThrow();
   });
 });

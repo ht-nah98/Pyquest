@@ -1,4 +1,4 @@
-import { librarySource } from '@pyquest/runtime';
+import { librarySource, type StageSize } from '@pyquest/runtime';
 import { catalog } from '../../content/catalog';
 
 /**
@@ -7,9 +7,12 @@ import { catalog } from '../../content/catalog';
  */
 export function LibraryPanel({
   uptoOrder,
+  stage,
   onClose,
 }: {
   uptoOrder: number | undefined;
+  /** The course's stage, so WIDTH / HEIGHT show their real numbers. */
+  stage: StageSize;
   onClose: () => void;
 }) {
   const entries = catalog.library(uptoOrder);
@@ -45,7 +48,7 @@ export function LibraryPanel({
             <pre className="mt-2 overflow-x-auto rounded bg-code-bg px-2 py-1 font-code text-sm text-code-fg">
               {e.example}
             </pre>
-            {librarySource(e.name) !== undefined && (
+            {librarySource(e.name, stage) !== undefined && (
               <details className="mt-2" data-testid="library-inside">
                 <summary className="cursor-pointer text-sm font-bold">🔍 Xem bên trong</summary>
                 <p className="mt-1 text-sm text-ink-soft">
@@ -53,7 +56,7 @@ export function LibraryPanel({
                   {e.inside === undefined ? '' : ` ${e.inside}`}
                 </p>
                 <pre className="mt-1 overflow-x-auto rounded bg-code-bg px-2 py-1 font-code text-xs text-code-fg">
-                  {librarySource(e.name)}
+                  {librarySource(e.name, stage)}
                 </pre>
               </details>
             )}

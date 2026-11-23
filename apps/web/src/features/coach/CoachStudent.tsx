@@ -8,6 +8,7 @@ import { TopBar } from '../../ui/TopBar';
 import { lessonsOf, listStudents, manage, type Student } from './coachApi';
 import { randomPin } from './CoachHome';
 import { exercisesOf } from './summary';
+import { drawingsOf } from '../studio/drawings';
 
 const when = (ms: number) =>
   new Date(ms).toLocaleString('vi-VN', {
@@ -44,6 +45,8 @@ export function CoachStudent() {
 
   if (student === undefined) return <TopBar title="Đang tải…" back="/coach" />;
   if (student === null) return <TopBar title="Không tìm thấy bé này" back="/coach" />;
+
+  const drawings = drawingsOf(new Map([...states].map(([id, r]) => [id, r.state])));
 
   const setNewPin = async () => {
     const err = await manage({ action: 'setPin', userId, pin });
@@ -104,6 +107,27 @@ export function CoachStudent() {
             </ul>
           </Panel>
         ))}
+        <Panel className="p-4" data-testid="student-drawings">
+          <h2 className="mb-2 text-2xl">🎨 Xưởng vẽ · {drawings.length} tranh</h2>
+          {drawings.length === 0 ? (
+            <p className="text-ink-soft">Bé chưa vẽ tranh nào.</p>
+          ) : (
+            <ul className="flex flex-wrap gap-2">
+              {drawings.map((d) => (
+                <li key={d.id}>
+                  <Link
+                    to={`/coach/s/${userId}/studio/${d.id}`}
+                    className="flex min-h-11 items-center gap-2 rounded-full border-2 border-ink/30 bg-white px-3 hover:bg-brand-soft"
+                    data-testid={`see-drawing-${d.id}`}
+                  >
+                    🖼️ {d.title}
+                    <span className="text-sm text-ink-soft">{when(d.changedAt)}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
         <Panel className="flex flex-wrap items-center gap-3 p-4">
           <span className="font-display text-lg">🔑 PIN mới</span>
           <input

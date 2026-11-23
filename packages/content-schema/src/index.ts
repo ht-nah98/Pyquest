@@ -4,3 +4,4 @@ export * from './goal';
 export * from './lesson';
 export * from './slide';
 export * from './library';
+export * from './studio';

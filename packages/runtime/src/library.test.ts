@@ -15,3 +15,10 @@ test('a constant shows its line', () => {
 test('names that are not in the library give nothing', () => {
   expect(librarySource('draw_bird')).toBeUndefined();
 });
+
+test("with the course's stage, WIDTH and HEIGHT show that stage's numbers", () => {
+  const square = { width: 600, height: 600 };
+  expect(librarySource('WIDTH', square)).toBe('WIDTH = 600');
+  expect(librarySource('HEIGHT', square)).toBe('HEIGHT = 600');
+  expect(librarySource('draw_circle', square)?.startsWith('def draw_circle(x, y, r')).toBe(true);
+});

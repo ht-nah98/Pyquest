@@ -9,23 +9,33 @@ import type { LessonState } from '../../storage/store';
 import { Button } from '../../ui/Button';
 import { TopBar } from '../../ui/TopBar';
 import { workOf } from '../code/exercises';
+import { liveDrawing, MAIN, rowOf } from '../studio/drawings';
 import { lessonsOf } from './coachApi';
 
-/** A child's code for one exercise, read-only, with ▶ to see what it draws. The coach cannot change it. */
+/**
+ * A child's code for one exercise, or one drawing of the 🎨 Xưởng vẽ (/studio/:drawingId), read-only,
+ * with ▶ to see what it draws. The coach cannot change it.
+ */
 export function CoachCode() {
-  const { userId = '', lessonId = '' } = useParams();
+  const { userId = '', lessonId: lessonParam = '', drawingId } = useParams();
   const [params] = useSearchParams();
-  const lesson = catalog.openLesson(lessonId);
+  const drawing = drawingId !== undefined;
+  const lessonId = drawing ? rowOf(drawingId) : lessonParam;
+  const lesson = drawing ? undefined : catalog.openLesson(lessonId);
   const all = lesson?.exercises ?? [];
   const ex = all.find((e) => e.id === params.get('ex')) ?? all[0];
+  const mode = drawing ? 'script' : ex?.mode;
   const [state, setState] = useState<LessonState | null | undefined>(undefined);
   const [file, setFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const stage = useRef<StageHandle>(null);
+  const size = drawing
+    ? (catalog.studio()?.stage ?? catalog.lessonStage(lessonId))
+    : catalog.lessonStage(lessonId);
   const loop = useGameLoop(stage, (r) => {
     if (r.error !== undefined) setError(r.error.messageVi);
   });
-  useGameKeys(ex?.mode === 'game', loop.press);
+  useGameKeys(mode === 'game', loop.press);
 
   useEffect(() => {
     void lessonsOf(userId)
@@ -37,20 +47,31 @@ export function CoachCode() {
       });
   }, [userId, lessonId]);
 
-  if (lesson === undefined || ex === undefined)
+  if (!drawing && (lesson === undefined || ex === undefined))
     return <TopBar title="Không có bài này" back={`/coach/s/${userId}`} />;
-  const files = state === undefined || state === null ? null : workOf(state, all, ex).files;
+  const main = ex === undefined || drawing ? MAIN : ex.main;
+  const files =
+    state === undefined || state === null
+      ? null
+      : drawing
+        ? (liveDrawing(state)?.files ?? null)
+        : ex === undefined
+          ? null
+          : workOf(state, all, ex).files;
   const names = files === null ? [] : Object.keys(files);
-  const shown = file !== null && names.includes(file) ? file : ex.main;
-  const done = state?.exercisesDone?.includes(ex.id) === true;
+  const shown = file !== null && names.includes(file) ? file : main;
+  const done = ex !== undefined && state?.exercisesDone?.includes(ex.id) === true;
+  const title = drawing
+    ? `🎨 Tranh: ${state?.studio?.title ?? ''}`
+    : `Bài ${String(lesson?.order ?? '')} · ${ex?.title ?? ''} ${done ? '✓' : ''}`;
 
   const run = () => {
     if (files === null) return;
     setError(null);
     loop.stop();
-    if (ex.mode === 'game') void loop.start(files, ex.main);
+    if (mode === 'game') void loop.start(files, main, size);
     else
-      void python.run(files, ex.main).then((r) => {
+      void python.run(files, main, { stage: size }).then((r) => {
         if (r.error !== undefined) setError(r.error.messageVi);
         return stage.current?.replay(r.events);
       });
@@ -58,21 +79,20 @@ export function CoachCode() {
 
   return (
     <div className="flex h-dvh flex-col overflow-hidden">
-      <TopBar
-        title={`Bài ${String(lesson.order)} · ${ex.title} ${done ? '✓' : ''}`}
-        back={`/coach/s/${userId}`}
-      />
-      <nav className="flex gap-2 overflow-x-auto border-b-2 border-ink/10 bg-paper px-3 py-1">
-        {all.map((e, i) => (
-          <Link
-            key={e.id}
-            to={`/coach/s/${userId}/l/${lessonId}?ex=${e.id}`}
-            className={`shrink-0 rounded-full border-2 px-3 py-1 text-sm ${e.id === ex.id ? 'border-ink bg-sun font-bold' : 'border-ink/30 bg-white'}`}
-          >
-            {i + 1}. {e.title}
-          </Link>
-        ))}
-      </nav>
+      <TopBar title={title} back={`/coach/s/${userId}`} />
+      {!drawing && (
+        <nav className="flex gap-2 overflow-x-auto border-b-2 border-ink/10 bg-paper px-3 py-1">
+          {all.map((e, i) => (
+            <Link
+              key={e.id}
+              to={`/coach/s/${userId}/l/${lessonId}?ex=${e.id}`}
+              className={`shrink-0 rounded-full border-2 px-3 py-1 text-sm ${e.id === ex?.id ? 'border-ink bg-sun font-bold' : 'border-ink/30 bg-white'}`}
+            >
+              {i + 1}. {e.title}
+            </Link>
+          ))}
+        </nav>
+      )}
       <div className="flex min-h-0 flex-1 gap-2 p-2">
         <section className="flex min-h-0 min-w-0 flex-1 flex-col rounded-[10px] border-2 border-ink bg-code-bg">
           <h2 className="flex items-center gap-2 border-b-2 border-ink bg-paper px-3 py-1 text-base">
@@ -93,6 +113,9 @@ export function CoachCode() {
           </h2>
           {state === undefined && <p className="p-4 text-white">Đang tải…</p>}
           {state === null && <p className="p-4 text-white">Bé chưa mở bài này.</p>}
+          {drawing && state !== undefined && state !== null && files === null && (
+            <p className="p-4 text-white">Bé đã xóa tranh này.</p>
+          )}
           {files !== null && (
             <pre
               className="min-h-0 flex-1 overflow-auto p-3 font-code text-[16px] leading-relaxed text-code-fg"
@@ -128,7 +151,7 @@ export function CoachCode() {
               loop.press('space', false);
             }}
           >
-            <Stage ref={stage} className="h-full" />
+            <Stage ref={stage} className="h-full" size={size} coords />
           </div>
           {error !== null && <p className="rounded-[8px] bg-oops-soft px-3 py-2">⚠️ {error}</p>}
         </aside>

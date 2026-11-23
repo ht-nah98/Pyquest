@@ -13,7 +13,7 @@ HEIGHT = 600
 # load a picture file). Everything a game needs on top, like draw_bird, the child writes with def.
 __all__ = [
     "WIDTH", "HEIGHT", "clear", "draw_rect", "draw_image", "draw_text", "key_pressed", "random_int", "print",
-    "play_sound", "play_music", "stop_music",
+    "play_sound", "play_music", "stop_music", "draw_circle", "draw_line", "draw_triangle", "draw_polygon",
 ]
 
 # Made by the page itself (8-bit synth): the names are the whole list, there are no sound files.
@@ -33,7 +33,10 @@ _state = {"events": [], "max": 5000, "keys": set(), "tapped": False, "rng": _ran
           "assets": set(), "stack": [], "calls": [], "calls_truncated": False}
 
 
-def _reset(seed, max_events):
+def _reset(seed, max_events, width=400, height=600):
+    # The stage size is set per course (ADR 0009): "from pyquest import *" reads these at import time.
+    global WIDTH, HEIGHT
+    WIDTH, HEIGHT = width, height
     _state["events"] = []
     _state["max"] = max_events
     _state["keys"] = set()
@@ -74,6 +77,45 @@ def draw_text(text, x, y, size=24, color="white"):
     """Write text with its centre at (x, y)."""
     _emit({"t": "text", "text": str(text), "x": _num(x, "x"), "y": _num(y, "y"), "size": _num(size, "size"),
            "color": str(color)})
+
+
+def draw_circle(x, y, r, color="orange"):
+    """Fill a circle with its centre at (x, y) and radius r."""
+    r = _num(r, "r")
+    if r < 0:
+        raise PyQuestError("Bán kính r không được nhỏ hơn 0")
+    _emit({"t": "circle", "x": _num(x, "x"), "y": _num(y, "y"), "r": r, "color": str(color)})
+
+
+def draw_line(x1, y1, x2, y2, color="black", width=3):
+    """Draw a straight line from (x1, y1) to (x2, y2), width thick."""
+    width = _num(width, "width")
+    if width <= 0:
+        raise PyQuestError("Độ dày width phải lớn hơn 0")
+    _emit({"t": "line", "x1": _num(x1, "x1"), "y1": _num(y1, "y1"), "x2": _num(x2, "x2"), "y2": _num(y2, "y2"),
+           "color": str(color), "width": width})
+
+
+def _corner(point):
+    """One corner (x, y) of a shape, as a list of two numbers."""
+    if not isinstance(point, (list, tuple)) or len(point) != 2:
+        raise PyQuestError("Mỗi góc phải là một cặp số (x, y)")
+    return [_num(point[0], "x"), _num(point[1], "y")]
+
+
+def draw_polygon(points, color="purple"):
+    """Fill a shape through the corners in points, a list of (x, y) pairs, in order."""
+    if not isinstance(points, (list, tuple)):
+        raise PyQuestError("points phải là một danh sách các góc (x, y)")
+    if len(points) < 3:
+        raise PyQuestError("Một hình cần ít nhất 3 góc")
+    _emit({"t": "polygon", "points": [_corner(p) for p in points], "color": str(color)})
+
+
+def draw_triangle(x1, y1, x2, y2, x3, y3, color="purple"):
+    """Fill a triangle with corners (x1, y1), (x2, y2) and (x3, y3)."""
+    draw_polygon([(_num(x1, "x1"), _num(y1, "y1")), (_num(x2, "x2"), _num(y2, "y2")),
+                  (_num(x3, "x3"), _num(y3, "y3"))], color)
 
 
 def _closest_asset(asset):

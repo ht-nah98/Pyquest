@@ -1,8 +1,12 @@
-import type { BlockTree, Files, GameInput, RunResult } from '@pyquest/runtime';
+import type { BlockTree, Files, GameInput, RunResult, StageSize } from '@pyquest/runtime';
+import { DEFAULT_STAGE } from '@pyquest/runtime';
 import { useSyncExternalStore } from 'react';
 import type { WorkerReply, WorkerRequest } from './protocol';
 
 export type PyStatus = 'idle' | 'loading' | 'ready' | 'running' | 'failed';
+
+type RunCall = { stage?: StageSize; seed?: number; maxEvents?: number };
+type GameCall = { stage?: StageSize; seed?: number };
 
 type Pending = { resolve: (v: RunResult | BlockTree) => void; reject: (e: Error) => void };
 type Body<K> = K extends WorkerRequest ? Omit<K, 'id'> : never;
@@ -96,12 +100,21 @@ export class PyClient {
     });
   }
 
-  run(files: Files, main: string, seed = 1, maxEvents = 5000): Promise<RunResult> {
-    return this.call({ kind: 'run', files, main, seed, maxEvents }) as Promise<RunResult>;
+  /** stage: the course's stage (catalog.lessonStage), so WIDTH / HEIGHT match what is drawn. */
+  run(
+    files: Files,
+    main: string,
+    { stage = DEFAULT_STAGE, seed = 1, maxEvents = 5000 }: RunCall = {},
+  ): Promise<RunResult> {
+    return this.call({ kind: 'run', files, main, seed, maxEvents, stage }) as Promise<RunResult>;
   }
 
-  startGame(files: Files, main: string, seed = Date.now() % 100000): Promise<RunResult> {
-    return this.call({ kind: 'start', files, main, seed }) as Promise<RunResult>;
+  startGame(
+    files: Files,
+    main: string,
+    { stage = DEFAULT_STAGE, seed = Date.now() % 100000 }: GameCall = {},
+  ): Promise<RunResult> {
+    return this.call({ kind: 'start', files, main, seed, stage }) as Promise<RunResult>;
   }
 
   step(input: GameInput): Promise<RunResult> {

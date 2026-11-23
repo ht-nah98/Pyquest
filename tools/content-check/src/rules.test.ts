@@ -173,6 +173,49 @@ describe('checkContent', () => {
     expect((await checkContent(i, py)).join('\n')).toContain('l99');
   });
 
+  test('a library entry with no lesson yet is accepted (ADR 0009)', async () => {
+    const i = input(lesson());
+    i.library = {
+      entries: [
+        {
+          name: 'draw_circle',
+          signature: 'draw_circle(x, y, bán kính, màu)',
+          vi: 'Tô một hình tròn.',
+          why: 'Ghép hình tròn từ ô vuông thì rất lâu.',
+          example: 'draw_circle(300, 300, 100, "gold")',
+        },
+      ],
+    };
+    expect(await checkContent(i, py)).toEqual([]);
+  });
+
+  test("grading runs use the course's stage size (ADR 0009)", async () => {
+    // The solution passes only when its WIDTH is 600, so the run must use the course's stage.
+    const l = lesson();
+    const e = ex(l) as Record<string, unknown>;
+    e['toolbox'] = [
+      'pq_import',
+      'pq_draw_circle',
+      'pq_assign',
+      'pq_var_get',
+      'pq_arith',
+      'pq_number',
+      'pq_text',
+    ];
+    e['goals'] = [
+      { id: 'g-size', label: 'Sân rộng 600', kind: 'varEquals', name: 'w', value: 600 },
+    ];
+    e['starter'] = { 'main.py': 'from pyquest import *\n' };
+    e['solution'] = {
+      'main.py': 'from pyquest import *\n\nw = WIDTH\ndraw_circle(w / 2, 300, 100, "gold")\n',
+    };
+    const i = input(l);
+    const course = i.courses[0]!.course as Record<string, unknown>;
+    expect((await checkContent(i, py)).join('\n')).toContain('g-size');
+    course['stage'] = { width: 600, height: 600 };
+    expect(await checkContent(i, py)).toEqual([]);
+  });
+
   test('a shifts goal catches a bird typed with fixed numbers', async () => {
     const birdAt = (x: string) =>
       `from pyquest import *\n\nx = 100\ndraw_rect(${x}, 300, 30, 20, "red")\n`;
@@ -236,5 +279,48 @@ describe('checkContent', () => {
     const i = input(lesson());
     i.courses[0]!.sampleGame = 'from pyquest import *\ndef update():\n    boom()\n';
     expect((await checkContent(i, py)).join('\n')).toMatch(/sample game/);
+  });
+
+  describe('the drawing studio (rule 12)', () => {
+    const studio = (over: Record<string, unknown> = {}) => ({
+      stage: { width: 600, height: 600 },
+      starter: 'from pyquest import *\n\nclear("white")\ndraw_circle(300, 300, 100, "orange")\n',
+      toolbox: ['pq_import', 'pq_clear', 'pq_draw_circle', 'pq_number', 'pq_text'],
+      challenges: [
+        { id: 'nha', title: 'Ngôi nhà', task: 'Vẽ một ngôi nhà.', hint: 'Mái là tam giác.' },
+      ],
+      ...over,
+    });
+    const check = (s: unknown) => checkContent({ ...input(lesson()), studio: s }, py);
+
+    test('a valid studio has no errors', async () => {
+      expect(await check(studio())).toEqual([]);
+    });
+
+    test('a broken studio file is reported', async () => {
+      expect((await check(studio({ challenges: [{ id: 'x' }] }))).join('\n')).toContain(
+        'studio/studio.json',
+      );
+    });
+
+    test('unknown toolbox blocks and blocks the starter needs are reported', async () => {
+      const errors = (await check(studio({ toolbox: ['pq_import', 'pq_nope'] }))).join('\n');
+      expect(errors).toContain('unknown toolbox block "pq_nope"');
+      expect(errors).toMatch(/toolbox lacks blocks the starter uses: .*pq_draw_circle/);
+    });
+
+    test('a starter the block editor would change is reported', async () => {
+      const errors = await check(
+        studio({ starter: 'from pyquest import *\ndraw_circle(300,300,100,"orange")\n' }),
+      );
+      expect(errors.join('\n')).toContain('does not survive the blocks round trip');
+    });
+
+    test('a starter that fails on the studio stage is reported', async () => {
+      const errors = await check(
+        studio({ starter: 'from pyquest import *\n\ndraw_circle(300, 300, -1, "orange")\n' }),
+      );
+      expect(errors.join('\n')).toContain('starter fails');
+    });
   });
 });

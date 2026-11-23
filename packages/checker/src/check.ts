@@ -1,14 +1,16 @@
 import type { Goal } from '@pyquest/content-schema';
-import type { DrawEvent, GameInput, RunResult } from '@pyquest/runtime';
+import type { DrawEvent, GameInput, RunResult, StageSize } from '@pyquest/runtime';
 
-// Same as STAGE_WIDTH/HEIGHT in @pyquest/runtime; importing a value from there would pull Pyodide in.
-const STAGE_WIDTH = 400;
-const STAGE_HEIGHT = 600;
+// Same as DEFAULT_STAGE in @pyquest/runtime; importing a value from there would pull Pyodide in.
+const DEFAULT_STAGE: StageSize = { width: 400, height: 600 };
 
 export type GoalResult = { id: string; ok: boolean };
 
-/** Extra runs some goals compare against: the program with its variable moved, and the solution. */
-export type CheckExtra = { shifted?: RunResult; expected?: RunResult };
+/**
+ * Extra runs some goals compare against: the program with its variable moved, and the solution.
+ * stage: the course's stage (ADR 0009); 400 × 600 when absent.
+ */
+export type CheckExtra = { shifted?: RunResult; expected?: RunResult; stage?: StageSize };
 
 /**
  * Pure: grades a finished run against a lesson's goals. Never runs Python itself.
@@ -65,7 +67,14 @@ const inGroup = (picture: string, group: string) =>
 
 type Shape = { t: string; x: number; y: number; rest: string };
 
-/** The visible pieces of a run (boxes, pictures, words) with their place, for comparing two drawings. */
+/** Points after the first, as offsets from (x, y): moving the whole shape changes only its place. */
+const offsets = (x: number, y: number, points: readonly (readonly [number, number])[]): string =>
+  points.map(([px, py]) => `${String(px - x)},${String(py - y)}`).join(' ');
+
+/**
+ * The visible pieces of a run (boxes, pictures, words, circles, lines, shapes) for comparing two drawings.
+ * (x, y) is a piece's place: a line's start, a shape's first corner; the rest of it is kept relative to that.
+ */
 function pieces(events: readonly DrawEvent[]): Shape[] {
   const out: Shape[] = [];
   for (const e of events) {
@@ -80,6 +89,19 @@ function pieces(events: readonly DrawEvent[]): Shape[] {
       });
     else if (e.t === 'text')
       out.push({ t: e.t, x: e.x, y: e.y, rest: `${e.text} ${String(e.size)}` });
+    else if (e.t === 'circle')
+      out.push({ t: e.t, x: e.x, y: e.y, rest: `${String(e.r)} ${e.color}` });
+    else if (e.t === 'line')
+      out.push({
+        t: e.t,
+        x: e.x1,
+        y: e.y1,
+        rest: `${offsets(e.x1, e.y1, [[e.x2, e.y2]])} ${String(e.width)} ${e.color}`,
+      });
+    else if (e.t === 'polygon') {
+      const [x, y] = e.points[0] ?? [0, 0];
+      out.push({ t: e.t, x, y, rest: `${offsets(x, y, e.points.slice(1))} ${e.color}` });
+    }
   }
   return out;
 }
@@ -135,7 +157,7 @@ function track(r: RunResult, sprite: string, axis: 'x' | 'y'): (number | undefin
 const defined = (xs: (number | undefined)[]): number[] => xs.filter((v) => v !== undefined);
 
 function meets(goal: Goal, r: RunResult, extra: CheckExtra): boolean {
-  const { shifted, expected } = extra;
+  const { shifted, expected, stage = DEFAULT_STAGE } = extra;
   switch (goal.kind) {
     case 'matches': {
       if (expected === undefined || r.error !== undefined) return false;
@@ -147,7 +169,7 @@ function meets(goal: Goal, r: RunResult, extra: CheckExtra): boolean {
       const at = goal.at;
       return framesOf(r.events).some((f) => {
         const boxes = f.filter(
-          (e) => e.t === 'rect' && !(e.w >= STAGE_WIDTH && e.h >= STAGE_HEIGHT),
+          (e) => e.t === 'rect' && !(e.w >= stage.width && e.h >= stage.height),
         );
         return (
           boxes.length >= goal.min &&

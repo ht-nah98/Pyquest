@@ -9,11 +9,10 @@ import {
 } from '@pyquest/checker';
 import type { Exercise } from '@pyquest/content-schema';
 import type { Call, DrawEvent, RunResult } from '@pyquest/runtime';
-import type * as Blockly from 'blockly/core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
-import { python, usePyStatus } from '../../runtime/client';
+import { python } from '../../runtime/client';
 import { uiSound, unlock } from '../../stage/sound';
 import { Stage, type StageHandle } from '../../stage/Stage';
 import { useGameKeys } from '../../stage/useGameKeys';
@@ -24,17 +23,12 @@ import type { LessonState } from '../../storage/store';
 import { useLessonState } from '../lesson/useLessonState';
 import { ExerciseBar } from './ExerciseBar';
 import { doneSteps, pickExercise, visibleExercises, workOf } from './exercises';
-import { BlockCodeSync, type SyncError } from './blockCodeSync';
-import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
-import { PythonPane, type PythonPaneHandle } from './PythonPane';
 import { CallPanel, familyOf } from './CallPanel';
+import { EditorPanes, type EditorPanesHandle } from './EditorPanes';
 import { ErrorBubble, VarWatch } from './RunPanel';
-import { FileTabs } from './FileTabs';
-import { LibraryPanel } from './LibraryPanel';
+import { RunButton } from './RunButton';
 import { TaskCard } from './TaskCard';
 import { useSession } from '../../app/session';
-
-const PARSE_DELAY_MS = 600;
 
 /**
  * The code screen (layout B, spec §8): blocks | Python side by side (~70%), a narrow stage column with
@@ -95,18 +89,13 @@ function CodeEditor({
     () => visibleExercises(catalog.openLesson(lessonId)?.exercises ?? [code], isCoach),
     [lessonId, code, isCoach],
   );
-  const status = usePyStatus();
-  const blocks = useRef<BlocksPaneHandle>(null);
-  const pyPane = useRef<PythonPaneHandle>(null);
+  const panes = useRef<EditorPanesHandle>(null);
   const stage = useRef<StageHandle>(null);
-  const sync = useRef<BlockCodeSync | null>(null);
-  const parseTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  /** The course's stage: the canvas and WIDTH / HEIGHT in Python share it. */
+  const size = catalog.lessonStage(lessonId);
   const [result, setResult] = useState<RunResult | null>(null);
   const [goals, setGoals] = useState<GoalResult[]>([]);
-  const [syncError, setSyncError] = useState<SyncError | null>(null);
-  const [split, setSplit] = useState(50);
   const [running, setRunning] = useState(false);
-  const [libraryOpen, setLibraryOpen] = useState(false);
   const [runs, setRuns] = useState(0);
   /** Right column: the task card or the 📞 calls panel. */
   const [panel, setPanel] = useState<'task' | 'calls'>('task');
@@ -118,11 +107,10 @@ function CodeEditor({
   const expected = useRef<RunResult | null>(null);
   const { profile } = useSession();
 
+  // Several files (Bài 16): Run always starts from main.
   const main = code.main;
-  // Several files (Bài 16): one is open in both panes at a time; Run always starts from main.
-  const [active, setActive] = useState(main);
-  const activeRef = useRef(main);
-  const files = workOf(state, all, code).files;
+  const work = workOf(state, all, code);
+  const files = work.files;
   const filesRef = useRef(files);
   useEffect(() => {
     filesRef.current = files;
@@ -131,7 +119,7 @@ function CodeEditor({
   const grade = useCallback(
     (r: RunResult, extra: CheckExtra = {}) => {
       if (lesson === undefined) return;
-      const res = checkGoals(code.goals, r, extra);
+      const res = checkGoals(code.goals, r, { ...extra, stage: size });
       setGoals(res);
       if (r.error !== undefined) uiSound('oops');
       else if (res.every((g) => g.ok)) uiSound('ok');
@@ -146,7 +134,7 @@ function CodeEditor({
         });
       }
     },
-    [code, lesson, all, update],
+    [code, lesson, all, update, size],
   );
 
   // Coming back to the lesson opens this exercise again.
@@ -170,7 +158,7 @@ function CodeEditor({
   const loop = useGameLoop(stage, (r) => {
     if (r.error !== undefined) {
       setResult(r);
-      pyPane.current?.highlight(r.error.line, 'error');
+      panes.current?.highlight(r.error.line, 'error');
     }
     if (r.error !== undefined || r.stoppedByLimit) setRunning(false);
   });
@@ -181,93 +169,18 @@ function CodeEditor({
   }, []);
 
   const saveCode = useCallback(
-    (text: string) => {
+    (file: string, text: string) => {
       update((s) => {
         const w = workOf(s, all, code);
         return {
           exercises: {
             ...s.exercises,
-            [code.id]: { ...w, files: { ...w.files, [activeRef.current]: text } },
+            [code.id]: { ...w, files: { ...w.files, [file]: text } },
           },
         };
       });
     },
     [all, code, update],
-  );
-
-  /** Rebuild the blocks from this code; a stopped worker just leaves the blocks stale until the next try. */
-  function reparse(text: string) {
-    void sync.current
-      ?.fromCode(text)
-      .then((ok) => {
-        if (ok && sync.current !== null) saveWorkspace(sync.current.saveState());
-        if (ok) blocks.current?.refreshCalls();
-      })
-      .catch(() => undefined);
-  }
-
-  const onReady = useCallback(
-    (ws: Blockly.WorkspaceSvg) => {
-      const s = new BlockCodeSync(ws, (src) => python.parse(src), {
-        onCode: (text) => {
-          pyPane.current?.setText(text);
-          saveCode(text);
-        },
-        onError: (e) => {
-          setSyncError(e);
-          pyPane.current?.highlight(e?.line ?? null, 'error');
-        },
-      });
-      sync.current = s;
-      // Saved blocks are only a first paint: the code is the truth, so always re-parse it (review C1).
-      const saved = workOf(state, all, code).workspace;
-      if (saved !== undefined) s.loadState(saved);
-      blocks.current?.refreshCalls();
-      reparse(filesRef.current[activeRef.current] ?? '');
-    },
-    // Runs once, when Blockly is injected.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
-  /** Switch both panes to another file of the project. */
-  const openFile = useCallback((f: string) => {
-    if (f === activeRef.current) return;
-    activeRef.current = f;
-    setActive(f);
-    sync.current?.markCodeDirty();
-    reparse(filesRef.current[f] ?? '');
-    // reparse only touches refs and the stable update().
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const onBlocksEdit = useCallback(() => {
-    const s = sync.current;
-    if (s === null || s.applying) return;
-    // Blocks behind newer typed code must never overwrite it (review C1).
-    if (s.fromBlocks() === null) return;
-    saveWorkspace(s.saveState());
-  }, [saveWorkspace]);
-
-  const onCodeChange = useCallback(
-    (text: string) => {
-      sync.current?.markCodeDirty();
-      saveCode(text);
-      clearTimeout(parseTimer.current);
-      parseTimer.current = setTimeout(() => {
-        reparse(text);
-      }, PARSE_DELAY_MS);
-    },
-    // reparse is stable (refs only).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [saveCode],
-  );
-
-  useEffect(
-    () => () => {
-      clearTimeout(parseTimer.current);
-    },
-    [],
   );
 
   const stop = () => {
@@ -280,7 +193,7 @@ function CodeEditor({
       void python
         .warmUp()
         .then(() => {
-          reparse(filesRef.current[activeRef.current] ?? '');
+          panes.current?.reparse();
         })
         .catch(() => undefined);
     }
@@ -297,12 +210,13 @@ function CodeEditor({
     // The live game numbers each frame's calls from 0; the test run numbered them on from callFrom.
     const live = code.mode === 'game' ? new Set([...ids].map((i) => i - callFrom)) : ids;
     stage.current?.highlight(live);
-    pyPane.current?.highlight(call.line, 'select');
+    panes.current?.highlight(call.line, 'select');
   };
 
   /** The solution's run, once: the picture a 'matches' exercise compares with and 👀 shows. */
   const solutionRun = async (): Promise<RunResult> => {
-    if (expected.current === null) expected.current = await python.run(code.solution, main);
+    if (expected.current === null)
+      expected.current = await python.run(code.solution, main, { stage: size });
     return expected.current;
   };
 
@@ -325,7 +239,7 @@ function CodeEditor({
         // Grade with the scripted test run first (same as content:check), then let the child play.
         const test = await runGameTest(
           {
-            start: () => python.startGame(filesRef.current, main, 1),
+            start: () => python.startGame(filesRef.current, main, { stage: size, seed: 1 }),
             step: (input) => python.step(input),
           },
           code.test ?? { frames: 90, taps: [] },
@@ -333,18 +247,18 @@ function CodeEditor({
         grade(test);
         setResult(test);
         setCallFrom(test.lastFrameFrom);
-        pyPane.current?.highlight(test.error?.line ?? null, 'error');
+        panes.current?.highlight(test.error?.line ?? null, 'error');
         if (test.error !== undefined) {
           setRunning(false);
           return;
         }
-        await loop.start(filesRef.current, main);
+        await loop.start(filesRef.current, main, size);
         return;
       }
-      const r = await python.run(filesRef.current, main);
+      const r = await python.run(filesRef.current, main, { stage: size });
       setResult(r);
       setCallFrom(0);
-      pyPane.current?.highlight(r.error?.line ?? null, 'error');
+      panes.current?.highlight(r.error?.line ?? null, 'error');
       // A 'shifts' goal runs the program once more with its variable moved (fixed numbers stay put).
       const shift = needsShiftedRun(code.goals);
       const moved =
@@ -354,7 +268,7 @@ function CodeEditor({
       const shifted =
         moved === undefined
           ? undefined
-          : await python.run({ ...filesRef.current, [main]: moved }, main);
+          : await python.run({ ...filesRef.current, [main]: moved }, main, { stage: size });
       const solution = needsExpected(code.goals) ? await solutionRun() : undefined;
       await stage.current?.replay(r.events);
       grade(r, {
@@ -384,107 +298,23 @@ function CodeEditor({
         <ExerciseBar lessonId={lessonId} all={all} current={code} done={done} isCoach={isCoach} />
       )}
       <div className="flex min-h-0 flex-1 gap-2 p-2">
-        {/* Below 1280 px (iPad landscape) blocks sit above the code, so the stage keeps a tall column. */}
-        <div className="flex min-h-0 min-w-0 flex-1 gap-0 max-[1279px]:flex-col">
-          <section
-            className="flex min-h-0 min-w-0 flex-col rounded-[10px] border-2 border-ink bg-white"
-            style={{ flexBasis: `${String(split)}%` }}
-          >
-            <h2 className="border-b-2 border-ink px-3 py-1 text-base" data-testid="blocks-title">
-              🧩 Khối
-              {typing && (
-                <span className="ml-2 text-sm font-normal text-ink-soft" data-testid="typing-note">
-                  ✍️ Thử gõ code nhé, kéo khối cũng được
-                </span>
-              )}
-            </h2>
-            <div className="relative min-h-0 flex-1">
-              {syncError !== null && (
-                <div
-                  className="absolute inset-0 z-[85] flex items-center justify-center bg-white/70 p-4 text-center"
-                  data-testid="blocks-locked"
-                >
-                  <p className="rounded-[10px] border-2 border-ink bg-paper px-4 py-3 shadow-hard">
-                    ✋ Sửa lỗi ở khung Python trước, khối sẽ hiện lại.
-                  </p>
-                </div>
-              )}
-              <BlocksPane
-                ref={blocks}
-                toolbox={code.toolbox}
-                onEdit={onBlocksEdit}
-                onReady={onReady}
-                onDispose={(ws) => {
-                  if (sync.current?.usesWorkspace(ws) === true) {
-                    sync.current.dispose();
-                    sync.current = null;
-                  }
-                }}
-                onSelectLine={(line) => pyPane.current?.highlight(line, 'select')}
-              />
-            </div>
-          </section>
-          <div
-            role="separator"
-            aria-orientation="vertical"
-            className="w-2 shrink-0 cursor-col-resize touch-none max-[1279px]:h-2 max-[1279px]:w-auto max-[1279px]:cursor-row-resize"
-            onPointerDown={(e) => {
-              (e.target as Element).setPointerCapture(e.pointerId);
-            }}
-            onPointerMove={(e) => {
-              if (e.buttons !== 1) return;
-              const parent = e.currentTarget.parentElement as HTMLElement;
-              const row = parent.getBoundingClientRect();
-              const stacked = getComputedStyle(parent).flexDirection === 'column';
-              const at = stacked
-                ? (e.clientY - row.top) / row.height
-                : (e.clientX - row.left) / row.width;
-              setSplit(Math.min(75, Math.max(25, at * 100)));
-            }}
-          />
-          <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[10px] border-2 border-ink bg-code-bg">
-            <h2 className="flex items-center gap-1 border-b-2 border-ink bg-paper px-2 py-1 text-base">
-              <span className="px-1">🐍</span>
-              <FileTabs files={Object.keys(files)} main={main} active={active} onOpen={openFile} />
-              <span className="flex-1" />
-              <button
-                type="button"
-                className="min-h-9 rounded-full border-2 border-ink bg-white px-3 py-0.5 text-sm font-bold"
-                onClick={() => {
-                  setLibraryOpen((o) => !o);
-                }}
-                data-testid="library-toggle"
-              >
-                📘 Thư viện
-              </button>
-            </h2>
-            <div className="relative min-h-0 flex-1">
-              <PythonPane
-                key={active}
-                ref={pyPane}
-                initial={files[active] ?? ''}
-                onChange={onCodeChange}
-                onCursorLine={(line) => blocks.current?.highlightLine(line)}
-              />
-              {libraryOpen && (
-                <LibraryPanel
-                  uptoOrder={profile?.role === 'coach' ? undefined : lesson.order}
-                  onClose={() => {
-                    setLibraryOpen(false);
-                  }}
-                />
-              )}
-              {syncError !== null && (
-                <p
-                  className="absolute inset-x-2 bottom-2 z-[85] rounded-[8px] border-2 border-oops bg-oops-soft px-3 py-1 text-ink"
-                  data-testid="sync-error"
-                >
-                  ⚠️ {syncError.messageVi}
-                </p>
-              )}
-            </div>
-          </section>
-        </div>
+        <EditorPanes
+          ref={panes}
+          toolbox={code.toolbox}
+          files={files}
+          main={main}
+          workspace={work.workspace}
+          onCode={saveCode}
+          onWorkspace={saveWorkspace}
+          library={{ uptoOrder: profile?.role === 'coach' ? undefined : lesson.order, stage: size }}
+          note={
+            typing && (
+              <span className="ml-2 text-sm font-normal text-ink-soft" data-testid="typing-note">
+                ✍️ Thử gõ code nhé, kéo khối cũng được
+              </span>
+            )
+          }
+        />
 
         <aside className="flex min-h-0 w-[28%] min-w-[340px] shrink-0 flex-col gap-2 max-[1279px]:w-[300px] max-[1279px]:min-w-0">
           {showCalls && (
@@ -533,32 +363,7 @@ function CodeEditor({
             />
           )}
           <div className="flex gap-2">
-            {running ? (
-              <Button tone="oops" onClick={stop} data-testid="stop" className="flex-1 text-xl">
-                ■ Dừng
-              </Button>
-            ) : status === 'failed' ? (
-              <Button
-                tone="sun"
-                className="flex-1"
-                onClick={() => {
-                  void python.warmUp().catch(() => undefined);
-                }}
-                data-testid="python-retry"
-              >
-                ⚠️ Chưa tải được Python. Thử lại
-              </Button>
-            ) : (
-              <Button
-                tone="go"
-                className="flex-1 text-xl"
-                onClick={() => void run()}
-                disabled={status === 'loading' || status === 'idle'}
-                data-testid="run"
-              >
-                {status === 'loading' || status === 'idle' ? 'Đang chuẩn bị Python…' : '▶ Chạy'}
-              </Button>
-            )}
+            <RunButton running={running} onRun={() => void run()} onStop={stop} />
             <Button
               title="Chơi toàn màn hình"
               onClick={() => {
@@ -590,7 +395,7 @@ function CodeEditor({
               loop.press('space', false);
             }}
           >
-            <Stage ref={stage} className="h-full" />
+            <Stage ref={stage} className="h-full" size={size} coords />
           </div>
           <div className="flex min-w-0 flex-col gap-2">
             <ErrorBubble result={result} />

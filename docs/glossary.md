@@ -14,6 +14,7 @@
 | Lộ trình | `roadmap` | các phần của game, sáng dần theo bài đã xong |
 | Mục tiêu | `Goal` | điều kiện chấm tự động của phần code |
 | Sân chơi | `Stage` | canvas vẽ kết quả chạy |
+| Cỡ sân | `StageSize`, `course.stage` | rộng × cao của sân, đặt theo khóa; mặc định 400 × 600 (ADR 0009) |
 | Chạy kịch bản | `mode: 'script'` | code chạy một lần, lệnh vẽ được ghi rồi phát lại |
 | Chạy game | `mode: 'game'` | nền tảng gọi `update()` rồi `draw()` mỗi khung hình |
 | Nhật ký lệnh vẽ | `DrawEvent[]` | thứ thay cho log |
@@ -30,3 +31,6 @@
 | Bài tập | `Exercise` / `lesson.exercises` | một nhiệm vụ code trong bài; bài sau mở khi bài trước đạt |
 | Kéo khối / gõ code | `input: 'blocks' \| 'typing'` | `typing` = gợi ý "✍️ Thử gõ code nhé", khối vẫn kéo được (ADR 0008) |
 | Hình mẫu | goal `matches`, nút 👀 | hình của lời giải, hiện mờ trên sân để so |
+| Xưởng vẽ | `/studio`, `content/studio/studio.json` | chỗ bé vẽ tự do bằng code / khối, lưu nhiều tranh, tải PNG; không chấm |
+| Tranh | dòng tiến độ `studio:<id>`, `state.studio` | một bức vẽ trong Xưởng vẽ: tên, code, khối |
+| Thử thách | `studio.challenges` | 💡 ý tưởng để vẽ trong Xưởng vẽ (đề + gợi ý), không có mục tiêu chấm |

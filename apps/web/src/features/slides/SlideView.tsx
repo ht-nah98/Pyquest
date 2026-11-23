@@ -71,7 +71,9 @@ export function SlideView({
         {image !== undefined && (
           <img src={image} alt="" className="mx-auto max-h-full max-w-full object-contain" />
         )}
-        {slide.widget?.kind === 'sampleGame' && <SampleGame source={ctx.course.sampleGame ?? ''} />}
+        {slide.widget?.kind === 'sampleGame' && (
+          <SampleGame source={ctx.course.sampleGame ?? ''} stage={catalog.stageOf(ctx.course.id)} />
+        )}
         {slide.widget?.kind === 'grid' && <Grid />}
         {slide.widget?.kind === 'gravity' && <Gravity />}
         {slide.widget?.kind === 'flipbook' && <Flipbook />}

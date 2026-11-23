@@ -10,8 +10,11 @@ export const LibraryEntrySchema = z.object({
   /** One sentence for the odd parts of its real code shown by "Xem bên trong", e.g. what _emit does. */
   inside: z.string().min(1).max(200).optional(),
   example: z.string().min(1).max(200),
-  /** The lesson that first teaches it; the panel lists only what the child has met so far. */
-  lesson: z.string().min(1),
+  /**
+   * The lesson that first teaches it; the panel lists only what the child has met so far. Absent for a
+   * command no lesson teaches yet (draw_circle… for the drawing studio, ADR 0009): no lesson lists it.
+   */
+  lesson: z.string().min(1).optional(),
 });
 
 export const LibraryRefSchema = z.object({ entries: z.array(LibraryEntrySchema).min(1) });

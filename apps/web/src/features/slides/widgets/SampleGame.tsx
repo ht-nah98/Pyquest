@@ -1,3 +1,4 @@
+import { DEFAULT_STAGE, type StageSize } from '@pyquest/runtime';
 import { useEffect, useRef } from 'react';
 import { usePyStatus } from '../../../runtime/client';
 import { Stage, type StageHandle } from '../../../stage/Stage';
@@ -9,7 +10,14 @@ import { Button } from '../../../ui/Button';
  * The finished sample game, filling the slide's visual box. It starts by itself on its "ready" screen
  * (the game waits for the first flap), so the slide never shows an empty stage.
  */
-export function SampleGame({ source }: { source: string }) {
+export function SampleGame({
+  source,
+  stage: size = DEFAULT_STAGE,
+}: {
+  source: string;
+  /** The course's stage (catalog.stageOf); Bay Qua Khe's 400 × 600 when absent. */
+  stage?: StageSize;
+}) {
   const stage = useRef<StageHandle>(null);
   const box = useRef<HTMLDivElement>(null);
   const status = usePyStatus();
@@ -17,7 +25,7 @@ export function SampleGame({ source }: { source: string }) {
   useGameKeys(true, loop.press);
 
   const start = () => {
-    void loop.start({ 'main.py': source }, 'main.py').catch(() => undefined);
+    void loop.start({ 'main.py': source }, 'main.py', size).catch(() => undefined);
   };
 
   useEffect(() => {
@@ -37,7 +45,7 @@ export function SampleGame({ source }: { source: string }) {
           loop.press('space', false);
         }}
       >
-        <Stage ref={stage} className="h-full" testId="sample-stage" />
+        <Stage ref={stage} className="h-full" testId="sample-stage" size={size} />
         {status === 'loading' && (
           <p className="absolute inset-0 grid place-items-center text-xl text-ink-soft">
             Đang chuẩn bị Python…

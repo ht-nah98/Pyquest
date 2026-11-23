@@ -2,7 +2,9 @@ import {
   AssetManifestSchema,
   CourseSchema,
   LibraryRefSchema,
+  StudioSchema,
   type LibraryEntry,
+  type Studio,
   isOpenLesson,
   parseLesson,
   type Asset,
@@ -10,6 +12,7 @@ import {
   type Lesson,
   type OpenLesson,
 } from '@pyquest/content-schema';
+import { DEFAULT_STAGE, type StageSize } from '@pyquest/runtime';
 
 // Vite fixes this list at start-up: a new file in content/ needs `npm run dev` restarted (AGENTS.md §9.3).
 const courseFiles = import.meta.glob<unknown>('@content/courses/*/course.json', {
@@ -30,6 +33,10 @@ const manifestFile = import.meta.glob<unknown>('@content/assets/library/manifest
   import: 'default',
 });
 const libraryFile = import.meta.glob<unknown>('@content/reference/pyquest.json', {
+  eager: true,
+  import: 'default',
+});
+const studioFile = import.meta.glob<unknown>('@content/studio/studio.json', {
   eager: true,
   import: 'default',
 });
@@ -69,8 +76,11 @@ function build() {
       entries: [{ name: '-', signature: '-', vi: '-', example: '-', lesson: 'l00' }],
     },
   );
+  const studioJson = Object.values(studioFile)[0];
+  const studio = studioJson === undefined ? undefined : StudioSchema.parse(studioJson);
   return {
     courses,
+    studio,
     assets: new Map(manifest.assets.map((a) => [a.id, a])),
     urls,
     library: library.entries,
@@ -97,6 +107,18 @@ export const catalog = {
   courseOf(lessonId: string): CatalogCourse | undefined {
     return [...data.courses.values()].find((c) => c.lessons.some((l) => l.id === lessonId));
   },
+  /** The stage of a course (400 × 600 when the course sets none). */
+  stageOf(courseId: string): StageSize {
+    return data.courses.get(courseId)?.stage ?? DEFAULT_STAGE;
+  },
+  /** The stage of the course a lesson belongs to. */
+  lessonStage(lessonId: string): StageSize {
+    return this.courseOf(lessonId)?.stage ?? DEFAULT_STAGE;
+  },
+  /** The 🎨 Xưởng vẽ (content/studio/studio.json), if there is one. */
+  studio(): Studio | undefined {
+    return data.studio;
+  },
   asset(id: string): Asset | undefined {
     return data.assets.get(id);
   },
@@ -112,7 +134,10 @@ export const catalog = {
     if (uptoOrder === undefined) return data.library;
     const orderOf = new Map<string, number>();
     for (const c of data.courses.values()) for (const l of c.lessons) orderOf.set(l.id, l.order);
-    return data.library.filter((e) => (orderOf.get(e.lesson) ?? Infinity) <= uptoOrder);
+    // A command no lesson teaches yet (no `lesson`) is never listed by lesson order.
+    return data.library.filter(
+      (e) => e.lesson !== undefined && (orderOf.get(e.lesson) ?? Infinity) <= uptoOrder,
+    );
   },
   /** A slide image by file name. */
   imageUrl(file: string): string | undefined {

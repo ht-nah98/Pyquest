@@ -65,6 +65,8 @@ trong kho hình. 7. Game mẫu chạy 300 khung (có bấm) không lỗi. 8. Kh�
 9. Code khởi đầu và lời giải đi qua **khối rồi về lại code** không đổi một ký tự (nếu không, trình soạn sẽ viết lại code
 của bài ngay khi bé chạm vào khối). Bài `game` được chấm bằng lần chạy thử theo `test`, giống hệt trên trang.
 11. `toolbox` của mỗi bài tập có mọi khối mà code khởi đầu và lời giải dùng (không tính code chữ và khối gọi lệnh tự đặt).
+12. `content/studio/studio.json` (🎨 Xưởng vẽ) hợp lệ; khối trong `toolbox` có thật và đủ khối `starter` dùng; `starter` đi
+qua khối rồi về lại code không đổi và chạy không lỗi trên sân của Xưởng vẽ.
 Thêm tệp mới trong `content/` thì khởi động lại `npm run dev` (AGENTS.md §9.3).
 
 ## Bài tập (ADR 0005)

@@ -1,4 +1,4 @@
-import type { Files, RunResult } from '@pyquest/runtime';
+import type { Files, RunResult, StageSize } from '@pyquest/runtime';
 import { useCallback, useEffect, useRef } from 'react';
 import { python } from '../runtime/client';
 import type { StageHandle } from './Stage';
@@ -31,10 +31,10 @@ export function useGameLoop(
   }, []);
 
   const start = useCallback(
-    async (files: Files, main: string) => {
+    async (files: Files, main: string, size: StageSize) => {
       stop();
       const mine = token.current;
-      const first = await python.startGame(files, main);
+      const first = await python.startGame(files, main, { stage: size });
       // Stopped, unmounted (stop runs on unmount) or restarted while Python was loading: do nothing.
       if (mine !== token.current) return;
       onResultRef.current(first);

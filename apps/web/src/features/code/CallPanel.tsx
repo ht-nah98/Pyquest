@@ -9,6 +9,12 @@ export function eventAsCall(e: DrawEvent): string | null {
   switch (e.t) {
     case 'rect':
       return `draw_rect(${n(e.x)}, ${n(e.y)}, ${n(e.w)}, ${n(e.h)}, "${e.color}")`;
+    case 'circle':
+      return `draw_circle(${n(e.x)}, ${n(e.y)}, ${n(e.r)}, "${e.color}")`;
+    case 'line':
+      return `draw_line(${n(e.x1)}, ${n(e.y1)}, ${n(e.x2)}, ${n(e.y2)}, "${e.color}", ${n(e.width)})`;
+    case 'polygon':
+      return `draw_polygon([${e.points.map(([x, y]) => `(${n(x)}, ${n(y)})`).join(', ')}], "${e.color}")`;
     case 'sprite':
       return `draw_image("images/${e.sprite}.png", ${n(e.x)}, ${n(e.y)}${e.flip === true ? ', flip=True' : ''})`;
     case 'text':

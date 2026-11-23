@@ -1,5 +1,5 @@
 import type { Goal } from '@pyquest/content-schema';
-import type { RunResult } from '@pyquest/runtime';
+import type { DrawEvent, RunResult } from '@pyquest/runtime';
 import { describe, expect, test } from 'vitest';
 import { checkGoals, needsExpected, runGameTest, shiftSource } from './index';
 
@@ -529,5 +529,78 @@ describe('runGameTest keeps the sounds of loading the module', () => {
     );
     expect(r.events).toEqual([{ t: 'music', name: 'happy' }, { t: 'frame' }]);
     expect(one({ id: 'g', label: 'l', kind: 'played', music: '*' }, r)).toBe(true);
+  });
+});
+
+describe('circles, lines and shapes (ADR 0009)', () => {
+  const g: Goal = { id: 'g', label: 'l', kind: 'matches' };
+  const sky = { t: 'clear', color: 'white' } as const;
+  const sun = (x: number, r = 50, color = 'gold') =>
+    ({ t: 'circle', x, y: 100, r, color }) as const;
+  const ray = (x2: number, width = 3, color = 'black') =>
+    ({ t: 'line', x1: 0, y1: 0, x2, y2: 10, color, width }) as const;
+  const roof = (top: number, color = 'purple', dx = 0): DrawEvent => ({
+    t: 'polygon',
+    points: [
+      [dx + 100, 400],
+      [dx + 200, top],
+      [dx + 300, 400],
+    ],
+    color,
+  });
+  const want = result([sky, sun(300), ray(50), roof(250)]);
+  const same = (events: RunResult['events']) =>
+    checkGoals([g], result(events), { expected: want })[0]?.ok;
+
+  test('the same circles, lines and shapes in any order match', () => {
+    expect(same([sky, roof(250), ray(50), sun(300)])).toBe(true);
+  });
+
+  test('a different circle, line or shape does not match', () => {
+    expect(same([sky, sun(301), ray(50), roof(250)])).toBe(false);
+    expect(same([sky, sun(300, 60), ray(50), roof(250)])).toBe(false);
+    expect(same([sky, sun(300, 50, 'red'), ray(50), roof(250)])).toBe(false);
+    expect(same([sky, sun(300), ray(60), roof(250)])).toBe(false);
+    expect(same([sky, sun(300), ray(50, 8), roof(250)])).toBe(false);
+    expect(same([sky, sun(300), ray(50, 3, 'red'), roof(250)])).toBe(false);
+    expect(same([sky, sun(300), ray(50), roof(200)])).toBe(false);
+    expect(same([sky, sun(300), ray(50), roof(250, 'teal')])).toBe(false);
+    expect(same([sky, sun(300), ray(50)])).toBe(false);
+  });
+
+  test('shifts: a whole triangle and line moved by the variable count as moved', () => {
+    const s: Goal = { id: 's', label: 'l', kind: 'shifts', var: 'x', by: 50, axis: 'x' };
+    const line = (dx: number) =>
+      ({ t: 'line', x1: dx, y1: 0, x2: dx + 20, y2: 10, color: 'red', width: 3 }) as const;
+    const before = result([roof(250, 'purple', 0), line(0), sun(300)]);
+    const moved = result([roof(250, 'purple', 50), line(50), sun(350)]);
+    expect(checkGoals([s], before, { shifted: moved })[0]?.ok).toBe(true);
+    // One corner typed as a fixed number: the shape changed instead of moving.
+    const stuck: DrawEvent = {
+      t: 'polygon',
+      points: [
+        [150, 400],
+        [250, 250],
+        [300, 400],
+      ],
+      color: 'purple',
+    };
+    expect(checkGoals([s], before, { shifted: result([stuck, line(50), sun(350)]) })[0]?.ok).toBe(
+      false,
+    );
+  });
+
+  test("drewRects: a background box the size of the course's stage does not count", () => {
+    const d: Goal = { id: 'd', label: 'l', kind: 'drewRects', min: 1 };
+    const square = { t: 'rect', x: 0, y: 0, w: 600, h: 600, color: 'white' } as const;
+    const box = { t: 'rect', x: 0, y: 0, w: 400, h: 600, color: 'red' } as const;
+    // On the 600 × 600 stage, a 400 × 600 box is a real piece; on the 400 × 600 stage it is the sky.
+    expect(
+      checkGoals([d], result([square, box]), { stage: { width: 600, height: 600 } })[0]?.ok,
+    ).toBe(true);
+    expect(checkGoals([d], result([square]), { stage: { width: 600, height: 600 } })[0]?.ok).toBe(
+      false,
+    );
+    expect(checkGoals([d], result([box]))[0]?.ok).toBe(false);
   });
 });

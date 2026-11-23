@@ -15,6 +15,20 @@ export type DrawEvent =
     } & By)
   | ({ t: 'rect'; x: number; y: number; w: number; h: number; color: string } & By)
   | ({ t: 'text'; text: string; x: number; y: number; size: number; color: string } & By)
+  /** draw_circle(x, y, r, color): a filled circle, (x, y) is its centre. */
+  | ({ t: 'circle'; x: number; y: number; r: number; color: string } & By)
+  /** draw_line(x1, y1, x2, y2, color, width): a straight line with round ends. */
+  | ({
+      t: 'line';
+      x1: number;
+      y1: number;
+      x2: number;
+      y2: number;
+      color: string;
+      width: number;
+    } & By)
+  /** draw_triangle / draw_polygon: a filled shape through these corners, in order. */
+  | ({ t: 'polygon'; points: [number, number][]; color: string } & By)
   | ({ t: 'say'; text: string } & By)
   /** play_sound: a short 8-bit sound, once. */
   | ({ t: 'sound'; name: string } & By)
@@ -49,12 +63,21 @@ export type RunResult = {
 /** The child's project: path → text, e.g. { "main.py": "draw_bird(1, 2)" }. */
 export type Files = Record<string, string>;
 
-export type RunOptions = { seed: number; maxEvents: number; maxLines?: number };
+/** The stage in stage units (pixels of the picture), origin top-left, y down. Set per course. */
+export type StageSize = { width: number; height: number };
+
+/** Bay Qua Khe's stage, and every course that does not say otherwise. */
+export const DEFAULT_STAGE: StageSize = { width: 400, height: 600 };
+
+/** stage: what WIDTH / HEIGHT are in the child's Python; DEFAULT_STAGE when absent. */
+export type RunOptions = { seed: number; maxEvents: number; maxLines?: number; stage?: StageSize };
 
 export type GameInput = { keys: string[]; tapped: boolean };
 
-export const STAGE_WIDTH = 400;
-export const STAGE_HEIGHT = 600;
+/** @deprecated Use the course's StageSize (DEFAULT_STAGE when a course sets none). */
+export const STAGE_WIDTH = DEFAULT_STAGE.width;
+/** @deprecated Use the course's StageSize (DEFAULT_STAGE when a course sets none). */
+export const STAGE_HEIGHT = DEFAULT_STAGE.height;
 
 /** A block as Python's ast saw it; packages/blocks turns it into Blockly JSON. */
 export type BlockNode = {

@@ -128,6 +128,38 @@
       "why": "Lúc thua mà nhạc vui vẫn chạy thì lạ. Tắt nhạc là một cách báo cho người chơi biết.",
       "example": "if game_over:\n    stop_music()",
       "lesson": "l22"
+    },
+    {
+      "name": "draw_circle",
+      "signature": "draw_circle(x, y, bán_kính, màu=\"orange\")",
+      "vi": "Tô một hình tròn, (x, y) là tâm, bán kính là khoảng cách từ tâm ra mép. Bán kính không được âm.",
+      "why": "Ghép hình tròn từ ô vuông thì mép răng cưa và rất lâu. Lệnh này để máy tính tính giúp mọi điểm trên đường tròn.",
+      "inside": "_num kiểm tra em đưa vào số thật. _emit gửi tâm, bán kính và màu cho trang web, trang web tô hình tròn.",
+      "example": "draw_circle(300, 150, 80, \"gold\")"
+    },
+    {
+      "name": "draw_line",
+      "signature": "draw_line(x1, y1, x2, y2, màu=\"black\", dày=3)",
+      "vi": "Kẻ một đường thẳng từ điểm (x1, y1) tới điểm (x2, y2). Số cuối là độ dày, thường là 3.",
+      "why": "Đường xiên đi qua rất nhiều điểm lẻ. Tự tô từng điểm thì khó và lâu, nên có lệnh nối hai điểm một lần.",
+      "inside": "_num kiểm tra bốn tọa độ và độ dày là số. _emit gửi hai đầu đường thẳng cho trang web.",
+      "example": "draw_line(0, 500, 600, 500, \"brown\", 6)"
+    },
+    {
+      "name": "draw_triangle",
+      "signature": "draw_triangle(x1, y1, x2, y2, x3, y3, màu=\"purple\")",
+      "vi": "Tô một tam giác qua ba góc (x1, y1), (x2, y2), (x3, y3). Hợp để vẽ mái nhà, ngọn núi, cây thông.",
+      "why": "Tam giác có cạnh xiên, ghép bằng hình chữ nhật thì không khít. Lệnh này tô kín phần bên trong ba góc.",
+      "inside": "draw_triangle chỉ gom ba góc thành một danh sách rồi nhờ draw_polygon vẽ.",
+      "example": "draw_triangle(150, 300, 300, 150, 450, 300, \"red\")"
+    },
+    {
+      "name": "draw_polygon",
+      "signature": "draw_polygon(các_góc, màu=\"purple\")",
+      "vi": "Tô một hình nhiều góc. các_góc là danh sách cặp số (x, y), nối theo thứ tự, ít nhất 3 góc.",
+      "why": "Ngôi sao, viên kim cương, lá cờ có nhiều góc khác nhau. Một lệnh nhận cả danh sách góc thì vẽ được mọi hình như vậy.",
+      "inside": "_corner kiểm tra mỗi góc là một cặp số. _emit gửi cả danh sách góc cho trang web, trang web nối và tô kín.",
+      "example": "draw_polygon([(300, 100), (380, 300), (220, 300)], \"teal\")"
     }
   ]
 }

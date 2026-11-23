@@ -53,4 +53,21 @@ test('drawings read back as Python', () => {
   expect(eventAsCall({ t: 'sprite', sprite: 'pipe', x: 1, y: 2, frame: 0, flip: true })).toBe(
     'draw_image("images/pipe.png", 1, 2, flip=True)',
   );
+  expect(eventAsCall({ t: 'circle', x: 300, y: 300, r: 50, color: 'gold' })).toBe(
+    'draw_circle(300, 300, 50, "gold")',
+  );
+  expect(eventAsCall({ t: 'line', x1: 0, y1: 0, x2: 10, y2: 20, color: 'black', width: 3 })).toBe(
+    'draw_line(0, 0, 10, 20, "black", 3)',
+  );
+  expect(
+    eventAsCall({
+      t: 'polygon',
+      points: [
+        [0, 0],
+        [10, 0],
+        [5, 8],
+      ],
+      color: 'purple',
+    }),
+  ).toBe('draw_polygon([(0, 0), (10, 0), (5, 8)], "purple")');
 });

@@ -88,4 +88,26 @@ describe('SyncStore', () => {
     const { store } = setup();
     await expect(store.saveLessonState('u2', 'l01', emptyLessonState())).rejects.toThrow();
   });
+
+  test('a drawing deleted on one device disappears on the other after sync (studio: rows)', async () => {
+    const cloud = fakeCloud();
+    const a = new SyncStore(new DexieStore(`pq-sync-${String(++n)}`), cloud, me, { delayMs: 0 });
+    const b = new SyncStore(new DexieStore(`pq-sync-${String(++n)}`), cloud, me, { delayMs: 0 });
+    const drawing = {
+      ...emptyLessonState(),
+      files: { 'main.py': 'from pyquest import *\n' },
+      studio: { title: 'Mây', createdAt: 1 },
+    };
+    await a.saveLessonState('u1', 'studio:abc', drawing);
+    await a.flush();
+    await b.start();
+    expect((await b.getLessonState('u1', 'studio:abc'))?.studio?.title).toBe('Mây');
+    await a.saveLessonState('u1', 'studio:abc', {
+      ...emptyLessonState(),
+      studio: { title: 'Mây', createdAt: 1, deleted: true },
+    });
+    await a.flush();
+    await b.start();
+    expect((await b.getLessonState('u1', 'studio:abc'))?.studio?.deleted).toBe(true);
+  });
 });

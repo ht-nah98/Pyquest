@@ -1,12 +1,21 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useSession } from '../../app/session';
 import { catalog } from '../../content/catalog';
 import { TopBar } from '../../ui/TopBar';
 import { Panel } from '../../ui/Panel';
+import { drawingsOf } from '../studio/drawings';
 
 /** Every course on the platform. A new course is a new folder in content/courses/ (spec §2). */
 export function CourseList() {
-  const { profile, isCloud } = useSession();
+  const { profile, isCloud, store } = useSession();
+  const [drawings, setDrawings] = useState<number | null>(null);
+  useEffect(() => {
+    if (profile !== null)
+      void store.allLessonStates(profile.id).then((m) => {
+        setDrawings(drawingsOf(m).length);
+      });
+  }, [store, profile]);
   return (
     <>
       <TopBar title="Các khóa học" />
@@ -28,6 +37,19 @@ export function CourseList() {
             </Panel>
           </Link>
         ))}
+        {catalog.studio() !== undefined && (
+          <Link to="/studio" data-testid="to-studio">
+            <Panel className="h-full bg-sun/25 p-5 hover:bg-sun/50">
+              <h2 className="text-3xl text-brand-deep">🎨 Xưởng vẽ</h2>
+              <p className="mt-2 text-ink-soft">
+                Vẽ tự do bằng code: hình tròn, đường thẳng, tam giác… Lưu nhiều tranh, tải về máy.
+              </p>
+              <p className="mt-3 font-pixel text-2xl" data-testid="studio-count">
+                {drawings === null ? '' : `${String(drawings)} tranh`}
+              </p>
+            </Panel>
+          </Link>
+        )}
       </main>
     </>
   );

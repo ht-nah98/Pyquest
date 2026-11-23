@@ -14,6 +14,7 @@ const ALLOWED = [
   /^courses\/[a-z0-9-]+\/sample-game\/[a-z0-9_]+\.py$/,
   /^assets\/library\/manifest\.json$/,
   /^reference\/pyquest\.json$/,
+  /^studio\/studio\.json$/,
   /^assets\/library\/[a-z0-9-]+\.png$/,
 ];
 
@@ -47,6 +48,9 @@ const input: ContentInput = {
   strayFiles: files.filter((f) => !ALLOWED.some((re) => re.test(f))),
   library: existsSync(join(CONTENT, 'reference/pyquest.json'))
     ? readJson(join(CONTENT, 'reference/pyquest.json'))
+    : undefined,
+  studio: existsSync(join(CONTENT, 'studio/studio.json'))
+    ? readJson(join(CONTENT, 'studio/studio.json'))
     : undefined,
 };
 

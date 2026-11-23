@@ -3,15 +3,17 @@ import { translateError } from './errors';
 import { HOST_SOURCE } from './pyquest/host.py.ts';
 import { PYQUEST_SOURCE } from './pyquest/pyquest.py.ts';
 import { TOBLOCKS_SOURCE } from './pyquest/toblocks.py.ts';
-import type {
-  BlockNode,
-  BlockTree,
-  Call,
-  DrawEvent,
-  Files,
-  GameInput,
-  RunOptions,
-  RunResult,
+import {
+  DEFAULT_STAGE,
+  type BlockNode,
+  type BlockTree,
+  type Call,
+  type DrawEvent,
+  type Files,
+  type GameInput,
+  type RunOptions,
+  type RunResult,
+  type StageSize,
 } from './types';
 
 const DEFAULT_MAX_LINES = 1_000_000;
@@ -85,6 +87,7 @@ export class PyRunner {
       opts.seed,
       opts.maxEvents,
       opts.maxLines ?? DEFAULT_MAX_LINES,
+      ...stageArgs(opts.stage),
     );
     return Promise.resolve(toResult(raw));
   }
@@ -93,13 +96,14 @@ export class PyRunner {
   startGame(
     files: Files,
     main: string,
-    opts: { seed: number; maxLines?: number },
+    opts: { seed: number; maxLines?: number; stage?: StageSize },
   ): Promise<RunResult> {
     const raw = this.startGameFn(
       JSON.stringify(files),
       main,
       opts.seed,
       opts.maxLines ?? DEFAULT_MAX_LINES,
+      ...stageArgs(opts.stage),
     );
     return Promise.resolve(toResult(raw));
   }
@@ -117,6 +121,11 @@ export class PyRunner {
   step(input: GameInput): RunResult {
     return toResult(this.stepFn(JSON.stringify(input.keys), input.tapped));
   }
+}
+
+/** WIDTH and HEIGHT for this run's Python (ADR 0009). */
+function stageArgs(stage: StageSize = DEFAULT_STAGE): [number, number] {
+  return [stage.width, stage.height];
 }
 
 function toResult(json: string): RunResult {

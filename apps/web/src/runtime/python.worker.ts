@@ -36,9 +36,13 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
     const py = await ready;
     const result =
       req.kind === 'run'
-        ? await py.runScript(req.files, req.main, { seed: req.seed, maxEvents: req.maxEvents })
+        ? await py.runScript(req.files, req.main, {
+            seed: req.seed,
+            maxEvents: req.maxEvents,
+            stage: req.stage,
+          })
         : req.kind === 'start'
-          ? await py.startGame(req.files, req.main, { seed: req.seed })
+          ? await py.startGame(req.files, req.main, { seed: req.seed, stage: req.stage })
           : req.kind === 'step'
             ? py.step(req.input)
             : py.parseBlocks(req.source);
