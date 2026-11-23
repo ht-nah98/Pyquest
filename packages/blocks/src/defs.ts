@@ -164,6 +164,29 @@ const JSON_DEFS = [
     tooltip: 'draw_text(chữ, x, y): viết chữ, (x, y) là tâm của chữ.',
   },
   {
+    type: 'pq_draw_text_size',
+    message0: 'viết chữ %1 tại x %2 y %3 cỡ %4',
+    args0: [
+      { type: 'input_value', name: 'TEXT' },
+      { type: 'input_value', name: 'X' },
+      { type: 'input_value', name: 'Y' },
+      { type: 'input_value', name: 'SIZE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DRAW,
+    tooltip: 'draw_text(chữ, x, y, cỡ): viết chữ to nhỏ tùy ý; cỡ thường là 24.',
+  },
+  {
+    type: 'pq_str',
+    message0: 'chữ của %1',
+    args0: [{ type: 'input_value', name: 'A' }],
+    output: 'String',
+    colour: VALUE,
+    tooltip: 'str(số): biến một số thành chữ, ví dụ str(12) là "12".',
+  },
+  {
     type: 'pq_aug',
     message0: '%1 %2 %3',
     args0: [
@@ -380,6 +403,20 @@ const JSON_DEFS = [
     tooltip: 'xs[i]: giá trị ở ngăn số i. Ngăn đầu là số 0.',
   },
   {
+    type: 'pq_index_set',
+    message0: 'đặt %1 ngăn số %2 = %3',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'xs' },
+      { type: 'input_value', name: 'INDEX' },
+      { type: 'input_value', name: 'VALUE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: LIST,
+    tooltip: 'xs[i] = giá trị: cất giá trị mới vào ngăn số i của danh sách.',
+  },
+  {
     type: 'pq_key_pressed',
     message0: 'đang bấm Space / chạm?',
     output: 'Boolean',
@@ -459,7 +496,8 @@ const JSON_DEFS = [
     // Python allows lines after return (they never run); without this the blocks cannot hold them.
     nextStatement: null,
     colour: FUNCTION,
-    tooltip: 'return: lệnh tự đặt gửi một kết quả về chỗ đã gọi nó.',
+    tooltip:
+      'return: lệnh tự đặt gửi một kết quả về chỗ đã gọi nó. Để trống ô thì lệnh dừng luôn ở đây.',
   },
   {
     type: 'pq_raw_expr',

@@ -157,7 +157,21 @@
         "main.py": "from pyquest import *\n\nhs = [100, 250, 180, 300]\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_list",
+        "pq_for_each",
+        "pq_draw_rect",
+        "pq_var_get",
+        "pq_assign",
+        "pq_append",
+        "pq_for",
+        "pq_len",
+        "pq_arith",
+        "pq_index"
+      ],
       "mode": "script",
       "goals": [
         {

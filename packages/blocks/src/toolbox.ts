@@ -13,6 +13,9 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
   pq_arith: { A: num(1), B: num(1) },
   pq_draw_image: { PATH: text('images/bird.png'), X: num(100), Y: num(300) },
   pq_draw_text: { TEXT: text('0'), X: num(200), Y: num(60) },
+  pq_draw_text_size: { TEXT: text('0'), X: num(200), Y: num(60), SIZE: num(48) },
+  pq_str: { A: num(0) },
+  pq_index_set: { INDEX: num(0), VALUE: num(0) },
   pq_aug: { VALUE: num(1) },
   pq_for: { COUNT: num(3) },
   pq_for_range: { FROM: num(0), TO: num(5) },
@@ -52,11 +55,22 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
   {
     name: 'Vẽ',
     colour: '210',
-    types: ['pq_clear', 'pq_draw_rect', 'pq_draw_image', 'pq_draw_text', 'pq_print'],
+    types: [
+      'pq_clear',
+      'pq_draw_rect',
+      'pq_draw_image',
+      'pq_draw_text',
+      'pq_draw_text_size',
+      'pq_print',
+    ],
   },
   { name: 'Biến', colour: '330', types: ['pq_assign', 'pq_aug', 'pq_var_get', 'pq_global'] },
   { name: 'Lặp', colour: '30', types: ['pq_for', 'pq_for_range', 'pq_for_each', 'pq_while'] },
-  { name: 'Danh sách', colour: '200', types: ['pq_list', 'pq_append', 'pq_len', 'pq_index'] },
+  {
+    name: 'Danh sách',
+    colour: '200',
+    types: ['pq_list', 'pq_append', 'pq_len', 'pq_index', 'pq_index_set'],
+  },
   {
     name: 'Điều kiện',
     colour: '260',
@@ -73,7 +87,11 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
   },
   { name: 'Lệnh tự đặt', colour: '290', types: ['pq_def', 'pq_return'] },
   { name: 'Âm thanh', colour: '345', types: ['pq_play_sound', 'pq_play_music', 'pq_stop_music'] },
-  { name: 'Số và chữ', colour: '160', types: ['pq_number', 'pq_text', 'pq_arith', 'pq_random'] },
+  {
+    name: 'Số và chữ',
+    colour: '160',
+    types: ['pq_number', 'pq_text', 'pq_str', 'pq_arith', 'pq_random'],
+  },
 ];
 
 function entry(type: string): ToolboxEntry {
@@ -87,10 +105,14 @@ function entry(type: string): ToolboxEntry {
   return out;
 }
 
-/** True when a def's body has a return somewhere inside. */
+/** True when a def's body has a return with a value somewhere inside (a bare return gives nothing). */
 function gives(def: BlockNode): boolean {
   const walk = (nodes: readonly BlockNode[]): boolean =>
-    nodes.some((n) => n.type === 'pq_return' || Object.values(n.statements ?? {}).some(walk));
+    nodes.some(
+      (n) =>
+        (n.type === 'pq_return' && n.inputs?.['VALUE'] !== undefined) ||
+        Object.values(n.statements ?? {}).some(walk),
+    );
   return walk(def.statements?.['BODY'] ?? []);
 }
 

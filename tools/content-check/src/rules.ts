@@ -17,7 +17,7 @@ import {
   type Lesson,
   type OpenLesson,
 } from '@pyquest/content-schema';
-import type { PyRunner, RunResult } from '@pyquest/runtime';
+import type { BlockNode, PyRunner, RunResult } from '@pyquest/runtime';
 
 export type ContentInput = {
   courses: {
@@ -149,6 +149,21 @@ async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Pro
   for (const ex of lesson.exercises ?? []) await checkExercise(ex, `${where}/${ex.id}`, ctx);
 }
 
+/** Code text, blank lines and call blocks are never in a toolbox list: they come from the code itself. */
+const NOT_IN_TOOLBOX = new Set(['pq_raw', 'pq_raw_expr', 'pq_call', 'pq_call_expr']);
+
+/** The toolbox block types a block tree uses, nested blocks too. */
+export function blockTypes(nodes: readonly BlockNode[]): Set<string> {
+  const out = new Set<string>();
+  const walk = (n: BlockNode) => {
+    if (!NOT_IN_TOOLBOX.has(n.type)) out.add(n.type);
+    for (const c of Object.values(n.inputs ?? {})) walk(c);
+    for (const list of Object.values(n.statements ?? {})) list.forEach(walk);
+  };
+  nodes.forEach(walk);
+  return out;
+}
+
 /** Every exercise is checked like a whole lesson used to be (spec foundations-first §4). */
 async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<void> {
   const known: readonly string[] = BLOCK_TYPES;
@@ -166,6 +181,7 @@ async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<v
   // Rule 9: what the lesson ships must survive code → blocks → code unchanged, or the editor would
   // rewrite it the moment the child touches a block.
   registerBlocks();
+  const needed = new Set<string>();
   for (const [kind, files] of [
     ['starter', code.starter],
     ['solution', code.solution],
@@ -176,6 +192,13 @@ async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<v
     if (back === null || back.trimEnd() !== source.trimEnd()) {
       ctx.err(where, `${kind} code does not survive the blocks round trip`);
     }
+    if (tree.ok) for (const t of blockTypes(tree.statements)) needed.add(t);
+  }
+  // Rule 11: every exercise can be built by dragging blocks (HLV 23/11, ADR 0008), so the toolbox
+  // holds every block the starter and the solution use.
+  const missing = [...needed].filter((t) => !code.toolbox.includes(t));
+  if (missing.length > 0) {
+    ctx.err(where, `toolbox lacks blocks the code uses: ${missing.join(', ')}`);
   }
 
   const solution = await gradeFiles(ctx.py, code, code.solution);

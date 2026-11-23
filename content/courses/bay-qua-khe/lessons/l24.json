@@ -103,7 +103,12 @@
         "pq_key_pressed",
         "pq_for",
         "pq_draw_text",
-        "pq_random"
+        "pq_random",
+        "pq_bool",
+        "pq_return",
+        "pq_not",
+        "pq_draw_text_size",
+        "pq_str"
       ],
       "mode": "game",
       "goals": [

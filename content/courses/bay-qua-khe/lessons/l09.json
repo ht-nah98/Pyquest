@@ -111,7 +111,19 @@
         "main.py": "from pyquest import *\n\nfor j in range(8):\n    for i in range(8):\n        draw_rect(i * 40 + 40, j * 40 + 140, 40, 40, \"white\")\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -146,7 +158,22 @@
         "main.py": "from pyquest import *\n\nis_night = False\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_if_else",
+        "pq_compare",
+        "pq_logic",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get",
+        "pq_bool",
+        "pq_not",
+        "pq_clear"
+      ],
       "mode": "script",
       "goals": [
         {

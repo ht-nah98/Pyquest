@@ -193,7 +193,16 @@
         "main.py": "from pyquest import *\n\ndef draw_bird(x, y):\n    draw_rect(x, y + 10, 30, 20, \"red\")\n    draw_rect(x + 30, y + 14, 8, 8, \"orange\")\n    draw_rect(x + 8, y, 14, 10, \"red\")\n\n\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get",
+        "pq_def"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -236,7 +245,17 @@
         "main.py": "from pyquest import *\n\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get",
+        "pq_def",
+        "pq_for_range"
+      ],
       "mode": "script",
       "goals": [
         {

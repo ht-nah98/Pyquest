@@ -33,17 +33,12 @@ export const BlocksPane = forwardRef<
   BlocksPaneHandle,
   {
     toolbox: string[];
-    /** Typing exercise: the blocks mirror the code but cannot be dragged, and there is no toolbox. */
-    readOnly?: boolean;
     onEdit: () => void;
     onSelectLine: (line: number | null) => void;
     onReady: (ws: Blockly.WorkspaceSvg) => void;
     onDispose: (ws: Blockly.WorkspaceSvg) => void;
   }
->(function BlocksPane(
-  { toolbox, readOnly = false, onEdit, onSelectLine, onReady, onDispose },
-  ref,
-) {
+>(function BlocksPane({ toolbox, onEdit, onSelectLine, onReady, onDispose }, ref) {
   const host = useRef<HTMLDivElement>(null);
   const ws = useRef<Blockly.WorkspaceSvg | null>(null);
   const refresh = useRef<() => void>(() => undefined);
@@ -60,7 +55,7 @@ export const BlocksPane = forwardRef<
       localeSet = true;
     }
     const w = Blockly.inject(host.current, {
-      ...(readOnly ? { readOnly: true } : { toolbox: toolboxFor(toolbox) }),
+      toolbox: toolboxFor(toolbox),
       media: `${import.meta.env.BASE_URL}blockly-media/`,
       renderer: 'zelos',
       trashcan: true,
@@ -72,7 +67,6 @@ export const BlocksPane = forwardRef<
     // Every def in the code gets a call block in the toolbox ("Lệnh tự đặt"), like Scratch's My Blocks.
     let defsKey = '[]';
     const refreshCalls = () => {
-      if (readOnly) return;
       const calls = callBlocksFor(defsOn(w));
       const key = JSON.stringify(calls);
       if (key === defsKey) return;

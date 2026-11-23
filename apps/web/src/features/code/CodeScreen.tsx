@@ -394,7 +394,7 @@ function CodeEditor({
               🧩 Khối
               {typing && (
                 <span className="ml-2 text-sm font-normal text-ink-soft" data-testid="typing-note">
-                  ✍️ Bài này em gõ code, khối chỉ để xem
+                  ✍️ Thử gõ code nhé, kéo khối cũng được
                 </span>
               )}
             </h2>
@@ -412,7 +412,6 @@ function CodeEditor({
               <BlocksPane
                 ref={blocks}
                 toolbox={code.toolbox}
-                readOnly={typing}
                 onEdit={onBlocksEdit}
                 onReady={onReady}
                 onDispose={(ws) => {

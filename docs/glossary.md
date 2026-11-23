@@ -28,5 +28,5 @@
 | Lời gọi | `Call` / `RunResult.calls` | một lần hàm của bé chạy, kèm số nó nhận; hiện ở 📞 Cuộc gọi |
 | Khối gọi | `pq_call` | khối gọi một `def` của bé, toolbox tự thêm |
 | Bài tập | `Exercise` / `lesson.exercises` | một nhiệm vụ code trong bài; bài sau mở khi bài trước đạt |
-| Kéo khối / gõ code | `input: 'blocks' \| 'typing'` | bài tập gõ code: khối chỉ để xem |
+| Kéo khối / gõ code | `input: 'blocks' \| 'typing'` | `typing` = gợi ý "✍️ Thử gõ code nhé", khối vẫn kéo được (ADR 0008) |
 | Hình mẫu | goal `matches`, nút 👀 | hình của lời giải, hiện mờ trên sân để so |

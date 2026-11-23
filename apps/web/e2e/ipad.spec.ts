@@ -32,3 +32,23 @@ test('iPad landscape: slides and the code screen work by touch without page scro
   const lib = await page.getByTestId('library-toggle').boundingBox();
   expect(lib?.height ?? 0).toBeGreaterThanOrEqual(36);
 });
+
+test('iPad landscape: a game exercise (Bài 21) has its toolbox and real blocks for return and text size', async ({
+  page,
+}) => {
+  await asCoach(page);
+  await page.goto('/l/l21/code');
+  await pythonReady(page);
+  await expect(page.getByTestId('typing-note')).toBeVisible();
+  await expect(page.locator('.blocklyToolboxCategory', { hasText: 'Vẽ' })).toBeVisible();
+  const canvasText = (t: string) =>
+    page.locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: t }).first();
+  await expect(canvasText('cỡ')).toBeAttached();
+  await expect(canvasText('trả về')).toBeAttached();
+  await page.getByTestId('run').tap();
+  await page.waitForTimeout(1500);
+  await expectNoPageScroll(page);
+  await page.screenshot({
+    path: `${process.env['PQ_SHOTS'] ?? 'test-results/shots'}/blocks-l21-ipad.png`,
+  });
+});

@@ -64,10 +64,12 @@ trong kho hình. 7. Game mẫu chạy 300 khung (có bấm) không lỗi. 8. Kh�
 10. `content/reference/pyquest.json` (📘 Thư viện) hợp lệ và mỗi lệnh trỏ tới một bài có thật.
 9. Code khởi đầu và lời giải đi qua **khối rồi về lại code** không đổi một ký tự (nếu không, trình soạn sẽ viết lại code
 của bài ngay khi bé chạm vào khối). Bài `game` được chấm bằng lần chạy thử theo `test`, giống hệt trên trang.
+11. `toolbox` của mỗi bài tập có mọi khối mà code khởi đầu và lời giải dùng (không tính code chữ và khối gọi lệnh tự đặt).
 Thêm tệp mới trong `content/` thì khởi động lại `npm run dev` (AGENTS.md §9.3).
 
 ## Bài tập (ADR 0005)
 
 Bước Code của bài có `exercises`: 3–5 bài tập khó dần ở phần nền tảng, 1–3 ở phần game. 1–2 bài tập đầu `input: "blocks"`,
 sau đó `"typing"`. Mỗi bài tập có `id` dạng `lNN-eK`, `title` ≤ 60, `task` ≤ 280 (đề nói đủ số để vẽ được), code bắt đầu
-riêng, và thường có goal `matches`. Bài tập gõ code không cần `toolbox` (để `[]`).
+riêng, và thường có goal `matches`. Bài tập nào cũng kéo khối được (ADR 0008): `"typing"` chỉ hiện gợi ý "✍️ Thử gõ code
+nhé", nên `toolbox` phải có **mọi khối** mà code khởi đầu và lời giải dùng (luật 11).

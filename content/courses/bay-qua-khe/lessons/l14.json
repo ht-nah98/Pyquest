@@ -104,7 +104,8 @@
         "pq_var_get",
         "pq_number",
         "pq_clear",
-        "pq_text"
+        "pq_text",
+        "pq_draw_image"
       ],
       "mode": "game",
       "goals": [

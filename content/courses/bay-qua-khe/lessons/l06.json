@@ -105,7 +105,15 @@
         "main.py": "from pyquest import *\n\ndraw_rect(100, 150, 200, 400, \"gray\")\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -140,7 +148,15 @@
         "main.py": "from pyquest import *\n\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
+      ],
       "mode": "script",
       "goals": [
         {

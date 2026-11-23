@@ -178,7 +178,17 @@
         "main.py": "from pyquest import *\n\ndef draw_bird(x, y):\n    draw_image(\"images/bird.png\", x, y)\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_def",
+        "pq_draw_image",
+        "pq_draw_rect",
+        "pq_var_get",
+        "pq_number",
+        "pq_text",
+        "pq_arith",
+        "pq_for"
+      ],
       "mode": "script",
       "goals": [
         {

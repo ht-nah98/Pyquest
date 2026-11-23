@@ -71,6 +71,8 @@ function installGenerators(): void {
     return `draw_image(${args.join(', ')})\n`;
   };
   g['pq_draw_text'] = call('draw_text', ['TEXT', 'X', 'Y']);
+  g['pq_draw_text_size'] = call('draw_text', ['TEXT', 'X', 'Y', 'SIZE']);
+  g['pq_str'] = (block) => [`str(${value(block, 'A')})`, Order.FUNCTION_CALL];
   g['pq_play_sound'] = (block) => `play_sound("${String(block.getFieldValue('SOUND'))}")\n`;
   g['pq_play_music'] = (block) => `play_music("${String(block.getFieldValue('MUSIC'))}")\n`;
   g['pq_stop_music'] = () => 'stop_music()\n';
@@ -86,7 +88,10 @@ function installGenerators(): void {
     `if ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}else:\n${body(block, 'ELSE')}`;
   g['pq_def'] = (block) =>
     `def ${String(block.getFieldValue('NAME'))}(${String(block.getFieldValue('PARAMS')).trim()}):\n${body(block, 'BODY')}`;
-  g['pq_return'] = (block) => `return ${value(block, 'VALUE') || 'None'}\n`;
+  g['pq_return'] = (block) => {
+    const v = value(block, 'VALUE');
+    return v === '' ? 'return\n' : `return ${v}\n`;
+  };
   g['pq_call'] = (block) => {
     const { name, params } = callOf(block);
     return `${name}(${params.map((_, i) => value(block, `ARG${String(i)}`) || '0').join(', ')})\n`;
@@ -123,6 +128,8 @@ function installGenerators(): void {
     `${String(block.getFieldValue('NAME'))}[${value(block, 'INDEX') || '0'}]`,
     Order.MEMBER,
   ];
+  g['pq_index_set'] = (block) =>
+    `${String(block.getFieldValue('NAME'))}[${value(block, 'INDEX') || '0'}] = ${value(block, 'VALUE') || 'None'}\n`;
   g['pq_while'] = (block) => `while ${value(block, 'COND') || 'False'}:\n${body(block, 'DO')}`;
   g['pq_not'] = (block) => [
     `not ${pythonGenerator.valueToCode(block, 'A', Order.LOGICAL_NOT) || 'False'}`,

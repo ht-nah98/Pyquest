@@ -155,7 +155,18 @@
         "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 300, 40, 40, \"red\")\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_if_else",
+        "pq_compare",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get",
+        "pq_assign"
+      ],
       "mode": "script",
       "goals": [
         {

@@ -13,7 +13,7 @@ for i in range(8):
         draw_rect(i * 50, 300, 40, 40, "blue")
 `;
 
-test('a lesson has several exercises: the next opens when one is done; typing ones lock the blocks', async ({
+test('a lesson has several exercises: the next opens when one is done; typing ones only hint', async ({
   page,
 }) => {
   await newStudent(page);
@@ -49,9 +49,9 @@ test('a lesson has several exercises: the next opens when one is done; typing on
   await expect(page).toHaveURL(/ex=l07-e3/);
   await pythonReady(page);
 
-  // Typing exercise: a note, no toolbox, blocks still mirror the code.
-  await expect(page.getByTestId('typing-note')).toBeVisible();
-  await expect(page.locator('.blocklyToolboxCategory')).toHaveCount(0);
+  // Typing exercise: a "try typing" hint, but the toolbox is there and blocks mirror the code (ADR 0008).
+  await expect(page.getByTestId('typing-note')).toHaveText(/Thử gõ code nhé, kéo khối cũng được/);
+  await expect(page.locator('.blocklyToolboxCategory', { hasText: 'Điều kiện' })).toBeVisible();
   await expect(
     page
       .locator('.blocklyWorkspace > .blocklyBlockCanvas .blocklyText', { hasText: 'lặp' })

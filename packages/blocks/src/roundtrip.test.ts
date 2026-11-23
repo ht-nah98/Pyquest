@@ -181,6 +181,55 @@ describe('Python → blocks → Python', () => {
     });
   });
 
+  test.each([
+    'gravity = 0.5',
+    'speed = -2.25',
+    'pipe[0] = pipe[0] - 2',
+    'pipe[1] = random_int(80, 300)',
+    'def update():\n    if dead:\n        return\n    y += 1',
+    'draw_text(str(score), 200, 60, 56)',
+    'draw_text("Thua rồi!", 200, 250, 48)',
+    'ok = a and b and c and d',
+    'ok = a or b or c',
+    'return px >= x and px <= x + w and py >= y and py <= y + h',
+  ])('game-part code %j is real blocks (no code text) and survives the round trip', (source) => {
+    const tree = py.parseBlocks(source);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    expect(JSON.stringify(tree.statements)).not.toContain('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test.each(['x = 1.0', 'x = 0.50', 'x = 1e-7', 'x = 0.0000001', 'x = (a and b) and c'])(
+    '%j stays code text, so it comes back exactly as typed',
+    (source) => {
+      const tree = py.parseBlocks(source);
+      expect(tree.ok && JSON.stringify(tree.statements)).toContain('pq_raw');
+      expect(roundTrip(source).trimEnd()).toBe(source);
+    },
+  );
+
+  test('new game-part blocks have the right types', () => {
+    const first = (src: string) => {
+      const tree = py.parseBlocks(src);
+      if (!tree.ok) throw new Error(tree.messageVi);
+      return tree.statements[0];
+    };
+    expect(first('xs[i] = 5')).toMatchObject({ type: 'pq_index_set', fields: { NAME: 'xs' } });
+    expect(first('draw_text("a", 1, 2, 30)')?.type).toBe('pq_draw_text_size');
+    expect(first('t = str(n)')?.inputs?.['VALUE']?.type).toBe('pq_str');
+    expect(first('g = 0.5')?.inputs?.['VALUE']).toEqual({
+      type: 'pq_number',
+      fields: { NUM: 0.5 },
+    });
+    expect(first('return')).toEqual({ type: 'pq_return' });
+  });
+
+  test('a def with only a bare return gives no value block', () => {
+    const tree = py.parseBlocks('def update():\n    return');
+    if (!tree.ok) throw new Error('parse');
+    expect(callBlocksFor(tree.statements).map((b) => b.type)).toEqual(['pq_call']);
+  });
+
   test('a def that returns a value also gives a value block in the toolbox', () => {
     const tree = py.parseBlocks('def inside(px, x):\n    return px > x');
     if (!tree.ok) throw new Error('parse');

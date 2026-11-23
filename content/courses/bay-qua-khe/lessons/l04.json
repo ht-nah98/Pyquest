@@ -211,7 +211,16 @@
         "main.py": "from pyquest import *\n\ndef draw_square(x, y):\n    draw_rect(x, y, 40, 40, \"gold\")\n\n\ndraw_square(60, 300)\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_def",
+        "pq_draw_rect",
+        "pq_var_get",
+        "pq_arith",
+        "pq_assign"
+      ],
       "mode": "script",
       "goals": [
         {

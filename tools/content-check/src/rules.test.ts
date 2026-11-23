@@ -31,7 +31,7 @@ function lesson(overrides: Record<string, unknown> = {}): Record<string, unknown
         input: 'blocks',
         starter: { 'main.py': '' },
         main: 'main.py',
-        toolbox: ['pq_draw_image', 'pq_number'],
+        toolbox: ['pq_import', 'pq_draw_image', 'pq_number', 'pq_text'],
         mode: 'script',
         goals: [{ id: 'g-bird', label: 'Chim', kind: 'drew', sprite: 'bird', at: [100, 300] }],
         solution: { 'main.py': 'from pyquest import *\ndraw_image("images/bird.png", 100, 300)\n' },
@@ -104,6 +104,21 @@ describe('checkContent', () => {
     expect((await checkContent(input(l), py)).join('\n')).toMatch(/starter/);
   });
 
+  test('a toolbox that lacks a block the code uses is reported (rule 11), calls and code text are not', async () => {
+    const l = lesson();
+    const e = ex(l) as Record<string, unknown>;
+    e['toolbox'] = ['pq_import', 'pq_number', 'pq_text'];
+    expect((await checkContent(input(l), py)).join('\n')).toContain(
+      'l00-e1: toolbox lacks blocks the code uses: pq_draw_image',
+    );
+    e['toolbox'] = ['pq_import', 'pq_draw_image', 'pq_number', 'pq_text', 'pq_def', 'pq_var_get'];
+    e['solution'] = {
+      'main.py':
+        'from pyquest import *\nimport math\n\n\ndef bird(x):\n    draw_image("images/bird.png", x, 300)\n\n\nbird(100)\n',
+    };
+    expect(await checkContent(input(l), py)).toEqual([]);
+  });
+
   test('an unknown toolbox block is reported', async () => {
     const l = lesson();
     (ex(l) as { toolbox: string[] }).toolbox = ['pq_nope'];
@@ -163,7 +178,14 @@ describe('checkContent', () => {
       `from pyquest import *\n\nx = 100\ndraw_rect(${x}, 300, 30, 20, "red")\n`;
     const l = lesson();
     const code = ex(l) as Record<string, unknown>;
-    code['toolbox'] = ['pq_draw_rect', 'pq_assign', 'pq_var_get', 'pq_number', 'pq_text'];
+    code['toolbox'] = [
+      'pq_import',
+      'pq_draw_rect',
+      'pq_assign',
+      'pq_var_get',
+      'pq_number',
+      'pq_text',
+    ];
     code['goals'] = [
       { id: 'g-follow', label: 'Theo x', kind: 'shifts', var: 'x', by: 50, axis: 'x' },
     ];
@@ -187,7 +209,7 @@ describe('checkContent', () => {
   test('a matches goal compares with the solution picture', async () => {
     const l = lesson();
     const e = ex(l) as Record<string, unknown>;
-    e['toolbox'] = ['pq_draw_rect', 'pq_number', 'pq_text'];
+    e['toolbox'] = ['pq_import', 'pq_draw_rect', 'pq_number', 'pq_text'];
     e['goals'] = [{ id: 'g-same', label: 'Giống hình', kind: 'matches' }];
     e['solution'] = { 'main.py': 'from pyquest import *\ndraw_rect(0, 0, 10, 10, "red")\n' };
     e['starter'] = { 'main.py': 'from pyquest import *\ndraw_rect(0, 0, 10, 10, "blue")\n' };

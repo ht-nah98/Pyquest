@@ -35,6 +35,8 @@ def _raw_expr(src, node, nested=False):
 
 
 _INT = re.compile(r"-?[0-9]+")
+# Decimals the number block writes back exactly as typed: 0.5, -2.25 (not 1.0, 0.50, 1e-7).
+_DECIMAL = re.compile(r"-?(0|[1-9][0-9]{0,8})\.[0-9]{0,5}[1-9]")
 
 
 def _plain_string(src, node):
@@ -53,6 +55,8 @@ def _expr(src, node, nested=False):
     # Number blocks only for plain whole numbers; 1.0, 0x10, 1e3 stay as typed (review I1).
     if _INT.fullmatch(seg) and len(seg.lstrip("-")) <= 15:
         return {"type": "pq_number", "fields": {"NUM": int(seg)}}
+    if _DECIMAL.fullmatch(seg):
+        return {"type": "pq_number", "fields": {"NUM": float(seg)}}
     if isinstance(node, ast.Constant) and isinstance(node.value, str) and _plain_string(src, node):
         return {"type": "pq_text", "fields": {"TEXT": node.value}}
     if isinstance(node, ast.Name):
@@ -60,10 +64,13 @@ def _expr(src, node, nested=False):
     if isinstance(node, ast.Compare) and len(node.ops) == 1 and type(node.ops[0]) in _CMP:
         return {"type": "pq_compare", "fields": {"OP": _CMP[type(node.ops[0])]},
                 "inputs": {"A": _expr(src, node.left, True), "B": _expr(src, node.comparators[0], True)}}
-    if (isinstance(node, ast.BoolOp) and len(node.values) == 2
-            and not any(isinstance(v, ast.BoolOp) for v in node.values)):
-        return {"type": "pq_logic", "fields": {"OP": "and" if isinstance(node.op, ast.And) else "or"},
-                "inputs": {"A": _expr(src, node.values[0], "logic"), "B": _expr(src, node.values[1], "logic")}}
+    if isinstance(node, ast.BoolOp) and not any(isinstance(v, ast.BoolOp) for v in node.values):
+        # a and b and c → (a and b) and c: the generator writes a same-op left side without brackets.
+        op = "and" if isinstance(node.op, ast.And) else "or"
+        block = _expr(src, node.values[0], "logic")
+        for v in node.values[1:]:
+            block = {"type": "pq_logic", "fields": {"OP": op}, "inputs": {"A": block, "B": _expr(src, v, "logic")}}
+        return block
     if isinstance(node, ast.List):
         return {"type": "pq_list", "extraState": {"items": len(node.elts)},
                 "inputs": {"ITEM" + str(i): _expr(src, e) for i, e in enumerate(node.elts)}}
@@ -75,6 +82,8 @@ def _expr(src, node, nested=False):
             return {"type": "pq_len", "inputs": {"A": _expr(src, node.args[0])}}
         if node.func.id == "key_pressed" and not node.args:
             return {"type": "pq_key_pressed"}
+        if node.func.id == "str" and len(node.args) == 1:
+            return {"type": "pq_str", "inputs": {"A": _expr(src, node.args[0])}}
         if node.func.id == "random_int" and len(node.args) == 2:
             return {"type": "pq_random", "inputs": {"A": _expr(src, node.args[0]), "B": _expr(src, node.args[1])}}
         params = _DEFS.get(node.func.id)
@@ -218,6 +227,9 @@ def _stmt(ctx, node):
             if spec[0] == "pq_draw_image":
                 block["fields"] = {"FLIP": "TRUE" if flip else "FALSE"}
             return block
+        if call.func.id == "draw_text" and not call.keywords and len(call.args) == 4:
+            return {"type": "pq_draw_text_size",
+                    "inputs": {n: _expr(src, a) for n, a in zip(["TEXT", "X", "Y", "SIZE"], call.args)}}
         # Sounds: a block only for a name on the list; a typo stays raw so Python can say which name was meant.
         named = (len(call.args) == 1 and not call.keywords and isinstance(call.args[0], ast.Constant)
                  and isinstance(call.args[0].value, str))
@@ -231,11 +243,20 @@ def _stmt(ctx, node):
         if params is not None and not call.keywords and len(call.args) == len(params):
             return {"type": "pq_call", "extraState": {"name": call.func.id, "params": params},
                     "inputs": {"ARG" + str(i): _expr(src, a) for i, a in enumerate(call.args)}}
-    if isinstance(node, ast.Return) and node.value is not None:
+    if isinstance(node, ast.Return):
+        # A bare return (stop here) is the same block with its slot left empty.
+        if node.value is None:
+            return {"type": "pq_return"}
         return {"type": "pq_return", "inputs": {"VALUE": _expr(src, node.value)}}
     if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
         return {"type": "pq_assign", "fields": {"NAME": node.targets[0].id},
                 "inputs": {"VALUE": _expr(src, node.value)}}
+    if isinstance(node, ast.Assign) and len(node.targets) == 1:
+        t = node.targets[0]
+        if (isinstance(t, ast.Subscript) and isinstance(t.value, ast.Name)
+                and not isinstance(t.slice, (ast.Slice, ast.Tuple))):
+            return {"type": "pq_index_set", "fields": {"NAME": t.value.id},
+                    "inputs": {"INDEX": _expr(src, t.slice), "VALUE": _expr(src, node.value)}}
     if isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and type(node.op) in _AUG:
         return {"type": "pq_aug", "fields": {"NAME": node.target.id, "OP": _AUG[type(node.op)]},
                 "inputs": {"VALUE": _expr(src, node.value)}}

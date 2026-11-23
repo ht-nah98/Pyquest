@@ -12,7 +12,7 @@ có một bài tập điền 1–3 dòng; `else`, `elif`, `while` không bài n�
   trường của `code` cũ. Màn code có thanh "Bài tập"; bài sau mở khi bài trước đạt (HLV mở bài nào cũng được); code lưu
   riêng từng bài tập (`LessonState.exercises`), dữ liệu cũ (`files`) tính là của bài tập đầu.
 - `typing`: khối hiện theo code nhưng Blockly `readOnly`, không có khay. Quy ước: 1–2 bài tập đầu `blocks`, sau đó `typing`;
-  phần game toàn `typing`.
+  phần game toàn `typing`. **Thay bởi ADR 0008 (23/11):** `typing` giờ chỉ là gợi ý, bài tập nào cũng kéo khối được.
 - Goal `matches`: hình cuối của bé giống hình của lời giải (cùng mảnh, chỗ, màu, nền; thứ tự vẽ tự do). Trang và
   `content:check` chạy lời giải để lấy hình mẫu; nút 👀 hiện mờ hình mẫu trên sân.
 - Khối mới: `%`, `while`, `not`, `True/False`, chuỗi `if/elif/else` (`pq_if_chain`), gọi lệnh có `return` như giá trị

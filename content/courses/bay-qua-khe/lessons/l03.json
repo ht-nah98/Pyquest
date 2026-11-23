@@ -214,7 +214,16 @@
         "main.py": "from pyquest import *\n\ny = 100\ndraw_rect(100, y, 40, 40, \"gold\")\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_assign",
+        "pq_var_get",
+        "pq_arith",
+        "pq_draw_rect",
+        "pq_clear"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -256,7 +265,16 @@
         "main.py": "from pyquest import *\n\nw = WIDTH / 4\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_assign",
+        "pq_var_get",
+        "pq_arith",
+        "pq_draw_rect",
+        "pq_clear"
+      ],
       "mode": "script",
       "goals": [
         {

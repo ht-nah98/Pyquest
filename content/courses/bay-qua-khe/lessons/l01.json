@@ -213,7 +213,15 @@
         "main.py": "from pyquest import *\n\nclear(\"skyblue\")\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_draw_rect",
+        "pq_number",
+        "pq_text",
+        "pq_clear",
+        "pq_print",
+        "pq_var_get"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -249,7 +257,15 @@
         "main.py": "from pyquest import *\n\nclear(\"skyblue\")\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_draw_rect",
+        "pq_number",
+        "pq_text",
+        "pq_clear",
+        "pq_print",
+        "pq_var_get"
+      ],
       "mode": "script",
       "goals": [
         {

@@ -122,7 +122,12 @@
         "pq_key_pressed",
         "pq_for",
         "pq_draw_text",
-        "pq_random"
+        "pq_random",
+        "pq_bool",
+        "pq_return",
+        "pq_draw_text_size",
+        "pq_not",
+        "pq_str"
       ],
       "mode": "game",
       "goals": [
@@ -205,7 +210,12 @@
         "pq_random",
         "pq_play_sound",
         "pq_play_music",
-        "pq_stop_music"
+        "pq_stop_music",
+        "pq_bool",
+        "pq_return",
+        "pq_not",
+        "pq_draw_text_size",
+        "pq_str"
       ],
       "mode": "game",
       "goals": [

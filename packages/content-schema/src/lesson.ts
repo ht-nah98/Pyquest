@@ -13,7 +13,7 @@ const FilesSchema = z.record(z.string().min(1), z.string());
 
 /**
  * One exercise of a lesson's code step. A lesson has several, easiest first (spec foundations-first §4).
- * input: 'blocks' = drag blocks or type; 'typing' = type Python only, the blocks just mirror the code.
+ * input: both kinds can be dragged or typed (ADR 0008); 'typing' only adds a "try typing" hint.
  */
 export const ExerciseSchema = z
   .object({

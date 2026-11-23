@@ -62,7 +62,8 @@ Tổng: **26 bài** (hiện 20). Với nhịp một bài mỗi buổi, phần n�
 - Bước Code của bài có **danh sách bài tập** thay cho một bài duy nhất. Màn code có thanh "Bài tập 1 · 2 · 3 · 4";
   làm đạt mục tiêu bài này thì mở bài sau. HLV nhảy bài nào cũng được.
 - Mỗi bài tập có: đề, các bước (📋), gợi ý, code bắt đầu, mục tiêu, lời giải, cách nhập.
-- **Cách nhập** (`input`):
+- **Cách nhập** (`input`). **Đổi 23/11 (ADR 0008):** bài tập nào cũng kéo khối được; `typing` chỉ còn là gợi ý
+  "✍️ Thử gõ code nhé, kéo khối cũng được". Mô tả dưới đây là bản 04/11.
   - `blocks`: như hiện nay, kéo khối hoặc gõ đều được.
   - `typing`: chỉ gõ Python. Khung khối vẫn hiện khối theo code để bé **đối chiếu**, nhưng không kéo thả được;
     hàng trên khung ghi "✍️ Bài này em gõ code".

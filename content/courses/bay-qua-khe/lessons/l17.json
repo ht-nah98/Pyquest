@@ -94,7 +94,8 @@
         "pq_if",
         "pq_compare",
         "pq_draw_rect",
-        "pq_key_pressed"
+        "pq_key_pressed",
+        "pq_draw_image"
       ],
       "mode": "game",
       "goals": [

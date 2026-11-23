@@ -106,7 +106,18 @@
         "main.py": "from pyquest import *\n\ny = 0\ncount = 0\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_while",
+        "pq_compare",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get",
+        "pq_print"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -147,7 +158,19 @@
         "main.py": "from pyquest import *\n\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_while",
+        "pq_compare",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get",
+        "pq_print",
+        "pq_for"
+      ],
       "mode": "script",
       "goals": [
         {

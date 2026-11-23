@@ -102,7 +102,11 @@
         "pq_key_pressed",
         "pq_for",
         "pq_draw_text",
-        "pq_random"
+        "pq_random",
+        "pq_list",
+        "pq_for_each",
+        "pq_index_set",
+        "pq_index"
       ],
       "mode": "game",
       "goals": [

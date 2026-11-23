@@ -108,7 +108,18 @@
         "main.py": "from pyquest import *\n\nscore = 7\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_if_chain",
+        "pq_compare",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
+      ],
       "mode": "script",
       "goals": [
         {
@@ -143,7 +154,18 @@
         "main.py": "from pyquest import *\n\nfor i in range(8):\n    draw_rect(i * 50, 300, 40, 40, \"gray\")\n"
       },
       "main": "main.py",
-      "toolbox": [],
+      "toolbox": [
+        "pq_import",
+        "pq_number",
+        "pq_text",
+        "pq_for",
+        "pq_if_chain",
+        "pq_compare",
+        "pq_assign",
+        "pq_draw_rect",
+        "pq_arith",
+        "pq_var_get"
+      ],
       "mode": "script",
       "goals": [
         {
