@@ -6,6 +6,7 @@ export {
   type CheckExtra,
   runGameTest,
   shiftSource,
+  testInput,
   type GameApi,
   type GameTestResult,
   type GoalResult,

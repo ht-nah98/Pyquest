@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useSession } from '../../app/session';
+import { seesCourse } from '../../content/access';
 import { catalog } from '../../content/catalog';
 import { TopBar } from '../../ui/TopBar';
+import { DraftTag } from '../../ui/DraftTag';
 import { Panel } from '../../ui/Panel';
 import { drawingsOf } from '../studio/drawings';
 
@@ -28,15 +30,19 @@ export function CourseList() {
             </Panel>
           </Link>
         )}
-        {catalog.courses().map((c) => (
-          <Link key={c.id} to={`/c/${c.id}`} data-testid={`course-${c.id}`}>
-            <Panel className="h-full p-5 hover:bg-brand-soft">
-              <h2 className="text-3xl text-brand-deep">{c.title}</h2>
-              <p className="mt-2 text-ink-soft">{c.summary}</p>
-              <p className="mt-3 font-pixel text-2xl">{c.lessons.length} bài</p>
-            </Panel>
-          </Link>
-        ))}
+        {catalog
+          .courses()
+          .filter((c) => seesCourse(c, profile?.role ?? 'student'))
+          .map((c) => (
+            <Link key={c.id} to={`/c/${c.id}`} data-testid={`course-${c.id}`}>
+              <Panel className="h-full p-5 hover:bg-brand-soft">
+                <h2 className="text-3xl text-brand-deep">{c.title}</h2>
+                <p className="mt-2 text-ink-soft">{c.summary}</p>
+                {c.draft === true && <DraftTag className="mt-2" />}
+                <p className="mt-3 font-pixel text-2xl">{c.lessons.length} bài</p>
+              </Panel>
+            </Link>
+          ))}
         {catalog.studio() !== undefined && (
           <Link to="/studio" data-testid="to-studio">
             <Panel className="h-full bg-sun/25 p-5 hover:bg-sun/50">

@@ -5,6 +5,7 @@ import { useSession } from '../../app/session';
 import { catalog } from '../../content/catalog';
 import type { LessonState } from '../../storage/store';
 import { Button } from '../../ui/Button';
+import { DraftTag } from '../../ui/DraftTag';
 import { Panel } from '../../ui/Panel';
 import { TopBar } from '../../ui/TopBar';
 import { lessonStatus, litRoadmap, type LessonStatus } from './progress';
@@ -43,6 +44,7 @@ export function CourseMap() {
             <div>
               <h2 className="text-3xl text-brand-deep">{course.title}</h2>
               <p className="mt-1 text-lg text-ink-soft">{course.summary}</p>
+              {course.draft === true && <DraftTag className="mt-1" />}
               <p className="mt-3 font-display text-lg">
                 Lộ trình game của em · {done}/{course.lessons.length} bài
               </p>
@@ -90,11 +92,7 @@ export function CourseMap() {
                         {summary !== undefined && (
                           <span className="text-sm text-ink-soft">{summary}</span>
                         )}
-                        {draft && (
-                          <span className="mt-1 self-start rounded-full bg-sun px-2 text-xs font-bold">
-                            Bản nháp · chỉ HLV thấy
-                          </span>
-                        )}
+                        {draft && <DraftTag className="mt-1" />}
                         {st === 'hidden' && !draft && (
                           <span className="text-sm text-ink-soft">Đang soạn</span>
                         )}

@@ -52,6 +52,23 @@ def _plain_string(src, node):
     return (seg == '"' + v + '"' and '"' not in v and "\\" not in v and "\n" not in v)
 
 
+def _as_typed(src, node):
+    """True when the code is written the way blocks write it (one line, the usual spaces and brackets), so a
+    block made from it gives back the same characters. Anything else stays code text (ADR 0011)."""
+    seg = ast.get_source_segment(src, node) or ""
+    return ast.unparse(node).replace("'", '"') == seg.replace("'", '"')
+
+
+def _named_slot(src, node):
+    """("mob", "x") for mob["x"] typed just so, else None (xs[i], xs['a'], mobs[0]["x"])."""
+    if not (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name)
+            and isinstance(node.slice, ast.Constant) and isinstance(node.slice.value, str)
+            and _plain_string(src, node.slice)):
+        return None
+    name, key = node.value.id, node.slice.value
+    return (name, key) if ast.get_source_segment(src, node) == name + '["' + key + '"]' else None
+
+
 def _expr(src, node, nested=False):
     seg = ast.get_source_segment(src, node) or ""
     if isinstance(node, ast.Constant) and isinstance(node.value, bool) and seg in ("True", "False"):
@@ -80,6 +97,15 @@ def _expr(src, node, nested=False):
     if isinstance(node, ast.List):
         return {"type": "pq_list", "extraState": {"items": len(node.elts)},
                 "inputs": {"ITEM" + str(i): _expr(src, e) for i, e in enumerate(node.elts)}}
+    if (isinstance(node, ast.Dict) and _as_typed(src, node)
+            and all(isinstance(k, ast.Constant) and isinstance(k.value, str) and _plain_string(src, k)
+                    for k in node.keys)):
+        return {"type": "pq_dict", "extraState": {"items": len(node.keys)},
+                "fields": {"KEY" + str(i): k.value for i, k in enumerate(node.keys)},
+                "inputs": {"ITEM" + str(i): _expr(src, v) for i, v in enumerate(node.values)}}
+    slot = _named_slot(src, node)
+    if slot is not None:
+        return {"type": "pq_key_get", "fields": {"NAME": slot[0], "KEY": slot[1]}}
     if (isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name)
             and not isinstance(node.slice, (ast.Slice, ast.Tuple))):
         return {"type": "pq_index", "fields": {"NAME": node.value.id}, "inputs": {"INDEX": _expr(src, node.slice)}}
@@ -97,6 +123,8 @@ def _expr(src, node, nested=False):
             return {"type": _POINTER[node.func.id]}
         if node.func.id == "str" and len(node.args) == 1:
             return {"type": "pq_str", "inputs": {"A": _expr(src, node.args[0])}}
+        if node.func.id == "abs" and "abs" not in _DEFS and len(node.args) == 1 and _as_typed(src, node):
+            return {"type": "pq_abs", "inputs": {"A": _expr(src, node.args[0])}}
         if node.func.id == "random_int" and len(node.args) == 2:
             return {"type": "pq_random", "inputs": {"A": _expr(src, node.args[0]), "B": _expr(src, node.args[1])}}
         params = _DEFS.get(node.func.id)
@@ -224,11 +252,20 @@ def _stmt(ctx, node):
 
     if ctx.has_comment(node.lineno, node.end_lineno):
         return None
+    # A table (dict, list of dicts) over several lines: the whole statement is code text, line by line.
+    if node.end_lineno > node.lineno and any(isinstance(n, ast.Dict) for n in ast.walk(node)):
+        return None
     if (isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)
             and isinstance(node.value.func, ast.Attribute) and node.value.func.attr == "append"
             and isinstance(node.value.func.value, ast.Name) and len(node.value.args) == 1
             and not node.value.keywords):
         return {"type": "pq_append", "fields": {"NAME": node.value.func.value.id},
+                "inputs": {"VALUE": _expr(src, node.value.args[0])}}
+    if (isinstance(node, ast.Expr) and isinstance(node.value, ast.Call)
+            and isinstance(node.value.func, ast.Attribute) and node.value.func.attr == "remove"
+            and isinstance(node.value.func.value, ast.Name) and len(node.value.args) == 1
+            and not node.value.keywords and _as_typed(src, node)):
+        return {"type": "pq_remove", "fields": {"NAME": node.value.func.value.id},
                 "inputs": {"VALUE": _expr(src, node.value.args[0])}}
     if isinstance(node, ast.Expr) and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Name):
         call = node.value
@@ -240,6 +277,11 @@ def _stmt(ctx, node):
             if spec[0] == "pq_draw_image":
                 block["fields"] = {"FLIP": "TRUE" if flip else "FALSE"}
             return block
+        if (call.func.id == "draw_image" and "draw_image" not in ctx.defs and len(call.args) == 3
+                and [k.arg for k in call.keywords] == ["scale"] and _as_typed(src, node)):
+            return {"type": "pq_draw_image_scale",
+                    "inputs": {n: _expr(src, a) for n, a in zip(["PATH", "X", "Y", "SCALE"],
+                                                                [*call.args, call.keywords[0].value])}}
         if call.func.id == "draw_text" and not call.keywords and len(call.args) == 4:
             return {"type": "pq_draw_text_size",
                     "inputs": {n: _expr(src, a) for n, a in zip(["TEXT", "X", "Y", "SIZE"], call.args)}}
@@ -269,6 +311,10 @@ def _stmt(ctx, node):
                 "inputs": {"VALUE": _expr(src, node.value)}}
     if isinstance(node, ast.Assign) and len(node.targets) == 1:
         t = node.targets[0]
+        slot = _named_slot(src, t)
+        if slot is not None:
+            return {"type": "pq_key_set", "fields": {"NAME": slot[0], "KEY": slot[1]},
+                    "inputs": {"VALUE": _expr(src, node.value)}}
         if (isinstance(t, ast.Subscript) and isinstance(t.value, ast.Name)
                 and not isinstance(t.slice, (ast.Slice, ast.Tuple))):
             return {"type": "pq_index_set", "fields": {"NAME": t.value.id},
@@ -276,6 +322,11 @@ def _stmt(ctx, node):
     if isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and type(node.op) in _AUG:
         return {"type": "pq_aug", "fields": {"NAME": node.target.id, "OP": _AUG[type(node.op)]},
                 "inputs": {"VALUE": _expr(src, node.value)}}
+    if (isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Subscript)
+            and isinstance(node.target.value, ast.Name) and type(node.op) in _AUG
+            and not isinstance(node.target.slice, (ast.Slice, ast.Tuple)) and _as_typed(src, node)):
+        return {"type": "pq_key_aug", "fields": {"NAME": node.target.value.id, "OP": _AUG[type(node.op)]},
+                "inputs": {"INDEX": _expr(src, node.target.slice), "VALUE": _expr(src, node.value)}}
     if (isinstance(node, ast.ImportFrom) and node.module == "pyquest" and node.level == 0
             and [a.name for a in node.names] == ["*"]):
         return {"type": "pq_import"}

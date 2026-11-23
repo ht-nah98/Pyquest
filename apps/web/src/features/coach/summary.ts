@@ -1,4 +1,4 @@
-import type { Lesson } from '@pyquest/content-schema';
+import type { Course, Lesson } from '@pyquest/content-schema';
 import type { LessonState } from '../../storage/store';
 
 /** How far a child is in one lesson, for the coach's grid. */
@@ -17,6 +17,14 @@ export function cellOf(lesson: Lesson, state: LessonState | undefined): Cell {
     finished: state?.done === true,
     started: state !== undefined,
   };
+}
+
+/** A child is in a course once they opened one of its lessons; everybody is in a course that is the first one. */
+export function isIn(
+  course: Pick<Course, 'after'> & { lessons: readonly Lesson[] },
+  states: ReadonlyMap<string, LessonState>,
+): boolean {
+  return course.after === undefined || course.lessons.some((l) => states.has(l.id));
 }
 
 /** The lesson a child is on: the first one not finished, after the last one they touched. */

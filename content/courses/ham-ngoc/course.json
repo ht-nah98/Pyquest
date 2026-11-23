@@ -1,0 +1,85 @@
+{
+  "id": "ham-ngoc",
+  "title": "Hầm Ngọc",
+  "summary": "Tự xây một game vượt ải: đi trong hầm, tự đánh quái, nhặt ngọc, lên cấp và chọn skill.",
+  "draft": true,
+  "after": "bay-qua-khe",
+  "howToPlay": "Đi bằng phím mũi tên hoặc W A S D, nhân vật tự đánh. Chọn nhân vật và thẻ bằng phím 1, 2, 3 hoặc bấm vào hình.",
+  "lessonIds": [
+    "h00"
+  ],
+  "roadmap": [
+    {
+      "id": "hero",
+      "label": "Nhân vật",
+      "icon": "⚔️"
+    },
+    {
+      "id": "move",
+      "label": "Di chuyển",
+      "icon": "🏃"
+    },
+    {
+      "id": "mobs",
+      "label": "Quái",
+      "icon": "👾"
+    },
+    {
+      "id": "health",
+      "label": "Máu",
+      "icon": "❤️"
+    },
+    {
+      "id": "attack",
+      "label": "Tự đánh",
+      "icon": "🏹"
+    },
+    {
+      "id": "xp",
+      "label": "Kinh nghiệm",
+      "icon": "💎"
+    },
+    {
+      "id": "level-up",
+      "label": "Lên cấp",
+      "icon": "⭐"
+    },
+    {
+      "id": "skills",
+      "label": "Skill",
+      "icon": "🃏"
+    },
+    {
+      "id": "combos",
+      "label": "Phối hợp",
+      "icon": "🔗"
+    },
+    {
+      "id": "stages",
+      "label": "Vượt ải",
+      "icon": "🚪"
+    },
+    {
+      "id": "effects",
+      "label": "Hiệu ứng",
+      "icon": "✨"
+    },
+    {
+      "id": "launch",
+      "label": "Ra mắt",
+      "icon": "🚀"
+    }
+  ],
+  "stage": {
+    "width": 600,
+    "height": 600
+  },
+  "parts": [
+    {
+      "title": "A. Bức tranh toàn cảnh",
+      "lessonIds": [
+        "h00"
+      ]
+    }
+  ]
+}

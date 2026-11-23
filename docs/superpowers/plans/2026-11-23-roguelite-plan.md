@@ -9,7 +9,7 @@ Thiết kế: `../specs/2026-11-23-roguelite-design.md`. **Phiên mới: đọc 
 | 2 | Game mẫu bằng hình khối + bot cân độ khó | sim chạy, PyRunner chạy không lỗi | xong (bfa0cea), dài 1119 dòng |
 | 3 | Hình vào kho | manifest `pixel: true`, ghi công, `content:check` xanh | xong (bfa0cea) |
 | 4 | Ghép hình + hiệu ứng + âm thanh vào game mẫu | ảnh chụp xem được, vẫn 60 FPS | đang làm |
-| 5 | Khóa mới: khung khóa, id bài riêng, để **bản nháp** (bé không thấy) | e2e: bé không vào được | đang làm |
+| 5 | Khóa mới: khung khóa, id bài riêng, để **bản nháp** (bé không thấy) | e2e: bé không vào được | xong, khóa để bản nháp |
 | 6 | Đề cương + nội dung bài, mỗi bài qua `content:check` | mọi bài `draft: true` | đang làm: chuỗi code từng bài |
 | 7 | Soát code độc lập, chạy cả bộ kiểm, đo dung lượng | báo cáo thật | chưa |
 | — | **HLV chơi thử, đọc lại chữ, dạy thử, bỏ `draft`** | AI không tự tích | HLV |

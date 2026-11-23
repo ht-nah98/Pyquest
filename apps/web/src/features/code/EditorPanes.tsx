@@ -40,8 +40,8 @@ export const EditorPanes = forwardRef<
     workspace: object | undefined;
     onCode: (file: string, text: string) => void;
     onWorkspace: (ws: object) => void;
-    /** 📘 Thư viện: commands met up to this lesson order (all when undefined), on this stage. */
-    library: { uptoOrder: number | 'studio' | undefined; stage: StageSize };
+    /** 📘 Thư viện: commands met up to this lesson id ('studio': the studio's, undefined: all), on this stage. */
+    library: { upto: string | undefined; stage: StageSize };
     /** Next to the 🧩 Khối title. */
     note?: ReactNode;
   }
@@ -236,7 +236,7 @@ export const EditorPanes = forwardRef<
           />
           {libraryOpen && (
             <LibraryPanel
-              uptoOrder={library.uptoOrder}
+              upto={library.upto}
               stage={library.stage}
               onClose={() => {
                 setLibraryOpen(false);

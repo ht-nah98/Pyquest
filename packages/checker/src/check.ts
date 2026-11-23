@@ -1,10 +1,12 @@
-import type { Goal } from '@pyquest/content-schema';
+import type { GameTest, Goal } from '@pyquest/content-schema';
 import type { DrawEvent, GameInput, RunResult, StageSize } from '@pyquest/runtime';
 
 // Same as DEFAULT_STAGE in @pyquest/runtime; importing a value from there would pull Pyodide in.
 const DEFAULT_STAGE: StageSize = { width: 400, height: 600 };
 
 export type GoalResult = { id: string; ok: boolean };
+
+type Vars = RunResult['vars'];
 
 /**
  * Extra runs some goals compare against: the program with its variable moved, and the solution.
@@ -19,7 +21,7 @@ export type CheckExtra = { shifted?: RunResult; expected?: RunResult; stage?: St
  */
 export function checkGoals(
   goals: readonly Goal[],
-  result: RunResult,
+  result: RunResult & { varsByFrame?: readonly Vars[] },
   extra: CheckExtra = {},
 ): GoalResult[] {
   return goals.map((goal) => ({ id: goal.id, ok: meets(goal, result, extra) }));
@@ -61,7 +63,10 @@ export function shiftSource(code: string, name: string, by: number): string | un
   return `${code.slice(0, start)}${String(Number(hit[2]) + by)}${code.slice(start + hit[2].length)}`;
 }
 
-/** "bird" matches the picture bird and every picture of its group: bird-cu, bird-rong… */
+/**
+ * "bird" matches the picture bird and every picture whose id starts with "bird-": bird-cu, bird-rong…
+ * Only the id counts, not the manifest's group: "mob" matches mob-bat, never boss-1 (its own prefix).
+ */
 const inGroup = (picture: string, group: string) =>
   picture === group || picture.startsWith(`${group}-`);
 
@@ -156,7 +161,20 @@ function track(r: RunResult, sprite: string, axis: 'x' | 'y'): (number | undefin
 
 const defined = (xs: (number | undefined)[]): number[] => xs.filter((v) => v !== undefined);
 
-function meets(goal: Goal, r: RunResult, extra: CheckExtra): boolean {
+/** One variable against a goal's value; a missing variable, or a size compared with a word, never passes. */
+function compares(goal: Extract<Goal, { kind: 'varCompare' }>, vars: Vars): boolean {
+  const v = vars[goal.name];
+  if (v === undefined) return false;
+  if (goal.op === '!=') return v !== goal.value;
+  if (typeof v !== 'number' || typeof goal.value !== 'number') return false;
+  return goal.op === '>=' ? v >= goal.value : v <= goal.value;
+}
+
+function meets(
+  goal: Goal,
+  r: RunResult & { varsByFrame?: readonly Vars[] },
+  extra: CheckExtra,
+): boolean {
   const { shifted, expected, stage = DEFAULT_STAGE } = extra;
   switch (goal.kind) {
     case 'matches': {
@@ -284,6 +302,10 @@ function meets(goal: Goal, r: RunResult, extra: CheckExtra): boolean {
     }
     case 'varEquals':
       return r.vars[goal.name] === goal.value;
+    case 'varCompare':
+      return goal.when === 'ever' && r.varsByFrame !== undefined
+        ? r.varsByFrame.some((vars) => compares(goal, vars))
+        : compares(goal, r.vars);
   }
 }
 
@@ -292,20 +314,50 @@ export type GameApi = {
   step: (input: GameInput) => RunResult | Promise<RunResult>;
 };
 
-/** A game test run: every frame joined; lastFrameFrom = id of the first call made in the last frame. */
-export type GameTestResult = RunResult & { lastFrameFrom: number };
+/**
+ * A game test run: every frame joined; lastFrameFrom = id of the first call made in the last frame,
+ * varsByFrame = the variables after each frame ('varCompare' with when: 'ever').
+ */
+export type GameTestResult = RunResult & { lastFrameFrom: number; varsByFrame: Vars[] };
 
 /**
- * The automatic test of a game-mode program: start it, play the scheduled frames (tapping on the
- * listed ones) and join the frames into one result the goals can judge. Same on Node and in the page.
+ * What the player does in one frame of the test, as the page would send it (GameInputs): a tap, a Space
+ * that goes down and a click all count as a tap; a click is also where the mouse is from then on.
+ */
+export function testInput(test: GameTest, frame: number): GameInput {
+  const keys = new Set<string>();
+  let tapped = test.taps.includes(frame);
+  for (const k of test.keys ?? []) {
+    if (frame < k.from || frame > k.to) continue;
+    keys.add(k.key);
+    if (k.key === 'space' && frame === k.from) tapped = true;
+  }
+  const input: GameInput = { keys: [], tapped };
+  // The latest click so far; of two on one frame, the one listed last (like the page).
+  let last: { frame: number; x: number; y: number } | undefined;
+  for (const c of test.clicks ?? [])
+    if (c.frame <= frame && (last === undefined || c.frame >= last.frame)) last = c;
+  if (last !== undefined) {
+    input.pointer = { x: last.x, y: last.y };
+    if (last.frame === frame) {
+      input.clicked = true;
+      input.tapped = true;
+      keys.add('space');
+    }
+  }
+  input.keys = [...keys];
+  return input;
+}
+
+/**
+ * The automatic test of a game-mode program: start it, play the scheduled frames (taps, keys and clicks)
+ * and join the frames into one result the goals can judge. Same on Node and in the page.
  * Each frame numbers its calls from 0, so they are renumbered here to stay unique across frames.
  */
-export async function runGameTest(
-  api: GameApi,
-  test: { frames: number; taps: readonly number[] },
-): Promise<GameTestResult> {
+export async function runGameTest(api: GameApi, test: GameTest): Promise<GameTestResult> {
   const start = await api.start();
-  if (start.error !== undefined || start.stoppedByLimit) return { ...start, lastFrameFrom: 0 };
+  if (start.error !== undefined || start.stoppedByLimit)
+    return { ...start, lastFrameFrom: 0, varsByFrame: [] };
   // Drawing done while the module loads belongs to no frame: frame 0 is the first update(). Its sounds count:
   // play_music("…") at the top of the file is how a game starts its tune.
   const all: GameTestResult = {
@@ -314,9 +366,10 @@ export async function runGameTest(
     stoppedByLimit: false,
     calls: [],
     lastFrameFrom: 0,
+    varsByFrame: [],
   };
   for (let f = 0; f < test.frames; f++) {
-    const r = await api.step({ keys: [], tapped: test.taps.includes(f) });
+    const r = await api.step(testInput(test, f));
     const offset = all.calls.length;
     all.lastFrameFrom = offset;
     for (const c of r.calls)
@@ -329,6 +382,7 @@ export async function runGameTest(
       all.events.push(e.t !== 'frame' && e.by !== undefined ? { ...e, by: e.by + offset } : e);
     if (r.callsTruncated === true) all.callsTruncated = true;
     all.vars = r.vars;
+    all.varsByFrame.push(r.vars);
     if (r.error !== undefined) return { ...all, error: r.error };
     if (r.stoppedByLimit) return { ...all, stoppedByLimit: true };
   }

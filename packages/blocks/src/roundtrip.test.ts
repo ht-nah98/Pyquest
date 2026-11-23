@@ -22,6 +22,9 @@ describe('Python → blocks → Python', () => {
     'x = 100\ny = 200\ndraw_rect(x, y, 10, 10, "red")',
     'y = y + 2',
     'y = (y + 2) * 3',
+    'y = a * (b % c)',
+    'y = a * (b / c)',
+    'y = a * b % c',
     'speed = -8',
     'print("chào")',
     'play_sound("flap")',
@@ -517,7 +520,7 @@ describe('keys, mouse and click blocks (ADR 0010)', () => {
     expect(roundTrip(source).trimEnd()).toBe(source);
   });
 
-  test('draw_image keeps its block; scale and mirror stay code text', () => {
+  test('draw_image keeps its block, scale alone has its own (ADR 0011); mirror and the rest stay code text', () => {
     const types = ['', ', flip=True', ', scale=2', ', mirror=True', ', flip=True, scale=2'].map(
       (rest) => {
         const source = `draw_image("images/bird.png", 1, 2${rest})`;
@@ -526,7 +529,13 @@ describe('keys, mouse and click blocks (ADR 0010)', () => {
         return tree.ok && tree.statements[0]?.type;
       },
     );
-    expect(types).toEqual(['pq_draw_image', 'pq_draw_image', 'pq_raw', 'pq_raw', 'pq_raw']);
+    expect(types).toEqual([
+      'pq_draw_image',
+      'pq_draw_image',
+      'pq_draw_image_scale',
+      'pq_raw',
+      'pq_raw',
+    ]);
   });
 
   test('the toolbox puts them under Điều kiện', () => {
@@ -538,5 +547,246 @@ describe('keys, mouse and click blocks (ADR 0010)', () => {
     ]);
     const fresh = { blocks: { languageVersion: 0, blocks: [{ type: 'pq_key_held', x: 0, y: 0 }] } };
     expect(toPython(fresh)).toContain('key_pressed("left")');
+  });
+});
+
+describe('named boxes (dict), abs, remove and scaled pictures (ADR 0011)', () => {
+  const statements = (src: string) => {
+    const tree = py.parseBlocks(src);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    return tree.statements;
+  };
+  const valueOf = (expr: string) => statements(`v = ${expr}`)[0]?.inputs?.['VALUE'];
+  const fresh = (type: string) => {
+    const tb = toolboxFor([type]);
+    if (tb.kind !== 'categoryToolbox') throw new Error('categories');
+    const block = tb.contents[0]?.contents[0];
+    return { blocks: { languageVersion: 0, blocks: [{ ...block, x: 0, y: 0 }] } };
+  };
+  const num = (n: number) => ({ type: 'pq_number', fields: { NUM: n } });
+  const text = (t: string) => ({ type: 'pq_text', fields: { TEXT: t } });
+
+  test.each([
+    'hero = {"x": 300, "hp": 5}',
+    'hero = {}',
+    'hero = {"tên": "Kiếm sĩ", "tốc độ": 2.5, "sống": True}',
+    'hero = {"pos": {"x": 1, "y": 2}, "skills": [], "bag": ["ngọc", "tim"]}',
+    'mobs = [{"x": 1, "hp": 2}, {"x": 5, "hp": 3}]',
+    'mobs.append({"x": random_int(0, 600), "y": y + 10 * 2, "hp": 3})',
+    'x = hero["x"]',
+    'x = mob["x"] + mob["size"] / 2',
+    'mob["x"] = 5',
+    'mob["x"] = mob["x"] - 2',
+    'mob["kind"] = "bat"',
+    'mob["hp"] -= 1',
+    'mob["x"] += mob["speed"] * 2',
+    'xs[i] += 1',
+    'xs[0] -= step',
+    'for mob in mobs:\n    mob["hp"] -= 1\n    if mob["hp"] <= 0:\n        mobs.remove(mob)',
+    'for s in hero["skills"]:\n    print(s)',
+    'xs.remove(40)',
+    'xs.remove({"x": 1})',
+    'd = abs(a - b)',
+    'if abs(a["x"] - b["x"]) < 40 and abs(a["y"] - b["y"]) < 40:\n    hit = True',
+    'def near(a, b, d):\n    return abs(a["x"] - b["x"]) < d\nok = near(hero, mob, 30)',
+    'draw_image("images/hero-knight.png", hero["x"], hero["y"], scale=3)',
+    'draw_image(path, x, y, scale=size / 2)',
+    'n = len(hero["bag"])',
+    'return {"x": 1}',
+    'print({"x": 1})',
+  ])('%j is real blocks (no code text) and survives the round trip', (source) => {
+    expect(JSON.stringify(statements(source))).not.toContain('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('the blocks are the ones the lessons name', () => {
+    expect(valueOf('{"x": 1, "hp": 5}')).toEqual({
+      type: 'pq_dict',
+      extraState: { items: 2 },
+      fields: { KEY0: 'x', KEY1: 'hp' },
+      inputs: { ITEM0: num(1), ITEM1: num(5) },
+    });
+    expect(valueOf('mob["x"]')).toEqual({ type: 'pq_key_get', fields: { NAME: 'mob', KEY: 'x' } });
+    expect(valueOf('xs[i]')?.type).toBe('pq_index');
+    expect(statements('mob["x"] = 1')[0]).toEqual({
+      type: 'pq_key_set',
+      fields: { NAME: 'mob', KEY: 'x' },
+      inputs: { VALUE: num(1) },
+    });
+    expect(statements('xs[0] = 1')[0]?.type).toBe('pq_index_set');
+    expect(statements('mob["hp"] -= 1')[0]).toEqual({
+      type: 'pq_key_aug',
+      fields: { NAME: 'mob', OP: '-=' },
+      inputs: { INDEX: text('hp'), VALUE: num(1) },
+    });
+    expect(statements('xs[i] += 1')[0]?.type).toBe('pq_key_aug');
+    expect(valueOf('abs(a - b)')?.type).toBe('pq_abs');
+    expect(statements('xs.remove(1)')[0]?.type).toBe('pq_remove');
+    expect(statements('draw_image("a", 1, 2, scale=3)')[0]?.type).toBe('pq_draw_image_scale');
+  });
+
+  test.each([
+    // the keys are not plain words
+    'd = {1: "a", 2: "b"}',
+    'd = {k: 1}',
+    'd = {"a": 1, **more}',
+    "d = {'x': 1}",
+    'd = {"a \\"quoted\\" key": 1}',
+    'd = {"đường\\n": 1}',
+    // typed in another way than the blocks write it
+    'd = {"x":1}',
+    'd = { "x": 1 }',
+    'd = {"x": 1,}',
+    'd = {"x": (1)}',
+    'd = {"x": a+b}',
+    'n = abs(a-b)',
+    'n = abs((a - b))',
+    'n = abs(x for x in xs)',
+    'n = abs(a, b)',
+    'mob["hp"]-=1',
+    'mob["hp"] -= (a + b)',
+    'mob["hp"] *= 2',
+    'xs.remove( 1 )',
+    'xs.remove(1, 2)',
+    'mobs[0].remove(1)',
+    'draw_image("a", 1, 2, scale = 3)',
+    'draw_image("a", 1, 2, 0, scale=3)',
+    'draw_image("a", 1, y=2, scale=3)',
+    'draw_image("a", 1, 2, scale=3, mirror=True)',
+    'draw_image("a", 1, 2, scale=3)  # to gấp 3',
+    'xs[1:2] += [3]',
+    'mobs[0]["x"] -= 1',
+    'mobs[0]["x"] = 1',
+    'x = mobs[0]["x"]',
+    'x = {"x": 1}["x"]',
+    'x = hero["bag"][0]',
+    'ok = 0 <= mob["x"] < 600',
+  ])('%j keeps some code text and comes back exactly as typed', (source) => {
+    expect(JSON.stringify(statements(source))).toContain('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test.each([
+    'hero = {"a": "it\'s", "b": \'x\', "c": f"{n}", "d": "\\n"}',
+    'if 0 <= mob["x"] < 600 and not mob["dead"]:\n    pass',
+    'hero = {"ok": 0 <= x < 5, "far": abs(x) > 3 or y == 2}',
+    'mob["x"] = a if b else c',
+    'mob["x"] = -speed',
+    'mob["x"] += -speed',
+  ])('%j comes back exactly as typed, whatever blocks it makes', (source) => {
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test.each([
+    'MOBS = {\n    "bat": {"hp": 5, "speed": 2.1},\n    "golem": {"hp": 32, "speed": 0.8},\n}',
+    'WAVES = [\n    {"bat": 3},\n    {"bat": 5, "golem": 1},\n]',
+    'def spawn():\n    mob = {\n        "x": 1,\n        "y": 2,\n    }\n    mobs.append({"x": 1,\n                 "y": 2})\n    return mob',
+  ])('a table over several lines is code text, also inside a def: %j', (source) => {
+    expect(JSON.stringify(statements(source))).toContain('pq_raw"');
+    expect(JSON.stringify(statements(source))).not.toContain('pq_dict');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('a string that is not a plain "…" key keeps the old list blocks, text unchanged', () => {
+    expect(valueOf("xs['a']")).toMatchObject({ type: 'pq_index', fields: { NAME: 'xs' } });
+    expect(statements("xs['a'] = 1")[0]?.type).toBe('pq_index_set');
+    for (const src of ["v = xs['a']", "xs['a'] = 1"]) expect(roundTrip(src).trimEnd()).toBe(src);
+    // Spaces inside the brackets were tidied by the list block before; they still are.
+    expect(roundTrip('v = xs[ "a" ]').trimEnd()).toBe('v = xs["a"]');
+  });
+
+  test("the child's own def abs or draw_image is not taken over", () => {
+    const own = 'def abs(n):\n    return n\n\n\nv = abs(3)';
+    expect(JSON.stringify(statements(own))).toContain('pq_call_expr');
+    expect(roundTrip(own).trimEnd()).toBe(own);
+    const draw = 'def draw_image(a, b, c, scale):\n    pass\n\n\ndraw_image(1, 2, 3, scale=4)';
+    expect(JSON.stringify(statements(draw))).not.toContain('pq_draw_image_scale');
+    expect(roundTrip(draw).trimEnd()).toBe(draw);
+  });
+
+  test('a workspace saved before these blocks (list blocks with a word inside) still loads', () => {
+    const saved = {
+      blocks: {
+        languageVersion: 0,
+        blocks: [
+          {
+            type: 'pq_index_set',
+            x: 20,
+            y: 20,
+            fields: { NAME: 'xs' },
+            inputs: {
+              INDEX: { block: text('a') },
+              VALUE: {
+                block: {
+                  type: 'pq_index',
+                  fields: { NAME: 'xs' },
+                  inputs: { INDEX: { block: text('b') } },
+                },
+              },
+            },
+            next: {
+              block: {
+                type: 'pq_assign',
+                fields: { NAME: 'd' },
+                inputs: {
+                  VALUE: { block: { type: 'pq_raw_expr', fields: { CODE: '{"x": 1}' } } },
+                },
+                next: {
+                  block: { type: 'pq_raw', extraState: { code: 'xs.remove(1)\nxs[0] += abs(d)' } },
+                },
+              },
+            },
+          },
+        ],
+      },
+    };
+    expect(toPython(saved)).toBe(
+      'xs["a"] = xs["b"]\nd = {"x": 1}\nxs.remove(1)\nxs[0] += abs(d)\n',
+    );
+  });
+
+  test('a saved workspace with the new blocks keeps names, values and the number of slots', () => {
+    const tree = statements('hero = {"hp": 5}\nmob = {"a": 1, "b": 2, "c": 3, "d": 4}');
+    const ws = new Blockly.Workspace();
+    Blockly.serialization.workspaces.load(treeToState(tree), ws);
+    const saved = JSON.parse(JSON.stringify(Blockly.serialization.workspaces.save(ws))) as object;
+    ws.dispose();
+    expect(toPython(saved)).toBe('hero = {"hp": 5}\nmob = {"a": 1, "b": 2, "c": 3, "d": 4}\n');
+  });
+
+  test('a key with a quote typed into a block is still valid Python', () => {
+    const state = {
+      blocks: {
+        languageVersion: 0,
+        blocks: [{ type: 'pq_key_set', x: 0, y: 0, fields: { NAME: 'd', KEY: 'a"b' } }],
+      },
+    };
+    expect(toPython(state)).toBe('d["a\\"b"] = None\n');
+    expect(py.parseBlocks(toPython(state)).ok).toBe(true);
+  });
+
+  test.each([
+    ['pq_dict', 'Hộp có tên', '{"x": 300, "y": 300, "hp": 5}\n'],
+    ['pq_key_get', 'Hộp có tên', 'hero["x"]\n'],
+    ['pq_key_set', 'Hộp có tên', 'hero["x"] = 0\n'],
+    ['pq_key_aug', 'Hộp có tên', 'hero["x"] += 1\n'],
+    ['pq_abs', 'Số và chữ', 'abs(-5)\n'],
+    ['pq_remove', 'Danh sách', 'xs.remove(40)\n'],
+    ['pq_draw_image_scale', 'Vẽ', 'draw_image("images/hero-knight.png", 300, 300, scale=3)\n'],
+  ])('a fresh %s from the toolbox (%s) is ready to use', (type, category, code) => {
+    const tb = toolboxFor([type]);
+    expect(tb.kind === 'categoryToolbox' && tb.contents.map((c) => c.name)).toEqual([category]);
+    expect(toPython(fresh(type))).toBe(code);
+  });
+
+  test('together the fresh blocks run', async () => {
+    const body = ['pq_key_set', 'pq_key_aug'].map((t) => toPython(fresh(t))).join('');
+    const r = await py.runScript(
+      { 'main.py': `hero = ${toPython(fresh('pq_dict'))}${body}v = hero["x"] + abs(-5)\n` },
+      'main.py',
+      { seed: 1, maxEvents: 100 },
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.vars['v']).toBe(6);
   });
 });

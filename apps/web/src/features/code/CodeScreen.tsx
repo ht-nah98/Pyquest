@@ -321,7 +321,7 @@ function CodeEditor({
           workspace={work.workspace}
           onCode={saveCode}
           onWorkspace={saveWorkspace}
-          library={{ uptoOrder: profile?.role === 'coach' ? undefined : lesson.order, stage: size }}
+          library={{ upto: profile?.role === 'coach' ? undefined : lessonId, stage: size }}
           note={
             typing && (
               <span className="ml-2 text-sm font-normal text-ink-soft" data-testid="typing-note">

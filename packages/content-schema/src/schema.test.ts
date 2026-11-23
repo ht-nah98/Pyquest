@@ -2,6 +2,7 @@ import { describe, expect, test } from 'vitest';
 import {
   AssetSchema,
   CourseSchema,
+  GoalSchema,
   isOpenLesson,
   LibraryRefSchema,
   parseLesson,
@@ -304,4 +305,59 @@ test('AssetSchema: pixel art is marked with pixel: true, anything else is refuse
   expect(AssetSchema.parse(asset).pixel).toBeUndefined();
   expect(AssetSchema.parse({ ...asset, pixel: true }).pixel).toBe(true);
   expect(() => AssetSchema.parse({ ...asset, pixel: false })).toThrow();
+});
+
+describe('ADR 0011: draft course, test keys and clicks, varCompare', () => {
+  const course = {
+    id: 'ham-ngoc',
+    title: 'Hầm Ngọc',
+    summary: 'Vượt ải.',
+    lessonIds: ['h00'],
+    roadmap: [],
+  };
+
+  test('a course may be a draft, come after another one and say how its game is played', () => {
+    const full = { ...course, draft: true, after: 'bay-qua-khe', howToPlay: 'Đi bằng mũi tên.' };
+    expect(CourseSchema.parse(full)).toEqual(full);
+    expect(CourseSchema.parse(course)).toEqual(course);
+    expect(CourseSchema.safeParse({ ...course, after: '' }).success).toBe(false);
+    expect(CourseSchema.safeParse({ ...course, draft: 'yes' }).success).toBe(false);
+  });
+
+  const withTest = (t: Record<string, unknown>) => {
+    const l = validLesson();
+    const e = ex(l) as Record<string, unknown>;
+    e['mode'] = 'game';
+    e['test'] = { frames: 60, taps: [], ...t };
+    return () => parseLesson(l);
+  };
+
+  test('test keys: a known key, held from a frame to a later one of the run', () => {
+    expect(withTest({})).not.toThrow();
+    expect(withTest({ keys: [{ key: 'left', from: 0, to: 59 }] })).not.toThrow();
+    expect(withTest({ keys: [{ key: '2', from: 5, to: 5 }] })).not.toThrow();
+    expect(withTest({ keys: [{ key: 'w', from: 0, to: 5 }] })).toThrow(/key/);
+    expect(withTest({ keys: [{ key: 'left', from: 6, to: 5 }] })).toThrow(/from <= to < frames/);
+    expect(withTest({ keys: [{ key: 'left', from: 0, to: 60 }] })).toThrow(/from <= to < frames/);
+    expect(withTest({ keys: [{ key: 'left', from: -1, to: 5 }] })).toThrow();
+  });
+
+  test('test clicks: on a frame of the run', () => {
+    expect(withTest({ clicks: [{ frame: 59, x: 300, y: 10.5 }] })).not.toThrow();
+    expect(withTest({ clicks: [{ frame: 60, x: 300, y: 10 }] })).toThrow(/frame must be < frames/);
+    expect(withTest({ clicks: [{ frame: 1, x: 300 }] })).toThrow();
+  });
+
+  test('varCompare: sizes need a number, != takes any value', () => {
+    const goal = (g: Record<string, unknown>) =>
+      GoalSchema.safeParse({ id: 'g', label: 'l', kind: 'varCompare', name: 'hp', ...g }).success;
+    expect(goal({ op: '>=', value: 3 })).toBe(true);
+    expect(goal({ op: '<=', value: 0, when: 'ever' })).toBe(true);
+    expect(goal({ op: '!=', value: 'play', when: 'end' })).toBe(true);
+    expect(goal({ op: '!=', value: true })).toBe(true);
+    expect(goal({ op: '>=', value: 'a' })).toBe(false);
+    expect(goal({ op: '<=', value: true })).toBe(false);
+    expect(goal({ op: '>', value: 1 })).toBe(false);
+    expect(goal({ op: '>=', value: 1, when: 'once' })).toBe(false);
+  });
 });

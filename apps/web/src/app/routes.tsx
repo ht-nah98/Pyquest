@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
+import { createBrowserRouter, Navigate, useParams, type RouteObject } from 'react-router';
 import { CourseList } from '../features/course/CourseList';
 import { CourseMap } from '../features/course/CourseMap';
 import { LoginScreen } from '../features/profile/LoginScreen';
@@ -8,6 +8,8 @@ import { CoachHome } from '../features/coach/CoachHome';
 import { CoachStudent } from '../features/coach/CoachStudent';
 import { CoachCode } from '../features/coach/CoachCode';
 import { cloud } from '../cloud/client';
+import { opensLesson, seesCourse } from '../content/access';
+import { catalog } from '../content/catalog';
 import { CodeScreen } from '../features/code/CodeScreen';
 import { PlayScreen } from '../features/code/PlayScreen';
 import { CoachNotesWindow } from '../features/slides/CoachNotesWindow';
@@ -23,6 +25,24 @@ function NeedProfile({ children }: { children: ReactNode }) {
 }
 
 const guard = (el: ReactNode) => <NeedProfile>{el}</NeedProfile>;
+
+/**
+ * Every page of a course or of one of its lessons goes through here: typing the address of something the
+ * coach has not approved yet leads a child back to the course list (AGENTS.md §9.5, ADR 0011).
+ */
+function NeedApproved({ children }: { children: ReactNode }) {
+  const { courseId, lessonId } = useParams();
+  const role = useSession().profile?.role ?? 'student';
+  const course =
+    lessonId === undefined ? catalog.course(courseId ?? '') : catalog.courseOf(lessonId);
+  // An unknown course or lesson: the page itself says so.
+  const ok =
+    course === undefined ||
+    (lessonId === undefined ? seesCourse(course, role) : opensLesson(course, lessonId, role));
+  return ok ? children : <Navigate to="/courses" replace />;
+}
+
+const courseGuard = (el: ReactNode) => guard(<NeedApproved>{el}</NeedApproved>);
 
 function NeedCoach({ children }: { children: ReactNode }) {
   const { profile, ready } = useSession();
@@ -61,11 +81,11 @@ export const router = createBrowserRouter(
   [
     { path: '/', element: <Home /> },
     { path: '/courses', element: guard(<CourseList />) },
-    { path: '/c/:courseId', element: guard(<CourseMap />) },
-    { path: '/l/:lessonId', element: guard(<LessonSlides />) },
-    { path: '/l/:lessonId/notes', element: guard(<CoachNotesWindow />) },
-    { path: '/l/:lessonId/code', element: guard(<CodeScreen />) },
-    { path: '/l/:lessonId/play', element: guard(<PlayScreen />) },
+    { path: '/c/:courseId', element: courseGuard(<CourseMap />) },
+    { path: '/l/:lessonId', element: courseGuard(<LessonSlides />) },
+    { path: '/l/:lessonId/notes', element: courseGuard(<CoachNotesWindow />) },
+    { path: '/l/:lessonId/code', element: courseGuard(<CodeScreen />) },
+    { path: '/l/:lessonId/play', element: courseGuard(<PlayScreen />) },
     { path: '/studio', element: guard(<StudioList />) },
     { path: '/studio/:drawingId', element: guard(<StudioEditor />) },
     { path: '/coach', element: coachOnly(<CoachHome />) },

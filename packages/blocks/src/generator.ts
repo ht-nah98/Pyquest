@@ -42,6 +42,8 @@ function installGenerators(): void {
   const call = (fn: string, names: string[]) => (block: Block) =>
     `${fn}(${names.map((n) => value(block, n)).join(', ')})\n`;
 
+  const key = (block: Block, field: string) => JSON.stringify(String(block.getFieldValue(field)));
+
   g['pq_import'] = () => 'from pyquest import *\n';
   g['pq_print'] = call('print', ['VALUE']);
   g['pq_clear'] = (block) => {
@@ -60,7 +62,13 @@ function installGenerators(): void {
   g['pq_arith'] = (block) => {
     const op = String(block.getFieldValue('OP'));
     const p = PRECEDENCE[op] ?? 1;
-    const strictRight = op === '-' || op === '/' || op === '%' ? p + 1 : p;
+    const right = block.getInputTargetBlock('B');
+    const rightOp = right?.type === 'pq_arith' ? String(right.getFieldValue('OP')) : '';
+    // a * (b % c) is not a * b % c, so a division or remainder on the right of × keeps its brackets too.
+    const strictRight =
+      op === '-' || op === '/' || op === '%' || (op === '*' && (rightOp === '%' || rightOp === '/'))
+        ? p + 1
+        : p;
     const code = `${operand(block, 'A', p)} ${op} ${operand(block, 'B', strictRight)}`;
     return [code, p === 1 ? Order.ADDITIVE : Order.MULTIPLICATIVE];
   };
@@ -70,6 +78,10 @@ function installGenerators(): void {
     if (block.getFieldValue('FLIP') === 'TRUE') args.push('flip=True');
     return `draw_image(${args.join(', ')})\n`;
   };
+  g['pq_draw_image_scale'] = (block) => {
+    const args = ['PATH', 'X', 'Y'].map((n) => value(block, n));
+    return `draw_image(${args.join(', ')}, scale=${value(block, 'SCALE') || '1'})\n`;
+  };
   g['pq_draw_text'] = call('draw_text', ['TEXT', 'X', 'Y']);
   g['pq_draw_text_size'] = call('draw_text', ['TEXT', 'X', 'Y', 'SIZE']);
   g['pq_draw_circle'] = call('draw_circle', ['X', 'Y', 'R', 'COLOR']);
@@ -77,6 +89,7 @@ function installGenerators(): void {
   g['pq_draw_line_width'] = call('draw_line', ['X1', 'Y1', 'X2', 'Y2', 'COLOR', 'WIDTH']);
   g['pq_draw_triangle'] = call('draw_triangle', ['X1', 'Y1', 'X2', 'Y2', 'X3', 'Y3', 'COLOR']);
   g['pq_str'] = (block) => [`str(${value(block, 'A')})`, Order.FUNCTION_CALL];
+  g['pq_abs'] = (block) => [`abs(${value(block, 'A') || '0'})`, Order.FUNCTION_CALL];
   g['pq_play_sound'] = (block) => `play_sound("${String(block.getFieldValue('SOUND'))}")\n`;
   g['pq_play_music'] = (block) => `play_music("${String(block.getFieldValue('MUSIC'))}")\n`;
   g['pq_stop_music'] = () => 'stop_music()\n';
@@ -134,6 +147,23 @@ function installGenerators(): void {
     `for ${String(block.getFieldValue('VAR'))} in ${value(block, 'LIST') || '[]'}:\n${body(block, 'DO')}`;
   g['pq_append'] = (block) =>
     `${String(block.getFieldValue('NAME'))}.append(${value(block, 'VALUE') || '0'})\n`;
+  g['pq_remove'] = (block) =>
+    `${String(block.getFieldValue('NAME'))}.remove(${value(block, 'VALUE') || '0'})\n`;
+  g['pq_dict'] = (block) => {
+    const items = Array.from(
+      { length: itemsOf(block) },
+      (_, i) => `${key(block, `KEY${String(i)}`)}: ${value(block, `ITEM${String(i)}`) || '0'}`,
+    );
+    return [`{${items.join(', ')}}`, Order.ATOMIC];
+  };
+  g['pq_key_get'] = (block) => [
+    `${String(block.getFieldValue('NAME'))}[${key(block, 'KEY')}]`,
+    Order.MEMBER,
+  ];
+  g['pq_key_set'] = (block) =>
+    `${String(block.getFieldValue('NAME'))}[${key(block, 'KEY')}] = ${value(block, 'VALUE') || 'None'}\n`;
+  g['pq_key_aug'] = (block) =>
+    `${String(block.getFieldValue('NAME'))}[${value(block, 'INDEX') || '0'}] ${String(block.getFieldValue('OP'))} ${value(block, 'VALUE') || '0'}\n`;
   g['pq_len'] = (block) => [`len(${value(block, 'A') || '[]'})`, Order.FUNCTION_CALL];
   g['pq_index'] = (block) => [
     `${String(block.getFieldValue('NAME'))}[${value(block, 'INDEX') || '0'}]`,

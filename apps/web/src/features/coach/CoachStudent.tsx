@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { catalog } from '../../content/catalog';
 import type { LessonState } from '../../storage/store';
 import { Button } from '../../ui/Button';
+import { DraftTag } from '../../ui/DraftTag';
 import { Panel } from '../../ui/Panel';
 import { TopBar } from '../../ui/TopBar';
 import { lessonsOf, listStudents, manage, type Student } from './coachApi';
@@ -77,7 +78,10 @@ export function CoachStudent() {
         )}
         {catalog.courses().map((course) => (
           <Panel key={course.id} className="p-4">
-            <h2 className="mb-2 text-2xl">{course.title}</h2>
+            <h2 className="mb-2 flex items-center gap-2 text-2xl">
+              {course.title}
+              {course.draft === true && <DraftTag />}
+            </h2>
             <ul className="flex flex-col divide-y divide-ink/10">
               {course.lessons.map((l) => {
                 const row = states.get(l.id);

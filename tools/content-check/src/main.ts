@@ -10,7 +10,7 @@ const LIBRARY = join(CONTENT, 'assets/library');
 /** Every file under content/ must match one of these (rule 8, AGENTS.md §9.13). */
 const ALLOWED = [
   /^courses\/[a-z0-9-]+\/course\.json$/,
-  /^courses\/[a-z0-9-]+\/lessons\/l\d{2}\.json$/,
+  /^courses\/[a-z0-9-]+\/lessons\/[a-z]\d{2}\.json$/,
   /^courses\/[a-z0-9-]+\/sample-game\/[a-z0-9_]+\.py$/,
   /^assets\/library\/manifest\.json$/,
   /^reference\/pyquest\.json$/,

@@ -14,6 +14,7 @@ Mỗi chủ đề có **một** tài liệu là nguồn chuẩn. Hai tài liệu
 | Âm thanh (play_sound, nhạc, 🔇) | `adr/0007-sound-made-by-the-page.md` | |
 | Cỡ sân theo khóa, lệnh vẽ tọa độ (draw_circle…) | `adr/0009-stage-size-per-course-and-drawing-commands.md` | nghiên cứu `superpowers/specs/2026-11-23-drawing-research.md` |
 | Chuột / chạm, phím, hình phóng to – lật – pixel, trang chơi thử của HLV | `adr/0010-pointer-keys-and-pixel-sprites.md` | hợp đồng ở `superpowers/specs/2026-11-23-roguelite-design.md` §4 |
+| Khóa nháp, học sau khóa, mã bài duy nhất; phím và chỗ bấm trong bài kiểm; `varCompare`; khối hộp có tên (dict) | `adr/0011-second-course-and-dict-blocks.md` | hợp đồng ở `superpowers/specs/2026-11-23-roguelite-design.md` §8; đề cương Hầm Ngọc ở §7 (nháp) |
 | Bài tập: kéo khối và gõ code song song | `adr/0008-every-exercise-has-blocks.md` | sửa một phần ADR 0005 |
 | Tài khoản, đồng bộ, màn HLV | `adr/0006-supabase-accounts-and-sync.md` | spec `superpowers/specs/2026-11-05-supabase-accounts-design.md` |
 | Thuật ngữ Việt ↔ code | `glossary.md` | |

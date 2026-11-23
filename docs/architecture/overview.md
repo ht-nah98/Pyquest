@@ -44,6 +44,12 @@ tools/content-check ──▶ runtime + checker trên Node: chạy lời giải 
   600 × 600 ở Xưởng vẽ), không có trợ giúp tọa độ, hình mẫu 👀 hay độ mờ 📞, rồi trả về PNG (data URL). Chưa vẽ gì thì
   trả `null`.
 
+## Nhiều khóa (ADR 0011)
+
+`catalog.courses()` trả mọi khóa, khóa sau nằm dưới khóa `after` của nó. Trang hỏi `seesCourse` / `opensLesson`
+(`content/access.ts`) trước khi hiện; mọi route `/c/…`, `/l/…` qua cổng `NeedApproved`. Route mới của khóa hay bài phải dùng
+`courseGuard`. 📘 Thư viện theo mã bài (`libraryFor` trong `content/courses.ts`), không theo số thứ tự.
+
 ## Xưởng vẽ (🎨, đợt 2)
 
 - **Nội dung:** `content/studio/studio.json` (schema `StudioSchema` trong `@pyquest/content-schema`): `stage` 600 × 600,

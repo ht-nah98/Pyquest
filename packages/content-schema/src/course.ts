@@ -5,6 +5,12 @@ export const CourseSchema = z
     id: z.string().min(1),
     title: z.string().min(1).max(40),
     summary: z.string().min(1).max(200),
+    /** The whole course is not approved yet: only the coach sees its card and opens its lessons (ADR 0011). */
+    draft: z.boolean().optional(),
+    /** The course taught before this one: 📘 Thư viện counts all its commands as known (ADR 0011). */
+    after: z.string().min(1).optional(),
+    /** How the course's game is played: next to the sample game and under the fullscreen play. */
+    howToPlay: z.string().min(1).max(160).optional(),
     lessonIds: z.array(z.string().min(1)).min(1),
     roadmap: z.array(
       z.object({

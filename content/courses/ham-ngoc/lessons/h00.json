@@ -1,0 +1,177 @@
+{
+  "id": "h00",
+  "courseId": "ham-ngoc",
+  "order": 0,
+  "title": "Vượt ải là làm gì?",
+  "draft": true,
+  "summary": "Chơi game mẫu, tách game thành phần, xếp lộ trình của em.",
+  "steps": [
+    {
+      "kind": "understand",
+      "slides": [
+        {
+          "id": "h00-hello",
+          "title": "Vào hầm thôi!",
+          "text": "Em vào hầm, né quái, nhặt ngọc, lên cấp rồi chọn skill. Qua hết các ải là thắng. Chơi thử game mẫu trước nhé!",
+          "widget": {
+            "kind": "sampleGame"
+          },
+          "coachNotes": "Bấm vào sân game trước, rồi mới dùng phím mũi tên để chơi (chưa bấm vào sân thì mũi tên là chuyển slide). Cho mỗi bé chơi một lượt. Hỏi: em thua vì sao? Thẻ nào em thích? Ghi câu trả lời lên bảng để dùng ở slide sau."
+        },
+        {
+          "id": "h00-parts",
+          "title": "Game to là nhiều phần nhỏ",
+          "text": "Hầm Ngọc trông rất to. Nhưng tách ra thì chỉ là nhiều phần nhỏ: nhân vật, di chuyển, quái, máu, tự đánh, kinh nghiệm, skill, các ải. Mỗi bài em làm một phần.",
+          "coachNotes": "Hỏi bé: lúc chơi em thấy những gì trên màn hình? Viết mỗi thứ ra một tờ giấy nhỏ, lát nữa xếp thứ tự."
+        },
+        {
+          "id": "h00-quiz-parts",
+          "quiz": {
+            "question": "Quái chạm vào em thì em mất máu. Muốn có việc này, cần những phần nào trước?",
+            "choices": [
+              "Skill và các ải",
+              "Nhân vật, quái và máu",
+              "Chỉ cần nhân vật"
+            ],
+            "answer": 1,
+            "explain": "Phải có nhân vật, có quái để chạm, và có số máu để trừ đi."
+          }
+        },
+        {
+          "id": "h00-process",
+          "title": "Vẫn quy trình cũ",
+          "text": "Ý tưởng → Thiết kế → Chuẩn bị → Code → Chơi thử → Sửa. Ở Bay Qua Khe em đã làm như vậy. Game to hơn thì càng cần đi từng bước.",
+          "coachNotes": "Hỏi: ở Bay Qua Khe, bước nào giúp em đỡ phải sửa code nhất?"
+        },
+        {
+          "id": "h00-yours",
+          "title": "Bản của em",
+          "text": "Game mẫu dài hơn 1000 dòng. Em không chép nó. Em tự xây bản của em, khoảng 250 dòng, và em hiểu hết từng dòng. Game mẫu để chơi và lấy ý tưởng."
+        },
+        {
+          "id": "h00-quiz-yours",
+          "quiz": {
+            "question": "Mỗi bài trong khóa này, em sẽ làm gì?",
+            "choices": [
+              "Chép game mẫu vào máy",
+              "Thêm một phần vào game của em",
+              "Làm một game mới từ đầu"
+            ],
+            "answer": 1,
+            "explain": "Bài sau bắt đầu từ code của bài trước, nên game của em lớn dần lên."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "design",
+      "slides": [
+        {
+          "id": "h00-roadmap",
+          "title": "Xếp lộ trình của em",
+          "text": "Kéo các phần của game vào thứ tự em sẽ làm. Phần nào cần có trước thì xếp lên trên.",
+          "widget": {
+            "kind": "roadmapBuilder"
+          },
+          "coachNotes": "Không có một thứ tự duy nhất đúng. Gợi ý: nhân vật → di chuyển → quái → máu → tự đánh → kinh nghiệm → lên cấp → skill → phối hợp → vượt ải → hiệu ứng → ra mắt. Hỏi bé vì sao xếp như vậy."
+        },
+        {
+          "id": "h00-quiz-order",
+          "quiz": {
+            "question": "Vì sao phần Quái phải làm trước phần Tự đánh?",
+            "choices": [
+              "Vì quái dễ vẽ hơn",
+              "Vì phải có quái thì mới có cái để đánh",
+              "Vì quái xuất hiện trước"
+            ],
+            "answer": 1,
+            "explain": "Tự đánh cần biết con quái nào ở gần, nên phải có quái trước."
+          }
+        }
+      ]
+    },
+    {
+      "kind": "prepare",
+      "slides": [
+        {
+          "id": "h00-stage",
+          "title": "Sân mới: 600 × 600",
+          "text": "Hầm Ngọc dùng sân vuông, rộng 600 và cao 600. Góc trên bên trái vẫn là (0, 0). Giữa sân là (300, 300).",
+          "coachNotes": "Cho bé vẽ một hình vuông ra giấy, ghi tọa độ bốn góc và tâm."
+        }
+      ]
+    },
+    {
+      "kind": "code",
+      "slides": [
+        {
+          "id": "h00-first-line",
+          "title": "Lời hứa của em",
+          "text": "Dùng print(\"...\") để nói một câu trên sân mới: Mình sẽ vượt ải!",
+          "coachNotes": "Bài tập ngắn để bé thấy sân vuông và nhớ lại màn code."
+        }
+      ]
+    },
+    {
+      "kind": "playtest",
+      "slides": [
+        {
+          "id": "h00-try",
+          "title": "Chạy thử",
+          "text": "Bấm ▶ Chạy. Thấy bong bóng chưa? Đổi sang câu của riêng em rồi chạy lại."
+        },
+        {
+          "id": "h00-next",
+          "title": "Bài sau",
+          "text": "Em sẽ đưa nhân vật đầu tiên vào hầm: một hình pixel nhỏ, phóng to lên cho dễ nhìn.",
+          "coachNotes": "Nếu còn giờ: cho bé xem lại lộ trình vừa xếp, chỉ phần Nhân vật."
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "h00-e1",
+      "title": "Lời hứa của em",
+      "task": "Dùng print(\"...\") để nói một câu trên sân mới: Mình sẽ vượt ải!",
+      "input": "blocks",
+      "starter": {
+        "main.py": "from pyquest import *\n\nprint(\"Xin chào!\")\n"
+      },
+      "main": "main.py",
+      "toolbox": [
+        "pq_import",
+        "pq_print",
+        "pq_text"
+      ],
+      "mode": "script",
+      "goals": [
+        {
+          "id": "h00-g-run",
+          "label": "Chạy không lỗi",
+          "kind": "noError"
+        },
+        {
+          "id": "h00-g-say",
+          "label": "Nói: Mình sẽ vượt ải!",
+          "kind": "printed",
+          "text": "Mình sẽ vượt ải!"
+        }
+      ],
+      "walkthrough": [
+        "Ở khung Khối, bấm vào chữ Xin chào! trong khối \"nói\" rồi gõ: Mình sẽ vượt ải!",
+        "Hoặc sửa thẳng trong khung Python. Giữ nguyên hai dấu ngoặc kép \" \" bao quanh chữ.",
+        "Bấm ▶ Chạy và xem bong bóng hiện trên sân vuông."
+      ],
+      "solution": {
+        "main.py": "from pyquest import *\n\nprint(\"Mình sẽ vượt ải!\")\n"
+      },
+      "hints": [
+        "Chỉ cần sửa chữ bên trong dấu ngoặc kép.",
+        "Gõ đúng: Mình sẽ vượt ải! (có dấu chấm than)."
+      ]
+    }
+  ],
+  "unlocksRoadmap": [],
+  "docsUnlocked": []
+}

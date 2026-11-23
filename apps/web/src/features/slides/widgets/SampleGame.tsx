@@ -13,10 +13,13 @@ import { Button } from '../../../ui/Button';
 export function SampleGame({
   source,
   stage: size = DEFAULT_STAGE,
+  howToPlay,
 }: {
   source: string;
   /** The course's stage (catalog.stageOf); Bay Qua Khe's 400 × 600 when absent. */
   stage?: StageSize;
+  /** course.howToPlay; absent: Bay Qua Khe's own words. */
+  howToPlay?: string | undefined;
 }) {
   const stage = useRef<StageHandle>(null);
   const box = useRef<HTMLDivElement>(null);
@@ -35,7 +38,14 @@ export function SampleGame({
   }, []);
 
   return (
-    <div ref={box} className="flex h-full w-full min-h-0 gap-4 bg-paper" data-testid="sample-game">
+    <div
+      ref={box}
+      // Focusable, so a click on the game gives it the keys in Trình chiếu (LessonSlides).
+      tabIndex={-1}
+      className="flex h-full w-full min-h-0 gap-4 bg-paper outline-none"
+      data-testid="sample-game"
+      data-game-keys
+    >
       <div className="relative min-h-0 flex-1 touch-none" {...loop.pointer}>
         <Stage ref={stage} className="h-full" testId="sample-stage" size={size} />
         {status === 'loading' && (
@@ -55,8 +65,13 @@ export function SampleGame({
           ⛶ Toàn màn hình
         </Button>
         <p className="rounded-[10px] bg-brand-soft p-3 text-base">
-          <b>Cách chơi:</b> bấm <kbd className="rounded border border-ink bg-white px-1">Space</kbd>
-          , bấm chuột hoặc chạm vào sân để vỗ cánh. Bay qua khe giữa hai cột!
+          <b>Cách chơi:</b>{' '}
+          {howToPlay ?? (
+            <>
+              bấm <kbd className="rounded border border-ink bg-white px-1">Space</kbd>, bấm chuột
+              hoặc chạm vào sân để vỗ cánh. Bay qua khe giữa hai cột!
+            </>
+          )}
         </p>
       </div>
     </div>

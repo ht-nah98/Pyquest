@@ -3,10 +3,11 @@ import { Link } from 'react-router';
 import { catalog } from '../../content/catalog';
 import type { LessonState } from '../../storage/store';
 import { Button } from '../../ui/Button';
+import { DraftTag } from '../../ui/DraftTag';
 import { Panel } from '../../ui/Panel';
 import { TopBar } from '../../ui/TopBar';
 import { lessonsOf, listStudents, manage, type Student } from './coachApi';
-import { cellOf, currentLesson } from './summary';
+import { cellOf, currentLesson, isIn } from './summary';
 
 const AVATARS = ['🦊', '🐼', '🐯', '🦉', '🐸', '🐙', '🦄', '🐲'];
 const input = 'min-h-11 rounded-[10px] border-2 border-ink bg-white px-3';
@@ -68,10 +69,13 @@ export function CoachHome() {
           students.length > 0 &&
           catalog.courses().map((course) => (
             <Panel key={course.id} className="overflow-x-auto p-3">
-              <h3 className="mb-2 text-xl">{course.title}</h3>
+              <h3 className="mb-2 flex items-center gap-2 text-xl">
+                {course.title}
+                {course.draft === true && <DraftTag />}
+              </h3>
               <table
                 className="border-separate border-spacing-1 text-sm"
-                data-testid="progress-grid"
+                data-testid={`progress-grid-${course.id}`}
               >
                 <thead>
                   <tr>
@@ -87,7 +91,10 @@ export function CoachHome() {
                 <tbody>
                   {students.map((s) => {
                     const mine = states.get(s.id) ?? new Map<string, LessonState>();
-                    const now = currentLesson(course.lessons, mine);
+                    // A child who has not started a later course is not "at Bài 0" of it.
+                    const now = isIn(course, mine)
+                      ? currentLesson(course.lessons, mine)
+                      : undefined;
                     return (
                       <tr key={s.id}>
                         <td className="sticky left-0 bg-paper pr-2">

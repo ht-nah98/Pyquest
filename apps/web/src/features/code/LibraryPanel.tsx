@@ -6,16 +6,17 @@ import { catalog } from '../../content/catalog';
  * an example, and "Xem bên trong" — its real code, because a library is just a Python file someone wrote.
  */
 export function LibraryPanel({
-  uptoOrder,
+  upto,
   stage,
   onClose,
 }: {
-  uptoOrder: number | 'studio' | undefined;
+  /** A lesson id, 'studio', or undefined: everything (the coach). */
+  upto: string | undefined;
   /** The course's stage, so WIDTH / HEIGHT show their real numbers. */
   stage: StageSize;
   onClose: () => void;
 }) {
-  const entries = catalog.library(uptoOrder);
+  const entries = catalog.library(upto);
   return (
     <aside
       className="absolute inset-y-0 right-0 z-[85] flex w-[min(440px,100%)] flex-col border-l-2 border-ink bg-paper"

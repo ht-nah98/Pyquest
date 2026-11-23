@@ -13,6 +13,7 @@ import {
   type OpenLesson,
 } from '@pyquest/content-schema';
 import { DEFAULT_STAGE, type StageSize } from '@pyquest/runtime';
+import { inCourseOrder, libraryFor } from './courses';
 
 // Vite fixes this list at start-up: a new file in content/ needs `npm run dev` restarted (AGENTS.md §9.3).
 const courseFiles = import.meta.glob<unknown>('@content/courses/*/course.json', {
@@ -90,8 +91,9 @@ function build() {
 const data = build();
 
 export const catalog = {
+  /** Every course, drafts too (the pages ask seesCourse), in the order children take them. */
   courses(): CatalogCourse[] {
-    return [...data.courses.values()];
+    return inCourseOrder([...data.courses.values()]);
   },
   course(id: string): CatalogCourse | undefined {
     return data.courses.get(id);
@@ -129,16 +131,11 @@ export const catalog = {
     const a = data.assets.get(id);
     return a === undefined ? undefined : data.urls.get(a.file);
   },
-  /** pyquest commands taught up to (and including) this lesson order; all of them when order is undefined. */
-  library(uptoOrder?: number | 'studio'): LibraryEntry[] {
-    if (uptoOrder === undefined) return data.library;
-    if (uptoOrder === 'studio') return data.library.filter((e) => e.gameOnly !== true);
-    const orderOf = new Map<string, number>();
-    for (const c of data.courses.values()) for (const l of c.lessons) orderOf.set(l.id, l.order);
-    // A command no lesson teaches yet (no `lesson`) is never listed by lesson order.
-    return data.library.filter(
-      (e) => e.lesson !== undefined && (orderOf.get(e.lesson) ?? Infinity) <= uptoOrder,
-    );
+  /** pyquest commands met by this lesson (libraryFor); all of them when upto is undefined. */
+  library(upto?: string): LibraryEntry[] {
+    if (upto === undefined) return data.library;
+    if (upto === 'studio') return data.library.filter((e) => e.gameOnly !== true);
+    return libraryFor(data.library, [...data.courses.values()], upto);
   },
   /** A slide image by file name. */
   imageUrl(file: string): string | undefined {

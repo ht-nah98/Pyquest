@@ -14,11 +14,19 @@ import {
   StudioSchema,
   isOpenLesson,
   parseLesson,
+  type Course,
   type Exercise,
+  type GameTest,
   type Lesson,
   type OpenLesson,
 } from '@pyquest/content-schema';
-import type { BlockNode, PyRunner, RunResult, StageSize } from '@pyquest/runtime';
+import {
+  DEFAULT_STAGE,
+  type BlockNode,
+  type PyRunner,
+  type RunResult,
+  type StageSize,
+} from '@pyquest/runtime';
 
 export type ContentInput = {
   courses: {
@@ -47,6 +55,8 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
   const err = (where: string, msg: string) => errors.push(`${where}: ${msg}`);
 
   for (const stray of input.strayFiles) err(stray, 'stray file in content/ (rule 8)');
+
+  checkCourses(input, err);
 
   // Rule 10: the library reference parses and points at lessons that exist.
   const allLessonIds = new Set(
@@ -133,6 +143,42 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
   return errors;
 }
 
+/** Saved work and links know a lesson by its id alone, so it is one letter and two digits (h05), used once. */
+const LESSON_ID = /^[a-z]\d{2}$/;
+
+/** Rule 13: lesson ids are unique on the whole platform; `after` names another course, without going round (ADR 0011). */
+function checkCourses(input: ContentInput, err: (where: string, msg: string) => void): void {
+  const owner = new Map<string, string>();
+  for (const c of input.courses)
+    for (const { file, json } of c.lessons) {
+      const id = (json as { id?: unknown }).id;
+      if (typeof id !== 'string') continue; // the lesson schema reports it
+      if (!LESSON_ID.test(id))
+        err(`${c.dir}/${file}`, `lesson id "${id}" must be a letter and two digits, like h05`);
+      const first = owner.get(id);
+      if (first !== undefined)
+        err(`${c.dir}/${file}`, `duplicate lesson id "${id}" (already in ${first})`);
+      else owner.set(id, c.dir);
+    }
+
+  const after = new Map<string, Course['after']>();
+  for (const c of input.courses) {
+    const course = CourseSchema.safeParse(c.course);
+    if (course.success) after.set(course.data.id, course.data.after);
+  }
+  for (const id of after.keys()) {
+    const seen = new Set([id]);
+    for (let next = after.get(id); next !== undefined; next = after.get(next)) {
+      if (!after.has(next)) err(id, `after: unknown course "${next}"`);
+      if (seen.has(next)) {
+        err(id, `after: the courses go round in a circle (${[...seen, next].join(' → ')})`);
+        break;
+      }
+      seen.add(next);
+    }
+  }
+}
+
 type Ctx = {
   roadmapIds: Set<string>;
   assetIds: Set<string>;
@@ -210,18 +256,32 @@ export function blockTypes(nodes: readonly BlockNode[]): Set<string> {
   return out;
 }
 
+/** The checker's own match (inGroup): the picture itself, or a picture whose id starts with it and a dash. */
+const hasPicture = (assetIds: ReadonlySet<string>, sprite: string): boolean =>
+  [...assetIds].some((id) => id === sprite || id.startsWith(`${sprite}-`));
+
 /** Every exercise is checked like a whole lesson used to be (spec foundations-first §4). */
 async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<void> {
   const known: readonly string[] = BLOCK_TYPES;
   for (const id of code.toolbox)
     if (!known.includes(id)) ctx.err(where, `unknown toolbox block "${id}"`);
   for (const goal of code.goals) {
-    if (goal.kind === 'drew' && !ctx.assetIds.has(goal.sprite)) {
+    // A goal's sprite is one picture (hero-knight) or the first part of several ids (hero, skill-fire).
+    if ('sprite' in goal && !hasPicture(ctx.assetIds, goal.sprite)) {
       ctx.err(where, `goal ${goal.id} sprite "${goal.sprite}" is not in the asset library`);
     }
     if ((goal.kind === 'shifts' || goal.kind === 'matches') && code.mode !== 'script') {
       ctx.err(where, `goal ${goal.id}: ${goal.kind} only works in script mode`);
     }
+  }
+
+  const { width, height } = ctx.stage ?? DEFAULT_STAGE;
+  for (const c of code.test?.clicks ?? []) {
+    if (c.x < 0 || c.x > width || c.y < 0 || c.y > height)
+      ctx.err(
+        where,
+        `test click at (${String(c.x)}, ${String(c.y)}) is outside the ${String(width)} × ${String(height)} stage`,
+      );
   }
 
   // Rule 9: what the lesson ships must survive code → blocks → code unchanged, or the editor would
@@ -302,7 +362,7 @@ async function runLesson(
   mode: 'script' | 'game',
   files: Record<string, string>,
   main: string,
-  test: { frames: number; taps: number[] } = { frames: 90, taps: [] },
+  test: GameTest = { frames: 90, taps: [] },
   stage?: StageSize,
 ): Promise<RunResult> {
   const size = stage === undefined ? {} : { stage };

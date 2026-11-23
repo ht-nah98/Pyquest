@@ -9,6 +9,43 @@ export type StepKind = z.infer<typeof StepKindSchema>;
 /** Every lesson must teach the why before the code, and end with playing it (pedagogy/lesson-rhythm.md). */
 export const REQUIRED_STEPS: readonly StepKind[] = ['understand', 'playtest'];
 
+/** The keys a test run may hold: the same list as KEYS in @pyquest/runtime (importing it would pull Pyodide in). */
+export const TEST_KEYS = ['left', 'right', 'up', 'down', 'space', '1', '2', '3'] as const;
+
+const Frame = z.int().nonnegative();
+
+/**
+ * How the automatic test plays a game exercise: how many frames, on which frames the screen is tapped,
+ * which keys are held from one frame up to and including another, and where it is clicked (ADR 0011).
+ */
+const GameTestSchema = z
+  .object({
+    frames: z.int().positive().max(600),
+    taps: z.array(Frame),
+    keys: z.array(z.object({ key: z.enum(TEST_KEYS), from: Frame, to: Frame })).optional(),
+    clicks: z.array(z.object({ frame: Frame, x: z.number(), y: z.number() })).optional(),
+  })
+  .superRefine((t, ctx) => {
+    t.keys?.forEach((k, i) => {
+      if (k.from > k.to || k.to >= t.frames)
+        ctx.addIssue({
+          code: 'custom',
+          message: `test key "${k.key}": needs from <= to < frames (${String(t.frames)})`,
+          path: ['keys', i],
+        });
+    });
+    t.clicks?.forEach((c, i) => {
+      if (c.frame >= t.frames)
+        ctx.addIssue({
+          code: 'custom',
+          message: `test click: frame must be < frames (${String(t.frames)})`,
+          path: ['clicks', i],
+        });
+    });
+  });
+
+export type GameTest = z.infer<typeof GameTestSchema>;
+
 const FilesSchema = z.record(z.string().min(1), z.string());
 
 /**
@@ -27,10 +64,8 @@ export const ExerciseSchema = z
     mode: z.enum(['script', 'game']),
     goals: z.array(GoalSchema).min(1),
     solution: FilesSchema,
-    /** Game mode: how the automatic test plays it (frames, and frames where the screen is tapped). */
-    test: z
-      .object({ frames: z.int().positive().max(600), taps: z.array(z.int().nonnegative()) })
-      .optional(),
+    /** Game mode: how the automatic test plays it. */
+    test: GameTestSchema.optional(),
     /** Numbered "Các bước" shown in the task card: the detailed how-to of this code step. */
     walkthrough: z.array(z.string().min(1).max(200)).max(8).optional(),
     /** Written but not yet approved by the coach: only the coach sees it (AGENTS.md §6). */

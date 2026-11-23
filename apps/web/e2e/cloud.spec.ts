@@ -49,7 +49,9 @@ test('accounts: the coach adds a child; the child learns on two devices, offline
   await coach.getByTestId('new-pin').fill('123456');
   await coach.getByTestId('new-go').click();
   await expect(coach.getByTestId('new-result')).toContainText('PIN 123456');
-  await expect(coach.getByTestId('student-an')).toContainText('An Nhiên');
+  await expect(
+    coach.getByTestId('progress-grid-bay-qua-khe').getByTestId('student-an'),
+  ).toContainText('An Nhiên');
   await coach.screenshot({ path: `${SHOTS}/cloud-coach-home.png` });
 
   // A wrong PIN says so in words.

@@ -14,6 +14,7 @@ const CONDITION = 260;
 const FUNCTION = 290;
 const EVENT = 45;
 const LIST = 200;
+const DICT = 110;
 const SOUND = 345;
 
 /** Dropdown labels: what the child hears, then the name the code uses (ADR 0007). */
@@ -160,6 +161,22 @@ const JSON_DEFS = [
       'draw_image("images/bird.png", x, y): dán cả một file ảnh, góc trên bên trái ở (x, y).',
   },
   {
+    type: 'pq_draw_image_scale',
+    message0: 'vẽ ảnh %1 tại x %2 y %3 phóng to %4 lần',
+    args0: [
+      { type: 'input_value', name: 'PATH' },
+      { type: 'input_value', name: 'X' },
+      { type: 'input_value', name: 'Y' },
+      { type: 'input_value', name: 'SCALE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DRAW,
+    tooltip:
+      'draw_image(ảnh, x, y, scale=3): dán ảnh to gấp 3, góc trên bên trái ở (x, y). Hợp với hình pixel nhỏ.',
+  },
+  {
     type: 'pq_draw_text',
     message0: 'viết chữ %1 tại x %2 y %3',
     args0: [
@@ -261,6 +278,15 @@ const JSON_DEFS = [
     output: 'String',
     colour: VALUE,
     tooltip: 'str(số): biến một số thành chữ, ví dụ str(12) là "12".',
+  },
+  {
+    type: 'pq_abs',
+    message0: 'giá trị tuyệt đối của %1',
+    args0: [{ type: 'input_value', name: 'A' }],
+    output: 'Number',
+    colour: VALUE,
+    tooltip:
+      'abs(số): bỏ dấu trừ. abs(a - b) là khoảng cách giữa a và b, không cần biết số nào lớn hơn.',
   },
   {
     type: 'pq_aug',
@@ -459,6 +485,20 @@ const JSON_DEFS = [
     tooltip: 'xs.append(giá trị): thêm một ngăn vào cuối danh sách.',
   },
   {
+    type: 'pq_remove',
+    message0: 'bỏ %2 khỏi %1',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'xs' },
+      { type: 'input_value', name: 'VALUE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: LIST,
+    tooltip:
+      'xs.remove(giá trị): bỏ ngăn đầu tiên có giá trị này. Danh sách không có nó thì báo lỗi.',
+  },
+  {
     type: 'pq_len',
     message0: 'số phần tử của %1',
     args0: [{ type: 'input_value', name: 'A' }],
@@ -491,6 +531,54 @@ const JSON_DEFS = [
     nextStatement: null,
     colour: LIST,
     tooltip: 'xs[i] = giá trị: cất giá trị mới vào ngăn số i của danh sách.',
+  },
+  {
+    type: 'pq_key_get',
+    message0: '%1 ngăn " %2 "',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'hero' },
+      { type: 'field_input', name: 'KEY', text: 'x' },
+    ],
+    output: null,
+    colour: DICT,
+    tooltip: 'hero["x"]: giá trị trong ngăn có tên x của hộp hero.',
+  },
+  {
+    type: 'pq_key_set',
+    message0: 'đặt %1 ngăn " %2 " = %3',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'hero' },
+      { type: 'field_input', name: 'KEY', text: 'x' },
+      { type: 'input_value', name: 'VALUE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DICT,
+    tooltip: 'hero["x"] = giá trị: cất giá trị mới vào ngăn có tên x của hộp hero.',
+  },
+  {
+    type: 'pq_key_aug',
+    message0: 'đổi %1 ngăn %2 %3 %4',
+    args0: [
+      { type: 'field_input', name: 'NAME', text: 'hero' },
+      { type: 'input_value', name: 'INDEX' },
+      {
+        type: 'field_dropdown',
+        name: 'OP',
+        options: [
+          ['+=', '+='],
+          ['-=', '-='],
+        ],
+      },
+      { type: 'input_value', name: 'VALUE' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DICT,
+    tooltip:
+      'hero["x"] += 2: cộng thêm 2 vào ngăn x. Danh sách cũng được: xs[0] -= 1 là bớt 1 ở ngăn số 0.',
   },
   {
     type: 'pq_key_pressed',
@@ -686,6 +774,40 @@ const LIST_BLOCK = {
   },
 };
 
+/** The names a fresh dict block starts with; the child types their own. */
+const DICT_KEYS = ['x', 'y', 'hp'];
+
+/** {"x": 300, "hp": 5}: a box with a fixed number of named slots (extraState { items }, fields KEY0…). */
+const DICT_BLOCK = {
+  init(this: ListBlock) {
+    this.items = DICT_KEYS.length;
+    this.setOutput(true);
+    this.setInputsInline(true);
+    this.setColour(DICT);
+    this.setTooltip(
+      'Hộp có tên (dict): mỗi ngăn có một tên. {"x": 300, "hp": 5} có ngăn x và ngăn hp.',
+    );
+    this.renderInputs();
+  },
+  renderInputs(this: ListBlock) {
+    for (const input of [...this.inputList]) this.removeInput(input.name);
+    this.appendDummyInput('OPEN').appendField('hộp có tên {');
+    for (let i = 0; i < this.items; i++)
+      this.appendValueInput(`ITEM${String(i)}`)
+        .appendField('"')
+        .appendField(new Blockly.FieldTextInput(DICT_KEYS[i] ?? ''), `KEY${String(i)}`)
+        .appendField('" :');
+    this.appendDummyInput('CLOSE').appendField('}');
+  },
+  saveExtraState(this: ListBlock) {
+    return { items: this.items };
+  },
+  loadExtraState(this: ListBlock, state: { items?: number }) {
+    this.items = state.items ?? DICT_KEYS.length;
+    this.renderInputs();
+  },
+};
+
 /** if … elif … elif … else: one block for the whole chain (extraState { elifs, else }). */
 const IF_CHAIN_BLOCK = {
   init(this: ChainBlock) {
@@ -774,6 +896,7 @@ export const BLOCK_TYPES = [
   'pq_call_expr',
   'pq_if_chain',
   'pq_list',
+  'pq_dict',
 ] as const;
 
 let registered = false;
@@ -787,6 +910,7 @@ export function registerBlocks(): void {
   Blockly.Blocks['pq_call_expr'] = CALL_EXPR_BLOCK;
   Blockly.Blocks['pq_if_chain'] = IF_CHAIN_BLOCK;
   Blockly.Blocks['pq_list'] = LIST_BLOCK;
+  Blockly.Blocks['pq_dict'] = DICT_BLOCK;
   registered = true;
 }
 
@@ -796,7 +920,7 @@ export function callOf(block: Block): { name: string; params: string[] } {
   return { name: b.fnName, params: b.params };
 }
 
-/** How many slots a list block has, for the generator. */
+/** How many slots a list or dict block has, for the generator. */
 export function itemsOf(block: Block): number {
   return (block as ListBlock).items;
 }

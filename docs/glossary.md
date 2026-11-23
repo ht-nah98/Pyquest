@@ -31,6 +31,11 @@
 | Bài tập | `Exercise` / `lesson.exercises` | một nhiệm vụ code trong bài; bài sau mở khi bài trước đạt |
 | Kéo khối / gõ code | `input: 'blocks' \| 'typing'` | `typing` = gợi ý "✍️ Thử gõ code nhé", khối vẫn kéo được (ADR 0008) |
 | Hình mẫu | goal `matches`, nút 👀 | hình của lời giải, hiện mờ trên sân để so |
+| Hộp có tên | `dict` / `pq_dict` | `{"x": 300, "hp": 5}`: một hộp có nhiều ngăn, mỗi ngăn một tên |
+| Ngăn (có tên) | `mob["x"]` / `pq_key_get`, `pq_key_set`, `pq_key_aug` | lấy, đặt, cộng bớt giá trị của một ngăn |
+| Khóa nháp | `course.draft` | cả khóa chỉ HLV thấy và mở được (ADR 0011) |
+| Học sau khóa | `course.after` | khóa đứng trước; lệnh của nó tính là đã học trong 📘 Thư viện |
+| Bài kiểm tự động | `Exercise.test` / `GameTest` | số khung, lúc chạm, phím giữ, chỗ bấm dùng để chấm bài game |
 | Xưởng vẽ | `/studio`, `content/studio/studio.json` | chỗ bé vẽ tự do bằng code / khối, lưu nhiều tranh, tải PNG; không chấm |
 | Tranh | dòng tiến độ `studio:<id>`, `state.studio` | một bức vẽ trong Xưởng vẽ: tên, code, khối |
 | Thử thách | `studio.challenges` | 💡 ý tưởng để vẽ trong Xưởng vẽ (đề + gợi ý), không có mục tiêu chấm |

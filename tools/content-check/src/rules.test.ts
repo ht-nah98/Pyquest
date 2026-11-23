@@ -1,4 +1,5 @@
-import { PyRunner } from '@pyquest/runtime';
+import { TEST_KEYS } from '@pyquest/content-schema';
+import { KEYS, PyRunner } from '@pyquest/runtime';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { checkContent, type ContentInput } from './rules';
 
@@ -279,6 +280,169 @@ describe('checkContent', () => {
     const i = input(lesson());
     i.courses[0]!.sampleGame = 'from pyquest import *\ndef update():\n    boom()\n';
     expect((await checkContent(i, py)).join('\n')).toMatch(/sample game/);
+  });
+
+  describe('two courses (rule 13, ADR 0011)', () => {
+    const two = (secondId: string, over: Record<string, unknown> = {}): ContentInput => {
+      const i = input(lesson());
+      i.courses.push({
+        dir: 'd',
+        course: {
+          id: 'd',
+          title: 'Khóa 2',
+          summary: 'Tóm tắt.',
+          draft: true,
+          after: 'c',
+          lessonIds: [secondId],
+          roadmap: [],
+          ...over,
+        },
+        lessons: [
+          {
+            file: `${secondId}.json`,
+            json: { id: secondId, courseId: 'd', order: 0, title: 'Một', hidden: true },
+          },
+        ],
+      });
+      return i;
+    };
+
+    test('a draft course after another one is fine', async () => {
+      expect(await checkContent(two('h00'), py)).toEqual([]);
+    });
+
+    test('a lesson id used by two courses is reported', async () => {
+      expect((await checkContent(two('l00'), py)).join('\n')).toContain(
+        'duplicate lesson id "l00" (already in c)',
+      );
+    });
+
+    test('a lesson id that is not a letter and two digits is reported', async () => {
+      for (const id of ['h0', 'H00', 'ham00', 'h000'])
+        expect((await checkContent(two(id), py)).join('\n')).toContain(`lesson id "${id}" must be`);
+    });
+
+    test('after: an unknown course, itself or a circle is reported', async () => {
+      const check = async (i: ContentInput) => (await checkContent(i, py)).join('\n');
+      expect(await check(two('h00', { after: 'nope' }))).toContain('unknown course "nope"');
+      expect(await check(two('h00', { after: 'd' }))).toContain('circle');
+      const round = two('h00');
+      (round.courses[0]!.course as Record<string, unknown>)['after'] = 'd';
+      expect(await check(round)).toContain('circle');
+    });
+
+    test('rule 10 accepts a lesson of any course', async () => {
+      const i = two('h00');
+      const entry = {
+        name: 'clicked',
+        signature: 'clicked()',
+        vi: 'Vừa bấm.',
+        why: 'Làm nút bấm.',
+        example: 'clicked()',
+      };
+      i.library = { entries: [{ ...entry, lesson: 'h00' }] };
+      expect(await checkContent(i, py)).toEqual([]);
+      i.library = { entries: [{ ...entry, lesson: 'h01' }] };
+      expect((await checkContent(i, py)).join('\n')).toContain('unknown lesson h01');
+    });
+  });
+
+  describe('game tests with keys and clicks (ADR 0011)', () => {
+    test('the schema knows the same keys as Python', () => {
+      expect(TEST_KEYS).toEqual(KEYS);
+    });
+
+    const WALK = `from pyquest import *
+
+x = 300
+shots = 0
+
+
+def update():
+    global x, shots
+    if key_pressed("left"):
+        x -= 4
+    if clicked() and mouse_x() > 500:
+        shots += 1
+
+
+def draw():
+    draw_image("images/bird.png", x, 100, scale=3)
+`;
+    const game = (test: Record<string, unknown>, stage?: { width: number; height: number }) => {
+      const l = lesson();
+      Object.assign(ex(l) as Record<string, unknown>, {
+        mode: 'game',
+        test: { frames: 30, taps: [], ...test },
+        toolbox: [
+          'pq_import',
+          'pq_assign',
+          'pq_aug',
+          'pq_def',
+          'pq_global',
+          'pq_if',
+          'pq_key_held',
+          'pq_logic',
+          'pq_clicked',
+          'pq_compare',
+          'pq_mouse_x',
+          'pq_draw_image_scale',
+          'pq_number',
+          'pq_text',
+          'pq_var_get',
+        ],
+        goals: [
+          { id: 'g-left', label: 'Sang trái', kind: 'moves', sprite: 'bird', axis: 'x', dir: -1 },
+          { id: 'g-shot', label: 'Bắn', kind: 'varCompare', name: 'shots', op: '>=', value: 1 },
+          {
+            id: 'g-far',
+            label: 'Đi xa',
+            kind: 'varCompare',
+            name: 'x',
+            op: '<=',
+            value: 270,
+            when: 'ever',
+          },
+        ],
+        starter: { 'main.py': 'from pyquest import *\n' },
+        solution: { 'main.py': WALK },
+      });
+      const i = input(l);
+      if (stage !== undefined) (i.courses[0]!.course as Record<string, unknown>)['stage'] = stage;
+      return checkContent(i, py);
+    };
+    const square = { width: 600, height: 600 };
+    const keys = [{ key: 'left', from: 2, to: 11 }];
+
+    test('the solution is graded with the held keys and the clicks', async () => {
+      expect(await game({ keys, clicks: [{ frame: 5, x: 560, y: 10 }] }, square)).toEqual([]);
+      expect((await game({ clicks: [{ frame: 5, x: 560, y: 10 }] }, square)).join('\n')).toMatch(
+        /misses goals g-left, g-far/,
+      );
+    });
+
+    test('a click outside the stage is reported (400 wide here)', async () => {
+      expect((await game({ keys, clicks: [{ frame: 5, x: 560, y: 10 }] })).join('\n')).toContain(
+        'outside the 400 × 600 stage',
+      );
+    });
+  });
+
+  test('a goal may name a group of pictures; one that matches nothing is reported', async () => {
+    const i = input(lesson());
+    const assets = (i.manifest as { assets: Record<string, unknown>[] }).assets;
+    assets.push({ ...assets[0], id: 'bird-rong' }, { ...assets[0], id: 'boss-1', group: 'mob' });
+    const e = ex(i.courses[0]!.lessons[0]!.json as Record<string, unknown>) as Record<
+      string,
+      unknown
+    >;
+    e['solution'] = {
+      'main.py': 'from pyquest import *\ndraw_image("images/boss-1.png", 1, 2)\n',
+    };
+    e['goals'] = [{ id: 'g', label: 'Trùm', kind: 'drew', sprite: 'boss' }];
+    expect(await checkContent(i, py)).toEqual([]);
+    e['goals'] = [{ id: 'g', label: 'Trùm', kind: 'drewCount', sprite: 'mob', min: 1 }];
+    expect((await checkContent(i, py)).join('\n')).toContain('sprite "mob" is not in the asset');
   });
 
   describe('the drawing studio (rule 12)', () => {

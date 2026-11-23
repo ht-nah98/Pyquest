@@ -84,6 +84,9 @@ export class BlockCodeSync {
     try {
       Blockly.Events.disable();
       Blockly.serialization.workspaces.load(state, this.ws);
+    } catch {
+      // Saved by a newer or broken build (an unknown block): start empty, the parse of the code fills it.
+      this.ws.clear();
     } finally {
       Blockly.Events.enable();
       this.applying = false;

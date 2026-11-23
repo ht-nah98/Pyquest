@@ -25,6 +25,8 @@ export function PlayScreen() {
   const { state } = useLessonState(lessonId);
   const stage = useRef<StageHandle>(null);
   const size = catalog.lessonStage(lessonId);
+  const howToPlay =
+    catalog.courseOf(lessonId)?.howToPlay ?? 'Bấm Space hoặc chạm màn hình để vỗ cánh';
   const [round, setRound] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const loop = useGameLoop(stage, (r) => {
@@ -51,9 +53,7 @@ export function PlayScreen() {
       size={size}
       pointer={loop.pointer}
       error={error}
-      {...(code?.mode === 'game'
-        ? { hint: 'Bấm Space hoặc chạm màn hình để vỗ cánh · Esc để về code' }
-        : {})}
+      {...(code?.mode === 'game' ? { hint: `${howToPlay} · Esc để về code` } : {})}
       backLabel="Về code"
       onAgain={() => {
         setError(null);

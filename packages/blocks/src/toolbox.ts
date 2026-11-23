@@ -12,6 +12,12 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
   pq_assign: { VALUE: num(0) },
   pq_arith: { A: num(1), B: num(1) },
   pq_draw_image: { PATH: text('images/bird.png'), X: num(100), Y: num(300) },
+  pq_draw_image_scale: {
+    PATH: text('images/hero-knight.png'),
+    X: num(300),
+    Y: num(300),
+    SCALE: num(3),
+  },
   pq_draw_text: { TEXT: text('0'), X: num(200), Y: num(60) },
   pq_draw_text_size: { TEXT: text('0'), X: num(200), Y: num(60), SIZE: num(48) },
   pq_draw_circle: { X: num(300), Y: num(300), R: num(100), COLOR: text('orange') },
@@ -33,6 +39,7 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
     Y3: num(450),
     COLOR: text('purple'),
   },
+  pq_abs: { A: num(-5) },
   pq_str: { A: num(0) },
   pq_index_set: { INDEX: num(0), VALUE: num(0) },
   pq_aug: { VALUE: num(1) },
@@ -43,12 +50,18 @@ const DEFAULT_INPUTS: Record<string, Record<string, object>> = {
   pq_list: { ITEM0: num(40), ITEM1: num(160), ITEM2: num(280) },
   pq_append: { VALUE: num(0) },
   pq_index: { INDEX: num(0) },
+  // The list's own first default, so it is there to be taken out.
+  pq_remove: { VALUE: num(40) },
+  pq_dict: { ITEM0: num(300), ITEM1: num(300), ITEM2: num(5) },
+  pq_key_set: { VALUE: num(0) },
+  pq_key_aug: { INDEX: text('x'), VALUE: num(1) },
 };
 
 /** Blocks whose shape is set by extraState in the toolbox. */
 const DEFAULT_EXTRA: Record<string, ToolboxEntry['extraState']> = {
   pq_if_chain: { elifs: 1, else: true },
   pq_list: { items: 3 },
+  pq_dict: { items: 3 },
 };
 
 export type ToolboxEntry = {
@@ -78,6 +91,7 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
       'pq_clear',
       'pq_draw_rect',
       'pq_draw_image',
+      'pq_draw_image_scale',
       'pq_draw_text',
       'pq_draw_text_size',
       'pq_draw_circle',
@@ -92,7 +106,12 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
   {
     name: 'Danh sách',
     colour: '200',
-    types: ['pq_list', 'pq_append', 'pq_len', 'pq_index', 'pq_index_set'],
+    types: ['pq_list', 'pq_append', 'pq_remove', 'pq_len', 'pq_index', 'pq_index_set'],
+  },
+  {
+    name: 'Hộp có tên',
+    colour: '110',
+    types: ['pq_dict', 'pq_key_get', 'pq_key_set', 'pq_key_aug'],
   },
   {
     name: 'Điều kiện',
@@ -117,7 +136,7 @@ const CATEGORIES: { name: string; colour: string; types: string[] }[] = [
   {
     name: 'Số và chữ',
     colour: '160',
-    types: ['pq_number', 'pq_text', 'pq_str', 'pq_arith', 'pq_random'],
+    types: ['pq_number', 'pq_text', 'pq_str', 'pq_arith', 'pq_abs', 'pq_random'],
   },
 ];
 

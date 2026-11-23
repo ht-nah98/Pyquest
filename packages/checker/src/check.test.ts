@@ -1,7 +1,7 @@
 import type { Goal } from '@pyquest/content-schema';
-import type { DrawEvent, RunResult } from '@pyquest/runtime';
+import type { DrawEvent, GameInput, RunResult } from '@pyquest/runtime';
 import { describe, expect, test } from 'vitest';
-import { checkGoals, needsExpected, runGameTest, shiftSource } from './index';
+import { checkGoals, needsExpected, runGameTest, shiftSource, testInput } from './index';
 
 const ok: RunResult = {
   events: [
@@ -628,5 +628,198 @@ describe('scaled and mirrored pictures (ADR 0010)', () => {
   test('drew still looks at the place only', () => {
     const g: Goal = { id: 'g', label: 'l', kind: 'drew', sprite: 'bird', at: [10, 20] };
     expect(one(g, { ...ok, events: [{ ...bird, scale: 3, mirror: true }] })).toBe(true);
+  });
+});
+
+describe('varCompare (ADR 0011)', () => {
+  const g = (
+    op: '>=' | '<=' | '!=',
+    value: number | string | boolean,
+    when?: 'end' | 'ever',
+    name = 'hp',
+  ): Goal => ({
+    id: 'g',
+    label: 'l',
+    kind: 'varCompare',
+    name,
+    op,
+    value,
+    ...(when === undefined ? {} : { when }),
+  });
+  const end = (vars: RunResult['vars']) => ({ ...ok, vars });
+
+  test('at the end of the run', () => {
+    expect(one(g('>=', 3), end({ hp: 3 }))).toBe(true);
+    expect(one(g('>=', 3), end({ hp: 2.9 }))).toBe(false);
+    expect(one(g('<=', 3), end({ hp: 3 }))).toBe(true);
+    expect(one(g('<=', 3), end({ hp: 4 }))).toBe(false);
+    expect(one(g('!=', 'play'), end({ hp: 'over' }))).toBe(true);
+    expect(one(g('!=', 'play'), end({ hp: 'play' }))).toBe(false);
+    expect(one(g('!=', false), end({ hp: true }))).toBe(true);
+  });
+
+  test('a variable that is missing or is not a number never passes', () => {
+    expect(one(g('!=', 5), end({}))).toBe(false);
+    expect(one(g('>=', 0), end({}))).toBe(false);
+    expect(one(g('>=', 0), end({ hp: 'nhiều' }))).toBe(false);
+    expect(one(g('>=', 1), end({ hp: true }))).toBe(false);
+  });
+
+  test('ever: after any frame; end: only after the last one', () => {
+    const r = { ...end({ hp: 5 }), varsByFrame: [{ hp: 5 }, { hp: 2 }, { hp: 5 }] };
+    const ever = (goal: Goal) => checkGoals([goal], r)[0]?.ok;
+    expect(ever(g('<=', 2, 'ever'))).toBe(true);
+    expect(ever(g('<=', 1, 'ever'))).toBe(false);
+    expect(ever(g('<=', 2, 'end'))).toBe(false);
+    expect(ever(g('<=', 2))).toBe(false);
+    // A script has no frames: the end is all there is.
+    expect(one(g('<=', 5, 'ever'), end({ hp: 5 }))).toBe(true);
+  });
+});
+
+describe('test keys and clicks (ADR 0011)', () => {
+  const play = async (t: Parameters<typeof testInput>[0]) => {
+    const inputs: GameInput[] = [];
+    const r = await runGameTest(
+      {
+        start: () => Promise.resolve({ ...ok, events: [], vars: { n: 0 } }),
+        step: (input) => {
+          inputs.push(input);
+          return { ...ok, events: [{ t: 'frame' }], vars: { n: inputs.length } };
+        },
+      },
+      t,
+    );
+    return { inputs, r };
+  };
+
+  test('without them every frame gets exactly what it got before', async () => {
+    const { inputs } = await play({ frames: 3, taps: [1] });
+    expect(inputs).toEqual([
+      { keys: [], tapped: false },
+      { keys: [], tapped: true },
+      { keys: [], tapped: false },
+    ]);
+  });
+
+  test('a key is held from its first to its last frame, both included; keys add up', async () => {
+    const { inputs } = await play({
+      frames: 5,
+      taps: [],
+      keys: [
+        { key: 'left', from: 1, to: 3 },
+        { key: 'up', from: 3, to: 4 },
+        { key: 'left', from: 2, to: 2 },
+      ],
+    });
+    expect(inputs.map((i) => i.keys)).toEqual([[], ['left'], ['left'], ['left', 'up'], ['up']]);
+    expect(inputs.some((i) => i.tapped)).toBe(false);
+  });
+
+  test('space held is one tap when it goes down, as on the page', async () => {
+    const { inputs } = await play({
+      frames: 4,
+      taps: [],
+      keys: [{ key: 'space', from: 1, to: 2 }],
+    });
+    expect(inputs.map((i) => [i.keys.join(), i.tapped])).toEqual([
+      ['', false],
+      ['space', true],
+      ['space', false],
+      ['', false],
+    ]);
+  });
+
+  test('a click is one frame, also a tap, and the mouse stays there', async () => {
+    const { inputs } = await play({
+      frames: 5,
+      taps: [],
+      clicks: [
+        { frame: 3, x: 10, y: 20 },
+        { frame: 1, x: 300, y: 400 },
+      ],
+    });
+    const at = { x: 300, y: 400 };
+    expect(inputs).toEqual([
+      { keys: [], tapped: false },
+      { keys: ['space'], tapped: true, clicked: true, pointer: at },
+      { keys: [], tapped: false, pointer: at },
+      { keys: ['space'], tapped: true, clicked: true, pointer: { x: 10, y: 20 } },
+      { keys: [], tapped: false, pointer: { x: 10, y: 20 } },
+    ]);
+  });
+
+  test('the variables of every frame are kept, up to an error', async () => {
+    const { r } = await play({ frames: 3, taps: [] });
+    expect(r.varsByFrame).toEqual([{ n: 1 }, { n: 2 }, { n: 3 }]);
+    let n = 0;
+    const broke = await runGameTest(
+      {
+        start: () => Promise.resolve(ok),
+        step: () => (++n === 2 ? { ...broken, vars: { n } } : { ...ok, vars: { n } }),
+      },
+      { frames: 9, taps: [] },
+    );
+    expect(broke.error).toBeDefined();
+    expect(broke.varsByFrame).toEqual([{ n: 1 }, { n: 2 }]);
+    const never = await runGameTest(
+      { start: () => Promise.resolve(broken), step: () => ok },
+      { frames: 9, taps: [] },
+    );
+    expect(never.varsByFrame).toEqual([]);
+  });
+});
+
+describe('pictures of the roguelite: groups by the first part of the id (ADR 0011)', () => {
+  const sprite = (id: string, x: number, y = 0): DrawEvent => ({
+    t: 'sprite',
+    sprite: id,
+    x,
+    y,
+    frame: 0,
+    scale: 3,
+    mirror: true,
+  });
+  const frames = (...fs: DrawEvent[][]): RunResult => ({
+    ...ok,
+    events: fs.flatMap((f) => [...f, { t: 'frame' } as const]),
+  });
+  const group = { id: 'g', label: 'l' };
+
+  test.each([
+    ['hero', 'hero-knight'],
+    ['mob', 'mob-bat'],
+    ['boss', 'boss-1'],
+    ['item', 'item-xp'],
+    ['shot', 'shot-fire'],
+    ['skill', 'skill-fire-1'],
+    ['skill-fire', 'skill-fire-4'],
+    ['fx', 'fx-hit'],
+  ])('%s matches %s drawn bigger and mirrored', (prefix, id) => {
+    const run = frames([sprite(id, 10)], [sprite(id, 14)]);
+    expect(one({ ...group, kind: 'drew', sprite: prefix }, run)).toBe(true);
+    expect(one({ ...group, kind: 'drew', sprite: id, at: [10, 0] }, run)).toBe(true);
+    expect(one({ ...group, kind: 'moves', sprite: prefix, axis: 'x', dir: 1 }, run)).toBe(true);
+    expect(one({ ...group, kind: 'staysWithin', sprite: prefix, axis: 'x', min: 0 }, run)).toBe(
+      true,
+    );
+    expect(one({ ...group, kind: 'distinctCount', sprite: prefix, axis: 'x', min: 2 }, run)).toBe(
+      true,
+    );
+    expect(one({ ...group, kind: 'drewCount', sprite: prefix, min: 1 }, run)).toBe(true);
+    expect(one({ ...group, kind: 'drewCount', sprite: prefix, min: 2 }, run)).toBe(false);
+  });
+
+  test('a boss is not a mob, whatever its group in the manifest; hero-knight is not hero-mage', () => {
+    const run = frames([sprite('boss-1', 1), sprite('hero-knight', 2)]);
+    expect(one({ ...group, kind: 'drew', sprite: 'mob' }, run)).toBe(false);
+    expect(one({ ...group, kind: 'drew', sprite: 'hero-mage' }, run)).toBe(false);
+    expect(one({ ...group, kind: 'drewCount', sprite: 'mob', min: 1 }, run)).toBe(false);
+  });
+
+  test('drewCount counts the whole group in one frame', () => {
+    const run = frames([sprite('mob-bat', 1), sprite('mob-slime', 2), sprite('boss-1', 3)]);
+    expect(one({ ...group, kind: 'drewCount', sprite: 'mob', min: 2 }, run)).toBe(true);
+    expect(one({ ...group, kind: 'drewCount', sprite: 'mob', min: 3 }, run)).toBe(false);
   });
 });

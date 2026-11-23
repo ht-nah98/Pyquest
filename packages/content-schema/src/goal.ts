@@ -20,6 +20,23 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     name: z.string().min(1),
     value: z.union([z.number(), z.string(), z.boolean()]),
   }),
+  /**
+   * A module variable compared with a value: at the end of the run, or (when: 'ever') after any frame of
+   * the test run. >= and <= need numbers; a variable that does not exist never passes.
+   */
+  z
+    .object({
+      ...base,
+      kind: z.literal('varCompare'),
+      name: z.string().min(1),
+      op: z.enum(['>=', '<=', '!=']),
+      value: z.union([z.number(), z.string(), z.boolean()]),
+      when: z.enum(['end', 'ever']).optional(),
+    })
+    .refine(
+      (g) => g.op === '!=' || typeof g.value === 'number',
+      'varCompare: >= and <= need a number',
+    ),
   // Judged over the frames of a run (game mode: the scripted test run in Exercise.test).
   z.object({
     ...base,
