@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { createBrowserRouter, Navigate } from 'react-router';
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import { CourseList } from '../features/course/CourseList';
 import { CourseMap } from '../features/course/CourseMap';
 import { LoginScreen } from '../features/profile/LoginScreen';
@@ -40,6 +40,23 @@ function Home() {
   return profile === null ? <LoginScreen /> : <Navigate to="/courses" replace />;
 }
 
+/**
+ * Dev server only (ADR 0010): `npm run build` drops this branch, so an unfinished game never reaches the
+ * children's site (AGENTS.md §9.5).
+ */
+const devRoutes: RouteObject[] = import.meta.env.DEV
+  ? [
+      {
+        path: '/coach/prototype',
+        hydrateFallbackElement: <></>,
+        lazy: async () => {
+          const { PrototypePlay } = await import('../features/coach/PrototypePlay');
+          return { element: coachOnly(<PrototypePlay />) };
+        },
+      },
+    ]
+  : [];
+
 export const router = createBrowserRouter(
   [
     { path: '/', element: <Home /> },
@@ -55,6 +72,7 @@ export const router = createBrowserRouter(
     { path: '/coach/s/:userId', element: coachOnly(<CoachStudent />) },
     { path: '/coach/s/:userId/l/:lessonId', element: coachOnly(<CoachCode />) },
     { path: '/coach/s/:userId/studio/:drawingId', element: coachOnly(<CoachCode />) },
+    ...devRoutes,
     // On GitHub Pages the app lives under /Pyquest/ (vite `base`); locally under /.
   ],
   { basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/' },

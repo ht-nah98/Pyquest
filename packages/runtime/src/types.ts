@@ -12,6 +12,10 @@ export type DrawEvent =
       y: number;
       frame: number;
       flip?: true;
+      /** Times the picture's game size; absent = 1 (ADR 0010). */
+      scale?: number;
+      /** Left and right swapped; absent = as drawn. */
+      mirror?: true;
     } & By)
   | ({ t: 'rect'; x: number; y: number; w: number; h: number; color: string } & By)
   | ({ t: 'text'; text: string; x: number; y: number; size: number; color: string } & By)
@@ -72,7 +76,15 @@ export const DEFAULT_STAGE: StageSize = { width: 400, height: 600 };
 /** stage: what WIDTH / HEIGHT are in the child's Python; DEFAULT_STAGE when absent. */
 export type RunOptions = { seed: number; maxEvents: number; maxLines?: number; stage?: StageSize };
 
-export type GameInput = { keys: string[]; tapped: boolean };
+export type GameInput = {
+  keys: string[];
+  /** Space or a tap since the last frame. */
+  tapped: boolean;
+  /** Where the mouse or finger last was, in stage units; absent = nowhere yet (0, 0 in Python). */
+  pointer?: { x: number; y: number };
+  /** The stage was pressed since the last frame. */
+  clicked?: boolean;
+};
 
 /** @deprecated Use the course's StageSize (DEFAULT_STAGE when a course sets none). */
 export const STAGE_WIDTH = DEFAULT_STAGE.width;

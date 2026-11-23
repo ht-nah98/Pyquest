@@ -160,6 +160,33 @@
       "why": "Ngôi sao, viên kim cương, lá cờ có nhiều góc khác nhau. Một lệnh nhận cả danh sách góc thì vẽ được mọi hình như vậy.",
       "inside": "_corner kiểm tra mỗi góc là một cặp số. _emit gửi cả danh sách góc cho trang web, trang web nối và tô kín.",
       "example": "draw_polygon([(300, 100), (380, 300), (220, 300)], \"teal\")"
+    },
+    {
+      "name": "mouse_x",
+      "signature": "mouse_x()",
+      "vi": "Chuột hay ngón tay đang ở x bao nhiêu trên sân. Chưa chạm vào sân lần nào thì là 0. Dùng trong game.",
+      "why": "Python thường không biết con chuột trên trang web ở đâu. Trang web đổi chỗ chuột ra tọa độ sân rồi báo cho em.",
+      "inside": "_state[\"mouse\"] là chỗ chuột (x, y) trang web báo mỗi khung hình. Số [0] là x.",
+      "example": "draw_circle(mouse_x(), 300, 20, \"gold\")",
+      "gameOnly": true
+    },
+    {
+      "name": "mouse_y",
+      "signature": "mouse_y()",
+      "vi": "Chuột hay ngón tay đang ở y bao nhiêu trên sân. Chưa chạm vào sân lần nào thì là 0. Dùng trong game.",
+      "why": "Đi cùng mouse_x(): phải có đủ x và y thì mới biết chuột chỉ vào đâu.",
+      "inside": "_state[\"mouse\"] là chỗ chuột (x, y) trang web báo mỗi khung hình. Số [1] là y.",
+      "example": "draw_circle(mouse_x(), mouse_y(), 20, \"gold\")",
+      "gameOnly": true
+    },
+    {
+      "name": "clicked",
+      "signature": "clicked()",
+      "vi": "True đúng một khung hình, lúc vừa bấm chuột hay chạm vào sân. Giữ tay thì các khung sau là False.",
+      "why": "Muốn làm nút bấm trong game thì phải biết lúc nào vừa bấm. key_pressed() thì True suốt lúc giữ, một lần bấm sẽ tính thành nhiều lần.",
+      "inside": "_state[\"clicked\"] là True khi trang web báo vừa có một lần bấm, sang khung sau lại là False.",
+      "example": "if clicked():\n    score = score + 1",
+      "gameOnly": true
     }
   ]
 }

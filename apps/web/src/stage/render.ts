@@ -102,13 +102,19 @@ export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent, size: Sta
       // frame from the real pixels, draw it at the game size.
       const sw = img.naturalWidth / asset.frames;
       const sh = img.naturalHeight;
+      const w = asset.width * (e.scale ?? 1);
+      const h = asset.height * (e.scale ?? 1);
+      const flip = e.flip === true;
+      const mirror = e.mirror === true;
       ctx.save();
-      if (e.flip === true) {
-        ctx.translate(e.x, e.y + asset.height);
-        ctx.scale(1, -1);
-        ctx.drawImage(img, frame * sw, 0, sw, sh, 0, 0, asset.width, asset.height);
+      // Pixel art keeps its hard edges; restore() gives the next picture its smoothing back.
+      if (asset.pixel === true) ctx.imageSmoothingEnabled = false;
+      if (flip || mirror) {
+        ctx.translate(mirror ? e.x + w : e.x, flip ? e.y + h : e.y);
+        ctx.scale(mirror ? -1 : 1, flip ? -1 : 1);
+        ctx.drawImage(img, frame * sw, 0, sw, sh, 0, 0, w, h);
       } else {
-        ctx.drawImage(img, frame * sw, 0, sw, sh, e.x, e.y, asset.width, asset.height);
+        ctx.drawImage(img, frame * sw, 0, sw, sh, e.x, e.y, w, h);
       }
       ctx.restore();
       return;

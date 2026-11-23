@@ -1,5 +1,6 @@
 // Python → block tree, using Python's own ast. Anything outside the supported subset becomes a raw-code
 // block holding the exact source, so a child's code is never lost (ADR 0003).
+import { KEYS } from '../keys';
 import { MUSIC, SOUNDS } from '../sounds';
 
 export const TOBLOCKS_SOURCE = String.raw`
@@ -16,6 +17,8 @@ _CALLS = {"print": ("pq_print", ["VALUE"]), "clear": ("pq_clear", ["COLOR"]),
           "draw_triangle": ("pq_draw_triangle", ["X1", "Y1", "X2", "Y2", "X3", "Y3", "COLOR"])}
 _SOUNDS = ${JSON.stringify(SOUNDS)}
 _MUSIC = ${JSON.stringify(MUSIC)}
+_KEYS = ${JSON.stringify(KEYS)}
+_POINTER = {"mouse_x": "pq_mouse_x", "mouse_y": "pq_mouse_y", "clicked": "pq_clicked"}
 _CMP = {ast.Eq: "==", ast.NotEq: "!=", ast.Lt: "<", ast.LtE: "<=", ast.Gt: ">", ast.GtE: ">="}
 _AUG = {ast.Add: "+=", ast.Sub: "-="}
 
@@ -85,6 +88,13 @@ def _expr(src, node, nested=False):
             return {"type": "pq_len", "inputs": {"A": _expr(src, node.args[0])}}
         if node.func.id == "key_pressed" and not node.args:
             return {"type": "pq_key_pressed"}
+        # A name the child gave to a def of their own stays a call of that def (below).
+        if (node.func.id == "key_pressed" and "key_pressed" not in _DEFS and len(node.args) == 1
+                and isinstance(node.args[0], ast.Constant) and node.args[0].value in _KEYS
+                and _plain_string(src, node.args[0])):
+            return {"type": "pq_key_held", "fields": {"KEY": node.args[0].value}}
+        if node.func.id in _POINTER and node.func.id not in _DEFS and not node.args:
+            return {"type": _POINTER[node.func.id]}
         if node.func.id == "str" and len(node.args) == 1:
             return {"type": "pq_str", "inputs": {"A": _expr(src, node.args[0])}}
         if node.func.id == "random_int" and len(node.args) == 2:

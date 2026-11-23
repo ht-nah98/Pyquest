@@ -52,8 +52,15 @@ export async function framesOf(page: Page, testId: string): Promise<number> {
 }
 
 /** Where a stage point is on the page: through the canvas scaling and its letterbox bars. */
-export async function pagePoint(page: Page, x: number, y: number, w = 400, h = 600) {
-  const box = await page.locator('[data-testid="code-screen"] [data-testid="stage"]').boundingBox();
+export async function pagePoint(
+  page: Page,
+  x: number,
+  y: number,
+  w = 400,
+  h = 600,
+  stage = '[data-testid="code-screen"] [data-testid="stage"]',
+) {
+  const box = await page.locator(stage).boundingBox();
   if (box === null) throw new Error('no stage');
   const k = Math.min(box.width / w, box.height / h);
   return {
@@ -70,4 +77,54 @@ export async function readout(page: Page) {
     x: Number(await badge.getAttribute('data-x')),
     y: Number(await badge.getAttribute('data-y')),
   };
+}
+
+/** A game that counts what it was given and says it in a bubble every frame: nothing transient to miss. */
+export const INPUT_GAME = `from pyquest import *
+
+spaces = 0
+rights = 0
+twos = 0
+clicks = 0
+at = "-"
+
+
+def update():
+    global spaces, rights, twos, clicks, at
+    if key_pressed("space"):
+        spaces += 1
+    if key_pressed("right"):
+        rights += 1
+    if key_pressed("2"):
+        twos += 1
+    if clicked():
+        clicks += 1
+        at = str(mouse_x()) + " " + str(mouse_y())
+
+
+def draw():
+    clear("skyblue")
+    draw_circle(mouse_x(), mouse_y(), 20, "gold")
+    draw_image("images/bird.png", 40, 300, scale=3, mirror=True)
+    print(spaces, rights, twos, clicks, at, mouse_x(), mouse_y())
+`;
+
+/** What INPUT_GAME counted so far; at = where the last click was, mouse = where the pointer is. */
+export async function inputSeen(page: Page) {
+  const text = (await page.getByTestId('bubble').last().textContent()) ?? '';
+  const m = /^(\d+) (\d+) (\d+) (\d+) (-|\d+ \d+) (\d+) (\d+)$/.exec(text);
+  if (m === null) throw new Error(`not the input game: ${text}`);
+  const at = (m[5] ?? '').split(' ').map(Number);
+  return {
+    spaces: Number(m[1]),
+    rights: Number(m[2]),
+    twos: Number(m[3]),
+    clicks: Number(m[4]),
+    at: { x: at[0] ?? NaN, y: at[1] ?? NaN },
+    mouse: { x: Number(m[6]), y: Number(m[7]) },
+  };
+}
+
+export function near(a: { x: number; y: number }, x: number, y: number): boolean {
+  return Math.abs(a.x - x) <= 1 && Math.abs(a.y - y) <= 1;
 }

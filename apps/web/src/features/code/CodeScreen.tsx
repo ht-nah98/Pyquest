@@ -183,7 +183,17 @@ function CodeEditor({
     [all, code, update],
   );
 
+  /** Bumped by every run, stop and unmount: a scripted test still stepping must leave the game to the next one. */
+  const runToken = useRef(0);
+  useEffect(
+    () => () => {
+      runToken.current++;
+    },
+    [],
+  );
+
   const stop = () => {
+    runToken.current++;
     loop.stop();
     stage.current?.clear();
     setRunning(false);
@@ -228,6 +238,7 @@ function CodeEditor({
   };
 
   const run = async () => {
+    const mine = ++runToken.current;
     unlock(); // browsers let sound start only from a click
     setRuns((n) => n + 1);
     flush();
@@ -240,10 +251,14 @@ function CodeEditor({
         const test = await runGameTest(
           {
             start: () => python.startGame(filesRef.current, main, { stage: size, seed: 1 }),
-            step: (input) => python.step(input),
+            step: (input) =>
+              mine === runToken.current
+                ? python.step(input)
+                : Promise.reject(new Error('superseded')),
           },
           code.test ?? { frames: 90, taps: [] },
         );
+        if (mine !== runToken.current) return;
         grade(test);
         setResult(test);
         setCallFrom(test.lastFrameFrom);
@@ -386,15 +401,7 @@ function CodeEditor({
               </Button>
             )}
           </div>
-          <div
-            className="relative min-h-[48%] flex-1 touch-none"
-            onPointerDown={() => {
-              loop.press('space', true);
-            }}
-            onPointerUp={() => {
-              loop.press('space', false);
-            }}
-          >
+          <div className="relative min-h-[48%] flex-1 touch-none" {...loop.pointer}>
             <Stage ref={stage} className="h-full" size={size} coords />
           </div>
           <div className="flex min-w-0 flex-col gap-2">

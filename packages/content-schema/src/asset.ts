@@ -2,12 +2,29 @@ import { z } from 'zod';
 
 export const AssetSchema = z.object({
   id: z.string().min(1),
-  group: z.enum(['bird', 'pipe', 'background', 'ground', 'ui']),
+  group: z.enum([
+    'bird',
+    'pipe',
+    'background',
+    'ground',
+    'ui',
+    // The roguelite's pixel art (tools/assets/pixel.py).
+    'hero',
+    'mob',
+    'item',
+    'shot',
+    'skill',
+    'deco',
+    'fx',
+  ]),
   file: z.string().min(1),
   width: z.int().positive(),
   height: z.int().positive(),
   frames: z.int().positive(),
-  credit: z.enum(['ai-generated', 'placeholder']),
+  /** Pixel art: drawn without smoothing, so it stays crisp when scaled (ADR 0010). */
+  pixel: z.literal(true).optional(),
+  /** pixelfx-mit: prerendered from pixelfx, its licence ships in public/licenses/. */
+  credit: z.enum(['ai-generated', 'placeholder', 'pixelfx-mit']),
   label: z.string().max(30).optional(),
 });
 

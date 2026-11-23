@@ -34,7 +34,8 @@ def _write_files(files):
 def _vars(g):
     out = {}
     for k, v in g.items():
-        if k.startswith("_") or k in pyquest.__all__:
+        # Only the library's own constants: a child may call a variable "clicked" without losing it.
+        if k.startswith("_") or k in ("WIDTH", "HEIGHT"):
             continue
         if isinstance(v, (bool, int, float, str)):
             out[k] = v
@@ -204,7 +205,7 @@ def set_assets(ids_json):
     pyquest._state["assets"] = set(json.loads(ids_json))
 
 
-def step(keys_json, tapped):
+def step(keys_json, tapped, mouse_x=0, mouse_y=0, clicked=False):
     g = _game["globals"]
     if g is None:
         return json.dumps({"events": [], "vars": {}, "stoppedByLimit": False,
@@ -215,6 +216,8 @@ def step(keys_json, tapped):
     pyquest._state["stack"] = []
     pyquest._state["keys"] = set(json.loads(keys_json))
     pyquest._state["tapped"] = bool(tapped)
+    pyquest._state["mouse"] = (mouse_x, mouse_y)
+    pyquest._state["clicked"] = bool(clicked)
 
     def frame():
         g["update"]()

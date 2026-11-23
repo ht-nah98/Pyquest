@@ -81,6 +81,176 @@
       "label": "Vẹt Xanh"
     },
     {
+      "id": "boss-1",
+      "group": "mob",
+      "file": "boss-1.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "boss-2",
+      "group": "mob",
+      "file": "boss-2.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "boss-3",
+      "group": "mob",
+      "file": "boss-3.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-barrel",
+      "group": "deco",
+      "file": "deco-barrel.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-crate",
+      "group": "deco",
+      "file": "deco-crate.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-misc",
+      "group": "deco",
+      "file": "deco-misc.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-torch",
+      "group": "deco",
+      "file": "deco-torch.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "fx-explosion",
+      "group": "fx",
+      "file": "fx-explosion.png",
+      "width": 48,
+      "height": 48,
+      "frames": 8,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-fire",
+      "group": "fx",
+      "file": "fx-fire.png",
+      "width": 48,
+      "height": 48,
+      "frames": 9,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-heal",
+      "group": "fx",
+      "file": "fx-heal.png",
+      "width": 48,
+      "height": 48,
+      "frames": 8,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-hit",
+      "group": "fx",
+      "file": "fx-hit.png",
+      "width": 48,
+      "height": 48,
+      "frames": 9,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-ice",
+      "group": "fx",
+      "file": "fx-ice.png",
+      "width": 56,
+      "height": 48,
+      "frames": 10,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-levelup",
+      "group": "fx",
+      "file": "fx-levelup.png",
+      "width": 56,
+      "height": 60,
+      "frames": 10,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-pickup",
+      "group": "fx",
+      "file": "fx-pickup.png",
+      "width": 48,
+      "height": 48,
+      "frames": 9,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-poof",
+      "group": "fx",
+      "file": "fx-poof.png",
+      "width": 56,
+      "height": 56,
+      "frames": 9,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-slash",
+      "group": "fx",
+      "file": "fx-slash.png",
+      "width": 48,
+      "height": 48,
+      "frames": 8,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
+      "id": "fx-spark",
+      "group": "fx",
+      "file": "fx-spark.png",
+      "width": 48,
+      "height": 48,
+      "frames": 9,
+      "pixel": true,
+      "credit": "pixelfx-mit"
+    },
+    {
       "id": "ground",
       "group": "ground",
       "file": "ground.png",
@@ -121,6 +291,116 @@
       "label": "Vịnh biển"
     },
     {
+      "id": "hero-archer",
+      "group": "hero",
+      "file": "hero-archer.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "hero-knight",
+      "group": "hero",
+      "file": "hero-knight.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "hero-mage",
+      "group": "hero",
+      "file": "hero-mage.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "item-chest",
+      "group": "item",
+      "file": "item-chest.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "item-heart",
+      "group": "item",
+      "file": "item-heart.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "item-xp",
+      "group": "item",
+      "file": "item-xp.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "mob-bat",
+      "group": "mob",
+      "file": "mob-bat.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "mob-ghost",
+      "group": "mob",
+      "file": "mob-ghost.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "mob-golem",
+      "group": "mob",
+      "file": "mob-golem.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "mob-mushroom",
+      "group": "mob",
+      "file": "mob-mushroom.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "mob-slime",
+      "group": "mob",
+      "file": "mob-slime.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
       "id": "pipe",
       "group": "pipe",
       "file": "pipe.png",
@@ -159,6 +439,206 @@
       "frames": 1,
       "credit": "ai-generated",
       "label": "Cột pha lê"
+    },
+    {
+      "id": "shot-arrow",
+      "group": "shot",
+      "file": "shot-arrow.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "shot-fire",
+      "group": "shot",
+      "file": "shot-fire.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "shot-ice",
+      "group": "shot",
+      "file": "shot-ice.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "shot-spark",
+      "group": "shot",
+      "file": "shot-spark.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-common-1",
+      "group": "skill",
+      "file": "skill-common-1.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-common-2",
+      "group": "skill",
+      "file": "skill-common-2.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-common-3",
+      "group": "skill",
+      "file": "skill-common-3.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-common-4",
+      "group": "skill",
+      "file": "skill-common-4.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-fire-1",
+      "group": "skill",
+      "file": "skill-fire-1.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-fire-2",
+      "group": "skill",
+      "file": "skill-fire-2.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-fire-3",
+      "group": "skill",
+      "file": "skill-fire-3.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-fire-4",
+      "group": "skill",
+      "file": "skill-fire-4.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-ice-1",
+      "group": "skill",
+      "file": "skill-ice-1.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-ice-2",
+      "group": "skill",
+      "file": "skill-ice-2.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-ice-3",
+      "group": "skill",
+      "file": "skill-ice-3.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-ice-4",
+      "group": "skill",
+      "file": "skill-ice-4.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-spark-1",
+      "group": "skill",
+      "file": "skill-spark-1.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-spark-2",
+      "group": "skill",
+      "file": "skill-spark-2.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-spark-3",
+      "group": "skill",
+      "file": "skill-spark-3.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "skill-spark-4",
+      "group": "skill",
+      "file": "skill-spark-4.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
     }
   ]
 }

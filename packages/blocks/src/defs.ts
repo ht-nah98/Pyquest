@@ -1,4 +1,4 @@
-import { MUSIC, SOUNDS } from '@pyquest/runtime';
+import { KEYS, MUSIC, SOUNDS } from '@pyquest/runtime';
 import { Blockly, type Block } from './blockly';
 
 /** Block colours by family, so a child links a colour with a kind of command. */
@@ -29,6 +29,16 @@ const MUSIC_LABEL: Record<(typeof MUSIC)[number], string> = {
   happy: 'vui',
   adventure: 'phiêu lưu',
   calm: 'êm',
+};
+const KEY_LABEL: Record<(typeof KEYS)[number], string> = {
+  left: '← trái',
+  right: '→ phải',
+  up: '↑ lên',
+  down: '↓ xuống',
+  space: 'Space / chạm',
+  '1': 'số 1',
+  '2': 'số 2',
+  '3': 'số 3',
 };
 
 /** Labels are Vietnamese; the code they make is English Python (spec §5). */
@@ -488,6 +498,41 @@ const JSON_DEFS = [
     output: 'Boolean',
     colour: EVENT,
     tooltip: 'key_pressed(): đúng (True) khi bấm Space hoặc chạm màn hình.',
+  },
+  {
+    type: 'pq_key_held',
+    message0: 'đang bấm phím %1 ?',
+    args0: [
+      {
+        type: 'field_dropdown',
+        name: 'KEY',
+        options: KEYS.map((k) => [KEY_LABEL[k], k]),
+      },
+    ],
+    output: 'Boolean',
+    colour: EVENT,
+    tooltip: 'key_pressed("left"): đúng (True) khi đang giữ phím đó.',
+  },
+  {
+    type: 'pq_mouse_x',
+    message0: 'x của chuột',
+    output: 'Number',
+    colour: EVENT,
+    tooltip: 'mouse_x(): chuột hay ngón tay đang ở x bao nhiêu.',
+  },
+  {
+    type: 'pq_mouse_y',
+    message0: 'y của chuột',
+    output: 'Number',
+    colour: EVENT,
+    tooltip: 'mouse_y(): chuột hay ngón tay đang ở y bao nhiêu.',
+  },
+  {
+    type: 'pq_clicked',
+    message0: 'vừa bấm chuột / chạm?',
+    output: 'Boolean',
+    colour: EVENT,
+    tooltip: 'clicked(): đúng (True) trong một khung hình, lúc vừa bấm chuột hay chạm vào sân.',
   },
   {
     type: 'pq_play_sound',

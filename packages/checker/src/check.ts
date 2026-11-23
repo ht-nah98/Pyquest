@@ -85,7 +85,7 @@ function pieces(events: readonly DrawEvent[]): Shape[] {
         t: e.t,
         x: e.x,
         y: e.y,
-        rest: `${e.sprite} ${String(e.frame)} ${String(e.flip ?? false)}`,
+        rest: `${e.sprite} ${String(e.frame)} ${String(e.flip ?? false)} ${String(e.scale ?? 1)} ${String(e.mirror ?? false)}`,
       });
     else if (e.t === 'text')
       out.push({ t: e.t, x: e.x, y: e.y, rest: `${e.text} ${String(e.size)}` });

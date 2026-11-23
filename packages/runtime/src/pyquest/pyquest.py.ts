@@ -1,5 +1,6 @@
 // The `pyquest` module children import. Kept as a TS string so Vite, Vitest and tsx all load it the same way.
 // Names are English (spec §5); every call appends one draw event the page turns into pictures (or sound).
+import { KEYS } from '../keys';
 import { MUSIC, SOUNDS } from '../sounds';
 
 export const PYQUEST_SOURCE = String.raw`
@@ -14,11 +15,14 @@ HEIGHT = 600
 __all__ = [
     "WIDTH", "HEIGHT", "clear", "draw_rect", "draw_image", "draw_text", "key_pressed", "random_int", "print",
     "play_sound", "play_music", "stop_music", "draw_circle", "draw_line", "draw_triangle", "draw_polygon",
+    "mouse_x", "mouse_y", "clicked",
 ]
 
 # Made by the page itself (8-bit synth): the names are the whole list, there are no sound files.
 _SOUNDS = ${JSON.stringify(SOUNDS)}
 _MUSIC = ${JSON.stringify(MUSIC)}
+# The keys the page reports (it turns W A S D into the arrows).
+_KEYS = ${JSON.stringify(KEYS)}
 
 
 class PyQuestError(Exception):
@@ -29,7 +33,7 @@ class _EventLimit(Exception):
     pass
 
 
-_state = {"events": [], "max": 5000, "keys": set(), "tapped": False, "rng": _random.Random(1),
+_state = {"events": [], "max": 5000, "keys": set(), "tapped": False, "mouse": (0, 0), "clicked": False, "rng": _random.Random(1),
           "assets": set(), "stack": [], "calls": [], "calls_truncated": False}
 
 
@@ -41,6 +45,8 @@ def _reset(seed, max_events, width=400, height=600):
     _state["max"] = max_events
     _state["keys"] = set()
     _state["tapped"] = False
+    _state["mouse"] = (0, 0)
+    _state["clicked"] = False
     _state["rng"] = _random.Random(seed)
     _state["stack"] = []
     _state["calls"] = []
@@ -145,19 +151,44 @@ def _picture(path):
     return asset
 
 
-def draw_image(path, x, y, frame=0, flip=False):
-    """Paste a whole picture file with its top-left corner at (x, y). flip=True draws it upside down."""
+def draw_image(path, x, y, frame=0, flip=False, scale=1, mirror=False):
+    """Paste a whole picture file with its top-left corner at (x, y). flip=True draws it upside down,
+    mirror=True swaps left and right, scale=2 draws it twice as big."""
     event = {"t": "sprite", "sprite": _picture(path), "x": _num(x, "x"), "y": _num(y, "y"), "frame": int(frame)}
     if flip:
         event["flip"] = True
+    if not 0 < _num(scale, "scale") < float("inf"):
+        raise PyQuestError("scale phải lớn hơn 0")
+    if scale != 1:
+        event["scale"] = scale
+    if mirror not in (True, False):
+        raise PyQuestError("mirror phải là True hoặc False")
+    if mirror:
+        event["mirror"] = True
     _emit(event)
 
 
 def key_pressed(key="space"):
     """True while the key is held. A tap on the screen counts as space."""
+    key = _known(key, _KEYS, "phím", "key_pressed")
     if key == "space" and _state["tapped"]:
         return True
     return key in _state["keys"]
+
+
+def mouse_x():
+    """Where the mouse or finger is, across the stage. 0 until it has been on the stage."""
+    return _state["mouse"][0]
+
+
+def mouse_y():
+    """Where the mouse or finger is, down the stage. 0 until it has been on the stage."""
+    return _state["mouse"][1]
+
+
+def clicked():
+    """True for one frame when the mouse or a finger presses the stage."""
+    return _state["clicked"]
 
 
 def random_int(a, b):
@@ -171,13 +202,13 @@ def print(*values, sep=" ", end=""):
 
 
 def _known(name, names, what, call):
-    """The sound or tune name, or a Vietnamese error that lists the right ones."""
+    """The sound, tune or key name, or a Vietnamese error that lists the right ones."""
     import difflib
     name = str(name)
     if name in names:
         return name
     close = difflib.get_close_matches(name.lower(), names, n=1, cutoff=0.5)
-    hint = ". Có phải em muốn " + call + '("' + close[0] + '")?' if close else ""
+    hint = ". Có phải em muốn " + call + '("' + close[0] + '")?' if close else "."
     raise PyQuestError("Không có " + what + ' "' + name + '"' + hint + " Có: " + ", ".join(names))
 
 

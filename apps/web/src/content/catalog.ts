@@ -130,8 +130,9 @@ export const catalog = {
     return a === undefined ? undefined : data.urls.get(a.file);
   },
   /** pyquest commands taught up to (and including) this lesson order; all of them when order is undefined. */
-  library(uptoOrder?: number): LibraryEntry[] {
+  library(uptoOrder?: number | 'studio'): LibraryEntry[] {
     if (uptoOrder === undefined) return data.library;
+    if (uptoOrder === 'studio') return data.library.filter((e) => e.gameOnly !== true);
     const orderOf = new Map<string, number>();
     for (const c of data.courses.values()) for (const l of c.lessons) orderOf.set(l.id, l.order);
     // A command no lesson teaches yet (no `lesson`) is never listed by lesson order.

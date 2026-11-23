@@ -290,3 +290,18 @@ describe('CourseSchema and AssetSchema', () => {
     expect(() => StudioSchema.parse({ ...studio, toolbox: [] })).toThrow();
   });
 });
+
+test('AssetSchema: pixel art is marked with pixel: true, anything else is refused', () => {
+  const asset = {
+    id: 'ui',
+    group: 'ui',
+    file: 'ui.png',
+    width: 16,
+    height: 16,
+    frames: 1,
+    credit: 'placeholder',
+  };
+  expect(AssetSchema.parse(asset).pixel).toBeUndefined();
+  expect(AssetSchema.parse({ ...asset, pixel: true }).pixel).toBe(true);
+  expect(() => AssetSchema.parse({ ...asset, pixel: false })).toThrow();
+});

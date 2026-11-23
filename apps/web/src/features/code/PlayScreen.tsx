@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { catalog } from '../../content/catalog';
 import { python } from '../../runtime/client';
-import { Stage, type StageHandle } from '../../stage/Stage';
-import { MuteButton } from '../../ui/MuteButton';
+import type { StageHandle } from '../../stage/Stage';
 import { useGameKeys } from '../../stage/useGameKeys';
 import { useGameLoop } from '../../stage/useGameLoop';
 import { useLessonState } from '../lesson/useLessonState';
 import { visibleExercises, workOf } from './exercises';
+import { PlayFrame } from './PlayFrame';
 import { useSession } from '../../app/session';
 
 /** ⛶ Fullscreen play of the child's own program. Esc or "Về code" goes back with the code untouched. */
@@ -25,37 +25,12 @@ export function PlayScreen() {
   const { state } = useLessonState(lessonId);
   const stage = useRef<StageHandle>(null);
   const size = catalog.lessonStage(lessonId);
-  const box = useRef<HTMLDivElement>(null);
   const [round, setRound] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const loop = useGameLoop(stage, (r) => {
     if (r.error !== undefined) setError(r.error.messageVi);
   });
   useGameKeys(code?.mode === 'game', loop.press);
-
-  const back = () => {
-    loop.stop();
-    if (document.fullscreenElement !== null) void document.exitFullscreen().catch(() => undefined);
-    void navigate(`/l/${lessonId}/code${code === undefined ? '' : `?ex=${code.id}`}`);
-  };
-
-  useEffect(() => {
-    void box.current?.requestFullscreen().catch(() => undefined);
-    const esc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') back();
-    };
-    const left = () => {
-      if (document.fullscreenElement === null) back();
-    };
-    window.addEventListener('keydown', esc);
-    document.addEventListener('fullscreenchange', left);
-    return () => {
-      window.removeEventListener('keydown', esc);
-      document.removeEventListener('fullscreenchange', left);
-    };
-    // back() only navigates; binding once is enough.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (state === null || code === undefined) return;
@@ -71,58 +46,23 @@ export function PlayScreen() {
   }, [state === null, round]);
 
   return (
-    <div
-      ref={box}
-      className="relative flex h-dvh w-full items-center justify-center bg-brand-deep"
-      data-testid="play-screen"
-      onPointerDown={() => {
-        loop.press('space', true);
+    <PlayFrame
+      stage={stage}
+      size={size}
+      pointer={loop.pointer}
+      error={error}
+      {...(code?.mode === 'game'
+        ? { hint: 'Bấm Space hoặc chạm màn hình để vỗ cánh · Esc để về code' }
+        : {})}
+      backLabel="Về code"
+      onAgain={() => {
+        setError(null);
+        setRound((n) => n + 1);
       }}
-      onPointerUp={() => {
-        loop.press('space', false);
+      onBack={() => {
+        loop.stop();
+        void navigate(`/l/${lessonId}/code${code === undefined ? '' : `?ex=${code.id}`}`);
       }}
-    >
-      <Stage ref={stage} className="h-full w-full p-2" testId="play-stage" size={size} />
-      <div
-        className="absolute right-3 top-3 z-10 flex gap-2"
-        onPointerDown={(e) => {
-          e.stopPropagation();
-        }}
-      >
-        <MuteButton className="min-h-11 bg-black/50" />
-        <button
-          type="button"
-          className="min-h-11 rounded-[10px] bg-black/50 px-4 text-white"
-          onClick={() => {
-            setError(null);
-            setRound((n) => n + 1);
-          }}
-          data-testid="play-again"
-        >
-          ↻ Chơi lại
-        </button>
-        <button
-          type="button"
-          className="min-h-11 rounded-[10px] bg-black/50 px-4 text-white"
-          onClick={back}
-          data-testid="back-to-code"
-        >
-          ✕ Về code
-        </button>
-      </div>
-      {error !== null && (
-        <p
-          className="absolute bottom-6 rounded-[10px] border-2 border-oops bg-oops-soft px-4 py-2"
-          data-testid="play-error"
-        >
-          ⚠️ {error}
-        </p>
-      )}
-      {code?.mode === 'game' && (
-        <p className="absolute bottom-2 text-sm text-white/70">
-          Bấm Space hoặc chạm màn hình để vỗ cánh · Esc để về code
-        </p>
-      )}
-    </div>
+    />
   );
 }

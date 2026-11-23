@@ -9,6 +9,8 @@
    code bài dùng (`draw_image("images/bird.png", …)`); các id khác (`bird-cu`, `pipe-da`…) là lựa chọn thêm cho Bài 5.
    Tên `<nhóm>-<biến thể>` là bắt buộc: goal chấm theo nhóm (`bird` khớp `bird-rong`).
 4. **Làm sạch:** `npm run assets:clean -- --all` (hoặc một ảnh: `npm run assets:clean -- <ảnh> --id X --group Y`).
+   Hình pixel (vẽ từng ô vuông, muốn giữ mép sắc khi phóng to): thêm `"pixel": true` vào mục của nó trong
+   `content/assets/library/manifest.json` (ADR 0010).
 5. **Kiểm:** `npm run content:check`, khởi động lại `npm run dev` (tệp mới trong `content/`, AGENTS.md §9.3), mở game
    mẫu ở Bài 0 xem hình.
 6. **Đo dung lượng:** `ls -l content/assets/library`. Đợt đầu: 12 ảnh + 4 dải đất ≈ 1,4 MB.

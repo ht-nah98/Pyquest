@@ -10,7 +10,7 @@ export function LibraryPanel({
   stage,
   onClose,
 }: {
-  uptoOrder: number | undefined;
+  uptoOrder: number | 'studio' | undefined;
   /** The course's stage, so WIDTH / HEIGHT show their real numbers. */
   stage: StageSize;
   onClose: () => void;

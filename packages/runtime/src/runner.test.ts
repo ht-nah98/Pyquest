@@ -369,3 +369,87 @@ describe('stage size per run (ADR 0009)', () => {
     expect(py.step({ keys: [], tapped: false }).events[0]).toMatchObject({ x: 200, y: 300 });
   });
 });
+
+describe('pictures, scaled and mirrored (ADR 0010)', () => {
+  test('scale and mirror are in the event only when they change the picture', async () => {
+    const r = await run(
+      'draw_image("images/bird.png", 1, 2)\n' +
+        'draw_image("images/bird.png", 1, 2, 0, False, 1.0, False)\n' +
+        'draw_image("images/bird.png", 1, 2, scale=2, mirror=True)\n' +
+        'draw_image("images/bird.png", 1, 2, frame=1, flip=True, scale=0.5)',
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.events.map((e) => JSON.stringify(e))).toEqual([
+      '{"t":"sprite","sprite":"bird","x":1,"y":2,"frame":0}',
+      '{"t":"sprite","sprite":"bird","x":1,"y":2,"frame":0}',
+      '{"t":"sprite","sprite":"bird","x":1,"y":2,"frame":0,"scale":2,"mirror":true}',
+      '{"t":"sprite","sprite":"bird","x":1,"y":2,"frame":1,"flip":true,"scale":0.5}',
+    ]);
+  });
+
+  test.each([
+    ['scale=0', 'scale phải lớn hơn 0'],
+    ['scale=-1', 'scale phải lớn hơn 0'],
+    ['scale=float("inf")', 'scale phải lớn hơn 0'],
+    ['scale=float("nan")', 'scale phải lớn hơn 0'],
+    ['scale="to"', 'scale phải là một số'],
+    ['scale=True', 'scale phải là một số'],
+    ['mirror="left"', 'mirror phải là True hoặc False'],
+  ])('%s is a short Vietnamese error', async (arg, words) => {
+    const r = await run(`draw_image("images/bird.png", 0, 0, ${arg})`);
+    expect(r.error?.line).toBe(2);
+    expect(r.error?.messageVi).toContain(words);
+    expect(r.events).toEqual([]);
+  });
+});
+
+describe('mouse, click and keys (ADR 0010)', () => {
+  const SEE = `${IMPORT}seen = ""
+def update():
+    global seen
+    held = [k for k in ["left", "right", "up", "down", "space", "1", "2", "3"] if key_pressed(k)]
+    seen = str(mouse_x()) + "," + str(mouse_y()) + " " + str(clicked()) + " " + "+".join(held)
+`;
+  const see = (input: Parameters<PyRunner['step']>[0]) => py.step(input).vars['seen'];
+  const start = () => py.startGame({ 'main.py': SEE }, 'main.py', { seed: 1 });
+
+  test('a step without a pointer is the old input: 0, 0 and no click', async () => {
+    await start();
+    expect(see({ keys: [], tapped: false })).toBe('0,0 False ');
+  });
+
+  test('pointer, click and keys of one step, and gone in the next one that lacks them', async () => {
+    await start();
+    expect(
+      see({ keys: ['left', '2'], tapped: false, pointer: { x: 120, y: 450 }, clicked: true }),
+    ).toBe('120,450 True left+2');
+    expect(see({ keys: ['3'], tapped: false, pointer: { x: 121, y: 450 }, clicked: false })).toBe(
+      '121,450 False 3',
+    );
+    expect(see({ keys: ['1', 'up', 'down', 'right'], tapped: true })).toBe(
+      '0,0 False right+up+down+space+1',
+    );
+  });
+
+  test('a new run forgets the pointer, and the top of the file can ask', async () => {
+    await start();
+    see({ keys: ['left'], tapped: true, pointer: { x: 5, y: 6 }, clicked: true });
+    const r = await run('print(mouse_x(), mouse_y(), clicked(), key_pressed())');
+    expect(r.events).toEqual([{ t: 'say', text: '0 0 False False' }]);
+  });
+
+  test('a key that does not exist says which ones do', async () => {
+    const near = await run('key_pressed("Left")');
+    expect(near.error?.messageVi).toContain('key_pressed("left")');
+    const far = await run('key_pressed("meo")');
+    expect(far.error?.messageVi).toBe(
+      'Dòng 2: Không có phím "meo". Có: left, right, up, down, space, 1, 2, 3.',
+    );
+  });
+
+  test('a child’s own variable or function with one of the new names still works and is reported', async () => {
+    const r = await run('clicked = 3\nmouse_x = 7\ndef mouse_y():\n    return 9\ny = mouse_y()');
+    expect(r.error).toBeUndefined();
+    expect(r.vars).toEqual({ clicked: 3, mouse_x: 7, y: 9 });
+  });
+});

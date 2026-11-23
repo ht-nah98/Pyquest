@@ -119,7 +119,8 @@ export class PyRunner {
 
   /** One frame: update() then draw(); returns that frame's draw events. */
   step(input: GameInput): RunResult {
-    return toResult(this.stepFn(JSON.stringify(input.keys), input.tapped));
+    const { keys, tapped, pointer = { x: 0, y: 0 }, clicked = false } = input;
+    return toResult(this.stepFn(JSON.stringify(keys), tapped, pointer.x, pointer.y, clicked));
   }
 }
 

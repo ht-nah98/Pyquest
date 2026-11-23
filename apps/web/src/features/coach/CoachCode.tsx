@@ -142,15 +142,7 @@ export function CoachCode() {
           >
             ▶ Chạy code của bé
           </Button>
-          <div
-            className="relative min-h-0 flex-1 touch-none"
-            onPointerDown={() => {
-              loop.press('space', true);
-            }}
-            onPointerUp={() => {
-              loop.press('space', false);
-            }}
-          >
+          <div className="relative min-h-0 flex-1 touch-none" {...loop.pointer}>
             <Stage ref={stage} className="h-full" size={size} coords />
           </div>
           {error !== null && <p className="rounded-[8px] bg-oops-soft px-3 py-2">⚠️ {error}</p>}

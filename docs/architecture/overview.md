@@ -37,6 +37,9 @@ tools/content-check ──▶ runtime + checker trên Node: chạy lời giải 
 - **Trợ giúp tọa độ** (`<Stage coords>`): nhãn `(0, 0)`, `x → W`, `y ↓ H` ở ba góc hình, và khi rê chuột / chạm ngón
   thì hiện `x … · y …` cùng hai đường gióng mờ. Bật ở màn code và màn xem code của HLV; tắt khi chơi toàn màn hình
   và ở slide game mẫu. Không chặn sự kiện chạm (chạm sân khấu vẫn vỗ cánh ở bài game).
+- **Người chơi bấm gì (ADR 0010):** mọi màn game dùng chung `useGameKeys` (Space, mũi tên, WASD, 1–3) và
+  `{...loop.pointer}` của `useGameLoop` (chuột / chạm → tọa độ sân qua `StageHandle.pointAt`). Cả hai đổ vào `GameInputs`
+  (`stage/gameInput.ts`, có unit test), mỗi khung hình worker nhận một `GameInput`. Rời cửa sổ thì nhả hết phím.
 - **⬇️ Tải tranh:** `StageHandle.picture()` vẽ lại hình đang có lên một canvas riêng đúng cỡ sân (1 điểm ảnh mỗi đơn vị,
   600 × 600 ở Xưởng vẽ), không có trợ giúp tọa độ, hình mẫu 👀 hay độ mờ 📞, rồi trả về PNG (data URL). Chưa vẽ gì thì
   trả `null`.
@@ -67,5 +70,6 @@ Chức năng có ở nhiều màn là **một component**. Thêm màn mới thì
 |---|---|---|---|---|
 | Màn code `/l/:id/code` | có | có | `coords` | ⛶ toàn màn hình, 👀 hình mẫu, 🎯 Nhiệm vụ / 📞 Cuộc gọi |
 | Xưởng vẽ `/studio/:id` | có | có | `coords`, 600 × 600 | ⬇️ Tải tranh, 💡 Thử thách, ✏️ tên tranh |
-| Chơi toàn màn hình `/l/:id/play` | không | không | không `coords` | Chơi lại, ← Về code |
+| Chơi toàn màn hình `/l/:id/play` (`PlayFrame`) | không | không | không `coords` | Chơi lại, ✕ Về code |
+| HLV chơi thử game đang làm `/coach/prototype` (`PlayFrame`), **chỉ dev server** | không | không | không `coords`, 600 × 600 | Chơi lại, ✕ Về |
 | HLV xem code `/coach/s/…` | chỉ xem chữ | ▶ Chạy code của bé | `coords` | — |

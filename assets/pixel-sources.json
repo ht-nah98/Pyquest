@@ -1,0 +1,290 @@
+[
+  {
+    "id": "hero-knight",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1153890,
+    "caption": "en garde blue armored swordsman with an open-faced helmet"
+  },
+  {
+    "id": "hero-mage",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 827653,
+    "caption": "jumping navy chibi wizard with a star wand"
+  },
+  {
+    "id": "hero-archer",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1278209,
+    "caption": "side-facing elf archer with a short cape"
+  },
+  {
+    "id": "mob-slime",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1163767,
+    "caption": "dripping honey slime with big round eyes"
+  },
+  {
+    "id": "mob-bat",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 308302,
+    "caption": "sleepy purple vampire bat"
+  },
+  {
+    "id": "mob-mushroom",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 407455,
+    "caption": "wet ghost mushroom with a small leaf"
+  },
+  {
+    "id": "mob-ghost",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 615563,
+    "caption": "front-view mischievous sheet ghost with eye holes in flat colors"
+  },
+  {
+    "id": "mob-golem",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 404116,
+    "caption": "friendly stone golem"
+  },
+  {
+    "id": "boss-1",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 208312,
+    "caption": "chubby forest dragon with big eyes"
+  },
+  {
+    "id": "boss-2",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 808830,
+    "caption": "chest-pounding blue yeti with a wide fanged mouth"
+  },
+  {
+    "id": "boss-3",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 883840,
+    "caption": "smoldering magma golem in flat colors"
+  },
+  {
+    "id": "item-xp",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 616565,
+    "caption": "flat lime green gem"
+  },
+  {
+    "id": "item-heart",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 544011,
+    "caption": "charmed heart symbol"
+  },
+  {
+    "id": "item-chest",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 967332,
+    "caption": "flat-topped treasure chest"
+  },
+  {
+    "id": "shot-fire",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 33085,
+    "caption": "flickering flame orb with a bright white core"
+  },
+  {
+    "id": "shot-ice",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 510044,
+    "caption": "giant cyan ice shard with a cracked middle"
+  },
+  {
+    "id": "shot-spark",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 208959,
+    "caption": "cyan spark burst with light rays"
+  },
+  {
+    "id": "shot-arrow",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 647625,
+    "caption": "side-view whistling arrow with a hollow tip"
+  },
+  {
+    "id": "skill-fire-1",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 759066,
+    "caption": "flying fireball"
+  },
+  {
+    "id": "skill-fire-2",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1170973,
+    "caption": "orange ring of fire with a hollow center"
+  },
+  {
+    "id": "skill-fire-3",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 582836,
+    "caption": "flaming meteor with a split tail"
+  },
+  {
+    "id": "skill-fire-4",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1093929,
+    "caption": "round cartoon explosion"
+  },
+  {
+    "id": "skill-ice-1",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 547953,
+    "caption": "jagged blue ice shard"
+  },
+  {
+    "id": "skill-ice-2",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 847336,
+    "caption": "star-shaped cyan snowflake with forked tips"
+  },
+  {
+    "id": "skill-ice-3",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 246361,
+    "caption": "shimmering light blue ice cube with small droplets around"
+  },
+  {
+    "id": "skill-ice-4",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1275865,
+    "caption": "swirling blizzard symbol with diagonal streaks"
+  },
+  {
+    "id": "skill-spark-1",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 223553,
+    "caption": "lightning bolt icon"
+  },
+  {
+    "id": "skill-spark-2",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 749320,
+    "caption": "doubled electric arc with a node at each end"
+  },
+  {
+    "id": "skill-spark-3",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1074376,
+    "caption": "storm cloud icon with a yellow bolt"
+  },
+  {
+    "id": "skill-spark-4",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 149135,
+    "caption": "cyan electric orb with swirling particles"
+  },
+  {
+    "id": "skill-common-1",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 762922,
+    "caption": "tall heart with plus icon with a small highlight"
+  },
+  {
+    "id": "skill-common-2",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 62810,
+    "caption": "blue winged boots"
+  },
+  {
+    "id": "skill-common-3",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 636270,
+    "caption": "u-shaped horseshoe magnet in flat colors"
+  },
+  {
+    "id": "skill-common-4",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 362063,
+    "caption": "bright crossed swords icon"
+  },
+  {
+    "id": "deco-torch",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 348579,
+    "caption": "wall sconce torch"
+  },
+  {
+    "id": "deco-barrel",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1195091,
+    "caption": "barrel with a hoop missing"
+  },
+  {
+    "id": "deco-crate",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 545810,
+    "caption": "stacked wooden crate"
+  },
+  {
+    "id": "deco-misc",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1296447,
+    "caption": "stone pillar with a round base"
+  },
+  {
+    "id": "fx-hit",
+    "from": "pixelfx",
+    "effect": "impacts/crit-hit",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/impact; imports adapted helper fx/impacts/_lib.js; uses core/sim.js, adapted from Sprite Fusion (Particles, Bits, Lights, P, B)"
+  },
+  {
+    "id": "fx-slash",
+    "from": "pixelfx",
+    "effect": "melee/sword-slash",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/slash; uses core/sim.js, adapted from Sprite Fusion (Particles, P, sparkle)"
+  },
+  {
+    "id": "fx-fire",
+    "from": "pixelfx",
+    "effect": "fire/flame-pillar",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/explosion; imports adapted helper fx/fire/_lib.js; uses core/sim.js, adapted from Sprite Fusion (Particles, Bits, Lights, P, PF, B, band, SMOKE_RAMP)"
+  },
+  {
+    "id": "fx-ice",
+    "from": "pixelfx",
+    "effect": "ice/frost-nova",
+    "adapted": "header does not say it adapts Sprite Fusion; uses core/sim.js, adapted from Sprite Fusion (Particles, Bits, Lights, P, B, crystal, band, flare)"
+  },
+  {
+    "id": "fx-spark",
+    "from": "pixelfx",
+    "effect": "lightning/zap-hit",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/lightning; imports adapted helper fx/lightning/_lib.js; uses core/sim.js, adapted from Sprite Fusion (Particles, Lights, P, GRAVITY, FIRE_RAMP, SMOKE_RAMP)"
+  },
+  {
+    "id": "fx-explosion",
+    "from": "pixelfx",
+    "effect": "explosions/firework-burst",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/sparkle; uses core/sim.js, adapted from Sprite Fusion (Particles, Lights, P, sparkle)"
+  },
+  {
+    "id": "fx-poof",
+    "from": "pixelfx",
+    "effect": "spawn/poof",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/explosion; uses core/sim.js, adapted from Sprite Fusion (Particles, Lights, P, flare)"
+  },
+  {
+    "id": "fx-levelup",
+    "from": "pixelfx",
+    "effect": "ui/level-up",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/holy-light; imports adapted helper fx/ui/_lib.js; uses core/sim.js, adapted from Sprite Fusion (Particles, Lights, P, PF, band, flare, sparkle)"
+  },
+  {
+    "id": "fx-heal",
+    "from": "pixelfx",
+    "effect": "holy/heal-aoe",
+    "adapted": "header does not say it adapts Sprite Fusion; imports adapted helper fx/holy/_lib.js; uses core/sim.js, adapted from Sprite Fusion (Particles, Lights, P, sparkle, flare, band)"
+  },
+  {
+    "id": "fx-pickup",
+    "from": "pixelfx",
+    "effect": "pickups/collect-burst",
+    "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/pickup; imports adapted helper fx/pickups/_lib.js; uses core/sim.js, adapted from Sprite Fusion (Lights)"
+  }
+]

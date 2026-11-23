@@ -604,3 +604,29 @@ describe('circles, lines and shapes (ADR 0009)', () => {
     expect(checkGoals([d], result([box]))[0]?.ok).toBe(false);
   });
 });
+
+describe('scaled and mirrored pictures (ADR 0010)', () => {
+  const bird = { t: 'sprite', sprite: 'bird', x: 10, y: 20, frame: 0 } as const;
+  const same = (a: DrawEvent, b: DrawEvent) =>
+    checkGoals(
+      [{ id: 'm', label: 'l', kind: 'matches' }],
+      { ...ok, events: [a] },
+      {
+        expected: { ...ok, events: [b] },
+      },
+    )[0]?.ok;
+
+  test('matches: the size and the mirror must be right too', () => {
+    expect(same(bird, bird)).toBe(true);
+    expect(same({ ...bird, scale: 2, mirror: true }, { ...bird, scale: 2, mirror: true })).toBe(
+      true,
+    );
+    expect(same({ ...bird, scale: 2 }, bird)).toBe(false);
+    expect(same({ ...bird, mirror: true }, bird)).toBe(false);
+  });
+
+  test('drew still looks at the place only', () => {
+    const g: Goal = { id: 'g', label: 'l', kind: 'drew', sprite: 'bird', at: [10, 20] };
+    expect(one(g, { ...ok, events: [{ ...bird, scale: 3, mirror: true }] })).toBe(true);
+  });
+});

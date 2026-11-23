@@ -1,4 +1,4 @@
-import { PyRunner } from '@pyquest/runtime';
+import { KEYS, PyRunner } from '@pyquest/runtime';
 import * as Blockly from 'blockly/core';
 import { beforeAll, describe, expect, test } from 'vitest';
 import { callBlocksFor, lineMap, registerBlocks, toPython, toolboxFor, treeToState } from './index';
@@ -462,5 +462,81 @@ describe('coordinate drawing blocks (ADR 0009)', () => {
     expect(
       toPython({ blocks: { languageVersion: 0, blocks: [{ ...blocks[0], x: 0, y: 0 }] } }),
     ).toBe('draw_circle(300, 300, 100, "orange")\n');
+  });
+});
+
+describe('keys, mouse and click blocks (ADR 0010)', () => {
+  const condition = (src: string) => {
+    const tree = py.parseBlocks(`x = ${src}`);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    return tree.statements[0]?.inputs?.['VALUE'];
+  };
+
+  test.each([...KEYS])('key_pressed("%s") is a block with that key', (k) => {
+    const src = `key_pressed("${k}")`;
+    expect(condition(src)).toEqual({ type: 'pq_key_held', fields: { KEY: k } });
+    expect(roundTrip(`x = ${src}`).trimEnd()).toBe(`x = ${src}`);
+  });
+
+  test.each([
+    ['key_pressed()', 'pq_key_pressed'],
+    ['mouse_x()', 'pq_mouse_x'],
+    ['mouse_y()', 'pq_mouse_y'],
+    ['clicked()', 'pq_clicked'],
+  ])('%s is its own block', (src, type) => {
+    expect(condition(src)).toEqual({ type });
+    expect(roundTrip(`x = ${src}`).trimEnd()).toBe(`x = ${src}`);
+  });
+
+  test.each([
+    'if clicked() and mouse_y() > 300:\n    x = mouse_x() - 10',
+    'if key_pressed("left") or key_pressed("1"):\n    x -= 4',
+    'if not key_pressed("space"):\n    x = 0',
+  ])('%j is made of real blocks', (source) => {
+    const tree = py.parseBlocks(source);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    expect(JSON.stringify(tree.statements)).not.toContain('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test.each([
+    'key_pressed("meo")',
+    "key_pressed('left')",
+    'key_pressed(k)',
+    'key_pressed(1)',
+    'key_pressed(key="left")',
+    'mouse_x(1)',
+  ])('%s stays as typed', (src) => {
+    expect(condition(src)?.type).toBe('pq_raw_expr');
+    expect(roundTrip(`x = ${src}`).trimEnd()).toBe(`x = ${src}`);
+  });
+
+  test('a def of the child with one of these names stays a call of that def', () => {
+    const source = 'def clicked():\n    return 1\n\n\nx = clicked()';
+    expect(JSON.stringify(py.parseBlocks(source))).toContain('pq_call_expr');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('draw_image keeps its block; scale and mirror stay code text', () => {
+    const types = ['', ', flip=True', ', scale=2', ', mirror=True', ', flip=True, scale=2'].map(
+      (rest) => {
+        const source = `draw_image("images/bird.png", 1, 2${rest})`;
+        expect(roundTrip(source).trimEnd()).toBe(source);
+        const tree = py.parseBlocks(source);
+        return tree.ok && tree.statements[0]?.type;
+      },
+    );
+    expect(types).toEqual(['pq_draw_image', 'pq_draw_image', 'pq_raw', 'pq_raw', 'pq_raw']);
+  });
+
+  test('the toolbox puts them under Điều kiện', () => {
+    const ids = ['pq_key_pressed', 'pq_key_held', 'pq_mouse_x', 'pq_mouse_y', 'pq_clicked'];
+    const tb = toolboxFor(ids);
+    if (tb.kind !== 'categoryToolbox') throw new Error('categories');
+    expect(tb.contents.map((c) => [c.name, c.contents.map((b) => b.type)])).toEqual([
+      ['Điều kiện', ids],
+    ]);
+    const fresh = { blocks: { languageVersion: 0, blocks: [{ type: 'pq_key_held', x: 0, y: 0 }] } };
+    expect(toPython(fresh)).toContain('key_pressed("left")');
   });
 });

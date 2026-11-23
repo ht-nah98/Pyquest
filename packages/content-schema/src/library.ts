@@ -15,6 +15,8 @@ export const LibraryEntrySchema = z.object({
    * command no lesson teaches yet (draw_circle… for the drawing studio, ADR 0009): no lesson lists it.
    */
   lesson: z.string().min(1).optional(),
+  /** Only useful in a game (mouse_x, clicked…): 🎨 Xưởng vẽ, which runs scripts, does not list it. */
+  gameOnly: z.literal(true).optional(),
 });
 
 export const LibraryRefSchema = z.object({ entries: z.array(LibraryEntrySchema).min(1) });

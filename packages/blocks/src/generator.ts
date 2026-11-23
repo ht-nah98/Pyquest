@@ -111,6 +111,13 @@ function installGenerators(): void {
     return [`${side('A')} ${op} ${side('B')}`, order];
   };
   g['pq_key_pressed'] = () => ['key_pressed()', Order.FUNCTION_CALL];
+  g['pq_key_held'] = (block) => [
+    `key_pressed("${String(block.getFieldValue('KEY'))}")`,
+    Order.FUNCTION_CALL,
+  ];
+  g['pq_mouse_x'] = () => ['mouse_x()', Order.FUNCTION_CALL];
+  g['pq_mouse_y'] = () => ['mouse_y()', Order.FUNCTION_CALL];
+  g['pq_clicked'] = () => ['clicked()', Order.FUNCTION_CALL];
   g['pq_random'] = (block) => [
     `random_int(${value(block, 'A')}, ${value(block, 'B')})`,
     Order.FUNCTION_CALL,

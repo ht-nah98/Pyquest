@@ -12,6 +12,8 @@ export type StageHandle = {
   /** Script mode: replay events one by one so the child sees the order things happen. */
   replay(events: readonly DrawEvent[], msPerEvent?: number): Promise<void>;
   clear(): void;
+  /** A point on the page in stage units, or null outside the picture (game screens: mouse_x, mouse_y). */
+  pointAt(clientX: number, clientY: number): { x: number; y: number } | null;
   /**
    * 📞 calls panel: keep the drawings made by these calls bright and fade the rest (null: all bright).
    * Ids are the call ids of the events on screen.
@@ -147,10 +149,15 @@ export const Stage = forwardRef<StageHandle, StageProps>(function Stage(
     };
   }, []);
 
+  const pointAt = (clientX: number, clientY: number) => {
+    const r = canvas.current?.getBoundingClientRect();
+    return r === undefined
+      ? null
+      : toStagePoint(clientX - r.left, clientY - r.top, r.width, r.height, size);
+  };
   /** Coordinates help: the stage point under the mouse or finger (null outside the picture). */
   const track = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    setPointer(toStagePoint(e.clientX - r.left, e.clientY - r.top, r.width, r.height, size));
+    setPointer(pointAt(e.clientX, e.clientY));
   };
   const untrack = () => {
     setPointer(null);
@@ -166,6 +173,7 @@ export const Stage = forwardRef<StageHandle, StageProps>(function Stage(
   };
 
   useImperativeHandle(ref, () => ({
+    pointAt,
     showFrame(events) {
       const c = ctx();
       if (c === null) return;

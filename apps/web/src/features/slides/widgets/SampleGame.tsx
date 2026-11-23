@@ -36,15 +36,7 @@ export function SampleGame({
 
   return (
     <div ref={box} className="flex h-full w-full min-h-0 gap-4 bg-paper" data-testid="sample-game">
-      <div
-        className="relative min-h-0 flex-1 touch-none"
-        onPointerDown={() => {
-          loop.press('space', true);
-        }}
-        onPointerUp={() => {
-          loop.press('space', false);
-        }}
-      >
+      <div className="relative min-h-0 flex-1 touch-none" {...loop.pointer}>
         <Stage ref={stage} className="h-full" testId="sample-stage" size={size} />
         {status === 'loading' && (
           <p className="absolute inset-0 grid place-items-center text-xl text-ink-soft">

@@ -41,7 +41,7 @@ export const EditorPanes = forwardRef<
     onCode: (file: string, text: string) => void;
     onWorkspace: (ws: object) => void;
     /** 📘 Thư viện: commands met up to this lesson order (all when undefined), on this stage. */
-    library: { uptoOrder: number | undefined; stage: StageSize };
+    library: { uptoOrder: number | 'studio' | undefined; stage: StageSize };
     /** Next to the 🧩 Khối title. */
     note?: ReactNode;
   }
