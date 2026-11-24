@@ -29,7 +29,7 @@ export const CourseSchema = z
     /** The sample game's own stage, when it is not the lessons' one (a wide screen to play on). */
     sampleStage: z
       .object({
-        width: z.number().int().min(100).max(1200),
+        width: z.number().int().min(100).max(1600),
         height: z.number().int().min(100).max(1200),
       })
       .optional(),

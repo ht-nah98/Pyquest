@@ -17,77 +17,89 @@ BRANCHES = {
 
 # "faces": trong ảnh gốc, nhân vật (quái) quay mặt về bên nào. Đi về bên kia thì lật ảnh.
 HEROES = [
-    {"name": "Kiếm sĩ", "image": "hero-knight", "faces": "left", "attack": "slash", "hp": 120, "speed": 1.9, "power": 9,
-     "reload": 70, "range": 100, "color": "#6fa8ff", "text": "120 máu. Chém cả vòng quanh mình"},
-    {"name": "Pháp sư", "image": "hero-mage", "faces": "left", "attack": "orb", "hp": 95, "speed": 1.9, "power": 8,
-     "reload": 78, "range": 330, "color": "#c79bff", "text": "95 máu. Đạn phép nổ lan"},
-    {"name": "Cung thủ", "image": "hero-archer", "faces": "right", "attack": "arrow", "hp": 105, "speed": 2.1, "power": 8,
-     "reload": 58, "range": 360, "color": "#7fd87a", "text": "105 máu. Đi nhanh, tên xuyên 3 con"},
+    {"name": "Kiếm sĩ", "image": "hero-knight", "faces": "left", "attack": "slash", "hp": 120, "speed": 1.55, "power": 9,
+     "reload": 70, "range": 105, "color": "#6fa8ff", "text": "120 máu. Chém cả vòng quanh mình"},
+    {"name": "Pháp sư", "image": "hero-mage", "faces": "left", "attack": "orb", "hp": 105, "speed": 1.55, "power": 8,
+     "reload": 78, "range": 380, "color": "#c79bff", "text": "105 máu. Đạn phép nổ lan"},
+    {"name": "Cung thủ", "image": "hero-archer", "faces": "right", "attack": "arrow", "hp": 105, "speed": 1.7, "power": 8,
+     "reload": 58, "range": 420, "color": "#7fd87a", "text": "105 máu. Đi nhanh, tên xuyên 3 con"},
 ]
 PIERCE = 3          # một mũi tên trúng được mấy con
+SHOT_SPEED = 4      # đạn của em bay bấy nhiêu điểm mỗi khung
 
 # "size": chạm gần bấy nhiêu thì trúng. "scale": ảnh 16 điểm phóng to mấy lần. "bite": chạm em thì em mất mấy máu.
+# "xp": viên ngọc rơi ra đáng mấy kinh nghiệm (ải sau nhân thêm, xem "gems" trong FLOORS).
 MOBS = {
-    "slime": {"image": "mob-slime", "faces": "left", "scale": 2, "move": "chase", "hp": 8, "speed": 0.6, "size": 13,
-              "bite": 8, "xp": 1},
-    "bat": {"image": "mob-bat", "faces": "left", "scale": 2, "move": "zigzag", "hp": 5, "speed": 1.0, "size": 11, "bite": 7,
-            "xp": 1, "fly": True},
-    "mushroom": {"image": "mob-mushroom", "faces": "left", "scale": 2, "move": "shoot", "hp": 14, "speed": 0.5, "size": 14,
-                 "bite": 10, "xp": 2},
-    "ghost": {"image": "mob-ghost", "faces": "left", "scale": 2, "move": "dash", "hp": 16, "speed": 0.65, "size": 14,
-              "bite": 11, "xp": 2, "fly": True},
-    "golem": {"image": "mob-golem", "faces": "left", "scale": 3, "move": "chase", "hp": 55, "speed": 0.42, "size": 19,
-              "bite": 18, "xp": 5},
-    "boss1": {"image": "boss-1", "faces": "left", "scale": 6, "move": "hop", "hp": 900, "speed": 2.6, "size": 40, "bite": 24,
-              "xp": 30, "fly": True, "boss": "Rồng Nhớt"},
-    "boss2": {"image": "boss-2", "faces": "left", "scale": 6, "move": "ring", "hp": 2200, "speed": 0.6, "size": 42, "bite": 26,
-              "xp": 30, "fly": True, "boss": "Người Tuyết"},
-    "boss3": {"image": "boss-3", "faces": "left", "scale": 7, "move": "charge", "hp": 4600, "speed": 0.8, "size": 46,
-              "bite": 30, "xp": 30, "fly": True, "boss": "Vua Dung Nham"},
+    "slime": {"image": "mob-slime", "faces": "left", "scale": 1.75, "move": "chase", "hp": 7, "speed": 0.5, "size": 11,
+              "bite": 7, "xp": 1},
+    "bat": {"image": "mob-bat", "faces": "left", "scale": 1.75, "move": "zigzag", "hp": 4, "speed": 0.85, "size": 10,
+            "bite": 6, "xp": 1, "fly": True},
+    "mushroom": {"image": "mob-mushroom", "faces": "left", "scale": 1.75, "move": "shoot", "hp": 12, "speed": 0.42,
+                 "size": 12, "bite": 9, "xp": 2},
+    "ghost": {"image": "mob-ghost", "faces": "left", "scale": 1.75, "move": "dash", "hp": 14, "speed": 0.55, "size": 12,
+              "bite": 10, "xp": 2, "fly": True},
+    "golem": {"image": "mob-golem", "faces": "left", "scale": 2.5, "move": "chase", "hp": 50, "speed": 0.36, "size": 16,
+              "bite": 16, "xp": 6},
+    "boss1": {"image": "boss-1", "faces": "left", "scale": 5.5, "move": "hop", "hp": 900, "speed": 2.2, "size": 36, "bite": 24,
+              "xp": 40, "fly": True, "boss": "Rồng Nhớt"},
+    "boss2": {"image": "boss-2", "faces": "left", "scale": 5.5, "move": "ring", "hp": 2200, "speed": 0.5, "size": 38,
+              "bite": 26, "xp": 40, "fly": True, "boss": "Người Tuyết"},
+    "boss3": {"image": "boss-3", "faces": "left", "scale": 6.5, "move": "charge", "hp": 4600, "speed": 0.7, "size": 42,
+              "bite": 30, "xp": 40, "fly": True, "boss": "Vua Dung Nham"},
 }
 
-# Mỗi ải là một sân rộng hơn màn hình, màn hình đi theo em.
+# Mỗi ải là một sân rộng gấp mấy lần màn hình, màn hình đi theo em.
 # "world": sân rộng, cao. "length": mấy giây thì trùm ra. "tough", "pace": máu và tốc độ quái nhân lên bấy nhiêu.
+# "gems": ngọc ở ải này đáng gấp mấy lần (ải sau quái khó hơn thì cho nhiều kinh nghiệm hơn).
 # "waves": từ giây thứ mấy, các loại quái (số to = ra nhiều hơn), mấy khung ra một con, sân lúc nào cũng có ít nhất mấy con.
 # "swarms": giây thứ mấy có cả bầy kéo tới. "elites": giây thứ mấy có quái to giữ rương.
 # "props": [ảnh, phóng to, bán kính chắn đường (0 = đi xuyên được), hay gặp tới đâu]. "thick": trong 10 ô thì mấy ô có đồ.
+# "walls": vật cản dài (hàng rào, vách đá): [ảnh, phóng to, chắn, mấy bức, ngắn nhất, dài nhất (số món)].
+# "clumps": cụm cây, cụm đá chen nhau, chừa lối nhỏ: [[các ảnh], phóng to, chắn, mấy cụm].
 # "pools": ảnh vũng, làm chậm (slow) hay gây bỏng (burn), mấy vũng. "marks": thứ đặt sẵn quanh giữa sân, [ảnh, to, chắn, x, y].
 FLOORS = [
-    {"name": "Đồng Rêu", "world": [2300, 1500], "ground": "deco-ground-meadow", "outside": "#2f4a33", "length": 120,
-     "tough": 1, "pace": 1, "boss": "boss1",
-     "waves": [[0, {"slime": 1}, 80, 5], [20, {"slime": 3, "bat": 1}, 64, 9], [45, {"slime": 3, "bat": 2}, 50, 14],
-               [70, {"slime": 3, "bat": 2, "mushroom": 1}, 44, 18], [95, {"slime": 3, "bat": 3, "mushroom": 1}, 38, 22]],
-     "swarms": [[35, "bat", 10], [60, "slime", 14], [90, "bat", 16]], "elites": [[50, "slime"], [85, "mushroom"]],
+    {"name": "Đồng Rêu", "world": [4200, 2600], "ground": "deco-ground-meadow", "outside": "#2f4a33", "length": 150,
+     "tough": 1, "pace": 1, "gems": 1, "boss": "boss1",
+     "waves": [[0, {"slime": 1}, 60, 10], [20, {"slime": 3, "bat": 1}, 46, 16], [45, {"slime": 3, "bat": 2}, 38, 22],
+               [75, {"slime": 3, "bat": 2, "mushroom": 1}, 32, 28], [110, {"slime": 3, "bat": 3, "mushroom": 1}, 26, 36]],
+     "swarms": [[35, "bat", 14], [65, "slime", 20], [100, "bat", 22], [130, "slime", 26]],
+     "elites": [[55, "slime"], [95, "mushroom"]],
      "props": [["deco-oak", 5, 15, 3], ["deco-chestnut", 5, 15, 3], ["deco-walnut", 5, 15, 1], ["deco-stump", 3, 14, 1],
                ["deco-boulder", 3, 18, 2], ["deco-bush", 3, 0, 3], ["deco-flowers", 2.5, 0, 4], ["deco-grass", 2.5, 0, 6]],
-     "thick": 5, "patch": "deco-dirt", "pools": ["deco-pond", "slow", 8], "rim": "deco-reed", "edge": ["deco-oak", "deco-chestnut"],
+     "thick": 4, "walls": [["deco-fence", 3, 14, 14, 4, 9]],
+     "clumps": [[["deco-oak", "deco-chestnut", "deco-walnut"], 5, 15, 10], [["deco-boulder", "deco-stump"], 3, 16, 6]],
+     "patch": "deco-dirt", "pools": ["deco-pond", "slow", 12], "rim": "deco-reed", "edge": ["deco-oak", "deco-chestnut"],
      "marks": [["deco-well", 4, 24, 0, -120], ["deco-fence", 3, 14, -110, -140], ["deco-fence", 3, 14, -64, -140],
                ["deco-fence", 3, 14, 64, -140], ["deco-fence", 3, 14, 110, -140], ["deco-flowers", 2.5, 0, -90, -100],
                ["deco-flowers", 2.5, 0, 90, -100]], "air": "petals"},
-    {"name": "Rừng Sương", "world": [3000, 1150], "ground": "deco-ground-forest", "outside": "#1c2f33", "length": 135,
-     "tough": 2.1, "pace": 1.15, "boss": "boss2",
-     "waves": [[0, {"bat": 2, "slime": 2}, 56, 10], [25, {"bat": 2, "mushroom": 2, "slime": 1}, 48, 15],
-               [55, {"ghost": 2, "slime": 2, "mushroom": 1}, 42, 20], [85, {"ghost": 2, "mushroom": 2, "bat": 2}, 36, 26],
-               [110, {"ghost": 3, "mushroom": 2, "bat": 3}, 32, 30]],
-     "swarms": [[30, "bat", 18], [65, "ghost", 12], [95, "bat", 24], [120, "ghost", 16]],
-     "elites": [[45, "mushroom"], [80, "ghost"], [115, "bat"]],
+    {"name": "Rừng Sương", "world": [5000, 2200], "ground": "deco-ground-forest", "outside": "#1c2f33", "length": 165,
+     "tough": 1.85, "pace": 1.1, "gems": 1.6, "boss": "boss2",
+     "waves": [[0, {"bat": 2, "slime": 2}, 44, 16], [25, {"bat": 2, "mushroom": 2, "slime": 1}, 36, 22],
+               [60, {"ghost": 2, "slime": 2, "mushroom": 1}, 32, 28], [95, {"ghost": 2, "mushroom": 2, "bat": 2}, 27, 36],
+               [130, {"ghost": 3, "mushroom": 2, "bat": 3}, 24, 42]],
+     "swarms": [[30, "bat", 22], [70, "ghost", 16], [105, "bat", 30], [145, "ghost", 22]],
+     "elites": [[50, "mushroom"], [90, "ghost"], [135, "bat"]],
      "props": [["deco-haunted", 5, 15, 3], ["deco-spirit", 5, 15, 3], ["deco-dead", 5, 15, 2], ["deco-star-tree", 5, 15, 2], ["deco-fern", 4, 13, 2],
                ["deco-thistle", 2.5, 0, 4], ["deco-crystal-flower", 2, 0, 3], ["deco-grass", 2.5, 0, 4]],
-     "thick": 7, "patch": "deco-mist-moss", "pools": ["deco-swamp", "slow", 9], "rim": "deco-fern",
+     "thick": 5, "walls": [["deco-fern", 4, 13, 8, 4, 8]],
+     "clumps": [[["deco-haunted", "deco-spirit", "deco-dead"], 5, 15, 18], [["deco-star-tree", "deco-fern"], 5, 14, 6]],
+     "patch": "deco-mist-moss", "pools": ["deco-swamp", "slow", 13], "rim": "deco-fern",
      "edge": ["deco-haunted", "deco-spirit"],
      "marks": [["deco-lantern", 5, 15, -230, -120], ["deco-lantern", 5, 15, 230, -120], ["deco-lantern", 5, 15, -230, 150],
                ["deco-lantern", 5, 15, 230, 150], ["deco-lantern", 5, 15, -700, 0], ["deco-lantern", 5, 15, 700, 0]],
      "air": "mist"},
-    {"name": "Hang Đá", "world": [1900, 1700], "ground": "deco-ground-cave", "outside": "#241b1a", "length": 150,
-     "tough": 4.5, "pace": 1.3, "boss": "boss3",
-     "waves": [[0, {"golem": 1, "bat": 3}, 50, 12], [25, {"golem": 2, "bat": 3, "ghost": 1}, 42, 18],
-               [60, {"golem": 2, "ghost": 3, "mushroom": 1}, 36, 24], [95, {"golem": 2, "ghost": 3, "bat": 3}, 31, 30],
-               [125, {"golem": 3, "ghost": 3, "mushroom": 2, "bat": 3}, 28, 34]],
-     "swarms": [[35, "bat", 22], [70, "ghost", 16], [100, "golem", 8], [130, "bat", 28]],
-     "elites": [[40, "bat"], [75, "golem"], [115, "ghost"]],
+    {"name": "Hang Đá", "world": [3800, 3000], "ground": "deco-ground-cave", "outside": "#241b1a", "length": 180,
+     "tough": 4.1, "pace": 1.22, "gems": 2.4, "boss": "boss3",
+     "waves": [[0, {"golem": 1, "bat": 3}, 40, 18], [25, {"golem": 2, "bat": 3, "ghost": 1}, 33, 26],
+               [65, {"golem": 2, "ghost": 3, "mushroom": 1}, 28, 32], [105, {"golem": 2, "ghost": 3, "bat": 3}, 24, 40],
+               [145, {"golem": 3, "ghost": 3, "mushroom": 2, "bat": 3}, 22, 46]],
+     "swarms": [[35, "bat", 26], [75, "ghost", 20], [110, "golem", 10], [150, "bat", 34]],
+     "elites": [[45, "bat"], [85, "golem"], [130, "ghost"]],
      "props": [["deco-rock", 4, 20, 4], ["deco-ember-rock", 3.5, 18, 2], ["deco-crystal", 3, 16, 2],
                ["deco-crystal-green", 3, 16, 1], ["deco-burnt", 4, 14, 2], ["deco-ruin", 4, 18, 1], ["deco-boulder", 2.5, 14, 2]],
-     "thick": 4, "patch": "deco-ash", "pools": ["deco-lava", "burn", 10], "rim": "deco-ember-rock",
+     "thick": 3, "walls": [["deco-rock", 4, 20, 16, 5, 11], ["deco-ruin", 4, 18, 5, 3, 6]],
+     "clumps": [[["deco-crystal", "deco-crystal-green", "deco-rock"], 3.5, 16, 8]],
+     "patch": "deco-ash", "pools": ["deco-lava", "burn", 14], "rim": "deco-ember-rock",
      "edge": ["deco-rock", "deco-boulder"],
      "marks": [["deco-pillar", 4, 20, -300, -190], ["deco-column", 4, 20, 0, -260], ["deco-pillar", 4, 20, 300, -190],
                ["deco-column", 4, 20, 360, 60], ["deco-pillar", 4, 20, 300, 260], ["deco-column", 4, 20, 0, 330],
@@ -172,12 +184,19 @@ SAFE = 28           # trúng đòn xong thì không mất máu nữa trong bấy
 WAIT = 25           # màn mới hiện ra thì chờ một chút mới nhận phím, kẻo bấm nhầm
 MAX_LEVEL = 3
 SLOTS = 6           # bộ skill có mấy ô. Thẻ nhánh Chung không chiếm ô
-MAX_MOBS = 64       # đông quá thì chạy chậm
-MAX_SHOTS = 34
-MAX_GEMS = 90
-MAX_ZONES = 24
-MAX_EFFECTS = 34
+MAX_MOBS = 96       # đông quá thì chạy chậm
+MAX_SHOTS = 40
+MAX_GEMS = 120
+MAX_ZONES = 28
+MAX_EFFECTS = 40
 KEYS = ["1", "2", "3", "space"]
+U = HEIGHT / 540    # chữ và khung trên màn hình phóng theo màn: màn 1600 × 900 thì U = 1,67
+
+# Ngọc kinh nghiệm có 3 bậc: đáng từ bấy nhiêu trở lên thì [màu quầng, phóng to]. Ngọc to nhìn từ xa đã thấy.
+GEM_TIERS = [[12, "#ff5c8a", 2.4], [4, "#7dff6b", 1.9], [0, "#4fd8ff", 1.4]]
+XP_FIRST = 8        # lên cấp 2 cần bấy nhiêu kinh nghiệm
+XP_STEP = 5         # mỗi cấp sau cần thêm bấy nhiêu
+XP_LATE = 2         # từ cấp 10 trở đi, mỗi cấp cần thêm nữa bấy nhiêu (lên cấp chậm dần)
 
 
 # ---------- CÁC LOẠI VẬT TRONG GAME ----------
@@ -240,6 +259,7 @@ class Gem:
     def __init__(self, x, y, value):
         self.x, self.y, self.value = x, y, value
         self.fly = False        # đang bay về phía em
+        self.speed = 2          # bay về càng lúc càng nhanh
         self.alive = True
 
 
@@ -281,9 +301,9 @@ class Effect:
 
 
 game = {"state": "hero", "clock": 0, "time": 0, "floor": 0, "second": 0, "tick": 0, "kills": 0, "last_gem": 0,
-        "last_bite": 0}
+        "last_bite": 0, "xp_shown": 0, "xp_glow": 0}
 camera = {"x": 0, "y": 0}
-world = {"w": 960, "h": 540}
+world = {"w": WIDTH, "h": HEIGHT}
 held = {}           # phím nào đang bị giữ
 fresh = {}          # phím nào vừa mới bấm ở khung này
 hero = Hero(HEROES[0])
@@ -377,7 +397,7 @@ def read_keys():
 
 
 def row_top(i):
-    return 136 + i * 128
+    return (136 + i * 128) * U
 
 
 def picked_row():
@@ -387,7 +407,7 @@ def picked_row():
     for i in range(3):
         if fresh[str(i + 1)]:
             return i
-        if clicked() and 160 <= mouse_x() <= 800 and row_top(i) <= mouse_y() <= row_top(i) + 116:
+        if clicked() and 160 * U <= mouse_x() <= 800 * U and row_top(i) <= mouse_y() <= row_top(i) + 116 * U:
             return i
     return None
 
@@ -425,20 +445,34 @@ def move_hero():
             step = step * 0.6
         elif game["time"] % 30 == 0:
             lose_hp(4)
+    old_x, old_y = hero.x, hero.y
     hero.x = hero.x + dx * step
     hero.y = hero.y + dy * step
     go_around(hero)
     keep_inside(hero, 24)
+    if stuck(hero):             # kẹt giữa hai món (khe hàng rào): đứng lại chỗ cũ
+        hero.x, hero.y = old_x, old_y
+
+
+def near_solids(x, y):
+    # Những món chắn đường ở gần (x, y): mỗi ô vuông nhớ sẵn các món phủ lên nó.
+    return blocks.get((x // CELL, y // CELL), [])
 
 
 def go_around(thing):
     # Vướng cây, đá thì bị đẩy ra ngoài vòng tròn của nó, thành ra trượt quanh nó.
-    for prop in [p for p in solids if abs(p.x - thing.x) < 60 and abs(p.y - thing.y) < 60]:
-        dx, dy, far = direction(prop, thing)
-        reach = prop.solid + thing.size
-        if far < reach:
-            thing.x = prop.x + dx * reach
-            thing.y = prop.y + dy * reach
+    # Làm 3 lượt, vì đẩy ra khỏi món này có thể đẩy vào món bên cạnh.
+    for i in range(3):
+        for prop in near_solids(thing.x, thing.y):
+            dx, dy, far = direction(prop, thing)
+            reach = prop.solid + thing.size
+            if far < reach:
+                thing.x = prop.x + dx * reach
+                thing.y = prop.y + dy * reach
+
+
+def stuck(thing):
+    return any([distance(prop, thing) < prop.solid + thing.size - 0.5 for prop in near_solids(thing.x, thing.y)])
 
 
 def in_pool():
@@ -512,7 +546,7 @@ def attack():
     if hero.data["attack"] == "slash":
         slash()
     else:
-        add(shots, Shot(hero.data["attack"], hero.x, hero.y, dx, dy, 4.6, hero.power, 100), MAX_SHOTS)
+        add(shots, Shot(hero.data["attack"], hero.x, hero.y, dx, dy, SHOT_SPEED, hero.power, 120), MAX_SHOTS)
 
 
 def slash():
@@ -571,7 +605,8 @@ def heal(amount):
 
 
 def xp_needed():
-    return 5 + hero.level * 5
+    # Cấp càng cao càng cần nhiều kinh nghiệm. Từ cấp 10 còn tăng nhanh hơn nữa.
+    return XP_FIRST + (hero.level - 1) * XP_STEP + max(0, hero.level - 9) * (hero.level - 9) * XP_LATE
 
 
 # ---------- SKILL ----------
@@ -665,7 +700,7 @@ def use_skills():
         if hero.shield_wait <= 0:
             hero.shield = True
     if is_time("spark_cloud"):
-        mob = nearest_mob(hero.x, hero.y, 300, [])
+        mob = nearest_mob(hero.x, hero.y, 380, [])
         if mob is not None:
             strike(hero.x, hero.y - 45, mob, value("spark_cloud", "power"))
     if is_time("spark_trap"):
@@ -673,7 +708,7 @@ def use_skills():
     if "plasma" in combos and game["time"] % 300 == 0:
         for i in range(8):
             angle = i * pi / 4
-            add(shots, Shot("plasma", hero.x, hero.y, cos(angle), sin(angle), 3.6, 9, 110), MAX_SHOTS)
+            add(shots, Shot("plasma", hero.x, hero.y, cos(angle), sin(angle), 3.2, 9, 130), MAX_SHOTS)
 
 
 def update_zone(zone):
@@ -748,7 +783,7 @@ def update_mobs():
 def steer(mob, now):
     # Quái thường: tính xem mấy khung tới đi về hướng nào.
     dx, dy, far = direction(mob, hero)
-    if far > 720:                       # bị bỏ xa quá: vòng ra phía khác, kẻo em chạy thẳng là thoát hết
+    if far > WIDTH * 0.8:               # bị bỏ xa quá: vòng ra phía khác, kẻo em chạy thẳng là thoát hết
         mob.x, mob.y = outside_point()
         keep_inside(mob, 20)
         return
@@ -778,9 +813,9 @@ def steer(mob, now):
 
 def aim_spores(mob, now, dx, dy, far, speed):
     # Nấm: tới gần thì đứng lại, lâu lâu phun một viên bào tử.
-    if (now + mob.beat) % 240 < 3 and far < 420:
-        add(shots, Shot("spore", mob.x, mob.y, dx, dy, 1.5, mob.data["bite"], 220), MAX_SHOTS)
-    if far < 190:
+    if (now + mob.beat) % 270 < 3 and far < 460:
+        add(shots, Shot("spore", mob.x, mob.y, dx, dy, 1.3, mob.data["bite"], 300), MAX_SHOTS)
+    if far < 220:
         return 0
     return speed
 
@@ -793,7 +828,7 @@ def aim_dash(mob, now, dx, dy, speed):
         return dx, dy, speed
     if beat < 190:
         return mob.dir_x, mob.dir_y, 0
-    return mob.dir_x, mob.dir_y, speed * 3.6
+    return mob.dir_x, mob.dir_y, speed * 3
 
 
 def push_apart(mob):
@@ -807,20 +842,22 @@ def push_apart(mob):
 
 def walk_around(mob):
     # Ô này có cây, đá: bỏ phần đang đâm thẳng vào nó, rồi lách sang một bên.
-    prop = blocks.get((mob.x // CELL, mob.y // CELL))
-    if prop is None:
-        return
-    dx, dy, far = direction(prop, mob)
-    if far < prop.solid + mob.size:
-        inward = min(0, mob.step_x * dx + mob.step_y * dy)
-        mob.step_x = mob.step_x - inward * dx + dx * 0.25 - dy * 0.35
-        mob.step_y = mob.step_y - inward * dy + dy * 0.25 + dx * 0.35
+    # Lách về phía gần em hơn, để quái không đi vòng mãi sau hàng rào.
+    for prop in near_solids(mob.x, mob.y):
+        dx, dy, far = direction(prop, mob)
+        if far < prop.solid + mob.size:
+            inward = min(0, mob.step_x * dx + mob.step_y * dy)
+            side = 1
+            if (hero.x - mob.x) * -dy + (hero.y - mob.y) * dx < 0:
+                side = -1
+            mob.step_x = mob.step_x - inward * dx + dx * 0.25 - dy * 0.35 * side
+            mob.step_y = mob.step_y - inward * dy + dy * 0.25 + dx * 0.35 * side
 
 
 def steer_boss(mob, now):
     dx, dy, far = direction(mob, hero)
     speed = mob.data["speed"]
-    if far > 380:
+    if far > 560:
         speed = speed * 1.8             # bị bỏ xa thì trùm chạy theo
     if mob.slow_end > now:
         speed = speed * 0.8             # trùm khỏe nên chỉ chậm một chút
@@ -865,7 +902,7 @@ def boss_ring(mob, beat, dx, dy, speed):
     if beat % 150 == 149:
         for i in range(12):
             angle = i * 2 * pi / 12 + beat
-            add(shots, Shot("spore", mob.x, mob.y, cos(angle), sin(angle), 1.6, 9, 260), MAX_SHOTS)
+            add(shots, Shot("spore", mob.x, mob.y, cos(angle), sin(angle), 1.4, 9, 320), MAX_SHOTS)
 
 
 def boss_charge(mob, beat, dx, dy, speed):
@@ -876,7 +913,7 @@ def boss_charge(mob, beat, dx, dy, speed):
         mob.dir_x, mob.dir_y = dx, dy
         go(mob, 0, 0, 0)
     elif beat == 145:
-        go(mob, mob.dir_x, mob.dir_y, 5.2)
+        go(mob, mob.dir_x, mob.dir_y, 4.4)
     elif beat == 190:
         go(mob, 0, 0, 0)
         rocks = 4
@@ -892,7 +929,10 @@ def bury_dead():
     for mob in [m for m in mobs if m.hp <= 0]:
         mob.alive = False
         game["kills"] = game["kills"] + 1
-        drop_gem(mob.x, mob.y, mob.data["xp"])
+        worth = mob.data["xp"] * FLOORS[game["floor"]]["gems"]
+        if mob.elite:
+            worth = worth * 6       # quái to cho ngọc to
+        drop_gem(mob.x, mob.y, worth)
         if mob.elite:
             drops.append(Drop("chest", mob.x, mob.y))
         if level_of("fire_boom") > 0:
@@ -919,9 +959,10 @@ def update_gems():
         dx, dy, far = direction(gem, hero)
         if far < reach:
             gem.fly = True
-        if gem.fly:
-            gem.x = gem.x + dx * 5
-            gem.y = gem.y + dy * 5
+        if gem.fly:                 # bay chậm rồi nhanh dần, như bị hút
+            gem.speed = min(14, gem.speed + 0.5)
+            gem.x = gem.x + dx * min(gem.speed, far)
+            gem.y = gem.y + dy * min(gem.speed, far)
         if far < 18:
             take_gem(gem)
 
@@ -929,6 +970,7 @@ def update_gems():
 def take_gem(gem):
     gem.alive = False
     hero.xp = hero.xp + gem.value * hero.gem_bonus
+    game["xp_glow"] = 12            # thanh kinh nghiệm sáng lên một chút
     if game["time"] - game["last_gem"] >= 24:       # nhặt cả nắm thì chỉ kêu và lóe một lần
         game["last_gem"] = game["time"]
         play_sound("point")
@@ -1014,7 +1056,8 @@ def hit_with_shot(shot, mob):
 # ---------- SÂN ----------
 
 def build_floor(floor):
-    # Rải đồ lên sân. Ô vuông 130, mỗi ô nhiều nhất một món, xê dịch ngẫu nhiên cho tự nhiên.
+    # Rải đồ lên sân: vũng, đồ đặt sẵn giữa sân, tường và cụm cây, rồi cây cỏ lẻ (ô vuông 150, mỗi ô nhiều nhất
+    # một món, xê dịch ngẫu nhiên cho tự nhiên).
     world["w"], world["h"] = floor["world"]
     for things in [props, solids, pools, patches]:
         things.clear()
@@ -1022,7 +1065,7 @@ def build_floor(floor):
     mid_x, mid_y = world["w"] / 2, world["h"] / 2
     for i in range(floor["pools"][2]):
         scatter(pools, mid_x, mid_y)
-    for i in range(12):
+    for i in range(world["w"] * world["h"] // 220000):
         patches.append([random_int(120, world["w"] - 120), random_int(100, world["h"] - 100)])
     for mark in floor["marks"]:
         add_prop(Prop(mark[0], mark[1], mark[2], mid_x + mark[3], mid_y + mark[4]))
@@ -1033,19 +1076,69 @@ def build_floor(floor):
         for i in range(3):
             angle = random_int(0, 628) / 100
             add_prop(Prop(floor["rim"], 2, 0, pool[0] + cos(angle) * 98, pool[1] + sin(angle) * 66 + 12))
+    for row in floor["walls"]:
+        for i in range(row[3]):
+            build_wall(row, mid_x, mid_y)
+    for row in floor["clumps"]:
+        for i in range(row[3]):
+            build_clump(row, mid_x, mid_y)
     names = []
     for row in floor["props"]:
         names.extend([row] * row[3])            # số cuối to thì tên đó nằm trong hộp nhiều lần, dễ bốc trúng
-    for left in range(60, world["w"] - 100, 130):
-        for top in range(80, world["h"] - 100, 130):
-            x = left + random_int(0, 70)
-            y = top + random_int(0, 70)
+    for left in range(60, world["w"] - 100, 150):
+        for top in range(80, world["h"] - 100, 150):
+            x = left + random_int(0, 80)
+            y = top + random_int(0, 80)
             row = names[random_int(0, len(names) - 1)]
             if random_int(1, 10) <= floor["thick"] and is_free(x, y, mid_x, mid_y):
                 add_prop(Prop(row[0], row[1], row[2], x, y))
     plant_edge(floor["edge"])
-    for i in range(8):
+    for i in range(14):
         add_box()
+
+
+def build_wall(row, mid_x, mid_y):
+    # Một bức tường: các món xếp sát nhau thành hàng thẳng, ngang, dọc hay chéo, có khi gấp khúc chữ L.
+    # Khe giữa hai món hẹp hơn em, nên phải đi vòng. Thử vài chỗ, chỗ nào vướng thì bỏ.
+    image, scale, solid, count, shortest, longest = row
+    step = solid * 2 + 8
+    turns = [[1, 0], [0, 1], [0.7, 0.7], [0.7, -0.7]]
+    for attempt in range(12):
+        length = random_int(shortest, longest)
+        dx, dy = turns[random_int(0, 3)]
+        x, y = random_int(200, world["w"] - 200), random_int(200, world["h"] - 200)
+        bend = length + 1
+        if random_int(1, 10) <= 4:
+            bend = length // 2          # gấp khúc ở giữa: quay 90 độ
+        spots = []
+        for i in range(length):
+            if i == bend:
+                dx, dy = -dy, dx
+            spots.append([x, y])
+            x, y = x + dx * step, y + dy * step
+        inside = all([150 < s[0] < world["w"] - 150 and 150 < s[1] < world["h"] - 150 for s in spots])
+        if inside and all([is_free(s[0], s[1], mid_x, mid_y) for s in spots]):
+            for s in spots:
+                add_prop(Prop(image, scale, solid, s[0], s[1]))
+            return
+
+
+def build_clump(row, mid_x, mid_y):
+    # Một cụm cây (đá) chen nhau: giữa cụm không đi qua được, quanh cụm vẫn có lối.
+    images, scale, solid, count = row
+    for attempt in range(12):
+        x, y = random_int(220, world["w"] - 220), random_int(220, world["h"] - 220)
+        if not is_free(x, y, mid_x, mid_y):
+            continue
+        add_prop(Prop(images[0], scale, solid, x, y))
+        for i in range(random_int(4, 8)):
+            angle = random_int(0, 628) / 100
+            far = random_int(solid * 2, solid * 5)
+            px, py = x + cos(angle) * far, y + sin(angle) * far
+            if not any([abs(px - p[0]) < 120 and abs(py - p[1]) < 90 for p in pools]) and \
+                    all([(p.x - px) ** 2 + (p.y - py) ** 2 >= (solid * 1.6) ** 2 for p in near_solids(px, py)]):
+                add_prop(Prop(images[random_int(0, len(images) - 1)], scale, solid, px, py))
+        return
 
 
 def scatter(spots, mid_x, mid_y):
@@ -1053,13 +1146,14 @@ def scatter(spots, mid_x, mid_y):
     for i in range(20):
         x = random_int(160, world["w"] - 160)
         y = random_int(140, world["h"] - 140)
-        if abs(x - mid_x) + abs(y - mid_y) > 420 and all([abs(x - s[0]) + abs(y - s[1]) > 330 for s in spots]):
+        if abs(x - mid_x) + abs(y - mid_y) > 520 and all([abs(x - s[0]) + abs(y - s[1]) > 360 for s in spots]):
             spots.append([x, y])
             return
 
 
 def is_free(x, y, mid_x, mid_y):
-    if abs(x - mid_x) < 390 and abs(y - mid_y) < 340 and ((x - mid_x) ** 2 + (y - mid_y) ** 2) ** 0.5 < 170:
+    # Giữa sân để trống cho em đứng lúc mới vào; không đặt đồ lên vũng hay sát món khác.
+    if ((x - mid_x) ** 2 + (y - mid_y) ** 2) ** 0.5 < 260:
         return False
     if any([abs(x - p[0]) < 120 and abs(y - p[1]) < 90 for p in pools]):
         return False
@@ -1067,6 +1161,7 @@ def is_free(x, y, mid_x, mid_y):
 
 
 def add_prop(prop):
+    # Món chắn đường thì ghi vào mọi ô vuông nó phủ lên, để tìm món ở gần cho nhanh.
     props.append(prop)
     if prop.solid == 0:
         return
@@ -1074,7 +1169,9 @@ def add_prop(prop):
     reach = prop.solid + 18
     for column in range(int((prop.x - reach) // CELL), int((prop.x + reach) // CELL) + 1):
         for line in range(int((prop.y - reach) // CELL), int((prop.y + reach) // CELL) + 1):
-            blocks[(column, line)] = prop
+            if (column, line) not in blocks:
+                blocks[(column, line)] = []
+            blocks[(column, line)].append(prop)
 
 
 def plant_edge(images):
@@ -1088,16 +1185,14 @@ def plant_edge(images):
 
 
 def add_box():
-    if len(drops) < 12:
-        drops.append(Drop("box", random_int(80, world["w"] - 80), random_int(100, world["h"] - 80)))
-        go_around_box(drops[-1])
-
-
-def go_around_box(box):
-    # Thùng rơi trúng cây thì xê ra cho dễ thấy.
-    for prop in solids:
-        if abs(prop.x - box.x) < 40 and abs(prop.y - box.y) < 40:
-            box.x = max(60, min(world["w"] - 60, prop.x + 60))
+    # Thùng rơi chỗ trống, không lọt vào giữa cụm cây.
+    if len(drops) >= 16:
+        return
+    for i in range(10):
+        x, y = random_int(80, world["w"] - 80), random_int(100, world["h"] - 80)
+        if not any([abs(p.x - x) < p.solid + 40 and abs(p.y - y) < p.solid + 40 for p in solids]):
+            drops.append(Drop("box", x, y))
+            return
 
 
 # ---------- ĐỢT, ẢI, LÊN CẤP ----------
@@ -1111,6 +1206,7 @@ def start_game(number):
     game["kills"] = 0
     game["last_gem"] = 0
     game["last_bite"] = 0
+    game["xp_shown"] = 0
     start_floor(0)
 
 
@@ -1216,6 +1312,7 @@ def level_up():
     # Dư kinh nghiệm thì giữ lại. Đủ lên thêm cấp nữa thì khung sau lại vào đây.
     hero.xp = hero.xp - xp_needed()
     hero.level = hero.level + 1
+    game["xp_shown"] = 0
     deal_cards()
     if len(cards) == 0:             # đã có hết mọi thẻ: hồi máu thay cho thẻ
         heal(15)
@@ -1331,6 +1428,9 @@ def update_play():
     bury_dead()
     for things in [shots, zones, gems, drops, effects]:
         remove_dead(things)
+    # Thanh kinh nghiệm đuổi theo số thật cho mượt, và sáng lên một lúc khi nhặt ngọc.
+    game["xp_shown"] = game["xp_shown"] + (min(1, hero.xp / xp_needed()) - game["xp_shown"]) * 0.2
+    game["xp_glow"] = max(0, game["xp_glow"] - 1)
     if len(banners) > 0:
         banners[0][1] = banners[0][1] - 1
         if banners[0][1] <= 0:
@@ -1532,25 +1632,35 @@ def draw_hero():
     y = hero.y - camera["y"]
     if hero.target is not None:
         draw_circle(hero.target[0] - camera["x"], hero.target[1] - camera["y"], 9, "#ffffff88")
-    draw_rect(x - 12, y + 15, 24, 6, "#00000055")
+    draw_rect(x - 11, y + 14, 22, 6, "#00000055")
     if hero.shield:
-        draw_circle(x, y, 28, "#7fd8ff88")
+        draw_circle(x, y, 26, "#7fd8ff88")
     lift = 0
     if hero.moving:
         lift = game["time"] // 8 % 2 * 3
     if game["time"] >= hero.safe_end or game["time"] // 5 % 2 == 0:         # nhấp nháy khi vừa trúng đòn
-        draw_sprite(hero.data["image"], x, y - lift, 2.75, hero.look != hero.data["faces"])
+        draw_sprite(hero.data["image"], x, y - lift, 2.5, hero.look != hero.data["faces"])
 
 
 def draw_near_hero():
     # Vẽ sau cùng để cây không che: thanh máu, đốm lửa, mây.
     x = hero.x - camera["x"]
     y = hero.y - camera["y"]
-    draw_bar(x, y + 27, 44, hero.hp / hero.max_hp, "#ff6b6b")
+    draw_bar(x, y + 26, 40, hero.hp / hero.max_hp, "#ff6b6b")
     for spot in ember_spots():
         draw_sprite("shot-fire", spot[0] - camera["x"], spot[1] - camera["y"], 1.75)
     if level_of("spark_cloud") > 0:
-        draw_sprite("skill-spark-3", x, y - 50, 2)
+        draw_sprite("skill-spark-3", x, y - 48, 2)
+
+
+def draw_gem(gem, x, y):
+    # Ngọc nhỏ xanh dương, vừa xanh lá, to màu hồng: quầng màu phía sau, ngọc nhấp nhô.
+    for tier in GEM_TIERS:
+        if gem.value >= tier[0]:
+            lift = sin(game["time"] * 0.1 + gem.x) * 2
+            draw_circle(x, y - lift, 5 * tier[2], tier[1] + "55")
+            draw_sprite("item-xp", x, y - lift, tier[2])
+            return
 
 
 def draw_air():
@@ -1558,23 +1668,23 @@ def draw_air():
     kind = FLOORS[game["floor"]]["air"]
     t = game["time"]
     if kind == "mist":
-        for i in range(6):
+        for i in range(9):
             x = (i * 283 + t * 0.25 - camera["x"]) % (WIDTH + 700) - 350
             draw_image("images/deco-glow-mist.png", x - 256, i * 197 % HEIGHT - 128 + sin(t * 0.01 + i) * 20, scale=8)
-        draw_image("images/deco-dark-forest.png", 0, 0, scale=10)
-    for i in range(14):
+        draw_image("images/deco-dark-forest.png", 0, 0, scale=WIDTH / 96)
+    for i in range(22):
         x = (i * 173 + sin(t * 0.02 + i) * 30 - camera["x"]) % WIDTH
         if kind == "petals":
-            y = (i * 97 + t * 0.5 - camera["y"]) % HEIGHT
+            y = (i * 97 + t * 0.4 - camera["y"]) % HEIGHT
             draw_rect(x, y, 5, 4, "#ffd3e6cc")
         elif kind == "mist":
             y = (i * 97 + cos(t * 0.015 + i * 2) * 40 - camera["y"]) % HEIGHT
             draw_circle(x, y, 2 + sin(t * 0.06 + i) * 1.5, "#d8ff9acc")
         else:
-            y = (i * 97 - t * 0.7 - camera["y"]) % HEIGHT
+            y = (i * 97 - t * 0.6 - camera["y"]) % HEIGHT
             draw_rect(x, y, 4, 4, "#ff9a4acc")
     if kind == "embers":                # hang tối ở mép màn hình
-        draw_image("images/deco-dark-cave.png", 0, 0, scale=10)
+        draw_image("images/deco-dark-cave.png", 0, 0, scale=WIDTH / 96)
 
 
 def draw_pointers():
@@ -1582,10 +1692,10 @@ def draw_pointers():
     for thing, image in [(m, m.data["image"]) for m in mobs if m.boss or m.elite] + \
             [(d, "item-chest") for d in drops if d.kind == "chest"]:
         if not on_screen(thing, -20):
-            x = max(34, min(WIDTH - 34, thing.x - camera["x"]))
-            y = max(84, min(HEIGHT - 70, thing.y - camera["y"]))
-            draw_circle(x, y, 20, "#181824aa")
-            draw_sprite(image, x, y, 1.75)
+            x = max(34 * U, min(WIDTH - 34 * U, thing.x - camera["x"]))
+            y = max(90 * U, min(HEIGHT - 76 * U, thing.y - camera["y"]))
+            draw_circle(x, y, 20 * U, "#181824aa")
+            draw_sprite(image, x, y, 1.75 * U)
 
 
 def draw_skill_icon(name, x, y, scale, level):
@@ -1605,45 +1715,62 @@ def clock_text(seconds):
     return str(seconds // 60) + ":" + str(rest)
 
 
+def draw_xp_bar():
+    # Thanh kinh nghiệm chạy suốt mép trên: đầy thì lên cấp. Ghi rõ còn thiếu bao nhiêu.
+    tall = 22 * U
+    need = xp_needed()
+    draw_rect(0, 0, WIDTH, tall + 6, "#0e0e18")
+    draw_rect(3, 3, WIDTH - 6, tall, "#22304a")
+    fill = (WIDTH - 6) * max(0, min(1, game["xp_shown"]))
+    color = "#2fc9a8"
+    if game["xp_glow"] > 0:
+        color = "#7ff7dc"
+    draw_rect(3, 3, fill, tall, color)
+    draw_rect(3, 3, fill, tall * 0.35, "#ffffff33")         # vệt sáng cho thanh trông tròn
+    for i in range(1, 10):                                   # vạch chia 10 phần
+        draw_rect(3 + (WIDTH - 6) * i / 10, 3, 2, tall, "#0e0e1855")
+    draw_text("Kinh nghiệm " + str(int(hero.xp)) + " / " + str(need), WIDTH / 2, 3 + tall / 2,
+              20 * U, "#ffffff")
+
+
 def draw_hud():
     floor = FLOORS[game["floor"]]
-    draw_rect(0, 0, WIDTH, 16, "#181824")
-    draw_rect(2, 2, (WIDTH - 4) * min(1, hero.xp / xp_needed()), 12, "#2fc9a8")
-    draw_text("Cấp " + str(hero.level), WIDTH - 50, 34, 26, "#5ff0c8")
-    draw_text("Hạ " + str(game["kills"]), WIDTH - 50, 60, 22, "#e8ecff")
-    draw_text("Ải " + str(game["floor"] + 1) + ": " + floor["name"], 100, 34, 24)
-    draw_image("images/item-heart.png", 18, 48, scale=1.5)
-    draw_rect(46, 52, 150, 16, "#181824cc")
-    draw_rect(48, 54, 146 * hero.hp / hero.max_hp, 12, "#ff6b6b")
-    draw_text(str(round(hero.hp)) + "/" + str(hero.max_hp), 121, 60, 20)
+    draw_xp_bar()
+    draw_text("Cấp " + str(hero.level), WIDTH - 60 * U, 46 * U, 30 * U, "#5ff0c8")
+    draw_text("Hạ " + str(game["kills"]), WIDTH - 60 * U, 72 * U, 22 * U, "#e8ecff")
+    draw_text("Ải " + str(game["floor"] + 1) + ": " + floor["name"], 104 * U, 44 * U, 24 * U)
+    draw_image("images/item-heart.png", 18 * U, 58 * U, scale=1.5 * U)
+    draw_rect(46 * U, 62 * U, 150 * U, 16 * U, "#181824cc")
+    draw_rect(48 * U, 64 * U, 146 * U * hero.hp / hero.max_hp, 12 * U, "#ff6b6b")
+    draw_text(str(round(hero.hp)) + "/" + str(hero.max_hp), 121 * U, 70 * U, 20 * U)
     if game["boss_out"]:
         for mob in mobs:
             if mob.boss:                # thanh máu trùm
-                draw_text(mob.data["boss"], WIDTH / 2, 32, 24, "#ffb3b3")
-                draw_rect(WIDTH / 2 - 182, 46, 364, 16, "#181824cc")
-                draw_rect(WIDTH / 2 - 180, 48, 360 * max(0, mob.hp / mob.max_hp), 12, "#ff5050")
+                draw_text(mob.data["boss"], WIDTH / 2, 44 * U, 24 * U, "#ffb3b3")
+                draw_rect(WIDTH / 2 - 182 * U, 56 * U, 364 * U, 16 * U, "#181824cc")
+                draw_rect(WIDTH / 2 - 180 * U, 58 * U, 360 * U * max(0, mob.hp / mob.max_hp), 12 * U, "#ff5050")
     else:
-        draw_text(clock_text(game["second"]), WIDTH / 2, 40, 40)
-        draw_text("Trùm ra lúc " + clock_text(floor["length"]), WIDTH / 2, 68, 18, "#c8cce0")
+        draw_text(clock_text(game["second"]), WIDTH / 2, 50 * U, 40 * U)
+        draw_text("Trùm ra lúc " + clock_text(floor["length"]), WIDTH / 2, 78 * U, 18 * U, "#c8cce0")
     for i in range(len(combos)):
         draw_combo(i, COMBOS[combos[i]])
-    x = 8
+    x = 8 * U
     for name in hero.skills:
-        draw_skill_icon(name, x, HEIGHT - 42, 1.75, hero.skills[name])
-        x = x + 38
+        draw_skill_icon(name, x, HEIGHT - 42 * U, 1.75 * U, hero.skills[name])
+        x = x + 38 * U
 
 
 def draw_combo(i, combo):
     # Phối hợp đã mở thì hiện tên mãi ở góc dưới phải. Vạch màu: cần những nhánh nào.
-    x = WIDTH - 108 - i % 3 * 104
-    y = HEIGHT - 30 - i // 3 * 30
-    draw_rect(x, y, 100, 24, "#4a3560dd")
-    width = 100 / len(combo["needs"])
+    x = WIDTH - (108 + i % 3 * 104) * U
+    y = HEIGHT - (30 + i // 3 * 30) * U
+    draw_rect(x, y, 100 * U, 24 * U, "#4a3560dd")
+    width = 100 * U / len(combo["needs"])
     left = x
     for branch in combo["needs"]:
-        draw_rect(left, y, width, 4, BRANCHES[branch]["color"])
+        draw_rect(left, y, width, 4 * U, BRANCHES[branch]["color"])
         left = left + width
-    draw_text(combo["name"], x + 50, y + 14, 18, "#ffd0f0")
+    draw_text(combo["name"], x + 50 * U, y + 14 * U, 18 * U, "#ffd0f0")
 
 
 def draw_play():
@@ -1653,7 +1780,7 @@ def draw_play():
         draw_zone(zone, zone.x - left, zone.y - top)
     for gem in gems:
         if on_screen(gem, 10):
-            draw_sprite("item-xp", gem.x - left, gem.y - top, min(2.25, 1.15 + gem.value * 0.1))
+            draw_gem(gem, gem.x - left, gem.y - top)
     for drop in drops:
         if on_screen(drop, 20):
             draw_drop(drop, drop.x - left, drop.y - top)
@@ -1667,34 +1794,35 @@ def draw_play():
     draw_pointers()
     draw_hud()
     if len(banners) > 0 and game["state"] == "play":
-        draw_rect(WIDTH / 2 - 300, 94, 600, 40, "#101018bb")
-        draw_text(banners[0][0], WIDTH / 2, 114, 24, "#ffe9a8")
+        draw_rect(WIDTH / 2 - 300 * U, 100 * U, 600 * U, 40 * U, "#101018bb")
+        draw_text(banners[0][0], WIDTH / 2, 120 * U, 24 * U, "#ffe9a8")
 
 
 def draw_row(i, color, dark):
-    draw_rect(160, row_top(i), 640, 116, color)
-    draw_rect(163, row_top(i) + 3, 634, 110, dark)
-    draw_text(str(i + 1), 190, row_top(i) + 58, 40, color)
+    draw_rect(160 * U, row_top(i), 640 * U, 116 * U, color)
+    draw_rect(163 * U, row_top(i) + 3 * U, 634 * U, 110 * U, dark)
+    draw_text(str(i + 1), 190 * U, row_top(i) + 58 * U, 40 * U, color)
 
 
 def draw_hero_choice():
     clear("#1d1b2c")
-    draw_text("HẦM NGỌC", 480, 48, 64, "#5ff0c8")
-    draw_text("Chọn nhân vật: phím 1, 2, 3 hoặc bấm vào", 480, 104, 26)
+    draw_text("HẦM NGỌC", WIDTH / 2, 48 * U, 64 * U, "#5ff0c8")
+    draw_text("Chọn nhân vật: phím 1, 2, 3 hoặc bấm vào", WIDTH / 2, 104 * U, 26 * U)
     for i in range(3):
         data = HEROES[i]
         draw_row(i, data["color"], "#4a4660")
-        draw_sprite(data["image"], 275, row_top(i) + 58 - game["clock"] // 20 % 2 * 4, 5, data["faces"] == "left")
-        draw_text(data["name"], 550, row_top(i) + 38, 38, data["color"])
-        draw_text(data["text"], 550, row_top(i) + 80, 26)
-    draw_text("Mũi tên / WASD để đi, hoặc giữ chuột (giữ tay) trên sân", 480, 524, 22, "#ffe9a8")
+        draw_sprite(data["image"], 275 * U, row_top(i) + (58 - game["clock"] // 20 % 2 * 4) * U, 5 * U,
+                    data["faces"] == "left")
+        draw_text(data["name"], 550 * U, row_top(i) + 38 * U, 38 * U, data["color"])
+        draw_text(data["text"], 550 * U, row_top(i) + 80 * U, 26 * U)
+    draw_text("Mũi tên / WASD để đi, hoặc giữ chuột (giữ tay) trên sân", WIDTH / 2, 524 * U, 22 * U, "#ffe9a8")
 
 
 def draw_cards():
     draw_rect(0, 0, WIDTH, HEIGHT, "#101018cc")
-    draw_text("Lên cấp " + str(hero.level) + "!", 480, 52, 50, "#5ff0c8")
-    draw_text("Chọn 1 thẻ: phím 1, 2, 3 hoặc bấm vào", 480, 104, 26)
-    draw_text("Ô skill: " + str(slots_used()) + "/" + str(SLOTS), 870, 104, 26, "#ffe9a8")
+    draw_text("Lên cấp " + str(hero.level) + "!", WIDTH / 2, 52 * U, 50 * U, "#5ff0c8")
+    draw_text("Chọn 1 thẻ: phím 1, 2, 3 hoặc bấm vào", WIDTH / 2, 104 * U, 26 * U)
+    draw_text("Ô skill: " + str(slots_used()) + "/" + str(SLOTS), 870 * U, 104 * U, 26 * U, "#ffe9a8")
     for i in range(len(cards)):
         draw_card(i, cards[i])
 
@@ -1704,20 +1832,21 @@ def draw_card(i, name):
     level = level_of(name) + 1
     y = row_top(i)
     draw_row(i, branch["color"], branch["dark"])
-    draw_skill_icon(name, 218, y + 20, 4, level)
-    draw_text(SKILLS[name]["name"] + " - " + branch["name"] + " cấp " + str(level), 540, y + 27, 32, branch["color"])
-    draw_text(SKILLS[name]["text"][level - 1], 540, y + 62, 26)
+    draw_skill_icon(name, 218 * U, y + 20 * U, 4 * U, level)
+    draw_text(SKILLS[name]["name"] + " - " + branch["name"] + " cấp " + str(level), 540 * U, y + 27 * U, 32 * U,
+              branch["color"])
+    draw_text(SKILLS[name]["text"][level - 1], 540 * U, y + 62 * U, 26 * U)
     unlock = combo_from(name)
     if unlock != "":
-        draw_text("Mở phối hợp: " + unlock, 540, y + 95, 22, "#ff9ad9")
+        draw_text("Mở phối hợp: " + unlock, 540 * U, y + 95 * U, 22 * U, "#ff9ad9")
 
 
 def draw_message(image, title, line, color, after):
-    draw_rect(220, 120, 520, 290, "#101018ee")
-    draw_sprite(image, 480, 172, 4)
-    draw_text(title, 480, 252, 58, color)
-    draw_text(line, 480, 312, 28)
-    draw_text("Bấm Space hoặc chạm để " + after, 480, 368, 24, "#b9c0d8")
+    draw_rect(220 * U, 120 * U, 520 * U, 290 * U, "#101018ee")
+    draw_sprite(image, WIDTH / 2, 172 * U, 4 * U)
+    draw_text(title, WIDTH / 2, 252 * U, 58 * U, color)
+    draw_text(line, WIDTH / 2, 312 * U, 28 * U)
+    draw_text("Bấm Space hoặc chạm để " + after, WIDTH / 2, 368 * U, 24 * U, "#b9c0d8")
 
 
 def draw():

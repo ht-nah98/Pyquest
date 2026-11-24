@@ -1,6 +1,6 @@
 # Hầm Ngọc — bản chơi thử
 
-Roguelite nhỏ bằng Python, chạy bằng thư viện `pyquest` (khung nhìn 960 × 540, sân rộng hơn màn hình), vẽ bằng hình trong kho (`content/assets/library`).
+Roguelite nhỏ bằng Python, chạy bằng thư viện `pyquest` (khung nhìn 1600 × 900, sân rộng gấp 2,5–3 lần màn hình, có hàng rào, vách đá, cụm cây chắn đường), vẽ bằng hình trong kho (`content/assets/library`).
 Luật chơi và hợp đồng kỹ thuật: `docs/superpowers/specs/2026-11-23-roguelite-design.md`. Chưa có bài học, bé chưa thấy.
 **HLV chưa chơi thử.**
 
@@ -35,12 +35,18 @@ chữ không tràn ra ngoài sân.
 - `MOBS`: máu, tốc độ, cỡ chạm, hình và phóng to mấy lần; `move` là cách đi. Máu trùm ở đây (không nhân theo ải).
   `faces`: hình gốc quay mặt về bên nào, đi về bên kia thì game lật hình.
 - `FLOORS`: mỗi ải một sân (rộng, nền, cây đá, vũng, không khí), lịch quái ra theo giây, bầy, quái to, trùm ra lúc nào;
-  `tough`, `pace` = máu và tốc độ quái nhân lên.
+  `tough`, `pace` = máu và tốc độ quái nhân lên; `gems` = ngọc ải này đáng gấp mấy lần.
+  `walls` = vật cản dài (hàng rào, vách đá, có khi gấp chữ L), `clumps` = cụm cây / đá chen nhau. Khe giữa hai món hẹp
+  hơn em nên phải đi vòng; giữa sân luôn để trống.
 - `SKILLS`: 3 số là 3 cấp, `icon` là hình. `COMBOS`: cần mấy skill của nhánh nào. Sức mạnh phối hợp nằm trong `hurt()` và
   `use_skills()`. Phối hợp đã mở hiện tên mãi ở thanh dưới.
 - Thẻ chung (Tim To, Giày Gió, Nam Châm, Đòn Mạnh) nằm trong `take_card()`.
 - `FX`: hiệu ứng nào có mấy khung, rộng bao nhiêu, hàng nào là chân. `GLOWS`: đồ phát sáng.
-- `SAFE` (bất tử sau khi trúng đòn), `xp_needed()` (lên cấp nhanh hay chậm), hồi 50 máu giữa các ải (trong `update()`).
+- Kinh nghiệm: `XP_FIRST`, `XP_STEP`, `XP_LATE` (lên cấp nhanh hay chậm, từ cấp 10 chậm dần), `GEM_TIERS` (ngọc 3 bậc
+  màu theo giá trị). Ngọc bay về nhanh dần; thanh kinh nghiệm ở mép trên ghi rõ còn thiếu bao nhiêu.
+- `SAFE` (bất tử sau khi trúng đòn), `SHOT_SPEED`, hồi 50 máu giữa các ải (trong `update()`).
+- `U`: chữ và khung trên màn hình phóng theo màn (1600 × 900 thì U = 1,67). Sân và quái thì không phóng: màn rộng là nhìn
+  được nhiều sân hơn, như máy quay đặt cao hơn.
 
 Nền ba ải để màu trung bình vì Vua Dung Nham, dơi và Pháp sư rất tối: nền tối thì mất hình.
 

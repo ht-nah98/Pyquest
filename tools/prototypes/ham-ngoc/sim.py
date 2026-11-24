@@ -21,9 +21,9 @@ from multiprocessing import Pool
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FPS = 60
-WIDTH, HEIGHT = 960, 540
+WIDTH, HEIGHT = 1600, 900
 MAX_FRAMES = 20 * 60 * FPS      # a run longer than 20 minutes counts as stuck
-MAX_EVENTS = 520
+MAX_EVENTS = 1100
 DRAW_EVERY = 10 if "--fast" in sys.argv else 1
 BRANCHES = ["fire", "ice", "spark"]
 MOVES = [(0, 0)] + [(dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1) if dx or dy]
@@ -434,6 +434,7 @@ def edge_cases():
     g = game.g
     hero, world, camera = g["hero"], g["world"], g["camera"]
     g["solids"].clear()
+    g["blocks"].clear()
     g["pools"].clear()
     for _ in range(30):
         game.step()
@@ -601,7 +602,8 @@ def edge_cases():
     used = [d["image"] for d in g["HEROES"] + list(g["MOBS"].values())] + [s["icon"] for s in g["SKILLS"].values()]
     used += ["fx-" + name for name in g["FX"]] + [d[0] for d in g["DROPS"].values()] + [n for pair in g["GLOWS"].items() for n in (pair[0], pair[1][0])]
     for floor in g["FLOORS"]:
-        used += [p[0] for p in floor["props"] + floor["marks"]] + floor["edge"]
+        used += [p[0] for p in floor["props"] + floor["marks"] + floor["walls"]] + floor["edge"]
+        used += [name for c in floor["clumps"] for name in c[0]]
         used += [floor["ground"], floor["patch"], floor["pools"][0], floor["rim"]]
         for mobs in [w[1] for w in floor["waves"]] + [{s[1]: 1} for s in floor["swarms"]] + [{e[1]: 1} for e in floor["elites"]]:
             assert all(kind in g["MOBS"] for kind in mobs), mobs
@@ -690,7 +692,7 @@ def render(events, path):
         elif kind == "draw_rect":
             x, y, w, h, color = a
             if w > 0 and h > 0:
-                d.rectangle([x, y, x + w - 1, y + h - 1], fill=rgba(color))
+                d.rectangle([x, y, max(x, x + w - 1), max(y, y + h - 1)], fill=rgba(color))
         elif kind == "draw_circle":
             x, y, r, color = a
             d.ellipse([x - r, y - r, x + r, y + r], fill=rgba(color))

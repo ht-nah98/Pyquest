@@ -34,5 +34,5 @@ Bay Qua Khe nhưng chật cho tranh. HLV chọn **sân vuông 600 × 600** cho p
 
 ## Bổ sung 24/11/2026
 
-`course.sampleStage` (tùy chọn): sân riêng của **game mẫu**, khi nó cần màn rộng hơn sân của bài học (Hầm Ngọc: 960 × 540,
+`course.sampleStage` (tùy chọn): sân riêng của **game mẫu**, khi nó cần màn rộng hơn sân của bài học (Hầm Ngọc: 1600 × 900 từ 24/11 tối, trước đó 960 × 540;
 bài học vẫn 600 × 600). Thiếu thì game mẫu dùng `stage`. `content:check` chạy game mẫu đúng sân này.

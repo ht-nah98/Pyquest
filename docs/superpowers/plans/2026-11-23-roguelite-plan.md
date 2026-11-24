@@ -42,3 +42,16 @@ HLV: *"tốc độ quá nhanh, màn bé quá, muốn như thể loại Vampire S
 2. Code bé có nối từ bài này sang bài sau không (hiện mỗi bài tập bắt đầu từ code mẫu).
 3. "Các bước" in sẵn bao nhiêu code.
 4. Tên game, độ khó (Kiếm sĩ khó với bé mới), iPad trong game của bé cần bàn phím rời.
+
+## Lần chơi thử thứ hai của HLV (24/11 tối), nhánh `feat/ham-ngoc-wide`
+HLV: *"tốc độ vẫn quá nhanh, map bé, cần vật cản, creep bé hơn, map full màn 16:9 (1600 × 900), góc nhìn cao hơn, làm lại
+thanh kinh nghiệm; chuẩn là Brotato / Vampire Survivors"*. (Lúc đó web còn là bản cũ: deploy của `29c40a1` đỏ vì lỗi
+artifact của GitHub, xem `deployment-ops.md`.)
+- Khung nhìn 1600 × 900 (`course.sampleStage`, schema cho tới 1600). Sân và quái không phóng to nên nhìn được nhiều sân hơn,
+  quái nhỏ đi; chữ và khung phóng theo `U`. Quái thường phóng 1,75 (trước 2), em 2,5 (trước 2,75).
+- Chậm hơn: em 1,55–1,7 điểm một khung (trước 1,9–2,1), quái chậm ~15%, đạn 4 (trước 4,6), ma, trùm húc, bào tử đều chậm lại.
+  Bù lại quái ra đông hơn (tối đa 96 con), máu thấp hơn một chút.
+- Sân 4200 × 2600, 5000 × 2200, 3800 × 3000. Vật cản: `walls` (hàng rào, vách đá, gấp chữ L) và `clumps` (cụm cây, đá).
+  Va chạm tra theo ô vuông (`blocks` giữ mọi món của ô); em kẹt khe thì đứng lại chỗ cũ; quái lách về phía em.
+- Kinh nghiệm làm lại: đường cong `XP_FIRST/STEP/LATE`, ngọc 3 bậc màu, ải sau ngọc đáng hơn (`gems`), quái to cho ngọc ×6,
+  ngọc bay về nhanh dần, thanh kinh nghiệm to ở mép trên có số "còn thiếu bao nhiêu".

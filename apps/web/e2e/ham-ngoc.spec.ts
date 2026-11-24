@@ -78,7 +78,7 @@ test('the coach opens Bài 0 of Hầm Ngọc: plays the sample game, walks the s
 
   await page.getByTestId('lesson-h00').click();
   await expect(page.getByTestId('slide-h00-hello')).toBeVisible();
-  await expect(page.getByTestId('sample-stage')).toHaveAttribute('data-stage', '960x540');
+  await expect(page.getByTestId('sample-stage')).toHaveAttribute('data-stage', '1600x900');
   await expect(page.getByTestId('sample-game')).toContainText('mũi tên');
   await expect.poll(() => framesOf(page, 'sample-stage'), { timeout: 60_000 }).toBeGreaterThan(20);
   // Once clicked, the arrows and Space play the game instead of turning the slide.
