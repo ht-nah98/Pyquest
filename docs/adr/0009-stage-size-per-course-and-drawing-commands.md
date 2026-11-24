@@ -31,3 +31,8 @@ Bay Qua Khe nhưng chật cho tranh. HLV chọn **sân vuông 600 × 600** cho p
 - `STAGE_WIDTH/HEIGHT` còn lại như bí danh cũ (deprecated) của `DEFAULT_STAGE`; chỗ nào cần cỡ sân phải lấy từ khóa.
 - Trang web phải truyền `course.stage` vào mọi lần chạy, cho sân vẽ đúng tỉ lệ, và vẽ được ba loại lệnh mới.
 - Lệnh vẽ mới chưa có bài dạy: thêm bài thì điền `lesson` cho các mục trong `content/reference/pyquest.json`.
+
+## Bổ sung 24/11/2026
+
+`course.sampleStage` (tùy chọn): sân riêng của **game mẫu**, khi nó cần màn rộng hơn sân của bài học (Hầm Ngọc: 960 × 540,
+bài học vẫn 600 × 600). Thiếu thì game mẫu dùng `stage`. `content:check` chạy game mẫu đúng sân này.

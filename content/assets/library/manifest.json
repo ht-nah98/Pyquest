@@ -111,9 +111,79 @@
       "credit": "ai-generated"
     },
     {
+      "id": "deco-ash",
+      "group": "deco",
+      "file": "deco-ash.png",
+      "width": 64,
+      "height": 44,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
       "id": "deco-barrel",
       "group": "deco",
       "file": "deco-barrel.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-boulder",
+      "group": "deco",
+      "file": "deco-boulder.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-brazier",
+      "group": "deco",
+      "file": "deco-brazier.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-burnt",
+      "group": "deco",
+      "file": "deco-burnt.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-bush",
+      "group": "deco",
+      "file": "deco-bush.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-chestnut",
+      "group": "deco",
+      "file": "deco-chestnut.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-column",
+      "group": "deco",
+      "file": "deco-column.png",
       "width": 16,
       "height": 16,
       "frames": 1,
@@ -131,6 +201,221 @@
       "credit": "ai-generated"
     },
     {
+      "id": "deco-crystal",
+      "group": "deco",
+      "file": "deco-crystal.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-crystal-flower",
+      "group": "deco",
+      "file": "deco-crystal-flower.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-crystal-green",
+      "group": "deco",
+      "file": "deco-crystal-green.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-dark-cave",
+      "group": "deco",
+      "file": "deco-dark-cave.png",
+      "width": 96,
+      "height": 54,
+      "frames": 1,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-dark-forest",
+      "group": "deco",
+      "file": "deco-dark-forest.png",
+      "width": 96,
+      "height": 54,
+      "frames": 1,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-dead",
+      "group": "deco",
+      "file": "deco-dead.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-dirt",
+      "group": "deco",
+      "file": "deco-dirt.png",
+      "width": 64,
+      "height": 44,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-ember-rock",
+      "group": "deco",
+      "file": "deco-ember-rock.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-fence",
+      "group": "deco",
+      "file": "deco-fence.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-fern",
+      "group": "deco",
+      "file": "deco-fern.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-flowers",
+      "group": "deco",
+      "file": "deco-flowers.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-glow-cool",
+      "group": "deco",
+      "file": "deco-glow-cool.png",
+      "width": 64,
+      "height": 64,
+      "frames": 1,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-glow-mist",
+      "group": "deco",
+      "file": "deco-glow-mist.png",
+      "width": 64,
+      "height": 32,
+      "frames": 1,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-glow-warm",
+      "group": "deco",
+      "file": "deco-glow-warm.png",
+      "width": 64,
+      "height": 64,
+      "frames": 1,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-grass",
+      "group": "deco",
+      "file": "deco-grass.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-ground-cave",
+      "group": "deco",
+      "file": "deco-ground-cave.png",
+      "width": 160,
+      "height": 160,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-ground-forest",
+      "group": "deco",
+      "file": "deco-ground-forest.png",
+      "width": 160,
+      "height": 160,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-ground-meadow",
+      "group": "deco",
+      "file": "deco-ground-meadow.png",
+      "width": 160,
+      "height": 160,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-haunted",
+      "group": "deco",
+      "file": "deco-haunted.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-lantern",
+      "group": "deco",
+      "file": "deco-lantern.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-lava",
+      "group": "deco",
+      "file": "deco-lava.png",
+      "width": 64,
+      "height": 44,
+      "frames": 2,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-lotus",
+      "group": "deco",
+      "file": "deco-lotus.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
       "id": "deco-misc",
       "group": "deco",
       "file": "deco-misc.png",
@@ -141,9 +426,149 @@
       "credit": "ai-generated"
     },
     {
+      "id": "deco-mist-moss",
+      "group": "deco",
+      "file": "deco-mist-moss.png",
+      "width": 64,
+      "height": 44,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-oak",
+      "group": "deco",
+      "file": "deco-oak.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-pillar",
+      "group": "deco",
+      "file": "deco-pillar.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-pond",
+      "group": "deco",
+      "file": "deco-pond.png",
+      "width": 64,
+      "height": 44,
+      "frames": 2,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-reed",
+      "group": "deco",
+      "file": "deco-reed.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-rock",
+      "group": "deco",
+      "file": "deco-rock.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-ruin",
+      "group": "deco",
+      "file": "deco-ruin.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-spirit",
+      "group": "deco",
+      "file": "deco-spirit.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-star-tree",
+      "group": "deco",
+      "file": "deco-star-tree.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-stump",
+      "group": "deco",
+      "file": "deco-stump.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-swamp",
+      "group": "deco",
+      "file": "deco-swamp.png",
+      "width": 64,
+      "height": 44,
+      "frames": 2,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-thistle",
+      "group": "deco",
+      "file": "deco-thistle.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
       "id": "deco-torch",
       "group": "deco",
       "file": "deco-torch.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-walnut",
+      "group": "deco",
+      "file": "deco-walnut.png",
+      "width": 16,
+      "height": 16,
+      "frames": 1,
+      "pixel": true,
+      "credit": "ai-generated"
+    },
+    {
+      "id": "deco-well",
+      "group": "deco",
+      "file": "deco-well.png",
       "width": 16,
       "height": 16,
       "frames": 1,

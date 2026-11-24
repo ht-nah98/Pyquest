@@ -6,8 +6,23 @@ import { GameInputs } from './gameInput';
 import type { StageHandle } from './Stage';
 import { hear, stopMusic } from './sound';
 
+/** A game runs 60 steps a second on every screen: the lessons say "60 khung = 1 giây". */
+const STEP_MS = 1000 / 60;
+/** A frame this much early still counts, so a 60 Hz screen never skips a step over timer jitter. */
+const EARLY_MS = 2;
+
 /**
- * Runs a game-mode program: startGame, then one step per animation frame with what the player did
+ * When the step after the one at `now` may run. A screen faster than 60 Hz (120, 144…) skips frames; a slow
+ * machine never gets a burst of steps to catch up.
+ */
+export function nextDue(now: number, due: number): number {
+  return (due + STEP_MS > now ? due : now) + STEP_MS;
+}
+
+export const isDue = (now: number, due: number): boolean => now >= due - EARLY_MS;
+
+/**
+ * Runs a game-mode program: startGame, then at most 60 steps a second with what the player did
  * since the last frame (GameInputs). Spread `pointer` on the element around the stage: it makes a press flap
  * (key_pressed()) and fills mouse_x(), mouse_y(), clicked(). Only one step is in flight; a slow frame skips, it never queues up.
  * When Python itself breaks, the game ends with a brokenRun() result; after stop() nothing is reported.
@@ -57,10 +72,12 @@ export function useGameLoop(
       if (first.error !== undefined || first.stoppedByLimit) return;
       running.current = true;
       let busy = false;
-      const tick = () => {
+      let due = 0;
+      const tick = (now: number) => {
         if (!running.current) return;
-        if (!busy) {
+        if (!busy && isDue(now, due)) {
           busy = true;
+          due = nextDue(now, due);
           python
             .step(inputs.current.take())
             .then((r) => {

@@ -6,7 +6,7 @@ import { Flipbook } from './widgets/Flipbook';
 import { Gravity } from './widgets/Gravity';
 import { Grid } from './widgets/Grid';
 import { RoadmapBuilder } from './widgets/RoadmapBuilder';
-import { SampleGame } from './widgets/SampleGame';
+import { isWide, SampleGame } from './widgets/SampleGame';
 
 export type WidgetContext = {
   course: CatalogCourse;
@@ -61,9 +61,13 @@ export function SlideView({
       </article>
     );
   }
+  // A wide game gets most of the slide: few words, big picture.
+  const wide = slide.widget?.kind === 'sampleGame' && isWide(catalog.sampleStageOf(ctx.course.id));
   return (
     <article
-      className="grid h-full min-h-0 grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-8 max-[1100px]:gap-5"
+      className={`grid h-full min-h-0 gap-8 max-[1100px]:gap-5 ${
+        wide ? 'grid-cols-[minmax(0,1fr)_minmax(0,3fr)]' : 'grid-cols-[minmax(0,5fr)_minmax(0,7fr)]'
+      }`}
       data-testid={`slide-${slide.id}`}
     >
       {words}
@@ -74,7 +78,7 @@ export function SlideView({
         {slide.widget?.kind === 'sampleGame' && (
           <SampleGame
             source={catalog.sampleGame(ctx.course.id) ?? ''}
-            stage={catalog.stageOf(ctx.course.id)}
+            stage={catalog.sampleStageOf(ctx.course.id)}
             howToPlay={ctx.course.howToPlay}
           />
         )}

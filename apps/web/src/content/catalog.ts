@@ -136,6 +136,10 @@ export const catalog = {
   stageOf(courseId: string): StageSize {
     return data.courses.get(courseId)?.stage ?? DEFAULT_STAGE;
   },
+  /** The stage of the course's sample game. */
+  sampleStageOf(courseId: string): StageSize {
+    return data.courses.get(courseId)?.sampleStage ?? this.stageOf(courseId);
+  },
   /** The stage of the course a lesson belongs to. */
   lessonStage(lessonId: string): StageSize {
     return this.courseOf(lessonId)?.stage ?? DEFAULT_STAGE;

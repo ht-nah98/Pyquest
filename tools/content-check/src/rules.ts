@@ -136,7 +136,7 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
     }
 
     if (c.sampleGame !== undefined) {
-      const failure = await runSampleGame(c.sampleGame, py, stage);
+      const failure = await runSampleGame(c.sampleGame, py, course.data.sampleStage ?? stage);
       if (failure !== null) err(`${c.dir}/sample-game/main.py`, `sample game fails: ${failure}`);
     }
   }

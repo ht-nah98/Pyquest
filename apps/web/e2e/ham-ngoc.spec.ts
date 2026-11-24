@@ -78,7 +78,7 @@ test('the coach opens Bài 0 of Hầm Ngọc: plays the sample game, walks the s
 
   await page.getByTestId('lesson-h00').click();
   await expect(page.getByTestId('slide-h00-hello')).toBeVisible();
-  await expect(page.getByTestId('sample-stage')).toHaveAttribute('data-stage', '600x600');
+  await expect(page.getByTestId('sample-stage')).toHaveAttribute('data-stage', '960x540');
   await expect(page.getByTestId('sample-game')).toContainText('mũi tên');
   await expect.poll(() => framesOf(page, 'sample-stage'), { timeout: 60_000 }).toBeGreaterThan(20);
   // Once clicked, the arrows and Space play the game instead of turning the slide.
@@ -132,6 +132,51 @@ test('the coach opens Bài 0 of Hầm Ngọc: plays the sample game, walks the s
   await page.screenshot({ path: `${SHOTS}/ham-ngoc-code.png` });
   await page.getByTestId('fullscreen').click();
   await expect(page.getByTestId('play-stage')).toHaveAttribute('data-stage', '600x600');
+  expect(errors).toEqual([]);
+});
+
+test('the sample game is wide, big on the slide, and takes the whole screen in fullscreen', async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await asCoach(page);
+  await page.goto('/l/h00?mode=present');
+  const stage = page.getByTestId('sample-stage');
+  await expect.poll(() => framesOf(page, 'sample-stage'), { timeout: 60_000 }).toBeGreaterThan(40);
+  const width = async () => (await stage.boundingBox())?.width ?? 0;
+  for (const [w, h] of [
+    [1080, 730],
+    [1866, 966],
+    [1280, 720],
+  ] as const) {
+    await page.setViewportSize({ width: w, height: h });
+    await expect.poll(width).toBeGreaterThan(Math.min(w * 0.6, 1000));
+    await expectNoPageScroll(page);
+    // The buttons under the game stay inside the slide.
+    const button = await page.getByTestId('sample-fullscreen').boundingBox();
+    const footer = await page.locator('footer').boundingBox();
+    expect((button?.y ?? 9999) + (button?.height ?? 0)).toBeLessThanOrEqual(footer?.y ?? 0);
+    await page.screenshot({ path: `${SHOTS}/ham-ngoc-sample-${String(w)}.png` });
+  }
+  await stage.click({ position: { x: 5, y: 5 } });
+  await page.keyboard.press('2');
+  await page.getByTestId('sample-fullscreen').click();
+  await expect(page.getByTestId('sample-full-exit')).toBeVisible();
+  await expect(page.getByTestId('sample-play')).toBeHidden();
+  await expect.poll(width).toBeGreaterThanOrEqual(1279);
+  // 60 steps a second, however fast the screen is.
+  const before = await framesOf(page, 'sample-stage');
+  await page.keyboard.down('ArrowRight');
+  await page.waitForTimeout(3000);
+  await page.keyboard.up('ArrowRight');
+  expect((await framesOf(page, 'sample-stage')) - before).toBeLessThanOrEqual(200);
+  await page.screenshot({ path: `${SHOTS}/ham-ngoc-sample-full.png` });
+  await expect(page.getByTestId('slide-count')).toHaveText(/^1\//);
+  await page.getByTestId('sample-full-again').click();
+  await page.keyboard.press('ArrowRight');
+  await page.getByTestId('sample-full-exit').click();
+  await expect(page.getByTestId('sample-play')).toBeVisible();
   expect(errors).toEqual([]);
 });
 

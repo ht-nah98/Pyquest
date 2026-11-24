@@ -26,6 +26,13 @@ export const CourseSchema = z
         height: z.number().int().min(100).max(1200),
       })
       .optional(),
+    /** The sample game's own stage, when it is not the lessons' one (a wide screen to play on). */
+    sampleStage: z
+      .object({
+        width: z.number().int().min(100).max(1200),
+        height: z.number().int().min(100).max(1200),
+      })
+      .optional(),
     /** Sections of the course map (A. Bức tranh toàn cảnh, B. Dựng sân khấu…). */
     parts: z
       .array(

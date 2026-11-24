@@ -4,7 +4,7 @@
   "summary": "Tự xây một game vượt ải: đi trong hầm, tự đánh quái, nhặt ngọc, lên cấp và chọn skill.",
   "draft": true,
   "after": "bay-qua-khe",
-  "howToPlay": "Đi bằng phím mũi tên hoặc W A S D, nhân vật tự đánh. Chọn nhân vật và thẻ bằng phím 1, 2, 3 hoặc bấm vào hình.",
+  "howToPlay": "Đi bằng mũi tên, W A S D hoặc giữ chuột trên sân; nhân vật tự đánh. Chọn nhân vật và thẻ bằng phím 1, 2, 3 hoặc bấm vào hình.",
   "lessonIds": [
     "h00",
     "h01",
@@ -91,6 +91,10 @@
   "stage": {
     "width": 600,
     "height": 600
+  },
+  "sampleStage": {
+    "width": 960,
+    "height": 540
   },
   "parts": [
     {

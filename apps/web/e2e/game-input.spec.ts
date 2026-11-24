@@ -118,7 +118,7 @@ test('the coach plays the game being made on the dev server; a child is sent awa
 
   await asCoach(page);
   await page.goto('/coach/prototype');
-  await expect(page.getByTestId('play-stage')).toHaveAttribute('data-stage', '600x600');
+  await expect(page.getByTestId('play-stage')).toHaveAttribute('data-stage', '960x540');
   // With tools/prototypes/ham-ngoc/main.py it plays; without it, it says so.
   await expect
     .poll(

@@ -21,9 +21,9 @@ from multiprocessing import Pool
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 FPS = 60
-STAGE = 600
-MAX_FRAMES = 15 * 60 * FPS      # a run longer than 15 minutes counts as stuck
-MAX_EVENTS = 350
+WIDTH, HEIGHT = 960, 540
+MAX_FRAMES = 20 * 60 * FPS      # a run longer than 20 minutes counts as stuck
+MAX_EVENTS = 520
 DRAW_EVERY = 10 if "--fast" in sys.argv else 1
 BRANCHES = ["fire", "ice", "spark"]
 MOVES = [(0, 0)] + [(dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1) if dx or dy]
@@ -88,7 +88,8 @@ class Engine:
         self.numbers(x, y, size)
         assert size > 0, ("size", size)
         half = len(text) * size * 0.4 / 2       # VT323: every letter is 0.4 of the size wide
-        assert 0 <= x - half and x + half <= STAGE, ("text runs off the stage", text)
+        # Damage numbers may leave the screen with their mob; every other text must fit.
+        assert text.lstrip("-").isdigit() or (0 <= x - half and x + half <= WIDTH), ("text runs off the stage", text, x)
         self.color(color)
         self.emit("draw_text", (str(text), x, y, size, color))
 
@@ -119,7 +120,7 @@ class Engine:
 
     def module(self):
         m = types.ModuleType("pyquest")
-        m.WIDTH = m.HEIGHT = STAGE
+        m.WIDTH, m.HEIGHT = WIDTH, HEIGHT
         for name in ["clear", "draw_rect", "draw_image", "draw_text", "draw_circle", "draw_line", "play_sound",
                      "play_music", "stop_music", "key_pressed"]:
             setattr(m, name, getattr(self, name))
@@ -139,6 +140,7 @@ class Game:
         self.g = {"__name__": "__main__"}
         exec(CODE, self.g)
         self.max_events = 0
+        self.boosted = False        # a test handed the hero more skills than there are slots
         self.max_mobs = 0
         self.sounds = Counter()
 
@@ -166,15 +168,16 @@ class Game:
         hero = g["hero"]
         assert 0 <= hero.hp <= hero.max_hp, ("hp", hero.hp, hero.max_hp)
         assert len(self.engine.events) <= MAX_EVENTS, ("events", len(self.engine.events))
-        for things in ["mobs", "shots", "gems", "zones"]:
+        for things, edge in [("mobs", 14), ("shots", 200), ("gems", 60), ("zones", 60), ("drops", 60)]:
             for t in g[things] + [hero]:
                 # A comparison with NaN is False, so this also catches positions that are not finite.
-                assert 0 <= t.x <= STAGE and g["TOP"] <= t.y <= g["BOTTOM"], (things, t.x, t.y)
+                assert -edge <= t.x <= g["world"]["w"] + edge and -edge <= t.y <= g["world"]["h"] + edge, (things, t.x, t.y)
         for things, cap in [("mobs", "MAX_MOBS"), ("shots", "MAX_SHOTS"), ("gems", "MAX_GEMS"),
                             ("zones", "MAX_ZONES"), ("effects", "MAX_EFFECTS")]:
             assert len(g[things]) <= g[cap], (things, len(g[things]))
         if self.state == "cards":
-            left = sum(hero.skills.get(s, 0) < g["MAX_LEVEL"] for s in g["SKILLS"])
+            left = sum(g["can_take"](s) for s in g["SKILLS"])
+            assert self.boosted or g["slots_used"]() <= g["SLOTS"], hero.skills
             assert len(set(g["cards"])) == len(g["cards"]) == min(3, left), g["cards"]
         assert all(0 < level <= g["MAX_LEVEL"] for level in hero.skills.values()), hero.skills
 
@@ -205,24 +208,32 @@ class Bot:
         return self.keys
 
     def score(self, g, move):
-        hero = g["hero"]
-        x = min(STAGE - 12, max(12, hero.x + move[0] * hero.speed * 14))
-        y = min(g["BOTTOM"] - 12, max(g["TOP"] + 12, hero.y + move[1] * hero.speed * 14))
+        hero, world = g["hero"], g["world"]
+        x = min(world["w"] - 24, max(24, hero.x + move[0] * hero.speed * 24))
+        y = min(world["h"] - 24, max(24, hero.y + move[1] * hero.speed * 24))
         far = lambda t: ((t.x - x) ** 2 + (t.y - y) ** 2) ** 0.5
-        total = -abs(x - 300) * 0.02 - abs(y - 311) * 0.02 + self.rng.random() * 0.5
+        total = -abs(x - world["w"] / 2) * 0.004 - abs(y - world["h"] / 2) * 0.004 + self.rng.random() * 0.5
         for mob in g["mobs"]:
+            if abs(mob.x - x) > 220 or abs(mob.y - y) > 220:
+                continue
             d = far(mob) - mob.size
-            total -= max(0, 75 - d) * 0.14
-            if "boss" in mob.data:
-                total -= max(0, 110 - d) * 0.12
+            total -= max(0, 80 - d) * 0.14
+            if mob.boss:
+                total -= max(0, 120 - d) * 0.12
         for shot in g["shots"]:
             if shot.kind == "spore":
-                total -= max(0, 55 - far(shot)) * 0.15
+                total -= max(0, 50 - far(shot)) * 0.15
         for zone in g["zones"]:
             if zone.kind == "rock":
                 total -= max(0, zone.r + 15 - far(zone)) * 0.2
-        if g["gems"]:
-            total -= min(far(gem) for gem in g["gems"]) * 0.035
+        for pool in g["pools"]:
+            if ((x - pool[0]) / 95) ** 2 + ((y + 12 - pool[1]) / 65) ** 2 < 1:
+                total -= 6
+        for prop in g["solids"]:
+            total -= max(0, prop.solid + 12 - far(prop)) * 0.3
+        wanted = [t for t in g["drops"] if t.kind != "heart" or hero.hp < hero.max_hp - 25] + g["gems"]
+        if wanted:
+            total -= min(min(far(t) for t in wanted), 500) * 0.035
         elif g["mobs"]:
             near = min(far(mob) for mob in g["mobs"])
             total -= abs(near - hero.data["range"] * 0.85) * 0.03
@@ -344,13 +355,13 @@ def fuzz_game(seed, frames=3000):
         if rng.random() < 0.15:
             keys = {k for k in KEYS if rng.random() < 0.3}
         if rng.random() < 0.2:
-            mouse = rng.choice([(rng.uniform(0, STAGE), rng.uniform(0, STAGE)), (rng.randint(-50, 650), rng.randint(-50, 650)),
-                                (0, 0), (STAGE, STAGE), (300, rng.randint(150, 540))])
+            mouse = rng.choice([(rng.uniform(0, WIDTH), rng.uniform(0, HEIGHT)), (rng.randint(-50, 1000), rng.randint(-50, 600)),
+                                (0, 0), (WIDTH, HEIGHT), (480, rng.randint(130, 530))])
         game.step(keys, mouse if rng.random() < 0.1 else None, mouse)
         states[game.state] += 1
         if boosted and game.state == "play":
             hero = g["hero"]
-            hero.hp = max(hero.hp, 2)
+            hero.hp = max(hero.hp, 40)
             if rng.random() < 0.004:
                 g["start_floor"](rng.randint(0, 2))
             if rng.random() < 0.01:
@@ -359,13 +370,12 @@ def fuzz_game(seed, frames=3000):
                 for mob in g["mobs"]:
                     mob.hp = min(mob.hp, rng.randint(0, 3))
             if rng.random() < 0.003:            # straight to the boss, or every mob falls at once
-                g["game"]["wave"] = 2
-                g["queue"].clear()
+                g["game"]["second"] = g["FLOORS"][g["game"]["floor"]]["length"] - 1
                 for mob in g["mobs"]:
                     mob.hp = 0
             if rng.random() < 0.003:            # a crowd, up to the cap
-                for _ in range(rng.randint(5, 30)):
-                    g["spawn_mob"](rng.choice(["slime", "bat", "mushroom", "ghost", "golem"]))
+                for _ in range(rng.randint(5, 60)):
+                    g["spawn_mob"](rng.choice(["slime", "bat", "mushroom", "ghost", "golem"]), rng.random() < 0.1)
             if rng.random() < 0.002:
                 hero.hp = 0
     return dict(states), game.max_events, game.max_mobs, len(g["combos"])
@@ -395,7 +405,7 @@ def edge_cases():
     game = start()
     for _ in range(80):
         game.step({"1"})
-    game.g["hero"].xp = 7
+    game.g["hero"].xp = 12
     for _ in range(120):
         game.step({"1"})
     assert game.state == "cards", "a held key picked a card"
@@ -406,45 +416,67 @@ def edge_cases():
 
     # Click on the second card; clicks outside the cards do nothing.
     game = start()
-    game.g["hero"].xp = 7
+    game.g["hero"].xp = 12
     for _ in range(40):
         game.step()
     second = game.g["cards"][1]
     game.step(click=(10, 10))
     assert game.state == "cards"
-    game.step(click=(300, game.g["row_top"](1) + 20))
+    game.step(click=(400, game.g["row_top"](1) + 20))
     assert second in game.g["hero"].skills and game.g["hero"].target is None
     game.step()
-    game.step(click=(300, game.g["row_top"](1) + 20))       # a double tap on the card is not a walk order
+    game.step(click=(400, game.g["row_top"](1) + 20))       # a double tap on the card is not a walk order
     assert game.g["hero"].target is None
     print("ok  click picks the card under it, and sets no walk target")
 
-    # Tap to walk: goes there and stops; a key cancels; the bars and the edge of the stage are safe.
+    # Tap to walk: goes there and stops; a key cancels; the edge of the world is safe. Holding follows the pointer.
     game = start()
-    hero = game.g["hero"]
+    g = game.g
+    hero, world, camera = g["hero"], g["world"], g["camera"]
+    g["solids"].clear()
+    g["pools"].clear()
     for _ in range(30):
         game.step()
-    for spot in [(300, 20), (300, 580), (0, 0), (300, -5), (700, 300)]:
-        game.step(click=spot)
-        assert hero.target is None, spot
-    for spot in [(420, 200), (1, 63), (600, 536), (0, 536), (599.5, 100.25), (420, 200)]:
+    for spot in [(700, 300), (1, 1), (960, 540), (200.5, 100.25), (480, 500)]:
+        want = [min(world["w"] - 24, max(24, spot[0] + camera["x"])), min(world["h"] - 24, max(24, spot[1] + camera["y"]))]
         game.step(click=spot)
         assert hero.target is not None
-        for _ in range(400):
-            hero.hp = hero.max_hp
-            hero.xp = 0
+        for _ in range(900):
+            hero.hp, hero.xp = hero.max_hp, 0
+            g["game"]["second"] = 1
             game.step()
-        assert hero.target is None and game.state == "play", spot
-        assert abs(hero.x - min(576, max(24, spot[0]))) < 0.01, (spot, hero.x)
-        assert abs(hero.y - min(game.g["BOTTOM"] - 24, max(game.g["TOP"] + 24, spot[1]))) < 0.01, (spot, hero.y)
-    game.step(click=(100, 400))
-    game.step(click=(hero.x, hero.y))       # tap on the hero itself
-    game.step()
-    assert hero.target is None
-    game.step(click=(100, 400))
+            if hero.target is None:
+                break
+        assert hero.target is None and abs(hero.x - want[0]) < 0.01 and abs(hero.y - want[1]) < 0.01, (spot, hero.x, hero.y)
+    game.step({"space"}, click=(100, 400))
+    for _ in range(40):
+        hero.hp = hero.max_hp
+        game.step({"space"}, mouse=(800, 270))
+    assert hero.target is not None and hero.target[0] > hero.x
     game.step({"right"})
     assert hero.target is None and hero.look == "right"
-    print("ok  tap to walk: arrives, stays inside, keys cancel, bars do nothing")
+    game.step({"space"}, mouse=(100, 100))          # the key alone is no pointer
+    assert hero.target is None
+    print("ok  tap or hold to walk: arrives, stays inside, keys cancel")
+
+    # Walking into every edge and around the props never leaves the world or gets stuck in a prop.
+    for floor in range(3):
+        game = start()
+        g = game.g
+        g["start_floor"](floor)
+        for keys in [{"left"}, {"up"}, {"right"}, {"down"}, {"left", "up"}, {"right", "down"}]:
+            for _ in range(700):
+                g["hero"].hp, g["hero"].xp, g["game"]["second"] = g["hero"].max_hp, 0, 1
+                game.step(keys)
+        for prop in g["solids"]:
+            assert g["distance"](prop, g["hero"]) >= prop.solid + 10, "inside a prop"
+        # A walk target inside a tree: the hero must not freeze the game.
+        prop = g["solids"][0]
+        g["hero"].target = [prop.x, prop.y]
+        for _ in range(200):
+            g["hero"].hp, g["hero"].xp = g["hero"].max_hp, 0
+            game.step()
+    print("ok  edges and props on all floors")
 
     # Several level-ups at once come one after the other.
     game = start()
@@ -460,9 +492,10 @@ def edge_cases():
     assert picks == game.g["hero"].level - 1 and picks > 3
     print("ok ", picks, "stacked level-ups, one screen each")
 
-    # Fewer than three cards left, then none.
+    # Fewer than three cards left, then none; a chest with nothing left to raise heals.
     game = start()
     g = game.g
+    game.boosted = True
     g["hero"].skills = {name: 3 for name in g["SKILLS"]}
     g["hero"].skills["heart"] = 2
     for expected in (1, 0):
@@ -477,18 +510,44 @@ def edge_cases():
             game.step()
             game.step({"1"})
     assert game.state == "play"
+    g["hero"].hp = 10
+    g["drops"].append(g["Drop"]("chest", g["hero"].x, g["hero"].y))
+    game.step()
+    assert g["hero"].hp > 40
     for _ in range(600):
         g["hero"].hp = g["hero"].max_hp
         game.step()
-    print("ok  one card left, then none; every skill at level 3 runs")
+    print("ok  one card left, then none; chest heals; every skill at level 3 runs")
+
+    # Chest raises a skill the hero has; box, heart and magnet work.
+    game = start()
+    g = game.g
+    g["hero"].skills = {"fire_hit": 1}
+    g["drops"].append(g["Drop"]("chest", g["hero"].x, g["hero"].y))
+    game.step()
+    assert g["hero"].skills == {"fire_hit": 2}
+    g["drops"].clear()
+    g["gems"].append(g["Gem"](g["hero"].x + 400, g["hero"].y, 1))
+    g["drops"].append(g["Drop"]("magnet", g["hero"].x, g["hero"].y))
+    xp = g["hero"].xp
+    for _ in range(150):
+        g["hero"].hp = g["hero"].max_hp
+        game.step()
+    assert g["hero"].xp > xp or game.state == "cards"
+    for _ in range(20):
+        g["drops"].append(g["Drop"]("box", g["hero"].x, g["hero"].y))
+        game.step()
+        if game.state != "play":
+            break
+    print("ok  chest, magnet, boxes")
 
     # Mob exactly on the hero, two mobs exactly on each other.
     game = start(hero_no=2)
     g = game.g
     for kind in g["MOBS"]:
-        for _ in range(2):
-            mob = g["Mob"](kind, g["hero"].x, g["hero"].y, 1)
-            mob.age = 100
+        for elite in (False, True):
+            mob = g["Mob"](kind, g["hero"].x, g["hero"].y, 1, elite)
+            mob.born = -100
             g["mobs"].append(mob)
     for _ in range(300):
         g["hero"].hp = g["hero"].max_hp
@@ -502,15 +561,15 @@ def edge_cases():
         game = start()
         g = game.g
         g["start_floor"](floor)
-        boss = g["Mob"](g["WAVES"][floor]["boss"], 100, 100, 1)
-        boss.age, boss.hp = 100, 0
+        boss = g["Mob"](g["FLOORS"][floor]["boss"], 300, 300, 1)
+        boss.born, boss.hp = -100, 0
         g["mobs"].append(boss)
         g["mobs"].append(g["Mob"]("slime", 200, 200, 1))
         g["hero"].hp = 0
         g["hero"].xp = g["xp_needed"]()         # a level-up comes first: leftovers must not hurt meanwhile
-        g["zones"].append(g["Zone"]("rock", g["hero"].x, g["hero"].y, 40, 1, 2))
-        g["shots"].append(g["Shot"]("spore", g["hero"].x - 24, g["hero"].y, 1, 0, 2, 1))
-        g["hero"].safe = 0
+        g["zones"].append(g["Zone"]("rock", g["hero"].x, g["hero"].y, 40, 10, 2))
+        g["shots"].append(g["Shot"]("spore", g["hero"].x - 24, g["hero"].y, 1, 0, 2, 9, 100))
+        g["hero"].safe_end = 0
         game.step()
         while game.state == "cards":        # the boss gems may give a level first
             for _ in range(30):
@@ -534,32 +593,41 @@ def edge_cases():
     for _ in range(40):
         game.step({"space"})
     game.step({"2"})
-    assert game.state == "play" and g["hero"].skills == {} and g["hero"].hp == 5 and g["combos"] == []
+    assert game.state == "play" and g["hero"].skills == {} and g["hero"].hp == g["HEROES"][1]["hp"] and g["combos"] == []
     print("ok  play again starts clean")
 
     # Every picture a table can name is in the library, with the frames the table says.
     g = start().g
     used = [d["image"] for d in g["HEROES"] + list(g["MOBS"].values())] + [s["icon"] for s in g["SKILLS"].values()]
-    used += [d[0] for d in g["DECO"]] + ["fx-" + name for name in g["FX"]]
+    used += ["fx-" + name for name in g["FX"]] + [d[0] for d in g["DROPS"].values()] + [n for pair in g["GLOWS"].items() for n in (pair[0], pair[1][0])]
+    for floor in g["FLOORS"]:
+        used += [p[0] for p in floor["props"] + floor["marks"]] + floor["edge"]
+        used += [floor["ground"], floor["patch"], floor["pools"][0], floor["rim"]]
+        for mobs in [w[1] for w in floor["waves"]] + [{s[1]: 1} for s in floor["swarms"]] + [{e[1]: 1} for e in floor["elites"]]:
+            assert all(kind in g["MOBS"] for kind in mobs), mobs
+        assert floor["waves"][0][0] == 0 and floor["boss"] in g["MOBS"]
+        assert ASSETS[floor["pools"][0]]["frames"] == 2 and ASSETS[floor["ground"]]["width"] * 3 == g["TILE"]
+        widest = sorted(floor["world"])
+        assert widest[0] >= HEIGHT * 2, "outside_point needs world beyond the screen"
     with open(os.path.join(HERE, "main.py"), encoding="utf-8") as f:
         text = f.read()
     used += re.findall(r'draw_sprite\("([a-z0-9-]+)"', text) + re.findall(r'"images/([a-z0-9-]+)\.png"', text)
     used += re.findall(r'draw_message\("([a-z0-9-]+)"', text)
     for name in used:
         assert name in ASSETS and os.path.exists(os.path.join(LIBRARY, ASSETS[name]["file"])), name
-        assert ASSETS[name].get("pixel"), name
+        assert ASSETS[name].get("pixel") or name.startswith(("deco-glow", "deco-dark")), name
     for name, fx in g["FX"].items():
         asset = ASSETS["fx-" + name]
         assert (fx["frames"], fx["width"]) == (asset["frames"], asset["width"]), name
         assert fx["foot"] <= asset["height"]
     for name in set(re.findall(r'add_effect\("([a-z]+)"', text)):
-        assert name in g["FX"] or name in ("ring", "bolt"), name
+        assert name in g["FX"] or name in ("ring", "bolt", "number"), name
     print("ok ", len(set(used)), "pictures named, all in the manifest, frame counts agree")
 
     # Card texts fit between the icon and the card's edge; combo names fit their chip.
     for s in g["SKILLS"].values():
-        assert len(s["text"]) == 3 and max(len(line) for line in s["text"]) * 9.6 / 2 <= 190, s["text"]
-    assert all(len(c["name"]) * 7.2 <= 97 for c in g["COMBOS"].values())
+        assert len(s["text"]) == 3 and max(len(line) for line in s["text"]) * 10.4 / 2 <= 240, s["text"]
+    assert all(len(c["name"]) * 7.2 <= 100 for c in g["COMBOS"].values())
     print("ok  card texts and combo names fit")
 
     # Every skill alone at every level, and every combo, on all heroes.
@@ -570,14 +638,15 @@ def edge_cases():
                 game = start(hero_no=hero_no)
                 game.g["hero"].skills = {name: level}
                 game.g["combos"].extend(game.g["COMBOS"])
+                for _ in range(12):
+                    game.g["spawn_mob"]("slime")
                 bot = Bot(1)
                 for _ in range(400):
                     if game.state != "play":
                         break
                     game.step(bot.play_keys(game.g))
-    never = sorted({n for n in used if not any(n == a for a, _ in seen_pictures)})
     short = [n for n in g["FX"] if {f for a, f in seen_pictures if a == "fx-" + n} != set(range(g["FX"][n]["frames"]))]
-    print("ok  every skill x level x hero runs with every combo on; not drawn here:", never, short)
+    print("ok  every skill x level x hero runs with every combo on; effect frames not drawn here:", short)
 
 
 def same_run_twice():
@@ -597,6 +666,7 @@ def rgba(color):
 def paste(img, asset, x, y, frame, flip, scale, mirror):
     from PIL import Image
     w, h = ASSETS[asset]["width"], ASSETS[asset]["height"]
+    soft = not ASSETS[asset].get("pixel")
     with Image.open(os.path.join(LIBRARY, ASSETS[asset]["file"])) as strip:
         k = strip.height // h
         picture = strip.convert("RGBA").crop((frame * w * k, 0, (frame + 1) * w * k, h * k))
@@ -604,19 +674,19 @@ def paste(img, asset, x, y, frame, flip, scale, mirror):
         picture = picture.transpose(Image.FLIP_LEFT_RIGHT)
     if flip:
         picture = picture.transpose(Image.FLIP_TOP_BOTTOM)
-    picture = picture.resize((max(1, round(w * scale)), max(1, round(h * scale))), Image.NEAREST)
+    picture = picture.resize((max(1, round(w * scale)), max(1, round(h * scale))), Image.BILINEAR if soft else Image.NEAREST)
     img.paste(picture, (round(x), round(y)), picture)
 
 
 def render(events, path):
     """The same picture render.ts makes, close enough to check the layout by eye."""
     from PIL import Image, ImageDraw, ImageFont
-    img = Image.new("RGB", (STAGE, STAGE), "#bfe3f2")
+    img = Image.new("RGB", (WIDTH, HEIGHT), "#bfe3f2")
     d = ImageDraw.Draw(img, "RGBA")
     for kind, a in events:
         a = list(a)
         if kind == "clear":
-            d.rectangle([0, 0, STAGE, STAGE], fill=rgba(a[0]))
+            d.rectangle([0, 0, WIDTH, HEIGHT], fill=rgba(a[0]))
         elif kind == "draw_rect":
             x, y, w, h, color = a
             if w > 0 and h > 0:
@@ -644,105 +714,64 @@ def render(events, path):
 
 
 def pictures(out):
+    """A tour with the same bot, a photo at fixed moments of each floor."""
     os.makedirs(out, exist_ok=True)
+
     def shot(name, game):
         game.step()
         render(game.engine.events, os.path.join(out, name + ".png"))
-        print(name, len(game.engine.events), "events")
+        print(name, len(game.engine.events), "events", len(game.g["mobs"]), "mobs")
+
     game = Game(3)
     for _ in range(30):
         game.step()
-    shot("01-hero", game)
-    wanted = [("02-floor1", lambda g: g["game"]["state"] == "play" and len(g["mobs"]) >= 6 and g["game"]["wave"] == 1),
-              ("03-levelup", lambda g: any(e.kind == "levelup" and e.age == 16 for e in g["effects"])),
-              ("04-cards", lambda g: g["game"]["state"] == "cards" and len(g["hero"].skills) >= 3),
-              ("05-banner", lambda g: g["game"]["state"] == "play" and g["banners"] and "Ph" in g["banners"][0][0]),
-              ("06-boss1", lambda g: g["game"]["floor"] == 0 and g["game"]["boss_out"] and g["mobs"]
-               and g["mobs"][0].age % 120 == 95),
-              ("07-next", lambda g: g["game"]["state"] == "next" and g["game"]["clock"] > 5),
-              ("08-floor2", lambda g: g["game"]["floor"] == 1 and len(g["mobs"]) > 11),
-              ("09-boss2", lambda g: g["game"]["floor"] == 1 and g["game"]["boss_out"] and len(g["shots"]) > 8
-               and any(m.kind == "boss2" and m.age > 200 for m in g["mobs"])),
-              ("10-floor3", lambda g: g["game"]["floor"] == 2 and len(g["mobs"]) > 13),
-              ("11-boss3", lambda g: g["game"]["floor"] == 2 and g["game"]["boss_out"]
-               and any(m.kind == "boss3" and 85 < m.age % 190 < 110 and m.age > 190 for m in g["mobs"])),
-              ("12-rocks", lambda g: g["game"]["floor"] == 2 and g["game"]["boss_out"]
-               and any(z.kind == "rock" for z in g["zones"])),
-              ("13-win", lambda g: g["game"]["state"] == "win")]
-    for hero_no in (1, 0, 2):           # the mage sees everything; the others only their fights
-        tour = wanted if hero_no == 1 else [("2%d-floor%d" % (hero_no, f + 1), lambda g, f=f: g["game"]["floor"] == f
-                                             and len(g["mobs"]) > 7 and (g["shots"] or any(e.kind == "slash" and e.age < 12
-                                                                                           for e in g["effects"])))
-                                            for f in range(3)]
-        game, bot, gap = Game(3 + hero_no), Bot(3), 0
-        while tour and game.state != "lose":
-            g = game.g
-            while tour and tour[0][1](g):
-                shot(tour.pop(0)[0], game)
-            if game.state == "play":
-                g["hero"].hp = max(g["hero"].hp, 2)     # the photo tour must reach the end
-                game.step(bot.play_keys(g))
-                gap = 40
-            elif gap > 0:
-                gap -= 1
-                game.step()
-            else:
-                number = {"hero": hero_no, "cards": bot.pick(g) if game.state == "cards" else 0}.get(game.state)
-                game.step({"space"} if number is None else {str(number + 1)})
-                game.step()
-                gap = 60
-        print("not seen:", [name for name, _ in tour])
-    game = start(4)
-    game.g["hero"].hp = 0
-    game.step()
-    shot("14-lose", game)
-    # Walking to a tap, and the fullest the screen can get.
-    game = start(4, 2)
-    for _ in range(90):
-        game.step()
-    game.step(click=(480, 420))
-    for _ in range(20):
-        game.step()
-    shot("15-tap", game)
+    shot("00-hero", game)
+    moments = [(f, s) for f in range(3) for s in (4, 40, 92, 999)]
+    game, bot, gap, n = Game(5), Bot(3), 0, 0
+    cards = False
+    while moments and n < MAX_FRAMES:
+        n += 1
+        g = game.g
+        if game.state == "play":
+            g["hero"].hp = max(g["hero"].hp, 60)
+            floor, second = moments[0]
+            boss = any(m.boss and g["game"]["time"] - m.born > 260 and g["on_screen"](m, 0) for m in g["mobs"])
+            if g["game"]["floor"] == floor and (boss if second == 999 else g["game"]["second"] >= second):
+                moments.pop(0)
+                shot("%d-%s" % (floor + 1, "boss" if second == 999 else "%03d" % second), game)
+            game.step(bot.play_keys(g))
+            gap = 40
+        elif gap > 0:
+            gap -= 1
+            game.step()
+        else:
+            if game.state == "cards" and len(g["hero"].skills) > 3 and not cards:
+                cards = True
+                shot("05-cards", game)
+            number = {"hero": 1, "cards": bot.pick(g) if game.state == "cards" else 0}.get(game.state)
+            if game.state in ("next", "lose", "win"):
+                shot("06-" + game.state, game)
+            game.step({"space"} if number is None else {str(number + 1)})
+            game.step()
+            gap = 60
+    print("not seen:", moments)
     for hero_no in range(3):
         game = start(4, hero_no)
         g = game.g
         g["start_floor"](2)
         hero = g["hero"]
+        game.boosted = True
         hero.skills = {name: 3 for name in g["SKILLS"]}
-        hero.max_hp, hero.hp = 10, 6
+        hero.max_hp, hero.hp = 200, 120
         g["combos"].extend(g["COMBOS"])
         g["banners"].clear()
         bot = Bot(1)
-        for _ in range(700):
-            hero.hp = 6
-            hero.xp = 0
-            game.step(bot.play_keys(g))
-            if len(g["mobs"]) > 5:
-                break
-        for _ in range(240):
-            hero.hp, hero.xp = 6, 0
+        for _ in range(40):
+            g["spawn_mob"]("ghost")
+        for _ in range(500):
+            hero.hp, hero.xp = 120, 0
             game.step(bot.play_keys(g))
         shot("%d-everything" % (16 + hero_no), game)
-    # Each mob on each floor colour: silhouettes.
-    for floor in range(3):
-        game = start(4)
-        g = game.g
-        g["start_floor"](floor)
-        g["banners"].clear()
-        for i, kind in enumerate(g["MOBS"]):
-            for j in range(2):
-                mob = g["Mob"](kind, 60 + i % 4 * 150 + j * 45 * (i < 5), 150 + i // 4 * 120 + (i // 4) * 60, 1)
-                mob.age, mob.stun, mob.look = 45, 999, ["left", "right"][j]
-                if j == 0 or i < 5:
-                    g["mobs"].append(mob)
-        for i in range(3):
-            g["gems"].append(g["Gem"](150 + i * 30, 500, 1))
-        g["hero"].x, g["hero"].y = 520, 480
-        g["draw"]()
-        game.engine.events = []
-        g["draw"]()
-        render(game.engine.events, os.path.join(out, "3%d-silhouettes.png" % floor))
 
 
 def main():

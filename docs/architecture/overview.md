@@ -23,8 +23,8 @@ tools/content-check ──▶ runtime + checker trên Node: chạy lời giải 
 ## Hai cách chạy
 
 - **Kịch bản** (`script`, Bài 1–5): chạy module một lần, `pyquest` ghi các lệnh vẽ vào nhật ký, trang phát lại thành hình.
-- **Game** (`game`, từ Bài 6 và game mẫu): chạy module để định nghĩa `update()` / `draw()`; mỗi khung hình trang gửi
-  phím/chạm, worker gọi `update()` rồi `draw()` và trả lại lệnh vẽ của khung đó.
+- **Game** (`game`, từ Bài 6 và game mẫu): chạy module để định nghĩa `update()` / `draw()`; tối đa 60 lần một giây trên
+  mọi màn hình (`nextDue` trong `useGameLoop.ts`: màn 120/144 Hz bỏ bớt khung), trang gửi phím/chạm, worker gọi `update()` rồi `draw()` và trả lại lệnh vẽ của khung đó.
 - **Python hỏng** (worker chết, hết bộ nhớ; không phải lỗi của bé, không phải ■ Dừng): mọi màn nhận `brokenRun()`
   (`apps/web/src/runtime/broken.ts`) như một lỗi thường, ▶ trở lại, `PyClient` tự dựng worker mới. `inf`, `nan`, số nguyên quá
   dài không vào JSON được: ô biến hiện một chữ, còn đưa vào lệnh vẽ thì là lỗi tiếng Việt.

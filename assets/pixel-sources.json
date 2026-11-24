@@ -286,5 +286,235 @@
     "from": "pixelfx",
     "effect": "pickups/collect-burst",
     "adapted": "header says it adapts Sprite Fusion (Hugo Duprez, MIT): https://www.spritefusion.com/pixel-art-vfx/pickup; imports adapted helper fx/pickups/_lib.js; uses core/sim.js, adapted from Sprite Fusion (Lights)"
+  },
+  {
+    "id": "deco-ground-meadow",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-ground-forest",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-ground-cave",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-pond",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-swamp",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-lava",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-dirt",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-mist-moss",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-ash",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-oak",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 592216,
+    "caption": "front-view ancient chestnut tree with hand-shaped leaves in muted colors"
+  },
+  {
+    "id": "deco-chestnut",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 232060,
+    "caption": "glowing magical chestnut tree with exposed roots"
+  },
+  {
+    "id": "deco-walnut",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1202373,
+    "caption": "three-quarter-view blossoming walnut tree with dangling catkins in muted colors"
+  },
+  {
+    "id": "deco-stump",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 715170,
+    "caption": "front-view tall tree stump with an axe notch in muted colors"
+  },
+  {
+    "id": "deco-bush",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1359299,
+    "caption": "leafy forsythia bush with tangled branches"
+  },
+  {
+    "id": "deco-flowers",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 765709,
+    "caption": "forsythia bush with long arching canes in flat colors"
+  },
+  {
+    "id": "deco-grass",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 426190,
+    "caption": "lush tall grass clump with bent tips"
+  },
+  {
+    "id": "deco-boulder",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1106790,
+    "caption": "front-view cracked split boulder with one half leaning in muted colors"
+  },
+  {
+    "id": "deco-well",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1319904,
+    "caption": "open stone well with a low wall"
+  },
+  {
+    "id": "deco-fence",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1318263,
+    "caption": "sagging wooden picket fence"
+  },
+  {
+    "id": "deco-reed",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 723017,
+    "caption": "lush cattail reed with two heads in muted colors"
+  },
+  {
+    "id": "deco-haunted",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 400749,
+    "caption": "glowing haunted tree with swirling wisps"
+  },
+  {
+    "id": "deco-spirit",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 51606,
+    "caption": "glowing spirit tree with swirling wisps"
+  },
+  {
+    "id": "deco-lantern",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1063509,
+    "caption": "leafy lantern tree with blue lamps in high contrast"
+  },
+  {
+    "id": "deco-dead",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 871177,
+    "caption": "petrified tree with a rough surface in muted colors"
+  },
+  {
+    "id": "deco-pillar",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 189859,
+    "caption": "stone pillar with a carved emblem"
+  },
+  {
+    "id": "deco-column",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 828779,
+    "caption": "stone pillar with a scroll capital"
+  },
+  {
+    "id": "deco-ruin",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1221892,
+    "caption": "toppled stone pillar with spiral grooves in earthy colors"
+  },
+  {
+    "id": "deco-crystal",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 244222,
+    "caption": "cracked quartz crystal embedded in stone"
+  },
+  {
+    "id": "deco-crystal-green",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 424704,
+    "caption": "glowing quartz crystal embedded in stone"
+  },
+  {
+    "id": "deco-rock",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1009780,
+    "caption": "twin granite pointed rock"
+  },
+  {
+    "id": "deco-ember-rock",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 195858,
+    "caption": "slate pointed rock with lichen spots"
+  },
+  {
+    "id": "deco-brazier",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 177729,
+    "caption": "black brazier with a warm glow"
+  },
+  {
+    "id": "deco-burnt",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 451217,
+    "caption": "front-view stumpy burnt tree with peeling bark"
+  },
+  {
+    "id": "deco-glow-warm",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-glow-cool",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-glow-mist",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-dark-cave",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-dark-forest",
+    "from": "tools/assets/arena.py"
+  },
+  {
+    "id": "deco-thistle",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 504806,
+    "caption": "open thistle flower"
+  },
+  {
+    "id": "deco-crystal-flower",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 221824,
+    "caption": "glowing crystal flower"
+  },
+  {
+    "id": "deco-fern",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 1162518,
+    "caption": "top-down tree fern with huge arching fronds"
+  },
+  {
+    "id": "deco-star-tree",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 614662,
+    "caption": "cursed starlight tree with hanging star fruit"
+  },
+  {
+    "id": "deco-lotus",
+    "from": "Angais/pixel-art-atlas-1.4m",
+    "row": 13387,
+    "caption": "lotus flower"
   }
 ]

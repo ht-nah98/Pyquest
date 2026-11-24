@@ -4,7 +4,7 @@ import type { PointerEvent } from 'react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { useGameKeys } from './useGameKeys';
 import type { StageHandle } from './Stage';
-import { useGameLoop } from './useGameLoop';
+import { isDue, nextDue, useGameLoop } from './useGameLoop';
 
 const { inputs, python, done } = vi.hoisted(() => ({
   inputs: [] as GameInput[],
@@ -64,7 +64,34 @@ async function nextInput(): Promise<GameInput> {
   return inputs[inputs.length - 1]!;
 }
 
-test('an arrow is not a tap: key_pressed("space") stays False', async () => {
+test.each([30, 50, 60, 75, 90, 120, 144, 165, 240])(
+  'on a %i Hz screen the game runs at 60 steps a second, never more',
+  (hz) => {
+    let due = 0;
+    let steps = 0;
+    for (let frame = 0; frame < hz * 10; frame++) {
+      const now = 5000 + (frame * 1000) / hz + (frame % 2); // timers jitter
+      if (!isDue(now, due)) continue;
+      due = nextDue(now, due);
+      steps++;
+    }
+    expect(steps / 10).toBeGreaterThan(Math.min(hz, 60) - 2);
+    expect(steps / 10).toBeLessThanOrEqual(60.5);
+  },
+);
+
+test('after a long pause (another tab) the game goes on from now, without a burst', () => {
+  let due = 0;
+  let steps = 0;
+  for (const now of [1000, 1017, 9000, 9004, 9008, 9012, 9017, 9022, 9034]) {
+    if (!isDue(now, due)) continue;
+    due = nextDue(now, due);
+    steps++;
+  }
+  expect(steps).toBe(5);
+});
+
+test('an arrow is not a tap:key_pressed("space") stays False', async () => {
   const { unmount } = await playing();
   key('keydown', 'ArrowRight');
   expect((await nextInput()).keys).toEqual(['right']);

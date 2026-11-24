@@ -15,7 +15,7 @@ const sources = import.meta.glob<string>('../../../../../tools/prototypes/ham-ng
 });
 const SOURCE = Object.values(sources)[0];
 const MAIN = 'main.py';
-const SIZE: StageSize = { width: 600, height: 600 };
+const SIZE: StageSize = { width: 960, height: 540 };
 
 /** /coach/prototype, dev server only: the coach plays the game being made, before any lesson about it exists. */
 export function PrototypePlay() {
