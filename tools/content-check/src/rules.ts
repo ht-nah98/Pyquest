@@ -241,7 +241,10 @@ async function checkStudio(
     stage: studio.stage,
   });
   if (run.error !== undefined) err(where, `starter fails: ${run.error.raw}`);
-  for (const t of studio.templates) await checkTemplate(studio, t, py, (msg) => err(where, msg));
+  for (const t of studio.templates)
+    await checkTemplate(studio, t, py, (msg) => {
+      err(where, msg);
+    });
 }
 
 /** Drawn pieces, not the sky, words to the console, sounds or frame marks. */
