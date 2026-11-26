@@ -8,6 +8,16 @@ export const StudioChallengeSchema = z.object({
   hint: z.string().min(1).max(120),
 });
 
+/** One "📐 Vẽ theo mẫu" picture: its code draws the faint template the child traces (spec 2026-11-26 §5.2). */
+export const StudioTemplateSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  title: z.string().min(1).max(40),
+  /** ⭐ how hard: 1 easy, 3 hard. */
+  level: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+  code: z.string().min(1),
+  hint: z.string().min(1).max(120),
+});
+
 /** content/studio/studio.json: the free drawing studio (🎨 Xưởng vẽ, spec 2026-11-23 §6). */
 export const StudioSchema = z
   .object({
@@ -20,6 +30,7 @@ export const StudioSchema = z
     /** Block ids offered in the studio. */
     toolbox: z.array(z.string().min(1)).min(1),
     challenges: z.array(StudioChallengeSchema),
+    templates: z.array(StudioTemplateSchema).default([]),
   })
   .superRefine((s, ctx) => {
     const ids = s.challenges.map((c) => c.id);
@@ -30,7 +41,16 @@ export const StudioSchema = z
         message: `duplicate challenge id "${dup}"`,
         path: ['challenges'],
       });
+    const tids = s.templates.map((t) => t.id);
+    const tdup = tids.find((id, i) => tids.indexOf(id) !== i);
+    if (tdup !== undefined)
+      ctx.addIssue({
+        code: 'custom',
+        message: `duplicate template id "${tdup}"`,
+        path: ['templates'],
+      });
   });
 
 export type StudioChallenge = z.infer<typeof StudioChallengeSchema>;
+export type StudioTemplate = z.infer<typeof StudioTemplateSchema>;
 export type Studio = z.infer<typeof StudioSchema>;

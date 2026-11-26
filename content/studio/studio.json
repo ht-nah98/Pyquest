@@ -1,5 +1,8 @@
 {
-  "stage": { "width": 600, "height": 600 },
+  "stage": {
+    "width": 600,
+    "height": 600
+  },
   "starter": "from pyquest import *\n\nclear(\"white\")\ndraw_circle(300, 300, 100, \"orange\")\n",
   "toolbox": [
     "pq_import",
@@ -79,6 +82,50 @@
       "title": "🏮 Đèn lồng Hội An",
       "task": "Vẽ một dây đèn lồng nhiều màu trên trời đêm. Mỗi đèn có dây treo, thân tròn và tua ở dưới.",
       "hint": "Viết hàm def den_long(x, mau) vẽ một cái đèn, rồi gọi nó nhiều lần với x khác nhau."
+    }
+  ],
+  "templates": [
+    {
+      "id": "may-troi-chim",
+      "title": "☀️ Mây trời và chim",
+      "level": 1,
+      "code": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_circle(500, 100, 60, \"gold\")\ndraw_circle(150, 150, 40, \"white\")\ndraw_circle(195, 130, 50, \"white\")\ndraw_circle(240, 150, 40, \"white\")\ndraw_ellipse(195, 165, 170, 50, \"white\")\ndraw_circle(380, 260, 30, \"white\")\ndraw_circle(420, 245, 38, \"white\")\ndraw_circle(460, 260, 30, \"white\")\ndraw_arc(250, 330, 20, 180, 360, \"black\")\ndraw_arc(290, 330, 20, 180, 360, \"black\")\ndraw_arc(120, 280, 14, 180, 360, \"black\")\ndraw_arc(148, 280, 14, 180, 360, \"black\")\ndraw_rect(0, 500, 600, 100, \"green\")\n",
+      "hint": "Đám mây là vài hình tròn trắng chồng lên nhau. Con chim là hai cung tròn từ 180 tới 360 đặt sát nhau."
+    },
+    {
+      "id": "ngoi-nha",
+      "title": "🏠 Ngôi nhà",
+      "level": 1,
+      "code": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_rect(0, 480, 600, 120, \"green\")\ndraw_rect(150, 280, 300, 220, \"khaki\")\ndraw_triangle(120, 280, 300, 140, 480, 280, \"brown\")\ndraw_rect(270, 380, 60, 120, \"sienna\")\ndraw_rect(180, 320, 60, 60, \"lightblue\")\ndraw_rect(360, 320, 60, 60, \"lightblue\")\ndraw_circle(318, 440, 5, \"gold\")\n",
+      "hint": "Đáy mái và đỉnh thân nhà cùng nằm ở y = 280. Cửa ra vào đứng sát mặt cỏ."
+    },
+    {
+      "id": "gia-dinh",
+      "title": "👨‍👩‍👧 Gia đình ba người",
+      "level": 2,
+      "code": "from pyquest import *\n\nclear(\"lightyellow\")\ndraw_rect(0, 480, 600, 120, \"lightgreen\")\ndraw_ellipse(150, 380, 90, 180, \"steelblue\")\ndraw_circle(150, 250, 40, \"peachpuff\")\ndraw_circle(136, 242, 5, \"black\")\ndraw_circle(164, 242, 5, \"black\")\ndraw_arc(150, 255, 18, 0, 180, \"black\")\ndraw_ellipse(300, 390, 90, 160, \"orchid\")\ndraw_circle(300, 270, 38, \"peachpuff\")\ndraw_circle(287, 262, 5, \"black\")\ndraw_circle(313, 262, 5, \"black\")\ndraw_arc(300, 275, 17, 0, 180, \"black\")\ndraw_ellipse(430, 430, 60, 100, \"orange\")\ndraw_circle(430, 350, 28, \"peachpuff\")\ndraw_circle(421, 344, 4, \"black\")\ndraw_circle(439, 344, 4, \"black\")\ndraw_arc(430, 354, 12, 0, 180, \"black\")\n",
+      "hint": "Mỗi người: thân là hình elip, đầu là hình tròn ngay trên thân, miệng là cung từ 0 tới 180."
+    },
+    {
+      "id": "cau-vong-doi",
+      "title": "🌈 Cầu vồng trên đồi",
+      "level": 2,
+      "code": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_circle(300, 450, 260, \"red\")\ndraw_circle(300, 450, 230, \"orange\")\ndraw_circle(300, 450, 200, \"yellow\")\ndraw_circle(300, 450, 170, \"green\")\ndraw_circle(300, 450, 140, \"blue\")\ndraw_circle(300, 450, 110, \"purple\")\ndraw_circle(300, 450, 80, \"skyblue\")\ndraw_ellipse(150, 560, 500, 260, \"forestgreen\")\ndraw_ellipse(470, 580, 500, 240, \"seagreen\")\n",
+      "hint": "Hình tròn to vẽ trước, nhỏ vẽ sau. Vòng cuối tô màu trời. Hai ngọn đồi là hai hình elip to che chân cầu vồng."
+    },
+    {
+      "id": "nha-cay-ho",
+      "title": "🏡 Nhà và cây bên hồ",
+      "level": 3,
+      "code": "from pyquest import *\n\nclear(\"skyblue\")\ndraw_circle(90, 90, 50, \"gold\")\ndraw_rect(0, 380, 600, 220, \"yellowgreen\")\ndraw_ellipse(420, 500, 300, 110, \"dodgerblue\")\ndraw_rect(60, 250, 180, 150, \"wheat\")\ndraw_triangle(40, 250, 150, 160, 260, 250, \"firebrick\")\ndraw_rect(125, 320, 50, 80, \"saddlebrown\")\ndraw_rect(80, 280, 35, 35, \"lightblue\")\ndraw_rect(390, 230, 24, 120, \"saddlebrown\")\ndraw_circle(402, 200, 60, \"forestgreen\")\ndraw_circle(370, 235, 40, \"forestgreen\")\ndraw_circle(434, 235, 40, \"forestgreen\")\ndraw_ellipse(470, 490, 50, 26, \"white\")\ndraw_circle(492, 470, 13, \"white\")\ndraw_triangle(503, 466, 518, 471, 503, 476, \"orange\")\n",
+      "hint": "Vẽ từ xa tới gần: trời, cỏ, hồ, rồi tới nhà và cây. Hình vẽ sau sẽ nằm đè lên hình vẽ trước."
+    },
+    {
+      "id": "pho-den-long",
+      "title": "🏮 Phố đèn lồng",
+      "level": 3,
+      "code": "from pyquest import *\n\nclear(\"midnightblue\")\ndraw_circle(520, 50, 30, \"lightyellow\")\ndraw_line(0, 100, 600, 100, \"black\")\nfor i in range(5):\n    draw_line(60 + i * 120, 100, 60 + i * 120, 150, \"black\")\n    draw_ellipse(60 + i * 120, 200, 80, 90, \"red\")\n    draw_rect(40 + i * 120, 150, 40, 10, \"gold\")\n    draw_rect(40 + i * 120, 245, 40, 10, \"gold\")\n    draw_line(60 + i * 120, 255, 60 + i * 120, 290, \"gold\")\ndraw_rect(0, 420, 600, 180, \"saddlebrown\")\nfor i in range(4):\n    draw_rect(50 + i * 150, 470, 60, 60, \"gold\")\n",
+      "hint": "Dùng vòng for: đèn thứ i có x = 60 + i * 120. Viết một đèn trong vòng lặp là được cả năm đèn."
     }
   ]
 }

@@ -292,6 +292,20 @@ describe('CourseSchema and AssetSchema', () => {
   });
 });
 
+test('studio templates: id, title, level 1–3, code and hint; level 4 and duplicate ids are refused', () => {
+  const tpl = { id: 'nha', title: '🏠 Ngôi nhà', level: 1, code: 'x', hint: 'Mái là tam giác.' };
+  const studio = {
+    stage: { width: 600, height: 600 },
+    starter: 'from pyquest import *\n',
+    toolbox: ['pq_import'],
+    challenges: [],
+  };
+  expect(StudioSchema.parse(studio).templates).toEqual([]);
+  expect(StudioSchema.parse({ ...studio, templates: [tpl] }).templates).toHaveLength(1);
+  expect(() => StudioSchema.parse({ ...studio, templates: [{ ...tpl, level: 4 }] })).toThrow();
+  expect(() => StudioSchema.parse({ ...studio, templates: [tpl, tpl] })).toThrow(/duplicate/);
+});
+
 test('AssetSchema: pixel art is marked with pixel: true, anything else is refused', () => {
   const asset = {
     id: 'ui',

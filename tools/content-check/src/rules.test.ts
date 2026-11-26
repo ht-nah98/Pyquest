@@ -480,6 +480,50 @@ def draw():
       expect(errors.join('\n')).toContain('does not survive the blocks round trip');
     });
 
+    describe('templates', () => {
+      const HOUSE =
+        'from pyquest import *\n\nclear("white")\ndraw_circle(100, 100, 50, "red")\n' +
+        'draw_circle(300, 100, 50, "red")\ndraw_circle(500, 100, 50, "red")\n';
+      const tpl = (code: string) => ({
+        templates: [{ id: 'x', title: 'X', level: 1, code, hint: 'Gợi ý.' }],
+      });
+
+      test('a good template has no errors', async () => {
+        expect(await check(studio(tpl(HOUSE)))).toEqual([]);
+      });
+
+      test('a template that fails to run is reported', async () => {
+        const errors = await check(studio(tpl(HOUSE.replace('50, "red")\n', '-1, "red")\n'))));
+        expect(errors.join('\n')).toContain('template "x" fails');
+      });
+
+      test('a template using blocks the studio does not offer is reported', async () => {
+        const errors = await check(studio(tpl(HOUSE + 'draw_line(0, 0, 10, 10, "red")\n')));
+        expect(errors.join('\n')).toMatch(
+          /template "x" uses blocks not in the toolbox: .*pq_draw_line/,
+        );
+      });
+
+      test('a template line that would only be code text (no block) is reported', async () => {
+        const errors = await check(
+          studio(tpl(HOUSE + 'draw_circle(1, 1, 1, "red", border="x")\n')),
+        );
+        expect(errors.join('\n')).toContain('template "x" has code text blocks');
+      });
+
+      test('a template with fewer than 3 shapes is reported', async () => {
+        const errors = await check(
+          studio(tpl('from pyquest import *\n\nclear("white")\ndraw_circle(1, 1, 1, "red")\n')),
+        );
+        expect(errors.join('\n')).toContain('template "x" draws fewer than 3 shapes');
+      });
+
+      test('a template the block editor would change is reported', async () => {
+        const errors = await check(studio(tpl(HOUSE.replace('(100, 100', '(100,100'))));
+        expect(errors.join('\n')).toContain('template "x" does not survive the blocks round trip');
+      });
+    });
+
     test('a starter that fails on the studio stage is reported', async () => {
       const errors = await check(
         studio({ starter: 'from pyquest import *\n\ndraw_circle(300, 300, -1, "orange")\n' }),

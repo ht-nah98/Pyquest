@@ -12,6 +12,8 @@ import {
   CourseSchema,
   LibraryRefSchema,
   StudioSchema,
+  type Studio,
+  type StudioTemplate,
   isOpenLesson,
   parseLesson,
   type Course,
@@ -239,10 +241,65 @@ async function checkStudio(
     stage: studio.stage,
   });
   if (run.error !== undefined) err(where, `starter fails: ${run.error.raw}`);
+  for (const t of studio.templates) await checkTemplate(studio, t, py, (msg) => err(where, msg));
+}
+
+/** Drawn pieces, not the sky, words to the console, sounds or frame marks. */
+const NOT_A_SHAPE = new Set(['clear', 'frame', 'say', 'sound', 'music']);
+
+/**
+ * A 📐 template (spec 2026-11-26 §5.2) is a picture the child can rebuild with the studio's own blocks: it runs on
+ * the studio's stage, keeps its exact text through the block editor, and draws at least 3 shapes.
+ */
+async function checkTemplate(
+  studio: Studio,
+  t: StudioTemplate,
+  py: PyRunner,
+  err: (msg: string) => void,
+): Promise<void> {
+  const name = `template "${t.id}"`;
+  const tree = py.parseBlocks(t.code);
+  const back = tree.ok ? toPython(treeToState(tree.statements)) : null;
+  if (back === null || back.trimEnd() !== t.code.trimEnd())
+    err(`${name} does not survive the blocks round trip`);
+  if (tree.ok) {
+    if (usesCodeText(tree.statements))
+      err(`${name} has code text blocks: every line must be a real block the child can drag`);
+    const missing = [...blockTypes(tree.statements)].filter((b) => !studio.toolbox.includes(b));
+    if (missing.length > 0) err(`${name} uses blocks not in the toolbox: ${missing.join(', ')}`);
+  }
+  const run = await py.runScript({ 'main.py': t.code }, 'main.py', {
+    seed: SEED,
+    maxEvents: 5000,
+    stage: studio.stage,
+  });
+  if (run.error !== undefined) {
+    err(`${name} fails: ${run.error.raw}`);
+    return;
+  }
+  if (run.events.filter((e) => !NOT_A_SHAPE.has(e.t)).length < 3)
+    err(`${name} draws fewer than 3 shapes`);
 }
 
 /** Code text, blank lines and call blocks are never in a toolbox list: they come from the code itself. */
 const NOT_IN_TOOLBOX = new Set(['pq_raw', 'pq_raw_expr', 'pq_call', 'pq_call_expr']);
+
+/** A code-text line that is really code: not a blank line, not a # comment (those show quietly, ADR 0003). */
+const realCodeText = (n: BlockNode): boolean => {
+  const state = n.extraState as { code?: unknown } | undefined;
+  const code = typeof state?.code === 'string' ? state.code.trim() : '';
+  return code !== '' && !code.startsWith('#');
+};
+
+/** True when some line or value of the tree is only code text (pq_raw / pq_raw_expr), not a real block. */
+function usesCodeText(nodes: readonly BlockNode[]): boolean {
+  const raw = (n: BlockNode): boolean =>
+    (n.type === 'pq_raw' && realCodeText(n)) ||
+    n.type === 'pq_raw_expr' ||
+    Object.values(n.inputs ?? {}).some(raw) ||
+    Object.values(n.statements ?? {}).some((list) => list.some(raw));
+  return nodes.some(raw);
+}
 
 /** The toolbox block types a block tree uses, nested blocks too. */
 export function blockTypes(nodes: readonly BlockNode[]): Set<string> {
