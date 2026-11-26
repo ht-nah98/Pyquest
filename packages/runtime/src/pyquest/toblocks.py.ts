@@ -13,6 +13,8 @@ _CALLS = {"print": ("pq_print", ["VALUE"]), "clear": ("pq_clear", ["COLOR"]),
           "draw_rect": ("pq_draw_rect", ["X", "Y", "W", "H", "COLOR"]),
           "draw_image": ("pq_draw_image", ["PATH", "X", "Y"]), "draw_text": ("pq_draw_text", ["TEXT", "X", "Y"]),
           "draw_circle": ("pq_draw_circle", ["X", "Y", "R", "COLOR"]),
+          "draw_ellipse": ("pq_draw_ellipse", ["X", "Y", "W", "H", "COLOR"]),
+          "draw_arc": ("pq_draw_arc", ["X", "Y", "R", "START", "END", "COLOR"]),
           "draw_line": ("pq_draw_line", ["X1", "Y1", "X2", "Y2", "COLOR"]),
           "draw_triangle": ("pq_draw_triangle", ["X1", "Y1", "X2", "Y2", "X3", "Y3", "COLOR"])}
 _SOUNDS = ${JSON.stringify(SOUNDS)}

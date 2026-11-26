@@ -79,6 +79,8 @@ function installGenerators(): void {
   g['pq_draw_text'] = call('draw_text', ['TEXT', 'X', 'Y']);
   g['pq_draw_text_size'] = call('draw_text', ['TEXT', 'X', 'Y', 'SIZE']);
   g['pq_draw_circle'] = call('draw_circle', ['X', 'Y', 'R', 'COLOR']);
+  g['pq_draw_ellipse'] = call('draw_ellipse', ['X', 'Y', 'W', 'H', 'COLOR']);
+  g['pq_draw_arc'] = call('draw_arc', ['X', 'Y', 'R', 'START', 'END', 'COLOR']);
   g['pq_draw_line'] = call('draw_line', ['X1', 'Y1', 'X2', 'Y2', 'COLOR']);
   g['pq_draw_line_width'] = call('draw_line', ['X1', 'Y1', 'X2', 'Y2', 'COLOR', 'WIDTH']);
   g['pq_draw_triangle'] = call('draw_triangle', ['X1', 'Y1', 'X2', 'Y2', 'X3', 'Y3', 'COLOR']);

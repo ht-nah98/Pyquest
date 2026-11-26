@@ -590,6 +590,43 @@ describe('circles, lines and shapes (ADR 0009)', () => {
     );
   });
 
+  test('ellipses, arcs and outlines are compared too (ADR 0013)', () => {
+    const face = (
+      h = 160,
+      color = 'peachpuff',
+      border?: string,
+    ): Extract<DrawEvent, { t: 'ellipse' }> => ({
+      t: 'ellipse',
+      x: 300,
+      y: 200,
+      w: 120,
+      h,
+      color,
+      ...(border === undefined ? {} : { border }),
+    });
+    const smile = (end = 180): Extract<DrawEvent, { t: 'arc' }> => ({
+      t: 'arc',
+      x: 300,
+      y: 230,
+      r: 30,
+      start: 0,
+      end,
+      color: 'red',
+      width: 3,
+    });
+    const model = result([sky, face(), smile()]);
+    const like = (events: RunResult['events']) =>
+      checkGoals([g], result(events), { expected: model })[0]?.ok;
+    expect(like([sky, smile(), face()])).toBe(true);
+    expect(like([sky, face(150), smile()])).toBe(false);
+    expect(like([sky, face(160, 'pink'), smile()])).toBe(false);
+    expect(like([sky, face(160, 'peachpuff', 'black'), smile()])).toBe(false);
+    expect(like([sky, face(), smile(90)])).toBe(false);
+    const s: Goal = { id: 's', label: 'l', kind: 'shifts', var: 'x', by: 10, axis: 'x' };
+    const moved = result([sky, { ...face(), x: 310 }, { ...smile(), x: 310 }]);
+    expect(checkGoals([s], model, { shifted: moved })[0]?.ok).toBe(true);
+  });
+
   test("drewRects: a background box the size of the course's stage does not count", () => {
     const d: Goal = { id: 'd', label: 'l', kind: 'drewRects', min: 1 };
     const square = { t: 'rect', x: 0, y: 0, w: 600, h: 600, color: 'white' } as const;

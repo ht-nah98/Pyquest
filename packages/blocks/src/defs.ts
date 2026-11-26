@@ -221,6 +221,41 @@ const JSON_DEFS = [
     tooltip: 'draw_circle(x, y, bán kính, màu): tô một hình tròn, (x, y) là tâm.',
   },
   {
+    type: 'pq_draw_ellipse',
+    message0: 'vẽ hình elip tâm x %1 y %2 rộng %3 cao %4 màu %5',
+    args0: [
+      { type: 'input_value', name: 'X' },
+      { type: 'input_value', name: 'Y' },
+      { type: 'input_value', name: 'W' },
+      { type: 'input_value', name: 'H' },
+      { type: 'input_value', name: 'COLOR' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DRAW,
+    tooltip:
+      'draw_ellipse(x, y, rộng, cao, màu): tô một hình elip, (x, y) là tâm. Hợp để vẽ mặt, thân, mây.',
+  },
+  {
+    type: 'pq_draw_arc',
+    message0: 'vẽ cung tròn tâm x %1 y %2 bán kính %3 từ góc %4 tới góc %5 màu %6',
+    args0: [
+      { type: 'input_value', name: 'X' },
+      { type: 'input_value', name: 'Y' },
+      { type: 'input_value', name: 'R' },
+      { type: 'input_value', name: 'START' },
+      { type: 'input_value', name: 'END' },
+      { type: 'input_value', name: 'COLOR' },
+    ],
+    inputsInline: true,
+    previousStatement: null,
+    nextStatement: null,
+    colour: DRAW,
+    tooltip:
+      'draw_arc(x, y, bán kính, góc đầu, góc cuối, màu): một phần đường tròn. 0 tới 180 là nụ cười.',
+  },
+  {
     type: 'pq_draw_line',
     message0: 'vẽ đường thẳng từ x %1 y %2 tới x %3 y %4 màu %5',
     args0: [

@@ -399,6 +399,45 @@ describe('sound blocks', () => {
   });
 });
 
+describe('ellipse and arc blocks (ADR 0013)', () => {
+  test.each([
+    ['draw_ellipse(300, 300, 160, 100, "pink")', 'pq_draw_ellipse'],
+    ['draw_ellipse(x, y + 10, w * 2, h, color)', 'pq_draw_ellipse'],
+    ['draw_arc(300, 300, 60, 0, 180, "black")', 'pq_draw_arc'],
+  ])('%j is a real block (%s) and survives the round trip', (source, type) => {
+    const tree = py.parseBlocks(source);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    expect(tree.statements[0]?.type).toBe(type);
+    expect(JSON.stringify(tree.statements)).not.toContain('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test.each([
+    'draw_circle(1, 2, 3, "red", border="black")',
+    'draw_ellipse(1, 2, 3, 4, None, border="red")',
+    'draw_arc(1, 2, 3, 0, 90, "red", 6)',
+    'draw_ellipse(1, 2, 3, 4)',
+  ])('%j stays code text and comes back exactly as typed', (source) => {
+    const tree = py.parseBlocks(source);
+    if (!tree.ok) throw new Error(tree.messageVi);
+    expect(tree.statements[0]?.type).toBe('pq_raw');
+    expect(roundTrip(source).trimEnd()).toBe(source);
+  });
+
+  test('the toolbox blocks give a pink oval and a smile', () => {
+    const tb = toolboxFor(['pq_draw_ellipse', 'pq_draw_arc']);
+    if (tb.kind !== 'categoryToolbox') throw new Error('categories');
+    const blocks = tb.contents[0]?.contents ?? [];
+    const py = blocks.map((b) =>
+      toPython({ blocks: { languageVersion: 0, blocks: [{ ...b, x: 0, y: 0 }] } }),
+    );
+    expect(py).toEqual([
+      'draw_ellipse(300, 300, 160, 100, "pink")\n',
+      'draw_arc(300, 300, 60, 0, 180, "black")\n',
+    ]);
+  });
+});
+
 describe('coordinate drawing blocks (ADR 0009)', () => {
   const first = (src: string) => {
     const tree = py.parseBlocks(src);

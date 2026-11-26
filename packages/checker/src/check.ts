@@ -76,6 +76,10 @@ type Shape = { t: string; x: number; y: number; rest: string };
 const offsets = (x: number, y: number, points: readonly (readonly [number, number])[]): string =>
   points.map(([px, py]) => `${String(px - x)},${String(py - y)}`).join(' ');
 
+/** A shape's fill colour and, when it has one, its outline colour (ADR 0013). */
+const paint = (e: { color: string; border?: string }) =>
+  e.border === undefined ? e.color : `${e.color} border ${e.border}`;
+
 /**
  * The visible pieces of a run (boxes, pictures, words, circles, lines, shapes) for comparing two drawings.
  * (x, y) is a piece's place: a line's start, a shape's first corner; the rest of it is kept relative to that.
@@ -84,7 +88,16 @@ function pieces(events: readonly DrawEvent[]): Shape[] {
   const out: Shape[] = [];
   for (const e of events) {
     if (e.t === 'rect')
-      out.push({ t: e.t, x: e.x, y: e.y, rest: `${String(e.w)}x${String(e.h)} ${e.color}` });
+      out.push({ t: e.t, x: e.x, y: e.y, rest: `${String(e.w)}x${String(e.h)} ${paint(e)}` });
+    else if (e.t === 'ellipse')
+      out.push({ t: e.t, x: e.x, y: e.y, rest: `${String(e.w)}x${String(e.h)} ${paint(e)}` });
+    else if (e.t === 'arc')
+      out.push({
+        t: e.t,
+        x: e.x,
+        y: e.y,
+        rest: `${String(e.r)} ${String(e.start)} ${String(e.end)} ${String(e.width)} ${e.color}`,
+      });
     else if (e.t === 'sprite')
       out.push({
         t: e.t,
@@ -95,7 +108,7 @@ function pieces(events: readonly DrawEvent[]): Shape[] {
     else if (e.t === 'text')
       out.push({ t: e.t, x: e.x, y: e.y, rest: `${e.text} ${String(e.size)}` });
     else if (e.t === 'circle')
-      out.push({ t: e.t, x: e.x, y: e.y, rest: `${String(e.r)} ${e.color}` });
+      out.push({ t: e.t, x: e.x, y: e.y, rest: `${String(e.r)} ${paint(e)}` });
     else if (e.t === 'line')
       out.push({
         t: e.t,
@@ -105,7 +118,7 @@ function pieces(events: readonly DrawEvent[]): Shape[] {
       });
     else if (e.t === 'polygon') {
       const [x, y] = e.points[0] ?? [0, 0];
-      out.push({ t: e.t, x, y, rest: `${offsets(x, y, e.points.slice(1))} ${e.color}` });
+      out.push({ t: e.t, x, y, rest: `${offsets(x, y, e.points.slice(1))} ${paint(e)}` });
     }
   }
   return out;
