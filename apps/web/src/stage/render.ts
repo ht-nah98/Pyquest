@@ -41,6 +41,24 @@ export function resetStage(ctx: CanvasRenderingContext2D, size: StageSize): void
   ctx.fillRect(0, 0, size.width, size.height);
 }
 
+/** color=None in Python: the shape has only its outline. */
+const NONE = 'none';
+/** The outline of border= (ADR 0013). */
+const BORDER_WIDTH = 3;
+
+/** Fills the path just made (unless its colour is 'none'), then draws its outline when it has one. */
+function paint(ctx: CanvasRenderingContext2D, color: string, border: string | undefined): void {
+  if (color !== NONE) {
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+  if (border === undefined) return;
+  ctx.strokeStyle = border;
+  ctx.lineWidth = BORDER_WIDTH;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+}
+
 /** Draws one event in stage coordinates (origin top-left, y down). 'say' and 'frame' are not drawn here. */
 export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent, size: StageSize): void {
   switch (e.t) {
@@ -49,14 +67,32 @@ export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent, size: Sta
       ctx.fillRect(0, 0, size.width, size.height);
       return;
     case 'rect':
-      ctx.fillStyle = e.color;
-      ctx.fillRect(e.x, e.y, e.w, e.h);
+      if (e.border === undefined && e.color !== NONE) {
+        ctx.fillStyle = e.color;
+        ctx.fillRect(e.x, e.y, e.w, e.h);
+        return;
+      }
+      ctx.beginPath();
+      ctx.rect(e.x, e.y, e.w, e.h);
+      paint(ctx, e.color, e.border);
       return;
     case 'circle':
-      ctx.fillStyle = e.color;
       ctx.beginPath();
       ctx.arc(e.x, e.y, Math.max(0, e.r), 0, Math.PI * 2);
-      ctx.fill();
+      paint(ctx, e.color, e.border);
+      return;
+    case 'ellipse':
+      ctx.beginPath();
+      ctx.ellipse(e.x, e.y, Math.max(0, e.w) / 2, Math.max(0, e.h) / 2, 0, 0, Math.PI * 2);
+      paint(ctx, e.color, e.border);
+      return;
+    case 'arc':
+      ctx.strokeStyle = e.color;
+      ctx.lineWidth = e.width;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, Math.max(0, e.r), (e.start * Math.PI) / 180, (e.end * Math.PI) / 180);
+      ctx.stroke();
       return;
     case 'line':
       ctx.strokeStyle = e.color;
@@ -70,12 +106,11 @@ export function drawEvent(ctx: CanvasRenderingContext2D, e: DrawEvent, size: Sta
     case 'polygon': {
       const [first, ...rest] = e.points;
       if (first === undefined) return;
-      ctx.fillStyle = e.color;
       ctx.beginPath();
       ctx.moveTo(first[0], first[1]);
       for (const [x, y] of rest) ctx.lineTo(x, y);
       ctx.closePath();
-      ctx.fill();
+      paint(ctx, e.color, e.border);
       return;
     }
     case 'text':

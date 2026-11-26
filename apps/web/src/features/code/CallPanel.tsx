@@ -6,15 +6,23 @@ const LEAVES_SHOWN = 8;
 /** A drawing order written back as the library call that made it, with the numbers already worked out. */
 export function eventAsCall(e: DrawEvent): string | null {
   const n = (v: number) => String(v);
+  /** The colour argument, then border= when the shape has an outline. */
+  const paint = (color: string, border?: string) =>
+    (color === 'none' ? 'None' : `"${color}"`) +
+    (border === undefined ? '' : `, border="${border}"`);
   switch (e.t) {
     case 'rect':
-      return `draw_rect(${n(e.x)}, ${n(e.y)}, ${n(e.w)}, ${n(e.h)}, "${e.color}")`;
+      return `draw_rect(${n(e.x)}, ${n(e.y)}, ${n(e.w)}, ${n(e.h)}, ${paint(e.color, e.border)})`;
     case 'circle':
-      return `draw_circle(${n(e.x)}, ${n(e.y)}, ${n(e.r)}, "${e.color}")`;
+      return `draw_circle(${n(e.x)}, ${n(e.y)}, ${n(e.r)}, ${paint(e.color, e.border)})`;
+    case 'ellipse':
+      return `draw_ellipse(${n(e.x)}, ${n(e.y)}, ${n(e.w)}, ${n(e.h)}, ${paint(e.color, e.border)})`;
+    case 'arc':
+      return `draw_arc(${n(e.x)}, ${n(e.y)}, ${n(e.r)}, ${n(e.start)}, ${n(e.end)}, "${e.color}", ${n(e.width)})`;
     case 'line':
       return `draw_line(${n(e.x1)}, ${n(e.y1)}, ${n(e.x2)}, ${n(e.y2)}, "${e.color}", ${n(e.width)})`;
     case 'polygon':
-      return `draw_polygon([${e.points.map(([x, y]) => `(${n(x)}, ${n(y)})`).join(', ')}], "${e.color}")`;
+      return `draw_polygon([${e.points.map(([x, y]) => `(${n(x)}, ${n(y)})`).join(', ')}], ${paint(e.color, e.border)})`;
     case 'sprite':
       return `draw_image("images/${e.sprite}.png", ${n(e.x)}, ${n(e.y)}${e.flip === true ? ', flip=True' : ''})`;
     case 'text':

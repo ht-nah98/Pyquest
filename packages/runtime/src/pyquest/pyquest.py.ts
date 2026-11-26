@@ -15,7 +15,7 @@ HEIGHT = 600
 __all__ = [
     "WIDTH", "HEIGHT", "clear", "draw_rect", "draw_image", "draw_text", "key_pressed", "random_int", "print",
     "play_sound", "play_music", "stop_music", "draw_circle", "draw_line", "draw_triangle", "draw_polygon",
-    "mouse_x", "mouse_y", "clicked",
+    "draw_ellipse", "draw_arc", "mouse_x", "mouse_y", "clicked",
 ]
 
 # Made by the page itself (8-bit synth): the names are the whole list, there are no sound files.
@@ -82,10 +82,19 @@ def clear(color="skyblue"):
     _emit({"t": "clear", "color": str(color)})
 
 
-def draw_rect(x, y, w, h, color="green"):
-    """Fill a box w wide and h tall, its top-left corner at (x, y)."""
-    _emit({"t": "rect", "x": _num(x, "x"), "y": _num(y, "y"), "w": _num(w, "w"), "h": _num(h, "h"),
-           "color": str(color)})
+def _paint(event, color, border):
+    """Adds the fill and the outline to a shape. color=None: only the outline (border= says its colour)."""
+    if color is None and border is None:
+        raise PyQuestError('color=None là không tô màu, nên cần border="màu viền"')
+    event["color"] = "none" if color is None else str(color)
+    if border is not None:
+        event["border"] = str(border)
+    _emit(event)
+
+
+def draw_rect(x, y, w, h, color="green", border=None):
+    """Fill a box w wide and h tall, its top-left corner at (x, y). border="black" adds an outline."""
+    _paint({"t": "rect", "x": _num(x, "x"), "y": _num(y, "y"), "w": _num(w, "w"), "h": _num(h, "h")}, color, border)
 
 
 def draw_text(text, x, y, size=24, color="white"):
@@ -94,12 +103,39 @@ def draw_text(text, x, y, size=24, color="white"):
            "color": str(color)})
 
 
-def draw_circle(x, y, r, color="orange"):
-    """Fill a circle with its centre at (x, y) and radius r."""
+def _radius(r):
     r = _num(r, "r")
     if r < 0:
         raise PyQuestError("Bán kính r không được nhỏ hơn 0")
-    _emit({"t": "circle", "x": _num(x, "x"), "y": _num(y, "y"), "r": r, "color": str(color)})
+    return r
+
+
+def draw_circle(x, y, r, color="orange", border=None):
+    """Fill a circle with its centre at (x, y) and radius r. border="black" adds an outline."""
+    r = _radius(r)
+    _paint({"t": "circle", "x": _num(x, "x"), "y": _num(y, "y"), "r": r}, color, border)
+
+
+def draw_ellipse(x, y, w, h, color="pink", border=None):
+    """Fill an oval with its centre at (x, y), w wide and h tall. border="black" adds an outline."""
+    event = {"t": "ellipse", "x": _num(x, "x"), "y": _num(y, "y"), "w": _num(w, "w"), "h": _num(h, "h")}
+    if event["w"] < 0 or event["h"] < 0:
+        raise PyQuestError("Chiều rộng w và chiều cao h không được nhỏ hơn 0")
+    _paint(event, color, border)
+
+
+def draw_arc(x, y, r, start, end, color="black", width=3):
+    """Draw part of a circle's edge, centre (x, y), from angle start to angle end in degrees.
+    0 is to the right and angles turn clockwise, so draw_arc(x, y, 15, 0, 180) is a smile."""
+    r = _radius(r)
+    event = {"t": "arc", "x": _num(x, "x"), "y": _num(y, "y"), "r": r, "start": _num(start, "start"),
+             "end": _num(end, "end")}
+    width = _num(width, "width")
+    if width <= 0:
+        raise PyQuestError("Độ dày width phải lớn hơn 0")
+    event["color"] = str(color)
+    event["width"] = width
+    _emit(event)
 
 
 def draw_line(x1, y1, x2, y2, color="black", width=3):
@@ -118,19 +154,19 @@ def _corner(point):
     return [_num(point[0], "x"), _num(point[1], "y")]
 
 
-def draw_polygon(points, color="purple"):
-    """Fill a shape through the corners in points, a list of (x, y) pairs, in order."""
+def draw_polygon(points, color="purple", border=None):
+    """Fill a shape through the corners in points, a list of (x, y) pairs, in order. border= adds an outline."""
     if not isinstance(points, (list, tuple)):
         raise PyQuestError("points phải là một danh sách các góc (x, y)")
     if len(points) < 3:
         raise PyQuestError("Một hình cần ít nhất 3 góc")
-    _emit({"t": "polygon", "points": [_corner(p) for p in points], "color": str(color)})
+    _paint({"t": "polygon", "points": [_corner(p) for p in points]}, color, border)
 
 
-def draw_triangle(x1, y1, x2, y2, x3, y3, color="purple"):
-    """Fill a triangle with corners (x1, y1), (x2, y2) and (x3, y3)."""
+def draw_triangle(x1, y1, x2, y2, x3, y3, color="purple", border=None):
+    """Fill a triangle with corners (x1, y1), (x2, y2) and (x3, y3). border= adds an outline."""
     draw_polygon([(_num(x1, "x1"), _num(y1, "y1")), (_num(x2, "x2"), _num(y2, "y2")),
-                  (_num(x3, "x3"), _num(y3, "y3"))], color)
+                  (_num(x3, "x3"), _num(y3, "y3"))], color, border)
 
 
 def _closest_asset(asset):

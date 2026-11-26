@@ -322,6 +322,68 @@ describe('coordinate drawing (draw_circle, draw_line, draw_triangle, draw_polygo
     expect(r.error?.messageVi).toContain(words);
   });
 
+  test('draw_ellipse and draw_arc record their events, with defaults', async () => {
+    const r = await run(
+      'draw_ellipse(300, 200, 80, 40)\ndraw_ellipse(1, 2, 3, 4, "red")\ndraw_arc(300, 300, 15, 0, 180)\n' +
+        'draw_arc(1, 2, 3, 90, 270, "blue", 6)',
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.events).toEqual([
+      { t: 'ellipse', x: 300, y: 200, w: 80, h: 40, color: 'pink' },
+      { t: 'ellipse', x: 1, y: 2, w: 3, h: 4, color: 'red' },
+      { t: 'arc', x: 300, y: 300, r: 15, start: 0, end: 180, color: 'black', width: 3 },
+      { t: 'arc', x: 1, y: 2, r: 3, start: 90, end: 270, color: 'blue', width: 6 },
+    ]);
+  });
+
+  test('border= draws an outline, and color=None leaves the inside empty', async () => {
+    const r = await run(
+      'draw_circle(10, 10, 5, "red", border="black")\ndraw_rect(0, 0, 5, 5, None, border="navy")\n' +
+        'draw_ellipse(1, 1, 2, 2, border="gold")\ndraw_triangle(0, 0, 1, 0, 0, 1, "teal", border="white")\n' +
+        'draw_polygon([(0, 0), (1, 0), (0, 1)], None, border="red")\ndraw_circle(1, 1, 1)',
+    );
+    expect(r.error).toBeUndefined();
+    expect(r.events).toEqual([
+      { t: 'circle', x: 10, y: 10, r: 5, color: 'red', border: 'black' },
+      { t: 'rect', x: 0, y: 0, w: 5, h: 5, color: 'none', border: 'navy' },
+      { t: 'ellipse', x: 1, y: 1, w: 2, h: 2, color: 'pink', border: 'gold' },
+      {
+        t: 'polygon',
+        points: [
+          [0, 0],
+          [1, 0],
+          [0, 1],
+        ],
+        color: 'teal',
+        border: 'white',
+      },
+      {
+        t: 'polygon',
+        points: [
+          [0, 0],
+          [1, 0],
+          [0, 1],
+        ],
+        color: 'none',
+        border: 'red',
+      },
+      { t: 'circle', x: 1, y: 1, r: 1, color: 'orange' },
+    ]);
+  });
+
+  test.each([
+    ['draw_ellipse(0, 0, -1, 5)', 'không được nhỏ hơn 0'],
+    ['draw_ellipse(0, 0, 5, "a")', 'h phải là một số'],
+    ['draw_circle(0, 0, 5, None)', 'cần border'],
+    ['draw_arc(0, 0, 5, "a", 90)', 'start phải là một số'],
+    ['draw_arc(0, 0, 5, 0, 90, width=0)', 'lớn hơn 0'],
+    ['draw_arc(0, 0, -5, 0, 90)', 'Bán kính'],
+  ])('%s is a short Vietnamese error too', async (code, words) => {
+    const r = await run(code);
+    expect(r.error?.line).toBe(2);
+    expect(r.error?.messageVi).toContain(words);
+  });
+
   test("a shape drawn inside the child's function knows which call drew it", async () => {
     const r = await run(
       'def sun(x):\n    draw_circle(x, 80, 40, "gold")\n    draw_triangle(x, 0, x, 1, 0, 1)\nsun(300)',

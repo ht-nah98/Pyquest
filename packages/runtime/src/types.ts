@@ -17,10 +17,32 @@ export type DrawEvent =
       /** Left and right swapped; absent = as drawn. */
       mirror?: true;
     } & By)
-  | ({ t: 'rect'; x: number; y: number; w: number; h: number; color: string } & By)
+  /** color 'none' (color=None): only the outline; border: an outline 3 thick in that colour (ADR 0013). */
+  | ({ t: 'rect'; x: number; y: number; w: number; h: number; color: string; border?: string } & By)
   | ({ t: 'text'; text: string; x: number; y: number; size: number; color: string } & By)
   /** draw_circle(x, y, r, color): a filled circle, (x, y) is its centre. */
-  | ({ t: 'circle'; x: number; y: number; r: number; color: string } & By)
+  | ({ t: 'circle'; x: number; y: number; r: number; color: string; border?: string } & By)
+  /** draw_ellipse(x, y, w, h, color): an oval, (x, y) is its centre (ADR 0013). */
+  | ({
+      t: 'ellipse';
+      x: number;
+      y: number;
+      w: number;
+      h: number;
+      color: string;
+      border?: string;
+    } & By)
+  /** draw_arc(x, y, r, start, end, color, width): part of a circle's edge; degrees, 0 right, clockwise. */
+  | ({
+      t: 'arc';
+      x: number;
+      y: number;
+      r: number;
+      start: number;
+      end: number;
+      color: string;
+      width: number;
+    } & By)
   /** draw_line(x1, y1, x2, y2, color, width): a straight line with round ends. */
   | ({
       t: 'line';
@@ -32,7 +54,7 @@ export type DrawEvent =
       width: number;
     } & By)
   /** draw_triangle / draw_polygon: a filled shape through these corners, in order. */
-  | ({ t: 'polygon'; points: [number, number][]; color: string } & By)
+  | ({ t: 'polygon'; points: [number, number][]; color: string; border?: string } & By)
   | ({ t: 'say'; text: string } & By)
   /** play_sound: a short 8-bit sound, once. */
   | ({ t: 'sound'; name: string } & By)

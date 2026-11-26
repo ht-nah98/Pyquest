@@ -56,6 +56,15 @@ test('drawings read back as Python', () => {
   expect(eventAsCall({ t: 'circle', x: 300, y: 300, r: 50, color: 'gold' })).toBe(
     'draw_circle(300, 300, 50, "gold")',
   );
+  expect(eventAsCall({ t: 'ellipse', x: 1, y: 2, w: 3, h: 4, color: 'none', border: 'red' })).toBe(
+    'draw_ellipse(1, 2, 3, 4, None, border="red")',
+  );
+  expect(
+    eventAsCall({ t: 'arc', x: 1, y: 2, r: 3, start: 0, end: 180, color: 'black', width: 3 }),
+  ).toBe('draw_arc(1, 2, 3, 0, 180, "black", 3)');
+  expect(eventAsCall({ t: 'rect', x: 1, y: 2, w: 3, h: 4, color: 'red', border: 'navy' })).toBe(
+    'draw_rect(1, 2, 3, 4, "red", border="navy")',
+  );
   expect(eventAsCall({ t: 'line', x1: 0, y1: 0, x2: 10, y2: 20, color: 'black', width: 3 })).toBe(
     'draw_line(0, 0, 10, 20, "black", 3)',
   );
