@@ -6,6 +6,8 @@ import {
   shiftSource,
   type CheckExtra,
   type GoalResult,
+  matchScore,
+  type SpriteSizes,
 } from '@pyquest/checker';
 import type { Exercise } from '@pyquest/content-schema';
 import type { Call, DrawEvent, RunResult } from '@pyquest/runtime';
@@ -29,12 +31,21 @@ import { EditorPanes, type EditorPanesHandle } from './EditorPanes';
 import { ErrorBubble, VarWatch } from './RunPanel';
 import { RunButton } from './RunButton';
 import { TaskCard } from './TaskCard';
+import { AnswerPanel } from './AnswerPanel';
 import { useSession } from '../../app/session';
 
 /**
  * The code screen (layout B, spec §8): blocks | Python side by side (~70%), a narrow stage column with
  * ▶ Chạy, ⛶ fullscreen, variables and goals. Below 1280 px (iPad) the stage becomes a strip at the bottom.
  */
+/** 🔑 Xem đáp án shows after this many runs that did not pass (HLV, 26/11/2026). */
+const ANSWER_AFTER = 5;
+
+/** Picture sizes for 'matches', the same the content check uses (the library's manifest). */
+const SPRITES: SpriteSizes = Object.fromEntries(
+  catalog.assets().map((a) => [a.id, { width: a.width, height: a.height }]),
+);
+
 export function CodeScreen() {
   const { lessonId = '' } = useParams();
   const lesson = catalog.openLesson(lessonId);
@@ -98,8 +109,12 @@ function CodeEditor({
   const [goals, setGoals] = useState<GoalResult[]>([]);
   const [running, setRunning] = useState(false);
   const [runs, setRuns] = useState(0);
-  /** Right column: the task card or the 📞 calls panel. */
-  const [panel, setPanel] = useState<'task' | 'calls'>('task');
+  /** Right column: the task card, the 📞 calls panel or the 🔑 answer. */
+  const [panel, setPanel] = useState<'task' | 'calls' | 'answer'>('task');
+  /** Runs graded and not passed: 🔑 Xem đáp án shows from ANSWER_AFTER on (spec 2026-11-26 lesson-likeness). */
+  const [failedRuns, setFailedRuns] = useState(0);
+  /** 'matches': how much the last run looks like the solution, 0–100. */
+  const [score, setScore] = useState<number | null>(null);
   const [picked, setPicked] = useState<number | null>(null);
   /** Game mode shows the calls of the test run's last frame: ids from here on. */
   const [callFrom, setCallFrom] = useState(0);
@@ -122,6 +137,7 @@ function CodeEditor({
       if (lesson === undefined) return;
       const res = checkGoals(code.goals, r, { ...extra, stage: size });
       setGoals(res);
+      if (!res.every((g) => g.ok)) setFailedRuns((n) => n + 1);
       if (r.error !== undefined) uiSound('oops');
       else if (res.every((g) => g.ok)) uiSound('ok');
       if (res.every((g) => g.ok)) {
@@ -305,7 +321,11 @@ function CodeEditor({
       grade(r, {
         ...(shifted === undefined ? {} : { shifted }),
         ...(solution === undefined ? {} : { expected: solution }),
+        sprites: SPRITES,
       });
+      setScore(
+        solution === undefined ? null : matchScore(r, solution, { stage: size, sprites: SPRITES }),
+      );
     } catch (e) {
       // ■ Dừng, leaving and a newer run bump the token; anything else is Python breaking.
       if (mine !== runToken.current) return;
@@ -379,7 +399,15 @@ function CodeEditor({
               ))}
             </div>
           )}
-          {panel === 'calls' && showCalls ? (
+          {panel === 'answer' ? (
+            <AnswerPanel
+              files={code.solution}
+              main={main}
+              onClose={() => {
+                setPanel('task');
+              }}
+            />
+          ) : panel === 'calls' && showCalls ? (
             <section
               className="flex max-h-[38%] min-h-0 flex-col overflow-y-auto rounded-[12px] border-2 border-ink bg-paper p-3"
               data-testid="calls-card"
@@ -388,6 +416,7 @@ function CodeEditor({
             </section>
           ) : (
             <TaskCard
+              score={score}
               title={code.title}
               text={code.task}
               goals={code.goals}
@@ -418,6 +447,19 @@ function CodeEditor({
                 className={ghostOn ? 'bg-sun' : ''}
               >
                 👀
+              </Button>
+            )}
+            {(isCoach || failedRuns >= ANSWER_AFTER) && (
+              <Button
+                title="Xem code đáp án để so với code của em"
+                onClick={() => {
+                  setPanel('answer');
+                }}
+                data-testid="answer-open"
+                aria-pressed={panel === 'answer'}
+                className={panel === 'answer' ? 'bg-sun' : ''}
+              >
+                🔑<span className="max-[1279px]:hidden"> Đáp án</span>
               </Button>
             )}
           </div>

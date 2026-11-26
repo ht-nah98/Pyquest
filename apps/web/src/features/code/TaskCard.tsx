@@ -1,9 +1,12 @@
 import type { Goal } from '@pyquest/content-schema';
-import type { GoalResult } from '@pyquest/checker';
+import { MATCH_PASS, type GoalResult } from '@pyquest/checker';
 import { useState } from 'react';
 import { GoalList } from './RunPanel';
 
-/** What to do on this screen: the code step's brief, the goals (✅/⬜) and 💡 hints one at a time. */
+/**
+ * What to do on this screen: the code step's brief, the goals (✅/⬜), how much the picture looks like the model,
+ * and 💡 hints one at a time.
+ */
 export function TaskCard({
   title,
   text,
@@ -12,6 +15,7 @@ export function TaskCard({
   hints,
   walkthrough,
   runs,
+  score = null,
 }: {
   title: string | undefined;
   text: string | undefined;
@@ -21,6 +25,8 @@ export function TaskCard({
   walkthrough: readonly string[];
   /** How many times ▶ Chạy was pressed: the first run folds the steps so the stage gets the room. */
   runs: number;
+  /** 'matches': the last run's likeness to the solution, 0–100; null before a run. */
+  score?: number | null;
 }) {
   const [shown, setShown] = useState(0);
   const [stepsOpen, setStepsOpen] = useState(true);
@@ -56,6 +62,14 @@ export function TaskCard({
         </details>
       )}
       <GoalList goals={goals} results={results} />
+      {score !== null && (
+        <p
+          className={`text-[15px] font-bold ${score >= MATCH_PASS ? 'text-go' : 'text-ink-soft'}`}
+          data-testid="match-score"
+        >
+          👀 Giống mẫu {score}% · cần {MATCH_PASS}%
+        </p>
+      )}
       {hints.slice(0, shown).map((h, i) => (
         <p key={h} className="rounded-[8px] bg-sun/40 px-2 py-1 text-[15px]" data-testid="hint">
           💡 {i + 1}. {h}
