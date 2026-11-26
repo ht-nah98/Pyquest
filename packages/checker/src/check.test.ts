@@ -1,7 +1,15 @@
 import type { Goal } from '@pyquest/content-schema';
 import type { DrawEvent, GameInput, RunResult } from '@pyquest/runtime';
 import { describe, expect, test } from 'vitest';
-import { checkGoals, needsExpected, runGameTest, shiftSource, testInput } from './index';
+import {
+  checkGoals,
+  MATCH_PASS,
+  matchScore,
+  needsExpected,
+  runGameTest,
+  shiftSource,
+  testInput,
+} from './index';
 
 const ok: RunResult = {
   events: [
@@ -429,42 +437,58 @@ test('drewRects with at: one of the boxes has its corner at that point', () => {
   expect(checkGoals([g], box(101))[0]?.ok).toBe(false);
 });
 
-describe("matches: the picture is the same as the solution's", () => {
+describe('matches: the picture looks like the solution, ≥ MATCH_PASS % (spec 2026-11-26 lesson-likeness)', () => {
   const g: Goal = { id: 'g', label: 'l', kind: 'matches' };
-  const sky = { t: 'clear', color: 'skyblue' } as const;
-  const box = (x: number, color = 'red') => ({ t: 'rect', x, y: 0, w: 10, h: 10, color }) as const;
-  const want = result([sky, box(0), box(20, 'blue')]);
+  // Bài 5 · Đàn chim: draw_bird is three boxes; the solution draws 5 birds at x = 20 + i * 75, y = 200.
+  const drawBird = (x: number, y: number): DrawEvent[] => [
+    { t: 'rect', x, y: y + 10, w: 30, h: 20, color: 'red' },
+    { t: 'rect', x: x + 30, y: y + 14, w: 8, h: 8, color: 'orange' },
+    { t: 'rect', x: x + 8, y, w: 14, h: 10, color: 'red' },
+  ];
+  const flock = (n: number, y = 200, dx = 0, sky: DrawEvent[] = []) =>
+    result([...sky, ...Array.from({ length: n }, (_, i) => drawBird(20 + i * 75 + dx, y)).flat()]);
+  const want = flock(5);
+  const score = (r: RunResult) => matchScore(r, want);
+  const passes = (r: RunResult) => checkGoals([g], r, { expected: want })[0]?.ok;
 
-  test('same pieces in any order match', () => {
-    expect(checkGoals([g], result([sky, box(20, 'blue'), box(0)]), { expected: want })[0]?.ok).toBe(
-      true,
-    );
+  test('the solution itself is 100% and passes', () => {
+    expect(score(flock(5))).toBe(100);
+    expect(passes(flock(5))).toBe(true);
+    expect(MATCH_PASS).toBe(90);
   });
 
-  test('a piece in another place, colour or size does not match', () => {
-    expect(checkGoals([g], result([sky, box(0), box(30, 'blue')]), { expected: want })[0]?.ok).toBe(
-      false,
-    );
-    expect(checkGoals([g], result([sky, box(0), box(20, 'red')]), { expected: want })[0]?.ok).toBe(
-      false,
-    );
-    expect(checkGoals([g], result([sky, box(0)]), { expected: want })[0]?.ok).toBe(false);
+  test('the same birds 5 px off still pass', () => {
+    expect(passes(flock(5, 205, 5))).toBe(true);
   });
 
-  test('the background colour counts', () => {
-    const night = result([{ t: 'clear', color: 'navy' }, box(0), box(20, 'blue')]);
-    expect(checkGoals([g], night, { expected: want })[0]?.ok).toBe(false);
+  test('one bird missing does not pass', () => {
+    expect(score(flock(4))).toBeLessThan(MATCH_PASS);
+    expect(passes(flock(4))).toBe(false);
   });
 
-  test('an extra copy of a piece does not match', () => {
-    expect(
-      checkGoals([g], result([sky, box(0), box(0), box(20, 'blue')]), { expected: want })[0]?.ok,
-    ).toBe(false);
+  test('the birds at y = 300 instead of 200 do not pass', () => {
+    expect(passes(flock(5, 300))).toBe(false);
   });
 
-  test("without the solution's picture the goal is not met", () => {
+  test('another sky colour loses its 15 points and does not pass', () => {
+    expect(score(flock(5, 200, 0, [{ t: 'clear', color: 'skyblue' }]))).toBe(85);
+  });
+
+  test('a run that broke scores 0; without the solution the goal is not met', () => {
+    expect(score({ ...want, error: { line: 1, messageVi: 'lỗi', raw: 'X' } })).toBe(0);
+    expect(passes({ ...want, error: { line: 1, messageVi: 'lỗi', raw: 'X' } })).toBe(false);
     expect(checkGoals([g], want)[0]?.ok).toBe(false);
     expect(needsExpected([g])).toBe(true);
+  });
+
+  test('order does not matter; pictures use the sizes they are given', () => {
+    expect(score(result([...want.events].reverse()))).toBe(100);
+    const bird: DrawEvent = { t: 'sprite', sprite: 'bird', x: 0, y: 0, frame: 0 };
+    const sprites = { bird: { width: 100, height: 100 } };
+    // 100 × 100 vs the same picture drawn 3 times bigger: far apart once their real size is known.
+    expect(matchScore(result([{ ...bird, scale: 3 }]), result([bird]), { sprites })).toBeLessThan(
+      MATCH_PASS,
+    );
   });
 });
 
@@ -556,14 +580,12 @@ describe('circles, lines and shapes (ADR 0009)', () => {
     expect(same([sky, roof(250), ray(50), sun(300)])).toBe(true);
   });
 
-  test('a different circle, line or shape does not match', () => {
-    expect(same([sky, sun(301), ray(50), roof(250)])).toBe(false);
-    expect(same([sky, sun(300, 60), ray(50), roof(250)])).toBe(false);
+  test('a circle, line or shape a few pixels off matches; a big change does not', () => {
+    expect(same([sky, sun(303), ray(52), roof(253)])).toBe(true);
+    expect(same([sky, sun(200), ray(50), roof(250)])).toBe(false);
+    expect(same([sky, sun(300, 90), ray(50), roof(250)])).toBe(false);
     expect(same([sky, sun(300, 50, 'red'), ray(50), roof(250)])).toBe(false);
-    expect(same([sky, sun(300), ray(60), roof(250)])).toBe(false);
-    expect(same([sky, sun(300), ray(50, 8), roof(250)])).toBe(false);
-    expect(same([sky, sun(300), ray(50, 3, 'red'), roof(250)])).toBe(false);
-    expect(same([sky, sun(300), ray(50), roof(200)])).toBe(false);
+    expect(same([sky, sun(300), ray(50), roof(150)])).toBe(false);
     expect(same([sky, sun(300), ray(50), roof(250, 'teal')])).toBe(false);
     expect(same([sky, sun(300), ray(50)])).toBe(false);
   });
@@ -618,10 +640,10 @@ describe('circles, lines and shapes (ADR 0009)', () => {
     const like = (events: RunResult['events']) =>
       checkGoals([g], result(events), { expected: model })[0]?.ok;
     expect(like([sky, smile(), face()])).toBe(true);
-    expect(like([sky, face(150), smile()])).toBe(false);
+    expect(like([sky, face(156), smile()])).toBe(true);
+    expect(like([sky, face(80), smile()])).toBe(false);
     expect(like([sky, face(160, 'pink'), smile()])).toBe(false);
-    expect(like([sky, face(160, 'peachpuff', 'black'), smile()])).toBe(false);
-    expect(like([sky, face(), smile(90)])).toBe(false);
+    expect(like([sky, face(160, 'none', 'black'), smile()])).toBe(false);
     const s: Goal = { id: 's', label: 'l', kind: 'shifts', var: 'x', by: 10, axis: 'x' };
     const moved = result([sky, { ...face(), x: 310 }, { ...smile(), x: 310 }]);
     expect(checkGoals([s], model, { shifted: moved })[0]?.ok).toBe(true);

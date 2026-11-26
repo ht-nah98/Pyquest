@@ -1,5 +1,7 @@
 import type { GameTest, Goal } from '@pyquest/content-schema';
 import type { DrawEvent, GameInput, RunResult, StageSize } from '@pyquest/runtime';
+import { likeness } from './likeness';
+import { rasterize, type SpriteSizes } from './raster';
 
 // Same as DEFAULT_STAGE in @pyquest/runtime; importing a value from there would pull Pyodide in.
 const DEFAULT_STAGE: StageSize = { width: 400, height: 600 };
@@ -12,7 +14,28 @@ type Vars = RunResult['vars'];
  * Extra runs some goals compare against: the program with its variable moved, and the solution.
  * stage: the course's stage (ADR 0009); 400 × 600 when absent.
  */
-export type CheckExtra = { shifted?: RunResult; expected?: RunResult; stage?: StageSize };
+export type CheckExtra = {
+  shifted?: RunResult;
+  expected?: RunResult;
+  stage?: StageSize;
+  /** Picture sizes for 'matches' (the library's manifest); an unknown picture counts as 24 × 24. */
+  sprites?: SpriteSizes;
+};
+
+/** 'matches' passes from this likeness on (spec 2026-11-26 lesson-likeness, HLV's choice). */
+export const MATCH_PASS = 90;
+
+/** How much a run's last picture looks like the solution's, 0–100; 0 when the run broke. */
+export function matchScore(r: RunResult, expected: RunResult, extra: CheckExtra = {}): number {
+  if (r.error !== undefined || expected.error !== undefined) return 0;
+  const stage = extra.stage ?? DEFAULT_STAGE;
+  const same = (a: string, b: string) => a === b;
+  return likeness(
+    rasterize(r.events, stage, extra.sprites),
+    rasterize(expected.events, stage, extra.sprites),
+    same,
+  );
+}
 
 /**
  * Pure: grades a finished run against a lesson's goals. Never runs Python itself.
@@ -30,16 +53,6 @@ export function checkGoals(
 /** True when a goal compares with the solution's picture, so the solution must be run too. */
 export function needsExpected(goals: readonly Goal[]): boolean {
   return goals.some((g) => g.kind === 'matches');
-}
-
-/** The last picture of a run as sorted keys: background colour, then every piece. Order of drawing is ignored. */
-function pictureOf(r: RunResult): string[] {
-  const frames = framesOf(r.events);
-  const last = frames[frames.length - 1] ?? [];
-  let sky = '';
-  for (const e of last) if (e.t === 'clear') sky = e.color;
-  const keys = pieces(last).map((p) => `${p.t} ${String(p.x)} ${String(p.y)} ${p.rest}`);
-  return [`clear ${sky}`, ...keys.sort()];
 }
 
 /** Goals that need a second run of the program (see shiftSource). */
@@ -190,12 +203,8 @@ function meets(
 ): boolean {
   const { shifted, expected, stage = DEFAULT_STAGE } = extra;
   switch (goal.kind) {
-    case 'matches': {
-      if (expected === undefined || r.error !== undefined) return false;
-      const a = pictureOf(r);
-      const b = pictureOf(expected);
-      return a.length === b.length && a.every((k, i) => k === b[i]);
-    }
+    case 'matches':
+      return expected !== undefined && matchScore(r, expected, extra) >= MATCH_PASS;
     case 'drewRects': {
       const at = goal.at;
       return framesOf(r.events).some((f) => {

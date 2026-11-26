@@ -88,7 +88,7 @@ export const GoalSchema = z.discriminatedUnion('kind', [
     sprite: z.string().min(1),
     axis: z.enum(['x', 'y']),
   }),
-  /** The last picture equals the solution's: same pieces, places, colours and background; order free. */
+  /** The last picture looks like the solution's: likeness ≥ MATCH_PASS (90), a few pixels off forgiven. */
   z.object({ ...base, kind: z.literal('matches') }),
   // Drawing from the smallest pieces (spec 2026-11-04-from-smallest-pieces).
   /** At least min boxes in one picture; a box covering the whole stage (a background) does not count. */
