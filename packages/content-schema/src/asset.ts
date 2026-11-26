@@ -6,6 +6,8 @@ export const AssetSchema = z.object({
     'bird',
     'pipe',
     'background',
+    // 🎨 Xưởng vẽ backgrounds, 600 × 600 (spec 2026-11-26 §5.4).
+    'bg',
     'ground',
     'ui',
     // The roguelite's pixel art (tools/assets/pixel.py).

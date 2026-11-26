@@ -22,6 +22,7 @@
 | `bird` | 3 khung × 44×40 | tách nền, cắt chung một khung cho 3 hình, thu nhỏ mịn |
 | `pipe` | 76×440 | thân cột thu về rộng 52 (= vùng va chạm) và đặt giữa; lá/đầu cột được tràn hai bên; thiếu chiều cao thì lặp đoạn thân |
 | `background` | 400×600 | phủ kín sân, giữ phần đáy (đất), cắt bớt trời |
+| `bg` | 600×600 | ảnh nền của 🎨 Xưởng vẽ: phủ kín sân vuông, giữ phần giữa (`assets/prompts/07-studio-backgrounds.md`) |
 | `ground` (tự sinh từ nền) | 800×80 | 80 dòng đáy của nền + bản lật gương của nó, nên cuộn vòng không có vết nối |
 
 - Ảnh lưu ở **gấp đôi** cỡ trong game (`SCALE = 2`) và sân chơi vẽ theo độ phân giải thật của màn hình, nên hình vẫn nét

@@ -7,6 +7,7 @@
 - bird: 3 frames side by side, one shared crop box, each frame fitted into BIRD.
 - pipe: the trunk is scaled to TRUNK wide and centred in PILLAR; a crown may overhang the trunk.
 - background: covers 400×600 (bottom kept); its bottom 80 rows + their mirror make a seamless ground.
+- bg: a 🎨 Xưởng vẽ background, covers the square 600×600 stage, middle kept (spec 2026-11-26 §5.4).
 
 Usage:
   npm run assets:clean -- --all                      # every picture listed in assets/raw/library.json
@@ -119,6 +120,19 @@ def clean_background(src: Path, out: Path, ground_out: Path) -> tuple[Path, Path
     return _save(bg, out), _save(ground, ground_out)
 
 
+SQUARE = (600, 600)  # the drawing studio's stage, game units
+
+
+def clean_square(src: Path, out: Path) -> Path:
+    """Covers the studio's square stage: scaled until both sides fit, then the middle is kept."""
+    img = Image.open(src).convert("RGB")
+    W, H = SQUARE[0] * SCALE, SQUARE[1] * SCALE
+    k = max(W / img.width, H / img.height)
+    img = img.resize((round(img.width * k), round(img.height * k)), Image.LANCZOS)
+    left, top = (img.width - W) // 2, (img.height - H) // 2
+    return _save(img.crop((left, top, left + W, top + H)), out)
+
+
 def register(entries: list[dict]) -> None:
     path = LIB / "manifest.json"
     manifest = json.loads(path.read_text()) if path.exists() else {"assets": []}
@@ -137,7 +151,10 @@ def _entry(asset_id: str, group: str, w: int, h: int, frames: int, label: str | 
     return e
 
 
-def process(src: Path, asset_id: str, group: str, label: str | None) -> list[dict]:
+def process(src: Path, asset_id: str, group: str, label: str | None, lib: Path = LIB) -> list[dict]:
+    if group == "bg":
+        clean_square(src, lib / f"{asset_id}.png")
+        return [_entry(asset_id, group, *SQUARE, 1, label)]
     if group == "bird":
         clean_bird(src, LIB / f"{asset_id}.png")
         return [_entry(asset_id, group, *BIRD, 3, label)]
@@ -158,7 +175,7 @@ def main() -> None:
     ap.add_argument("src", type=Path, nargs="?")
     ap.add_argument("--all", action="store_true", help="clean everything in assets/raw/library.json")
     ap.add_argument("--id")
-    ap.add_argument("--group", choices=["bird", "pipe", "background"])
+    ap.add_argument("--group", choices=["bird", "pipe", "background", "bg"])
     ap.add_argument("--label")
     args = ap.parse_args()
     if args.all:

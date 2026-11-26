@@ -30,6 +30,22 @@ def pillar(path: Path) -> None:
 
 
 class CleanTest(unittest.TestCase):
+    def test_a_studio_background_covers_the_square_stage_keeping_the_middle(self):
+        with tempfile.TemporaryDirectory() as d:
+            src = Path(d) / "tall.png"
+            img = Image.new("RGB", (1024, 1536), (90, 160, 230))
+            ImageDraw.Draw(img).rectangle([0, 1400, 1023, 1535], fill=(40, 140, 40))  # ground at the very bottom
+            ImageDraw.Draw(img).rectangle([462, 718, 562, 818], fill=(250, 200, 0))   # sun in the middle
+            img.save(src)
+            entries = clean.process(src, "bg-test", "bg", "Thử", lib=Path(d))
+            self.assertEqual(entries, [{"id": "bg-test", "group": "bg", "file": "bg-test.png", "width": 600,
+                                        "height": 600, "frames": 1, "credit": "ai-generated", "label": "Thử"}])
+            out = Image.open(Path(d) / "bg-test.png").convert("RGB")
+            self.assertEqual(out.size, (600 * S, 600 * S))
+            r, g, b = out.getpixel((600, 600))  # the sun stays in the centre
+            self.assertGreater(r, 200)
+            self.assertLess(b, 80)
+
     def test_white_background_goes_but_an_enclosed_white_belly_stays(self):
         with tempfile.TemporaryDirectory() as d:
             src = Path(d) / "bird.png"
