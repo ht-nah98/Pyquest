@@ -129,7 +129,12 @@ function DrawingEditor({
     if (template === undefined) return Promise.resolve([]);
     modelRun.current ??= python
       .run({ [MAIN]: template.code }, MAIN, { stage: size })
-      .then((r) => r.events);
+      .then((r) => r.events)
+      .catch((e: unknown) => {
+        // Python was stopped or broke mid-run: try again next time instead of keeping the failure.
+        modelRun.current = null;
+        throw e;
+      });
     return modelRun.current;
   };
 
@@ -209,8 +214,12 @@ function DrawingEditor({
       await stage.current?.replay(r.events);
       if (r.error !== undefined) uiSound('oops');
       if (template !== undefined && mine === runToken.current) {
-        const [model] = await Promise.all([modelEvents(), preloadSprites()]);
-        if (mine === runToken.current)
+        // The score is extra: if the template cannot run now, the child's run is still fine.
+        const model = await Promise.all([modelEvents(), preloadSprites()]).then(
+          ([events]) => events,
+          () => null,
+        );
+        if (model !== null && mine === runToken.current)
           setScore(likeness(renderPicture(r.events, size), renderPicture(model, size)));
       }
     } catch (e) {
