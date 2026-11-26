@@ -67,3 +67,22 @@ test('iPad: 📐 pick a template by finger, the faint template and the score fit
   await expectNoPageScroll(page);
   await page.screenshot({ path: `${SHOTS}/studio-trace-ipad.png` });
 });
+
+test('iPad: 🖼️ Kho hình opens by finger, tiles and ➕ are finger-size', async ({ page }) => {
+  await newStudent(page, 'Lan');
+  await page.getByTestId('to-studio').tap();
+  await page.getByTestId('new-drawing').tap();
+  await page.waitForURL(/\/studio\/[a-z0-9]+$/);
+  await pythonReady(page);
+  await page.getByTestId('pictures-toggle').tap();
+  await page.getByTestId('picture-group-cay-hoa').tap();
+  await page.getByTestId('picture-deco-lotus').tap();
+  await expect(page.getByTestId('picture-code')).toContainText('deco-lotus.png');
+  for (const id of ['pictures-toggle', 'picture-group-chim', 'picture-deco-lotus', 'picture-add']) {
+    const box = await page.getByTestId(id).boundingBox();
+    expect(box?.height ?? 0, id).toBeGreaterThanOrEqual(36);
+  }
+  await page.getByTestId('picture-add').tap();
+  await expectNoPageScroll(page);
+  await page.screenshot({ path: `${SHOTS}/studio-pictures-ipad.png` });
+});

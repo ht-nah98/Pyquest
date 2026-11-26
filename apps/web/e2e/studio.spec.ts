@@ -203,3 +203,60 @@ test('studio: 📐 trace a template — faint template, 100% when traced, 👀 t
   await expect(page.getByTestId('ghost-toggle')).toHaveCount(0);
   await expect(page.getByTestId('likeness')).toHaveCount(0);
 });
+
+test('studio: 🖼️ Kho hình shows the pictures, their code, and ➕ adds one to the drawing', async ({
+  page,
+}) => {
+  await newStudent(page);
+  await page.getByTestId('to-studio').click();
+  await page.getByTestId('new-drawing').click();
+  await page.waitForURL(/\/studio\/[a-z0-9]+$/);
+  await pythonReady(page);
+
+  await page.getByTestId('pictures-toggle').click();
+  const panel = page.getByTestId('picture-panel');
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText('Đổi x, y để dời hình');
+  // Over the code, under Blockly's menus (AGENTS.md §9.12): the panel's own edge is on top.
+  const box = await panel.boundingBox();
+  const top = await page.evaluate(
+    (p) =>
+      document.elementFromPoint(p.x + 3, p.y + 40)?.closest('[data-testid="picture-panel"]') !==
+      null,
+    { x: box?.x ?? 0, y: box?.y ?? 0 },
+  );
+  expect(top).toBe(true);
+
+  // 📘 and 🖼️ never cover each other.
+  await page.getByTestId('library-toggle').click();
+  await expect(page.getByTestId('library-panel')).toBeVisible();
+  await expect(panel).toHaveCount(0);
+  await page.getByTestId('pictures-toggle').click();
+  await expect(page.getByTestId('library-panel')).toHaveCount(0);
+
+  await page.getByTestId('picture-group-cay-hoa').click();
+  await page.getByTestId('picture-deco-oak').click();
+  await expect(page.getByTestId('picture-name')).toContainText('Cây sồi');
+  await expect(page.getByTestId('picture-code')).toHaveText(
+    'draw_image("images/deco-oak.png", 268, 268, scale=4)',
+  );
+  await page.getByTestId('picture-group-chim').click();
+  await page.getByTestId('picture-bird-cu').click();
+  await expect(page.getByTestId('picture-code')).toHaveText(
+    'draw_image("images/bird-cu.png", 278, 280)',
+  );
+  await page.screenshot({ path: `${SHOTS}/studio-pictures-1280.png` });
+  await page.getByTestId('picture-add').click();
+  await expect.poll(() => codeText(page)).toContain('draw_image("images/bird-cu.png", 278, 280)\n');
+  expect(
+    (await codeText(page)).trimEnd().endsWith('draw_image("images/bird-cu.png", 278, 280)'),
+  ).toBe(true);
+  await expect(page.locator(BLOCK_TEXT, { hasText: 'images/bird-cu.png' }).first()).toBeVisible();
+
+  await runAndWait(page);
+  await expect(page.getByTestId('run-error')).toHaveCount(0);
+  // The owl is drawn over the orange circle, in the middle of the stage.
+  expect(await colourAt(page, 300, 300)).not.toEqual([255, 165, 0]);
+  await expectNoPageScroll(page);
+  await page.screenshot({ path: `${SHOTS}/studio-pictures-run-1280.png` });
+});

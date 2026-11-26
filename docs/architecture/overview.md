@@ -68,6 +68,11 @@ Bài của mỗi khóa là **một gói tải riêng** (ADR 0012): trong gói ch
   khối không đổi, chỉ khối có trong `toolbox`, không có dòng "code chữ". Tranh theo mẫu lưu `state.studio.template`
   (id mẫu); màn vẽ hiện mẫu mờ (`Stage.ghost`), nút 👀 Mẫu, và sau mỗi ▶ là "Giống mẫu N%" (`likeness.ts`: so hai
   hình thu về 100 × 100, lệch ≤ 2 ô và màu gần nhau vẫn tính; hình chiếm 85%, màu trời 15%). Không phải chấm bài.
+- **🖼️ Kho hình (26/11):** `pictureGroups` trong `studio.json` (`id`, `title`, `pictures`: id trong kho hình). Mỗi hình
+  phải có trong manifest và có `label` tiếng Việt (`content:check`). Ngăn `PicturePanel` mở từ `EditorPanes` (cùng chỗ
+  với 📘, mỗi lần một ngăn, `z-[85]`): bấm hình thấy tên, cỡ thật, dòng `draw_image(...)` (`pictures.ts`: hình pixel
+  `scale=4` đặt giữa sân, ảnh nền 600 × 600 ở (0, 0)); ➕ thêm dòng đó vào cuối code, ảnh nền thì ngay sau `clear()`
+  đầu tiên, khối đi theo như khi gõ.
 - **Route:** `/studio` (danh sách tranh: ✏️ Vẽ sáng tạo, 📐 Vẽ theo mẫu (lưới mẫu), mở, ✏️ đổi tên, 🗑️ xóa có hỏi lại), `/studio/:drawingId` (màn vẽ:
   🧩 khối | 🐍 Python | cột phải ▶ Chạy / ■ Dừng, ⬇️ Tải tranh, sân 600 × 600 có trợ giúp tọa độ, 💡 Thử thách). Chỉ chạy
   kiểu kịch bản. Thẻ "🎨 Xưởng vẽ" ở `/courses` đếm số tranh. HLV: `/coach/s/:userId` liệt kê tranh của bé,
@@ -83,11 +88,11 @@ Bài của mỗi khóa là **một gói tải riêng** (ADR 0012): trong gói ch
 
 Chức năng có ở nhiều màn là **một component**. Thêm màn mới thì thêm dòng.
 
-| Màn | 🧩 khối ⇄ 🐍 code, 📘 Thư viện (`EditorPanes`) | ▶ Chạy / ■ Dừng (`RunButton`) | Sân (`Stage`) | Nút riêng |
+| Màn | 🧩 khối ⇄ 🐍 code, 📘 Thư viện, 🖼️ Kho hình nếu màn truyền `pictures` (`EditorPanes`) | ▶ Chạy / ■ Dừng (`RunButton`) | Sân (`Stage`) | Nút riêng |
 |---|---|---|---|---|
 | Màn code `/l/:id/code` | có | có | `coords` | ⛶ toàn màn hình, 👀 hình mẫu, 🎯 Nhiệm vụ / 📞 Cuộc gọi |
-| Xưởng vẽ `/studio/:id` | có | có | `coords`, 600 × 600 | ⬇️ Tải tranh, 💡 Thử thách, ✏️ tên tranh |
-| Xưởng vẽ, tranh theo mẫu `/studio/:id` | có | có | `coords`, 600 × 600, mẫu mờ | ⬇️ Tải tranh, 👀 Mẫu, Giống mẫu N%, 📐 💡 Gợi ý (thay 💡 Thử thách), ✏️ tên tranh |
+| Xưởng vẽ `/studio/:id` | có, cả 🖼️ Kho hình | có | `coords`, 600 × 600 | ⬇️ Tải tranh, 💡 Thử thách, ✏️ tên tranh |
+| Xưởng vẽ, tranh theo mẫu `/studio/:id` | có, cả 🖼️ Kho hình | có | `coords`, 600 × 600, mẫu mờ | ⬇️ Tải tranh, 👀 Mẫu, Giống mẫu N%, 📐 💡 Gợi ý (thay 💡 Thử thách), ✏️ tên tranh |
 | Chơi toàn màn hình `/l/:id/play` (`PlayFrame`) | không | không | không `coords` | Chơi lại, ✕ Về code |
 | HLV chơi thử game đang làm `/coach/prototype` (`PlayFrame`), **chỉ dev server** | không | không | không `coords`, 600 × 600 | Chơi lại, ✕ Về |
 | HLV xem code `/coach/s/…` | chỉ xem chữ | ▶ Chạy code của bé | `coords` | — |

@@ -281,6 +281,7 @@ function DrawingEditor({
           onCode={saveCode}
           onWorkspace={saveWorkspace}
           library={{ upto: 'studio', stage: size }}
+          pictures={{ groups: studio.pictureGroups, stage: size }}
         />
         <aside className="flex min-h-0 w-[32%] min-w-[340px] shrink-0 flex-col gap-2 max-[1279px]:w-[300px] max-[1279px]:min-w-0">
           <div className="flex gap-2">

@@ -1,3 +1,4 @@
+import type { StudioPictureGroup } from '@pyquest/content-schema';
 import type { StageSize } from '@pyquest/runtime';
 import type * as Blockly from 'blockly/core';
 import {
@@ -13,7 +14,9 @@ import { python } from '../../runtime/client';
 import { BlockCodeSync, type SyncError } from './blockCodeSync';
 import { BlocksPane, type BlocksPaneHandle } from './BlocksPane';
 import { FileTabs } from './FileTabs';
+import { withLine } from '../studio/pictures';
 import { LibraryPanel } from './LibraryPanel';
+import { PicturePanel } from './PicturePanel';
 import { PythonPane, type PythonPaneHandle } from './PythonPane';
 
 const PARSE_DELAY_MS = 600;
@@ -23,6 +26,8 @@ export type EditorPanesHandle = {
   highlight(line: number | null, kind: 'error' | 'select'): void;
   /** Rebuild the blocks from the open file (after Python restarted). */
   reparse(): void;
+  /** Add one line to the open file ('end', or 'under': after the first clear()), in code and blocks. */
+  insertLine(line: string, where: 'end' | 'under'): void;
 };
 
 /**
@@ -44,9 +49,11 @@ export const EditorPanes = forwardRef<
     library: { upto: string | undefined; stage: StageSize };
     /** Next to the 🧩 Khối title. */
     note?: ReactNode;
+    /** 🖼️ Kho hình (the studio): its shelves of library pictures; absent: no 🖼️ button. */
+    pictures?: { groups: readonly StudioPictureGroup[]; stage: StageSize };
   }
 >(function EditorPanes(
-  { toolbox, files, main, workspace, onCode, onWorkspace, library, note },
+  { toolbox, files, main, workspace, onCode, onWorkspace, library, note, pictures },
   ref,
 ) {
   const blocks = useRef<BlocksPaneHandle>(null);
@@ -55,7 +62,8 @@ export const EditorPanes = forwardRef<
   const parseTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [syncError, setSyncError] = useState<SyncError | null>(null);
   const [split, setSplit] = useState(50);
-  const [libraryOpen, setLibraryOpen] = useState(false);
+  /** 📘 or 🖼️: one panel over the code at a time. */
+  const [panel, setPanel] = useState<'library' | 'pictures' | null>(null);
   // Several files (Bài 16): one is open in both panes at a time.
   const [active, setActive] = useState(main);
   const activeRef = useRef(main);
@@ -89,6 +97,9 @@ export const EditorPanes = forwardRef<
     },
     reparse() {
       reparse(filesRef.current[activeRef.current] ?? '');
+    },
+    insertLine(line, where) {
+      insertLine(line, where);
     },
   }));
 
@@ -147,6 +158,16 @@ export const EditorPanes = forwardRef<
     // saveCode and reparse only touch refs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
+  );
+
+  /** 🖼️ ➕: one more line in the open file; the code pane shows it and the blocks follow, like typing it. */
+  const insertLine = useCallback(
+    (line: string, where: 'end' | 'under') => {
+      const text = withLine(filesRef.current[activeRef.current] ?? '', line, where);
+      pyPane.current?.setText(text);
+      onCodeChange(text);
+    },
+    [onCodeChange],
   );
 
   useEffect(
@@ -215,11 +236,24 @@ export const EditorPanes = forwardRef<
           <span className="px-1">🐍</span>
           <FileTabs files={Object.keys(files)} main={main} active={active} onOpen={openFile} />
           <span className="flex-1" />
+          {pictures !== undefined && (
+            <button
+              type="button"
+              className="min-h-9 rounded-full border-2 border-ink bg-white px-3 py-0.5 text-sm font-bold"
+              onClick={() => {
+                setPanel((p) => (p === 'pictures' ? null : 'pictures'));
+              }}
+              aria-pressed={panel === 'pictures'}
+              data-testid="pictures-toggle"
+            >
+              🖼️ Kho hình
+            </button>
+          )}
           <button
             type="button"
             className="min-h-9 rounded-full border-2 border-ink bg-white px-3 py-0.5 text-sm font-bold"
             onClick={() => {
-              setLibraryOpen((o) => !o);
+              setPanel((p) => (p === 'library' ? null : 'library'));
             }}
             data-testid="library-toggle"
           >
@@ -234,12 +268,22 @@ export const EditorPanes = forwardRef<
             onChange={onCodeChange}
             onCursorLine={(line) => blocks.current?.highlightLine(line)}
           />
-          {libraryOpen && (
+          {panel === 'library' && (
             <LibraryPanel
               upto={library.upto}
               stage={library.stage}
               onClose={() => {
-                setLibraryOpen(false);
+                setPanel(null);
+              }}
+            />
+          )}
+          {panel === 'pictures' && pictures !== undefined && (
+            <PicturePanel
+              groups={pictures.groups}
+              stage={pictures.stage}
+              onAdd={insertLine}
+              onClose={() => {
+                setPanel(null);
               }}
             />
           )}
