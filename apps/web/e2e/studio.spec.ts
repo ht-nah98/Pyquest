@@ -110,3 +110,29 @@ test('studio: new drawing, run, reload, rename, download a PNG, delete', async (
   await page.goto(url);
   await expect(page.getByTestId('drawing-missing')).toBeVisible();
 });
+
+const FACE = `from pyquest import *
+
+clear("skyblue")
+draw_ellipse(300, 300, 240, 300, "peachpuff", border="black")
+draw_circle(250, 260, 20, "white", border="black")
+draw_circle(350, 260, 20, None, border="black")
+draw_arc(300, 360, 60, 0, 180, "red", 6)
+`;
+
+test('studio: a face with an ellipse, outlined eyes and an arc smile', async ({ page }) => {
+  await newStudent(page);
+  await page.getByTestId('to-studio').click();
+  await page.getByTestId('new-drawing').click();
+  await page.waitForURL(/\/studio\/[a-z0-9]+$/);
+  await pythonReady(page);
+  await typeCode(page, FACE);
+  await runAndWait(page);
+  await expect(page.getByTestId('run-error')).toHaveCount(0);
+  expect(await colourAt(page, 300, 200)).toEqual([255, 218, 185]); // the face, peachpuff
+  expect(await colourAt(page, 250, 260)).toEqual([255, 255, 255]); // a filled eye
+  expect(await colourAt(page, 350, 260)).toEqual([255, 218, 185]); // the hollow eye shows the face
+  expect(await colourAt(page, 300, 420)).toEqual([255, 0, 0]); // bottom of the smile
+  expect(await colourAt(page, 300, 300)).toEqual([255, 218, 185]); // above it, no line
+  await page.screenshot({ path: `${SHOTS}/studio-face-1280.png` });
+});

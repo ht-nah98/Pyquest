@@ -121,7 +121,7 @@ test('the library panel says what each piece does, why it exists, and shows its 
   await expect(page.getByTestId('walkthrough')).toContainText('vẽ hình chữ nhật');
   await page.getByTestId('library-toggle').click();
   const panel = page.getByTestId('library-panel');
-  await expect(panel).toContainText('draw_rect(x, y, rộng, cao, màu)');
+  await expect(panel).toContainText('draw_rect(x, y, rộng, cao, màu, …)');
   await expect(panel).toContainText('from pyquest import *');
   await expect(panel.getByTestId('library-why').first()).toContainText('Vì sao có?');
   await panel
@@ -130,7 +130,7 @@ test('the library panel says what each piece does, why it exists, and shows its 
     .nth(1)
     .locator('summary')
     .click();
-  await expect(panel).toContainText('def draw_rect(x, y, w, h, color="green"):');
+  await expect(panel).toContainText('def draw_rect(x, y, w, h, color="green", border=None):');
   await page.getByRole('button', { name: 'Đóng' }).click();
   // Like real Python: without the import line, draw_rect is unknown and the message says what to add.
   await typeCode(page, 'draw_rect(100, 300, 40, 40, "gold")');
