@@ -42,7 +42,7 @@ Mỗi bài theo `docs/pedagogy/lesson-rhythm.md`: Hiểu → Thiết kế → Ch
 | `printed` | có bong bóng `print` đúng nguyên văn |
 | `varCompare` | biến cấp module so với `value` bằng `op` (`>=`, `<=` với số; `!=` với giá trị bất kỳ); `when: "end"` (mặc định) cuối lượt, `"ever"` sau một khung nào đó. Biến không có thì không đạt; không thấy được ngăn của dict (`hero["hp"]`) |
 | `drew` | có vẽ ảnh thuộc nhóm `sprite` (`bird` khớp `bird-rong`; tùy chọn `at`, `tolerance`; `customImage`: ảnh khác ảnh đầu của nhóm) |
-| `matches` | hình cuối giống hình của lời giải (mảnh, chỗ, màu, nền; thứ tự tự do); có nút 👀 hình mẫu |
+| `matches` | hình cuối giống hình lời giải ≥ 90% (ADR 0014: lệch ≤ 8 px vẫn trúng, mỗi màu tính riêng, màu trời 15%); có nút 👀 hình mẫu và dòng "Giống mẫu N%" |
 | `drewRects` | một khung có ít nhất `min` ô `draw_rect` (không tính ô phủ cả sân); tùy chọn `at` |
 | `called` | hàm bé tự viết `name` chạy ít nhất `min` lần; `distinct`: với số khác nhau |
 | `sameShape` | mọi lời gọi `name` vẽ ra cùng một hình, chỉ dời chỗ |

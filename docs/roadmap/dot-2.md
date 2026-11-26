@@ -12,6 +12,8 @@
   mẫu mờ 👀, "Giống mẫu N%"); 🖼️ Kho hình (24 hình có sẵn, ➕ Thêm vào tranh)
   (`../superpowers/specs/2026-11-26-studio-trace-and-pictures-design.md`). **Chờ HLV đọc lại 6 mẫu, gợi ý và câu khích
   lệ; chờ HLV chọn hình pixel từ Pixel Art Atlas và sinh 6 ảnh nền** (`assets/prompts/07-studio-backgrounds.md`).
+- ✅ 26/11: Chấm "Giống hình mẫu" theo % (≥ 90%, ADR 0014) và nút 🔑 Đáp án sau 5 lần ▶ chưa qua. **Chờ HLV thử lại**
+  với tài khoản học sinh ở bài đàn chim.
 - Phần thưởng (sao / huy hiệu) — hỏi HLV trước.
 - Phần nâng cao không hướng dẫn.
 - Bé tải ảnh của mình lên.

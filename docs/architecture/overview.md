@@ -66,8 +66,9 @@ Bài của mỗi khóa là **một gói tải riêng** (ADR 0012): trong gói ch
 - **📐 Vẽ theo mẫu (26/11, spec `2026-11-26-studio-trace-and-pictures-design.md`):** `templates` trong `studio.json`
   (`id`, `title`, `level` 1–3 ⭐, `code`, `hint`). `content:check` chạy từng mẫu trên sân Xưởng vẽ, đòi ≥ 3 hình, đi qua
   khối không đổi, chỉ khối có trong `toolbox`, không có dòng "code chữ". Tranh theo mẫu lưu `state.studio.template`
-  (id mẫu); màn vẽ hiện mẫu mờ (`Stage.ghost`), nút 👀 Mẫu, và sau mỗi ▶ là "Giống mẫu N%" (`likeness.ts`: so hai
-  hình thu về 100 × 100, lệch ≤ 2 ô và màu gần nhau vẫn tính; hình chiếm 85%, màu trời 15%). Không phải chấm bài.
+  (id mẫu); màn vẽ hiện mẫu mờ (`Stage.ghost`), nút 👀 Mẫu, và sau mỗi ▶ là "Giống mẫu N%" (`likeness()` của
+  `packages/checker`, dùng chung với chấm `matches`, ADR 0014: hai hình thu về 100 × 100, lệch ≤ 2 ô và màu gần nhau
+  vẫn tính; hình chiếm 85%, màu trời 15%). Không phải chấm bài.
 - **🖼️ Kho hình (26/11):** `pictureGroups` trong `studio.json` (`id`, `title`, `pictures`: id trong kho hình). Mỗi hình
   phải có trong manifest và có `label` tiếng Việt (`content:check`). Ngăn `PicturePanel` mở từ `EditorPanes` (cùng chỗ
   với 📘, mỗi lần một ngăn, `z-[85]`): bấm hình thấy tên, cỡ thật, dòng `draw_image(...)` (`pictures.ts`: hình pixel
@@ -90,7 +91,7 @@ Chức năng có ở nhiều màn là **một component**. Thêm màn mới thì
 
 | Màn | 🧩 khối ⇄ 🐍 code, 📘 Thư viện, 🖼️ Kho hình nếu màn truyền `pictures` (`EditorPanes`) | ▶ Chạy / ■ Dừng (`RunButton`) | Sân (`Stage`) | Nút riêng |
 |---|---|---|---|---|
-| Màn code `/l/:id/code` | có | có | `coords` | ⛶ toàn màn hình, 👀 hình mẫu, 🎯 Nhiệm vụ / 📞 Cuộc gọi |
+| Màn code `/l/:id/code` | có | có | `coords` | ⛶ toàn màn hình, 👀 hình mẫu, Giống mẫu N%, 🔑 Đáp án (sau 5 lần ▶ chưa qua), 🎯 Nhiệm vụ / 📞 Cuộc gọi |
 | Xưởng vẽ `/studio/:id` | có, cả 🖼️ Kho hình | có | `coords`, 600 × 600 | ⬇️ Tải tranh, 💡 Thử thách, ✏️ tên tranh |
 | Xưởng vẽ, tranh theo mẫu `/studio/:id` | có, cả 🖼️ Kho hình | có | `coords`, 600 × 600, mẫu mờ | ⬇️ Tải tranh, 👀 Mẫu, Giống mẫu N%, 📐 💡 Gợi ý (thay 💡 Thử thách), ✏️ tên tranh |
 | Chơi toàn màn hình `/l/:id/play` (`PlayFrame`) | không | không | không `coords` | Chơi lại, ✕ Về code |
