@@ -35,6 +35,29 @@ describe('drawings in the progress store', () => {
     expect(list.map((d) => d.title)).toEqual(['Tranh 2', 'Tranh 1']);
   });
 
+  test('a 📐 drawing remembers its template and is named after it; old drawings have none', async () => {
+    const store = fresh();
+    const p = await store.createProfile('Minh', '🦊', 'student');
+    const tpl = { id: 'ngoi-nha', title: '🏠 Ngôi nhà' };
+    const a = (await createDrawing(store, p.id, STARTER, 1000, tpl)) ?? '';
+    const b = (await createDrawing(store, p.id, STARTER, 2000, tpl)) ?? '';
+    await createDrawing(store, p.id, STARTER, 3000);
+    const state = await store.getLessonState(p.id, rowOf(a));
+    expect(state?.studio).toEqual({
+      title: '🏠 Ngôi nhà',
+      createdAt: 1000,
+      changedAt: 1000,
+      template: 'ngoi-nha',
+    });
+    const list = drawingsOf(await store.allLessonStates(p.id));
+    expect(list.map((d) => [d.title, d.template])).toEqual([
+      ['Tranh 3', undefined],
+      ['🏠 Ngôi nhà 2', 'ngoi-nha'],
+      ['🏠 Ngôi nhà', 'ngoi-nha'],
+    ]);
+    expect(list.find((d) => d.id === b)?.template).toBe('ngoi-nha');
+  });
+
   test('rename and delete; a deleted drawing leaves a tombstone without code', async () => {
     const store = fresh();
     const p = await store.createProfile('Minh', '🦊', 'student');

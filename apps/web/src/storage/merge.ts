@@ -20,11 +20,14 @@ function mergeStudio(
   if (o === undefined && n === undefined) return {};
   if (o === undefined || n === undefined) return { studio: (n ?? o) as StudioMeta };
   const deleted = o.deleted === true || n.deleted === true;
+  // A drawing never changes its template: keep it even when one copy was saved without it.
+  const template = n.template ?? o.template;
   return {
     studio: {
       ...((o.changedAt ?? 0) > (n.changedAt ?? 0) ? o : n),
       createdAt: Math.min(o.createdAt, n.createdAt),
       ...(deleted ? { deleted: true } : {}),
+      ...(template === undefined ? {} : { template }),
     },
   };
 }

@@ -75,6 +75,21 @@ describe('mergeLessonState: newer wins, achievements are never lost', () => {
     expect(mergeLessonState(a, { state: s({}), at: 300 }).state.studio?.title).toBe('Nhà');
   });
 
+  test('a 📐 drawing keeps its template through a merge, even past a copy that lost it', () => {
+    const traced = (title: string, createdAt: number, template?: string) =>
+      s({ studio: { title, createdAt, ...(template === undefined ? {} : { template }) } });
+    const a = { state: traced('Nhà', 50, 'ngoi-nha'), at: 100 };
+    const b = { state: traced('Nhà đẹp', 90, 'ngoi-nha'), at: 200 };
+    expect(mergeLessonState(a, b).state.studio?.template).toBe('ngoi-nha');
+    const lost = { state: traced('Nhà đẹp', 90), at: 200 };
+    expect(mergeLessonState(a, lost).state.studio?.template).toBe('ngoi-nha');
+    expect(mergeLessonState(lost, a).state.studio?.template).toBe('ngoi-nha');
+    const plain = { state: traced('Mây', 1), at: 1 };
+    expect(mergeLessonState(plain, { ...plain, at: 2 }).state.studio).not.toHaveProperty(
+      'template',
+    );
+  });
+
   test('a drawing deleted on one device stays deleted, even if the other edited it later', () => {
     const gone = {
       state: s({ studio: { title: 'Mây', createdAt: 1, deleted: true } }),

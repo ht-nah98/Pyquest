@@ -25,6 +25,8 @@ export type StudioMeta = {
   /** When the child last changed the code or the name (ms), for the list of drawings. */
   changedAt?: number;
   deleted?: boolean;
+  /** 📐 Vẽ theo mẫu: the id of the template in studio.json this drawing traces; absent: a free drawing. */
+  template?: string;
 };
 
 /** Everything we keep about one child in one lesson. No personal data (AGENTS.md §3 rule 8). */
