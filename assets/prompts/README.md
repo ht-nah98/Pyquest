@@ -45,6 +45,7 @@ no shadow on the background
 | `04-ground.md` | Mặt đất | 4 (đi cặp với nền) | game mẫu |
 | `05-ui.md` | Nút và biểu tượng | 1 bộ | màn bắt đầu / thua |
 | `06-arena.md` | Nền, vật mốc, quái của Hầm Ngọc | 1 bộ | game mẫu Hầm Ngọc |
+| `07-studio-backgrounds.md` | Ảnh nền vuông 600 × 600 | 6 | 🎨 Xưởng vẽ, 🖼️ Kho hình |
 
 Ưu tiên cho Chủ nhật: **bộ 1 của mỗi nhóm** (`bird-lua`, `pillar-tre`, `bg-ruong-bac-thang`, `ground-ruong`). Các bộ còn lại
 dùng ở Bài 3 (bé chọn nhân vật), nên chưa gấp.

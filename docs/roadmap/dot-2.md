@@ -8,6 +8,10 @@
 - ✅ 23/11: 🎨 Xưởng vẽ: thẻ ở trang khóa, vẽ tự do trên sân 600 × 600 bằng khối / code, lưu nhiều tranh (tối đa 50),
   đổi tên, xóa, tải PNG, 6 💡 Thử thách; HLV xem tranh của bé (`../architecture/overview.md` mục Xưởng vẽ). **Chờ HLV đọc
   lại chữ của Thử thách.**
+- ✅ 26/11: Xưởng vẽ thêm: lệnh `draw_ellipse`, `draw_arc`, `border=`, hình rỗng (ADR 0013); 📐 Vẽ theo mẫu (6 mẫu,
+  mẫu mờ 👀, "Giống mẫu N%"); 🖼️ Kho hình (24 hình có sẵn, ➕ Thêm vào tranh)
+  (`../superpowers/specs/2026-11-26-studio-trace-and-pictures-design.md`). **Chờ HLV đọc lại 6 mẫu, gợi ý và câu khích
+  lệ; chờ HLV chọn hình pixel từ Pixel Art Atlas và sinh 6 ảnh nền** (`assets/prompts/07-studio-backgrounds.md`).
 - Phần thưởng (sao / huy hiệu) — hỏi HLV trước.
 - Phần nâng cao không hướng dẫn.
 - Bé tải ảnh của mình lên.
