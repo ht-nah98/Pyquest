@@ -19,7 +19,7 @@
     },
     {
       "name": "draw_rect",
-      "signature": "draw_rect(x, y, rộng, cao, màu)",
+      "signature": "draw_rect(x, y, rộng, cao, màu, …)",
       "vi": "Tô một hình chữ nhật, góc trên bên trái ở (x, y). Màu viết bằng tên tiếng Anh: \"gold\", \"red\", \"green\"…",
       "why": "Màn hình là hàng nghìn điểm màu. Tô từng điểm thì quá lâu, nên có lệnh tô cả một khối một lần.",
       "inside": "_num kiểm tra em đưa vào số thật. _emit gửi một lệnh vẽ cho trang web, trang web tô màu lên sân.",
@@ -131,11 +131,27 @@
     },
     {
       "name": "draw_circle",
-      "signature": "draw_circle(x, y, bán_kính, màu=\"orange\")",
-      "vi": "Tô một hình tròn, (x, y) là tâm, bán kính là khoảng cách từ tâm ra mép. Bán kính không được âm.",
+      "signature": "draw_circle(x, y, bán_kính, màu=\"orange\", border=None)",
+      "vi": "Tô một hình tròn, (x, y) là tâm, bán kính là khoảng cách từ tâm ra mép. Bán kính không được âm. Thêm border=\"black\" để có viền; màu None là hình rỗng, chỉ có viền.",
       "why": "Ghép hình tròn từ ô vuông thì mép răng cưa và rất lâu. Lệnh này để máy tính tính giúp mọi điểm trên đường tròn.",
       "inside": "_num kiểm tra em đưa vào số thật. _emit gửi tâm, bán kính và màu cho trang web, trang web tô hình tròn.",
       "example": "draw_circle(300, 150, 80, \"gold\")"
+    },
+    {
+      "name": "draw_ellipse",
+      "signature": "draw_ellipse(x, y, rộng, cao, màu=\"pink\", border=None)",
+      "vi": "Tô một hình elip (hình tròn dẹt), (x, y) là tâm. Hợp để vẽ mặt, thân người, đám mây, bụi cây.",
+      "why": "Mặt người, quả trứng, đám mây không tròn đều. Hình elip co giãn được theo chiều ngang và chiều dọc.",
+      "inside": "_num kiểm tra em đưa vào số thật. _paint gửi màu tô và màu viền cho trang web.",
+      "example": "draw_ellipse(300, 200, 120, 160, \"peachpuff\")"
+    },
+    {
+      "name": "draw_arc",
+      "signature": "draw_arc(x, y, bán_kính, góc_đầu, góc_cuối, màu=\"black\", width=3)",
+      "vi": "Vẽ một phần đường tròn, tâm (x, y). Góc tính bằng độ: 0 là bên phải, góc tăng theo chiều kim đồng hồ. Từ 0 tới 180 là nửa dưới: một nụ cười.",
+      "why": "Nụ cười, cầu vồng, cánh chim là những đường cong. Đường thẳng không vẽ được đường cong mềm.",
+      "inside": "_radius kiểm tra bán kính không âm. _emit gửi tâm, bán kính và hai góc cho trang web.",
+      "example": "draw_arc(300, 320, 40, 0, 180, \"red\", 4)"
     },
     {
       "name": "draw_line",
@@ -147,7 +163,7 @@
     },
     {
       "name": "draw_triangle",
-      "signature": "draw_triangle(x1, y1, x2, y2, x3, y3, màu=\"purple\")",
+      "signature": "draw_triangle(x1, y1, x2, y2, x3, y3, màu=\"purple\", border=None)",
       "vi": "Tô một tam giác qua ba góc (x1, y1), (x2, y2), (x3, y3). Hợp để vẽ mái nhà, ngọn núi, cây thông.",
       "why": "Tam giác có cạnh xiên, ghép bằng hình chữ nhật thì không khít. Lệnh này tô kín phần bên trong ba góc.",
       "inside": "draw_triangle chỉ gom ba góc thành một danh sách rồi nhờ draw_polygon vẽ.",
@@ -155,7 +171,7 @@
     },
     {
       "name": "draw_polygon",
-      "signature": "draw_polygon(các_góc, màu=\"purple\")",
+      "signature": "draw_polygon(các_góc, màu=\"purple\", border=None)",
       "vi": "Tô một hình nhiều góc. các_góc là danh sách cặp số (x, y), nối theo thứ tự, ít nhất 3 góc.",
       "why": "Ngôi sao, viên kim cương, lá cờ có nhiều góc khác nhau. Một lệnh nhận cả danh sách góc thì vẽ được mọi hình như vậy.",
       "inside": "_corner kiểm tra mỗi góc là một cặp số. _emit gửi cả danh sách góc cho trang web, trang web nối và tô kín.",
