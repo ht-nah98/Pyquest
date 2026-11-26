@@ -63,13 +63,18 @@ Bài của mỗi khóa là **một gói tải riêng** (ADR 0012): trong gói ch
   `hint` ≤ 120). Không có mục tiêu, không chấm. `content:check` (luật 12) kiểm schema, khối trong `toolbox` có thật,
   `starter` đi qua khối rồi về lại code không đổi, `starter` chạy không lỗi trên sân của Xưởng vẽ, `toolbox` đủ khối
   `starter` dùng. Trang đọc qua `catalog.studio()`.
-- **Route:** `/studio` (danh sách tranh: ＋ Tranh mới, mở, ✏️ đổi tên, 🗑️ xóa có hỏi lại), `/studio/:drawingId` (màn vẽ:
+- **📐 Vẽ theo mẫu (26/11, spec `2026-11-26-studio-trace-and-pictures-design.md`):** `templates` trong `studio.json`
+  (`id`, `title`, `level` 1–3 ⭐, `code`, `hint`). `content:check` chạy từng mẫu trên sân Xưởng vẽ, đòi ≥ 3 hình, đi qua
+  khối không đổi, chỉ khối có trong `toolbox`, không có dòng "code chữ". Tranh theo mẫu lưu `state.studio.template`
+  (id mẫu); màn vẽ hiện mẫu mờ (`Stage.ghost`), nút 👀 Mẫu, và sau mỗi ▶ là "Giống mẫu N%" (`likeness.ts`: so hai
+  hình thu về 100 × 100, lệch ≤ 2 ô và màu gần nhau vẫn tính; hình chiếm 85%, màu trời 15%). Không phải chấm bài.
+- **Route:** `/studio` (danh sách tranh: ✏️ Vẽ sáng tạo, 📐 Vẽ theo mẫu (lưới mẫu), mở, ✏️ đổi tên, 🗑️ xóa có hỏi lại), `/studio/:drawingId` (màn vẽ:
   🧩 khối | 🐍 Python | cột phải ▶ Chạy / ■ Dừng, ⬇️ Tải tranh, sân 600 × 600 có trợ giúp tọa độ, 💡 Thử thách). Chỉ chạy
   kiểu kịch bản. Thẻ "🎨 Xưởng vẽ" ở `/courses` đếm số tranh. HLV: `/coach/s/:userId` liệt kê tranh của bé,
   `/coach/s/:userId/studio/:drawingId` xem code (chỉ xem) và chạy.
 - **Lưu trữ (không thêm bảng, không migration):** mỗi tranh là **một dòng tiến độ** `lessonId = "studio:<id>"` (≤ 40 ký
   tự, `lesson_states.lesson_id`) qua `ProgressStore` như bài học: code ở `files["main.py"]` + `workspace`, tên và giờ ở
-  `state.studio = { title, createdAt, changedAt?, deleted? }`. Xóa = **bia mộ** `deleted: true` (code bị xóa), để lệnh xóa
+  `state.studio = { title, createdAt, changedAt?, deleted?, template? }`. Xóa = **bia mộ** `deleted: true` (code bị xóa), để lệnh xóa
   tới được máy khác của bé. `mergeLessonState`: tên và code theo bản mới hơn, `createdAt` giữ bản sớm nhất, đã xóa ở
   một máy thì luôn là đã xóa. Tối đa 50 tranh mỗi bé (`MAX_DRAWINGS`). Bản đồ khóa, `progress.ts`, trang HLV đi theo danh
   sách bài của khóa nên không bao giờ đọc dòng `studio:`. Logic ở `apps/web/src/features/studio/drawings.ts` (có unit test).
@@ -82,6 +87,7 @@ Chức năng có ở nhiều màn là **một component**. Thêm màn mới thì
 |---|---|---|---|---|
 | Màn code `/l/:id/code` | có | có | `coords` | ⛶ toàn màn hình, 👀 hình mẫu, 🎯 Nhiệm vụ / 📞 Cuộc gọi |
 | Xưởng vẽ `/studio/:id` | có | có | `coords`, 600 × 600 | ⬇️ Tải tranh, 💡 Thử thách, ✏️ tên tranh |
+| Xưởng vẽ, tranh theo mẫu `/studio/:id` | có | có | `coords`, 600 × 600, mẫu mờ | ⬇️ Tải tranh, 👀 Mẫu, Giống mẫu N%, 📐 💡 Gợi ý (thay 💡 Thử thách), ✏️ tên tranh |
 | Chơi toàn màn hình `/l/:id/play` (`PlayFrame`) | không | không | không `coords` | Chơi lại, ✕ Về code |
 | HLV chơi thử game đang làm `/coach/prototype` (`PlayFrame`), **chỉ dev server** | không | không | không `coords`, 600 × 600 | Chơi lại, ✕ Về |
 | HLV xem code `/coach/s/…` | chỉ xem chữ | ▶ Chạy code của bé | `coords` | — |

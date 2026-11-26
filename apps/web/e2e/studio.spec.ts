@@ -136,3 +136,70 @@ test('studio: a face with an ellipse, outlined eyes and an arc smile', async ({ 
   expect(await colourAt(page, 300, 300)).toEqual([255, 218, 185]); // above it, no line
   await page.screenshot({ path: `${SHOTS}/studio-face-1280.png` });
 });
+
+const STUDIO_JSON = new URL('../../../content/studio/studio.json', import.meta.url);
+const templateCode = (id: string): string => {
+  const studio = JSON.parse(readFileSync(STUDIO_JSON, 'utf8')) as {
+    templates: { id: string; code: string }[];
+  };
+  return studio.templates.find((t) => t.id === id)?.code ?? '';
+};
+
+test('studio: 📐 trace a template — faint template, 100% when traced, 👀 turns it off', async ({
+  page,
+}) => {
+  await newStudent(page);
+  await page.getByTestId('to-studio').click();
+  await page.waitForURL('**/studio');
+  await page.getByTestId('trace-mode').click();
+  await expect(page.getByTestId('template-ngoi-nha')).toBeVisible();
+  await expect(page.getByTestId('template-pho-den-long')).toContainText('⭐⭐⭐');
+  // Every card shows its template, drawn by running its code.
+  await expect(page.locator('[data-testid="template-thumb"][data-drawn="true"]')).toHaveCount(6, {
+    timeout: 30_000,
+  });
+  await expectNoPageScroll(page);
+  await page.screenshot({ path: `${SHOTS}/studio-templates-1280.png` });
+
+  await page.getByTestId('template-ngoi-nha').click();
+  await page.waitForURL(/\/studio\/[a-z0-9]+$/);
+  await pythonReady(page);
+  await expect(page.getByTestId('drawing-title')).toHaveValue('🏠 Ngôi nhà');
+  await expect(page.getByTestId('stage')).toHaveAttribute('data-ghost', 'on');
+  await expect(page.getByTestId('ghost-toggle')).toHaveAttribute('aria-pressed', 'true');
+  // The template's own hint takes the place of 💡 Thử thách.
+  await expect(page.getByTestId('challenges')).toHaveCount(0);
+  await page.getByTestId('template-show-hint').click();
+  await expect(page.getByTestId('template-hint')).toContainText('y = 280');
+
+  // The starter (one orange circle) looks little like the house.
+  await runAndWait(page);
+  await expect(page.getByTestId('likeness')).toBeVisible();
+  const starter = Number(
+    /(\d+)%/.exec((await page.getByTestId('likeness').textContent()) ?? '')?.[1],
+  );
+  expect(starter).toBeLessThan(60);
+
+  await typeCode(page, templateCode('ngoi-nha'));
+  await runAndWait(page);
+  await expect(page.getByTestId('likeness')).toContainText('Giống mẫu 100%');
+  await expect(page.locator(BLOCK_TEXT, { hasText: 'khaki' }).first()).toBeVisible();
+  await expect(page.getByTestId('likeness')).toContainText('🎉');
+  await expectNoPageScroll(page);
+  await page.screenshot({ path: `${SHOTS}/studio-trace-1280.png` });
+  await page.setViewportSize({ width: 1866, height: 966 });
+  await expectNoPageScroll(page);
+  await page.screenshot({ path: `${SHOTS}/studio-trace-1866.png` });
+  await page.setViewportSize({ width: 1280, height: 720 });
+
+  await page.getByTestId('ghost-toggle').click();
+  await expect(page.getByTestId('stage')).toHaveAttribute('data-ghost', 'off');
+
+  // ✏️ a free drawing has no template and no 👀.
+  await page.goto(page.url().replace(/\/studio\/.*$/, '/studio'));
+  await page.getByTestId('new-drawing').click();
+  await page.waitForURL(/\/studio\/[a-z0-9]+$/);
+  await pythonReady(page);
+  await expect(page.getByTestId('ghost-toggle')).toHaveCount(0);
+  await expect(page.getByTestId('likeness')).toHaveCount(0);
+});

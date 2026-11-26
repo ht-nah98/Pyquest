@@ -1,3 +1,4 @@
+import type { StudioTemplate } from '@pyquest/content-schema';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useSession } from '../../app/session';
@@ -15,6 +16,7 @@ import {
   renameDrawing,
   type Drawing,
 } from './drawings';
+import { TemplatePicker } from './TemplatePicker';
 
 const when = (ms: number) =>
   new Date(ms).toLocaleString('vi-VN', {
@@ -31,6 +33,7 @@ export function StudioList() {
   const [drawings, setDrawings] = useState<Drawing[] | null>(null);
   const [renaming, setRenaming] = useState<{ id: string; title: string } | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
+  const [picking, setPicking] = useState(false);
   const profileId = profile?.id;
   const studio = catalog.studio();
 
@@ -50,9 +53,16 @@ export function StudioList() {
   if (studio === undefined) return <p className="p-8">Chưa có Xưởng vẽ.</p>;
   const full = drawings !== null && drawings.length >= MAX_DRAWINGS;
 
-  const create = async () => {
+  /** ✏️ a free drawing, or 📐 one that traces a template. */
+  const create = async (template?: StudioTemplate) => {
     if (profileId === undefined) return;
-    const id = await createDrawing(store, profileId, studio.starter);
+    const id = await createDrawing(
+      store,
+      profileId,
+      studio.starter,
+      Date.now(),
+      template === undefined ? undefined : { id: template.id, title: template.title },
+    );
     if (id === null) {
       setMsg(`Em đã có ${String(MAX_DRAWINGS)} tranh rồi. Xóa bớt tranh cũ để vẽ tranh mới nhé.`);
       return;
@@ -90,16 +100,42 @@ export function StudioList() {
             <span className="font-pixel text-2xl" data-testid="drawing-count">
               {drawings?.length ?? 0}/{MAX_DRAWINGS} tranh
             </span>
-            <Button
-              tone="go"
-              className="min-h-14 px-6 text-2xl"
-              onClick={() => void create()}
-              disabled={drawings === null || full}
-              data-testid="new-drawing"
-            >
-              ＋ Tranh mới
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                tone="go"
+                className="min-h-14 px-6 text-2xl"
+                onClick={() => void create()}
+                disabled={drawings === null || full}
+                data-testid="new-drawing"
+              >
+                ✏️ Vẽ sáng tạo
+              </Button>
+              {studio.templates.length > 0 && (
+                <Button
+                  tone="sun"
+                  className="min-h-14 px-6 text-2xl"
+                  onClick={() => {
+                    setPicking((p) => !p);
+                  }}
+                  disabled={drawings === null || full}
+                  aria-expanded={picking}
+                  data-testid="trace-mode"
+                >
+                  📐 Vẽ theo mẫu
+                </Button>
+              )}
+            </div>
           </Panel>
+          {picking && (
+            <Panel className="p-5">
+              <TemplatePicker
+                templates={studio.templates}
+                stage={studio.stage}
+                onPick={(t) => void create(t)}
+                disabled={drawings === null || full}
+              />
+            </Panel>
+          )}
           {(msg !== null || full) && (
             <p className="rounded-[8px] bg-sun/40 px-3 py-2" role="status" data-testid="studio-msg">
               {msg ??
@@ -108,7 +144,7 @@ export function StudioList() {
           )}
           {drawings !== null && drawings.length === 0 && (
             <p className="py-8 text-center text-xl text-ink-soft" data-testid="no-drawings">
-              Chưa có tranh nào. Bấm ＋ Tranh mới để bắt đầu vẽ nhé!
+              Chưa có tranh nào. Bấm ✏️ Vẽ sáng tạo hoặc 📐 Vẽ theo mẫu để bắt đầu nhé!
             </p>
           )}
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

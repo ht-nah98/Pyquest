@@ -43,3 +43,27 @@ test('iPad: the studio fits the screen, blocks above code, finger-size buttons',
   await expectNoPageScroll(page);
   await page.screenshot({ path: `${SHOTS}/studio-list-ipad.png` });
 });
+
+test('iPad: 📐 pick a template by finger, the faint template and the score fit the screen', async ({
+  page,
+}) => {
+  await newStudent(page, 'Lan');
+  await page.getByTestId('to-studio').tap();
+  await page.getByTestId('trace-mode').tap();
+  await expect(page.locator('[data-testid="template-thumb"][data-drawn="true"]')).toHaveCount(6, {
+    timeout: 30_000,
+  });
+  await page.screenshot({ path: `${SHOTS}/studio-templates-ipad.png` });
+  await page.getByTestId('template-gia-dinh').tap();
+  await page.waitForURL(/\/studio\/[a-z0-9]+$/);
+  await pythonReady(page);
+  await expect(page.getByTestId('stage')).toHaveAttribute('data-ghost', 'on');
+  await page.getByTestId('run').tap();
+  await expect(page.getByTestId('likeness')).toBeVisible({ timeout: 30_000 });
+  for (const id of ['ghost-toggle', 'run', 'download']) {
+    const box = await page.getByTestId(id).boundingBox();
+    expect(box?.height ?? 0, id).toBeGreaterThanOrEqual(44);
+  }
+  await expectNoPageScroll(page);
+  await page.screenshot({ path: `${SHOTS}/studio-trace-ipad.png` });
+});

@@ -1,10 +1,11 @@
-import type { Studio } from '@pyquest/content-schema';
-import type { RunResult } from '@pyquest/runtime';
+import type { Studio, StudioTemplate } from '@pyquest/content-schema';
+import type { DrawEvent, RunResult } from '@pyquest/runtime';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { catalog } from '../../content/catalog';
 import { brokenRun } from '../../runtime/broken';
 import { python } from '../../runtime/client';
+import { preloadSprites } from '../../stage/render';
 import { uiSound, unlock } from '../../stage/sound';
 import { Stage, type StageHandle } from '../../stage/Stage';
 import { changeTime, type LessonState, type StudioMeta } from '../../storage/store';
@@ -16,6 +17,46 @@ import { ErrorBubble } from '../code/RunPanel';
 import { useLessonState } from '../lesson/useLessonState';
 import { Challenges } from './Challenges';
 import { cleanTitle, liveDrawing, MAIN, MAX_TITLE, pngName, rowOf } from './drawings';
+import { likeness } from './likeness';
+import { renderPicture } from './renderPicture';
+
+/** 📐 In place of 💡 Thử thách: the template's name and, on demand, its hint. */
+function TemplateHint({ template }: { template: StudioTemplate }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <section
+      className="flex shrink-0 flex-col gap-2 rounded-[12px] border-2 border-ink bg-paper p-2"
+      data-testid="template-card"
+    >
+      <h3 className="font-display text-lg">
+        📐 Vẽ theo mẫu: {template.title} {'⭐'.repeat(template.level)}
+      </h3>
+      {open ? (
+        <p className="rounded-[8px] bg-sun/40 px-2 py-1 text-[15px]" data-testid="template-hint">
+          💡 {template.hint}
+        </p>
+      ) : (
+        <button
+          type="button"
+          className="min-h-11 self-start rounded-full border-2 border-ink bg-sun px-3 text-[15px] font-bold"
+          onClick={() => {
+            setOpen(true);
+          }}
+          data-testid="template-show-hint"
+        >
+          💡 Gợi ý
+        </button>
+      )}
+    </section>
+  );
+}
+
+/** A short cheer under "Giống mẫu N%" (spec 2026-11-26 §5.2). */
+export function cheer(score: number): string {
+  if (score >= 90) return '🎉 Giống y như mẫu!';
+  if (score >= 60) return 'Gần giống rồi, chỉnh thêm chút nữa!';
+  return 'Nhìn mẫu mờ và vẽ tiếp nhé.';
+}
 
 /** /studio/:drawingId: one drawing, blocks | Python | ▶ and the 600 × 600 stage. No goals, no grading. */
 export function StudioEditor() {
@@ -77,10 +118,44 @@ function DrawingEditor({
   });
   /** The code of the picture now on the stage, so ⬇️ never saves an old picture. */
   const ranFiles = useRef<string | null>(null);
+  /** 📐 the template this drawing traces; a template gone from studio.json makes it a free drawing. */
+  const template: StudioTemplate | undefined =
+    meta.template === undefined ? undefined : studio.templates.find((t) => t.id === meta.template);
+  const [ghostOn, setGhostOn] = useState(template !== undefined);
+  const [score, setScore] = useState<number | null>(null);
+  const modelRun = useRef<Promise<readonly DrawEvent[]> | null>(null);
+  /** The template's picture, run once. */
+  const modelEvents = (): Promise<readonly DrawEvent[]> => {
+    if (template === undefined) return Promise.resolve([]);
+    modelRun.current ??= python
+      .run({ [MAIN]: template.code }, MAIN, { stage: size })
+      .then((r) => r.events);
+    return modelRun.current;
+  };
 
   useEffect(() => {
     void python.warmUp().catch(() => undefined);
   }, []);
+
+  // 📐 the template shows faintly from the start; 👀 hides or shows it again.
+  useEffect(() => {
+    if (template === undefined) return;
+    let live = true;
+    if (!ghostOn) {
+      stage.current?.ghost(null);
+      return;
+    }
+    void modelEvents()
+      .then((events) => {
+        if (live) stage.current?.ghost(events);
+      })
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+    // modelEvents is stable for this drawing (one template, one stage).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ghostOn, template]);
 
   const saveCode = useCallback(
     (file: string, text: string) => {
@@ -133,6 +208,11 @@ function DrawingEditor({
       panes.current?.highlight(r.error?.line ?? null, 'error');
       await stage.current?.replay(r.events);
       if (r.error !== undefined) uiSound('oops');
+      if (template !== undefined && mine === runToken.current) {
+        const [model] = await Promise.all([modelEvents(), preloadSprites()]);
+        if (mine === runToken.current)
+          setScore(likeness(renderPicture(r.events, size), renderPicture(model, size)));
+      }
     } catch (e) {
       // Not ■ Dừng (that bumps the token): Python broke.
       if (mine === runToken.current) {
@@ -214,12 +294,38 @@ function DrawingEditor({
             >
               ⬇️ Tải tranh
             </Button>
+            {template !== undefined && (
+              <Button
+                title="Hiện mờ tranh mẫu để vẽ theo"
+                onClick={() => {
+                  setGhostOn((on) => !on);
+                }}
+                aria-pressed={ghostOn}
+                className={ghostOn ? 'bg-sun' : ''}
+                data-testid="ghost-toggle"
+              >
+                👀 Mẫu
+              </Button>
+            )}
           </div>
           <div className="relative min-h-[45%] flex-1 max-[1279px]:aspect-square max-[1279px]:min-h-0 max-[1279px]:flex-none">
             <Stage ref={stage} className="h-full" size={size} coords />
           </div>
+          {template !== undefined && score !== null && (
+            <p
+              className="rounded-[10px] border-2 border-ink bg-paper px-3 py-1 text-lg"
+              role="status"
+              data-testid="likeness"
+            >
+              <b className="font-display">Giống mẫu {score}%</b> · {cheer(score)}
+            </p>
+          )}
           <ErrorBubble result={result} />
-          <Challenges challenges={studio.challenges} />
+          {template === undefined ? (
+            <Challenges challenges={studio.challenges} />
+          ) : (
+            <TemplateHint template={template} />
+          )}
         </aside>
       </div>
     </div>
