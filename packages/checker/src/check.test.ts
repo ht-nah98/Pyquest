@@ -481,6 +481,25 @@ describe('matches: the picture looks like the solution, ≥ MATCH_PASS % (spec 2
     expect(needsExpected([g])).toBe(true);
   });
 
+  test('each colour counts the same: small dots are not drowned by a big box (Bài 10 · Điểm trong khung)', () => {
+    const frame: DrawEvent = { t: 'rect', x: 100, y: 200, w: 200, h: 150, color: 'lightgray' };
+    const dot = (i: number, color: string): DrawEvent => ({
+      t: 'rect',
+      x: i * 50 + 20,
+      y: 270,
+      w: 10,
+      h: 10,
+      color,
+    });
+    const inside = (i: number) => i * 50 + 20 >= 100 && i * 50 + 20 <= 300;
+    const dots = (paint: (i: number) => string) =>
+      Array.from({ length: 8 }, (_, i) => dot(i, paint(i)));
+    const solution = result([frame, ...dots((i) => (inside(i) ? 'red' : 'black'))]);
+    expect(matchScore(solution, solution)).toBe(100);
+    expect(matchScore(result([frame]), solution)).toBeLessThan(MATCH_PASS);
+    expect(matchScore(result([frame, ...dots(() => 'black')]), solution)).toBeLessThan(MATCH_PASS);
+  });
+
   test('order does not matter; pictures use the sizes they are given', () => {
     expect(score(result([...want.events].reverse()))).toBe(100);
     const bird: DrawEvent = { t: 'sprite', sprite: 'bird', x: 0, y: 0, frame: 0 };
@@ -576,7 +595,7 @@ describe('circles, lines and shapes (ADR 0009)', () => {
   const same = (events: RunResult['events']) =>
     checkGoals([g], result(events), { expected: want })[0]?.ok;
 
-  test('the same circles, lines and shapes in any order match', () => {
+  test('the same circles, lines and shapes match in any order when they do not overlap', () => {
     expect(same([sky, roof(250), ray(50), sun(300)])).toBe(true);
   });
 
@@ -585,7 +604,7 @@ describe('circles, lines and shapes (ADR 0009)', () => {
     expect(same([sky, sun(200), ray(50), roof(250)])).toBe(false);
     expect(same([sky, sun(300, 90), ray(50), roof(250)])).toBe(false);
     expect(same([sky, sun(300, 50, 'red'), ray(50), roof(250)])).toBe(false);
-    expect(same([sky, sun(300), ray(50), roof(150)])).toBe(false);
+    expect(same([sky, sun(300), ray(50), roof(50)])).toBe(false);
     expect(same([sky, sun(300), ray(50), roof(250, 'teal')])).toBe(false);
     expect(same([sky, sun(300), ray(50)])).toBe(false);
   });
@@ -639,7 +658,9 @@ describe('circles, lines and shapes (ADR 0009)', () => {
     const model = result([sky, face(), smile()]);
     const like = (events: RunResult['events']) =>
       checkGoals([g], result(events), { expected: model })[0]?.ok;
-    expect(like([sky, smile(), face()])).toBe(true);
+    expect(like([sky, face(), smile()])).toBe(true);
+    // The face drawn after the smile hides it: the picture really has no smile.
+    expect(like([sky, smile(), face()])).toBe(false);
     expect(like([sky, face(156), smile()])).toBe(true);
     expect(like([sky, face(80), smile()])).toBe(false);
     expect(like([sky, face(160, 'pink'), smile()])).toBe(false);

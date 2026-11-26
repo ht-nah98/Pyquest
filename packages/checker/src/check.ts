@@ -34,6 +34,7 @@ export function matchScore(r: RunResult, expected: RunResult, extra: CheckExtra 
     rasterize(r.events, stage, extra.sprites),
     rasterize(expected.events, stage, extra.sprites),
     same,
+    (c) => c,
   );
 }
 

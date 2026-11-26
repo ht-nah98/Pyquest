@@ -6,6 +6,7 @@ import {
   runGameTest,
   shiftSource,
   type GoalResult,
+  type SpriteSizes,
 } from '@pyquest/checker';
 import {
   AssetManifestSchema,
@@ -79,6 +80,13 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
   if (input.studio !== undefined)
     await checkStudio(input.studio, py, err, manifest.success ? manifest.data.assets : []);
   const assetIds = new Set<string>();
+  // 'matches' compares pictures at their real size on the stage, as the page does.
+  const sprites: SpriteSizes = Object.fromEntries(
+    (manifest.success ? manifest.data.assets : []).map((a) => [
+      a.id,
+      { width: a.width, height: a.height },
+    ]),
+  );
   if (!manifest.success) err('assets/library/manifest.json', manifest.error.message);
   else {
     for (const a of manifest.data.assets) {
@@ -136,6 +144,7 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
         py,
         err,
         stage,
+        sprites,
       });
     }
 
@@ -190,6 +199,7 @@ type Ctx = {
   py: PyRunner;
   err: (where: string, msg: string) => void;
   stage: StageSize | undefined;
+  sprites: SpriteSizes;
 };
 
 async function checkOpenLesson(lesson: OpenLesson, where: string, ctx: Ctx): Promise<void> {
@@ -378,13 +388,13 @@ async function checkExercise(code: Exercise, where: string, ctx: Ctx): Promise<v
     ctx.err(where, `toolbox lacks blocks the code uses: ${missing.join(', ')}`);
   }
 
-  const solution = await gradeFiles(ctx.py, code, code.solution, ctx.stage);
+  const solution = await gradeFiles(ctx.py, code, code.solution, ctx.stage, ctx.sprites);
   const failed = solution.goals.filter((g) => !g.ok);
   if (failed.length > 0) {
     const why = solution.run.error === undefined ? '' : ` (${solution.run.error.raw})`;
     ctx.err(where, `solution misses goals ${failed.map((g) => g.id).join(', ')}${why}`);
   }
-  const starter = await gradeFiles(ctx.py, code, code.starter, ctx.stage);
+  const starter = await gradeFiles(ctx.py, code, code.starter, ctx.stage, ctx.sprites);
   if (starter.goals.every((g) => g.ok)) {
     ctx.err(where, 'starter already passes every goal; the exercise would finish itself');
   }
@@ -399,6 +409,7 @@ async function gradeFiles(
   code: Exercise,
   files: Record<string, string>,
   stage: StageSize | undefined,
+  sprites: SpriteSizes,
 ): Promise<{ run: RunResult; goals: GoalResult[] }> {
   const run = await runLesson(py, code.mode, files, code.main, code.test, stage);
   const shift = needsShiftedRun(code.goals);
@@ -424,6 +435,7 @@ async function gradeFiles(
       ...(shifted === undefined ? {} : { shifted }),
       ...(expected === undefined ? {} : { expected }),
       ...(stage === undefined ? {} : { stage }),
+      sprites,
     }),
   };
 }

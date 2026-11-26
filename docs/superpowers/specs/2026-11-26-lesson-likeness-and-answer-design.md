@@ -39,6 +39,13 @@ nên "lệch 2 ô" nghĩa là lệch tới 8 điểm ảnh.
   `extra.sprites`; thiếu thì dùng 24 × 24, như ô đỏ "chưa nạp" của sân.
 - Màu so bằng tên, viết thường. Sân không có `clear()` thì trời là màu mặc định của sân.
 
+**Mỗi màu tính riêng (bài học):** ở bài học, màu là tên màu. Điểm hình là **trung bình theo từng màu**, nên
+mọi màu nặng như nhau dù to hay nhỏ. Lý do: khi đo thử, code khởi đầu của Bài 10 · "Điểm trong khung" đã được
+97%, vì khung xám to lấn hết 8 chấm đỏ/đen là ý chính của bài. Tính theo màu thì chỉ còn 43%. Xưởng vẽ vẫn
+tính theo từng điểm ảnh.
+
+Tranh giờ được so như **nhìn thấy**: hình vẽ sau che hình vẽ trước. Vẽ miệng rồi vẽ mặt đè lên là mất miệng.
+
 **Chấm:** `matches` qua khi `matchScore(r, expected) ≥ 90`. Hàm `matchScore` được export để màn code hiện
 **"Giống mẫu N% · cần 90%"** sau mỗi lần chạy.
 
@@ -62,6 +69,9 @@ vào cả hai luật.
 | Thiếu 1 con chim | trượt |
 | Vẽ ở y = 300 thay vì 200 | trượt |
 | Thêm `clear("skyblue")` | trượt (tối đa 85%) |
+
+Đo code khởi đầu của cả 40 bài tập sau khi đổi: cao nhất 57% (Bài 3 · Ô đi kèm, Bài 10 · Bên phải tới đâu,
+Hầm Ngọc · Mỗi người một hộp). Thấp nhất 0% (Bài 9 · Ngày và đêm, lỗi khi chạy).
 
 ## 5. Ngoài phạm vi
 
