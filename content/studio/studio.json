@@ -127,5 +127,44 @@
       "code": "from pyquest import *\n\nclear(\"midnightblue\")\ndraw_circle(520, 50, 30, \"lightyellow\")\ndraw_line(0, 100, 600, 100, \"black\")\nfor i in range(5):\n    draw_line(60 + i * 120, 100, 60 + i * 120, 150, \"black\")\n    draw_ellipse(60 + i * 120, 200, 80, 90, \"red\")\n    draw_rect(40 + i * 120, 150, 40, 10, \"gold\")\n    draw_rect(40 + i * 120, 245, 40, 10, \"gold\")\n    draw_line(60 + i * 120, 255, 60 + i * 120, 290, \"gold\")\ndraw_rect(0, 420, 600, 180, \"saddlebrown\")\nfor i in range(4):\n    draw_rect(50 + i * 150, 470, 60, 60, \"gold\")\n",
       "hint": "Dùng vòng for: đèn thứ i có x = 60 + i * 120. Viết một đèn trong vòng lặp là được cả năm đèn."
     }
+  ],
+  "pictureGroups": [
+    {
+      "id": "chim",
+      "title": "🐦 Chim",
+      "pictures": ["bird", "bird-cu", "bird-vet", "bird-rong"]
+    },
+    {
+      "id": "cay-hoa",
+      "title": "🌳 Cây và hoa",
+      "pictures": [
+        "deco-oak",
+        "deco-chestnut",
+        "deco-walnut",
+        "deco-star-tree",
+        "deco-fern",
+        "deco-lantern",
+        "deco-flowers",
+        "deco-bush",
+        "deco-lotus",
+        "deco-grass",
+        "deco-reed",
+        "deco-stump"
+      ]
+    },
+    {
+      "id": "do-vat",
+      "title": "🏠 Nhà và đồ vật",
+      "pictures": [
+        "deco-well",
+        "deco-fence",
+        "deco-pond",
+        "deco-rock",
+        "deco-crate",
+        "deco-barrel",
+        "item-chest",
+        "item-heart"
+      ]
+    }
   ]
 }

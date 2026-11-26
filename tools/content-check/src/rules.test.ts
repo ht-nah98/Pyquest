@@ -480,6 +480,45 @@ def draw():
       expect(errors.join('\n')).toContain('does not survive the blocks round trip');
     });
 
+    describe('picture groups (🖼️ Kho hình)', () => {
+      const withBird = (label?: string) => {
+        const i = input(lesson());
+        const assets = (i.manifest as { assets: Record<string, unknown>[] }).assets;
+        if (label !== undefined) assets[0] = { ...assets[0], label };
+        return i;
+      };
+      const groups = (...g: { id: string; title: string; pictures: string[] }[]) =>
+        studio({ pictureGroups: g });
+      const chim = { id: 'chim', title: '🐦 Chim', pictures: ['bird'] };
+
+      test('labelled library pictures in groups have no errors', async () => {
+        expect(await checkContent({ ...withBird('Chim én'), studio: groups(chim) }, py)).toEqual(
+          [],
+        );
+      });
+
+      test('a picture that is not in the library is reported', async () => {
+        const errors = await checkContent(
+          { ...withBird('Chim én'), studio: groups({ ...chim, pictures: ['bird', 'pet-dog'] }) },
+          py,
+        );
+        expect(errors.join('\n')).toContain('picture "pet-dog" is not in the library');
+      });
+
+      test('a picture without a Vietnamese label is reported', async () => {
+        const errors = await checkContent({ ...withBird(), studio: groups(chim) }, py);
+        expect(errors.join('\n')).toContain('picture "bird" has no label');
+      });
+
+      test('the same picture in two groups is refused', async () => {
+        const errors = await checkContent(
+          { ...withBird('Chim én'), studio: groups(chim, { ...chim, id: 'khac' }) },
+          py,
+        );
+        expect(errors.join('\n')).toMatch(/duplicate picture \\?"bird/);
+      });
+    });
+
     describe('templates', () => {
       const HOUSE =
         'from pyquest import *\n\nclear("white")\ndraw_circle(100, 100, 50, "red")\n' +

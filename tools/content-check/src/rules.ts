@@ -12,6 +12,7 @@ import {
   CourseSchema,
   LibraryRefSchema,
   StudioSchema,
+  type Asset,
   type Studio,
   type StudioTemplate,
   isOpenLesson,
@@ -75,7 +76,8 @@ export async function checkContent(input: ContentInput, py: PyRunner): Promise<s
 
   const manifest = AssetManifestSchema.safeParse(input.manifest);
   if (manifest.success) py.setAssets(manifest.data.assets.map((a) => a.id));
-  if (input.studio !== undefined) await checkStudio(input.studio, py, err);
+  if (input.studio !== undefined)
+    await checkStudio(input.studio, py, err, manifest.success ? manifest.data.assets : []);
   const assetIds = new Set<string>();
   if (!manifest.success) err('assets/library/manifest.json', manifest.error.message);
   else {
@@ -213,6 +215,7 @@ async function checkStudio(
   json: unknown,
   py: PyRunner,
   err: (where: string, msg: string) => void,
+  assets: readonly Asset[],
 ): Promise<void> {
   const where = 'studio/studio.json';
   const parsed = StudioSchema.safeParse(json);
@@ -241,6 +244,14 @@ async function checkStudio(
     stage: studio.stage,
   });
   if (run.error !== undefined) err(where, `starter fails: ${run.error.raw}`);
+  // 🖼️ Kho hình: every picture is in the library and has a Vietnamese name for the child.
+  const byId = new Map(assets.map((a) => [a.id, a]));
+  for (const id of studio.pictureGroups.flatMap((g) => g.pictures)) {
+    const a = byId.get(id);
+    if (a === undefined) err(where, `picture "${id}" is not in the library`);
+    else if (a.label === undefined || a.label.trim() === '')
+      err(where, `picture "${id}" has no label`);
+  }
   for (const t of studio.templates)
     await checkTemplate(studio, t, py, (msg) => {
       err(where, msg);

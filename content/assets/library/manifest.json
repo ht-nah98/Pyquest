@@ -128,7 +128,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Thùng tô nô"
     },
     {
       "id": "deco-boulder",
@@ -168,7 +169,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Bụi hoa vàng"
     },
     {
       "id": "deco-chestnut",
@@ -178,7 +180,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Cây xanh"
     },
     {
       "id": "deco-column",
@@ -198,7 +201,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Thùng gỗ"
     },
     {
       "id": "deco-crystal",
@@ -286,7 +290,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Hàng rào"
     },
     {
       "id": "deco-fern",
@@ -296,7 +301,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Cây cọ"
     },
     {
       "id": "deco-flowers",
@@ -306,7 +312,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Bụi hoa hồng"
     },
     {
       "id": "deco-glow-cool",
@@ -343,7 +350,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Bụi cỏ"
     },
     {
       "id": "deco-ground-cave",
@@ -393,7 +401,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Cây treo đèn"
     },
     {
       "id": "deco-lava",
@@ -413,7 +422,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Hoa sen"
     },
     {
       "id": "deco-misc",
@@ -443,7 +453,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Cây sồi"
     },
     {
       "id": "deco-pillar",
@@ -463,7 +474,8 @@
       "height": 44,
       "frames": 2,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Ao nhỏ"
     },
     {
       "id": "deco-reed",
@@ -473,7 +485,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Cây sậy"
     },
     {
       "id": "deco-rock",
@@ -483,7 +496,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Tảng đá"
     },
     {
       "id": "deco-ruin",
@@ -513,7 +527,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Cây ăn quả"
     },
     {
       "id": "deco-stump",
@@ -523,7 +538,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Gốc cây"
     },
     {
       "id": "deco-swamp",
@@ -563,7 +579,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Cây hoa hồng"
     },
     {
       "id": "deco-well",
@@ -573,7 +590,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Giếng nước"
     },
     {
       "id": "fx-explosion",
@@ -753,7 +771,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Rương báu"
     },
     {
       "id": "item-heart",
@@ -763,7 +782,8 @@
       "height": 16,
       "frames": 1,
       "pixel": true,
-      "credit": "ai-generated"
+      "credit": "ai-generated",
+      "label": "Trái tim"
     },
     {
       "id": "item-xp",

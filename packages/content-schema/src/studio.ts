@@ -18,6 +18,13 @@ export const StudioTemplateSchema = z.object({
   hint: z.string().min(1).max(120),
 });
 
+/** One shelf of the 🖼️ Kho hình: library picture ids under a Vietnamese title (spec 2026-11-26 §5.3). */
+export const StudioPictureGroupSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  title: z.string().min(1).max(30),
+  pictures: z.array(z.string().min(1)).min(1),
+});
+
 /** content/studio/studio.json: the free drawing studio (🎨 Xưởng vẽ, spec 2026-11-23 §6). */
 export const StudioSchema = z
   .object({
@@ -31,6 +38,7 @@ export const StudioSchema = z
     toolbox: z.array(z.string().min(1)).min(1),
     challenges: z.array(StudioChallengeSchema),
     templates: z.array(StudioTemplateSchema).default([]),
+    pictureGroups: z.array(StudioPictureGroupSchema).default([]),
   })
   .superRefine((s, ctx) => {
     const ids = s.challenges.map((c) => c.id);
@@ -49,8 +57,17 @@ export const StudioSchema = z
         message: `duplicate template id "${tdup}"`,
         path: ['templates'],
       });
+    const pics = s.pictureGroups.flatMap((g) => g.pictures);
+    const pdup = pics.find((id, i) => pics.indexOf(id) !== i);
+    if (pdup !== undefined)
+      ctx.addIssue({
+        code: 'custom',
+        message: `duplicate picture "${pdup}"`,
+        path: ['pictureGroups'],
+      });
   });
 
 export type StudioChallenge = z.infer<typeof StudioChallengeSchema>;
+export type StudioPictureGroup = z.infer<typeof StudioPictureGroupSchema>;
 export type StudioTemplate = z.infer<typeof StudioTemplateSchema>;
 export type Studio = z.infer<typeof StudioSchema>;
